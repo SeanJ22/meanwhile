@@ -1,0 +1,25 @@
+{
+  "method": "OFFICIAL_COMPLETE_NATIVE_CORRECTED_COMPOSITE_SAMPLE_PDF",
+  "currentCountyHomepageSampleSha256": "cf28e34fde3fcef9d3904110708c979686e0303619c3804a9c3f17d36592da76",
+  "officialAmendedPMNAttachmentSha256": "cf28e34fde3fcef9d3904110708c979686e0303619c3804a9c3f17d36592da76",
+  "nativeBytesIdentical": true,
+  "pages": 162,
+  "twoPageStyles": 81,
+  "ordinaryStyles": 79,
+  "federalOnlyStyles": 2,
+  "parser": "PyMuPDF native text extraction. Exact printed full ordinary office blocks and full Yes/No judicial questions, with independent visual checks of pages12 and93. All style name/party parity checked.",
+  "publicSourceIdentityLookupUsed": false,
+  "schoolScopeProof": "All seven sample precinct unions equal current official GIS LOCALSCHOOL assignments exactly, including every precinct in each seat. Seven unchanged full source polygons staged.",
+  "independentCertification": "County certified ordinary list independently names all13 offices and21 candidate names. No special-district candidate field occurs in the81 reviewed sample styles.",
+  "blockedRoutes": [
+    "County-linked candidate Google Sheet returned403 on public CSV/gviz/htmlview; no authentication attempted. Qualified local write-in names therefore not acquired, no zero-eligibility claim.",
+    "Fresh state certification origin403 and reader captured denial body; exact earlier Salt Lake original capture reused only as held-scope corroboration.",
+    "Highland old justice route503/reader422 and current guessedroute404; official native2025/26RFP captured instead."
+  ],
+  "helpersScratchOnly": [
+    "fetch.py",
+    "parse-samples.py",
+    "build-packet.py"
+  ],
+  "productionWrites": false
+}

@@ -1,0 +1,9 @@
+{
+  "status": "FROZEN_DATA_ONLY_PARTIAL_SCOPE",
+  "filesExcludingFreezeRecord": 98,
+  "bytesExcludingFreezeRecord": 57180368,
+  "ballotInputSha256": "55b328460750a41e2f40224405d8ac5b659a9437aca847b2704a39a6fe9d048f",
+  "installManifestSha256": "0fd130ce2122e74d7c9c8be9afe0c04f756905cf64edc5a1068bb47a4c11c322",
+  "helpersInsidePacket": false,
+  "productionWrites": false
+}

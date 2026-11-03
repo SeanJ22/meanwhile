@@ -1,0 +1,109 @@
+{
+  "kellySchaefferBullock": {
+    "status": "PENDING_SOURCE_SCOPE_CONTRADICTION_NOT_IN_INSTALLABLE_INPUT",
+    "printedName": "KELLY N. SCHAEFFER-BULLOCK",
+    "printedQuestion": "Shall KELLY N. SCHAEFFER-BULLOCK be retained in the office of Judge of the Highland/Alpine Justice Court?",
+    "quote": "Shall KELLY N.\nSCHAEFFER-BULLOCK be retained in\nthe office of Judge of the\nHighland/Alpine Justice Court?\nYES\nNO",
+    "provenance": {
+      "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+      "sourceOrg": "Utah County Clerk",
+      "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+      "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+      "quote": "Shall KELLY N.\nSCHAEFFER-BULLOCK be retained in\nthe office of Judge of the\nHighland/Alpine Justice Court?\nYES\nNO"
+    },
+    "sampleStyles": [
+      6,
+      7,
+      18,
+      19,
+      20
+    ],
+    "physicalPages": [
+      12,
+      14,
+      36,
+      38,
+      40
+    ],
+    "printedPrecinctCodes": [
+      "25AL01",
+      "25AL02",
+      "25AL03",
+      "25AL04",
+      "25AL05",
+      "25AL06",
+      "25AL07",
+      "25AL08",
+      "25HI01",
+      "25HI02",
+      "25HI03",
+      "25HI04",
+      "25HI05",
+      "25HI06",
+      "25HI07",
+      "25HI08",
+      "25HI09",
+      "25HI10",
+      "25HI11",
+      "25HI12",
+      "25HI13",
+      "25HI14",
+      "25HI15",
+      "25HI16",
+      "25HI17",
+      "25HI18"
+    ],
+    "readerOcdIdAsserted": null,
+    "sourceRule": "Keep exact sample evidence; do not widen to county or assert joint-city voter applicability from conflicting facts.",
+    "followUpOwner": "River/source follow-up: authoritative corrected ballot applicability or binding election instruction needed.",
+    "statutorySource": {
+      "sourceUrl": "https://le.utah.gov/xcode/Title20A/Chapter12/C20A-12-S201_2026031320260313.pdf",
+      "sourceFile": "sources/32e5e49f7f20dfb7aa0280c2ef036e44c371e8a375f6116bcf55231e1433171e.source",
+      "quote": "(7)\n(a) If a justice court judge is standing for retention for one or more judicial offices in a county in\nwhich the judge is a county justice court judge or a municipal justice court judge in a town or\nmunicipality of the fourth or fifth class, as described in Section 10-2-301, or any combination\nthereof, the election officer shall place the judge's name on the county ballot only once for all\njudicial offices for which the judge seeks to be retained.\n(b) If a justice court judge is standing for retention for one or more judicial offices in a municipality\nof the first, second, or third class, as described in Section 10-2-301, the election officer shall\nplace the judge's name only on the municipal ballot for the voters of the municipality that the\njudge serves."
+    },
+    "classificationSource": {
+      "sourceUrl": "https://le.utah.gov/xcode/Title10/Chapter2/C10-2-S301_1800010118000101.pdf",
+      "quote": "(d) A municipality with a population of 10,000 or more but less than 30,000 is a city of the fourth\nclass.\n(e) A municipality with a population of 1,000 or more but less than 10,000 is a city of the fifth\nclass."
+    },
+    "officialJointCourtRfp": {
+      "sourceUrl": "https://www.highlandut.gov/DocumentCenter/View/9506/RFP-for-City-Prosector-Services-2025-26",
+      "quote": "Highlights of Justice Court \n• Highland and Alpine Cities have entered into an interlocal agreement to \nextend the Highland Justice Court jurisdiction to Alpine City. The Cities also \nshare a public safety entity, Lone Peak Police Department. The agreement \nalso allows the Cities to contract with the same attorneys, which the Cities \nintend to do.  \n• The Court is located in a building shared with the Lone Peak Police \nDepartment at 5400 W Civic Center Drive, Suite 4, Highland, UT 84003. \n• The Court was recertified on December 5, 2023. \n• Judge Kelly Schaeffer-Bullock has served as the Justice Court Judge since \n2017. \n• Other court employees consist of one part-time Court Clerk who has been \nwith the court since 2005.  \n• Estimated populations of the communities are: Highland 21,000; Alpine \n10,500.",
+      "qualification": "RFP reports interlocal court service, not a binding voter-electorate ruling; its21,000/10,500 estimated city populations fall in the statutory fourth-class range."
+    }
+  },
+  "draperCrossCounty": {
+    "status": "SOURCE_ONLY_CROSS_COUNTY_STYLE_DIFFERENCE_NO_ABSENCE_OR_REMOVAL",
+    "earlierSaltLakeContestId": "ut-cx-local-2026-draper-municipal-justice-court-retention-lisa-a-garner",
+    "printedUtahCountyDraperStyles": [
+      {
+        "style": 10,
+        "pages": [
+          19,
+          20
+        ],
+        "precinctCodes": [
+          "25DR01"
+        ],
+        "federalOnly": false
+      },
+      {
+        "style": 11,
+        "pages": [
+          21,
+          22
+        ],
+        "precinctCodes": [
+          "25DR02",
+          "25DR03",
+          "25LE01",
+          "25LE02",
+          "25NW01",
+          "25NW02"
+        ],
+        "federalOnly": false
+      }
+    ],
+    "finding": "Current corrected Utah County styles covering25DR precincts do not print Lisa A. Garner Draper retention. Salt Lake packet does. No conclusion about legal electorate, absence, removal or withdrawal is installed. River/source follow-up needed."
+  },
+  "installableCandidateInputContainsKelly": false
+}

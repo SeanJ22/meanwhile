@@ -1,0 +1,285 @@
+{
+  "objectIdFieldName" : "OBJECTID", 
+  "uniqueIdField" : 
+  {
+    "name" : "OBJECTID", 
+    "isSystemMaintained" : true
+  }, 
+  "globalIdFieldName" : "", 
+  "geometryProperties" : 
+  {
+    "shapeAreaFieldName" : "Shape__Area", 
+    "shapeLengthFieldName" : "Shape__Length", 
+    "units" : "esriMeters"
+  }, 
+  "geometryType" : "esriGeometryPolygon", 
+  "spatialReference" : {
+    "wkid" : 102100, 
+    "latestWkid" : 3857
+  }, 
+  "fields" : [
+    {
+      "name" : "OBJECTID", 
+      "type" : "esriFieldTypeOID", 
+      "alias" : "OBJECTID", 
+      "sqlType" : "sqlTypeOther", 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "SCHOOL_BOARD", 
+      "type" : "esriFieldTypeString", 
+      "alias" : "Local School Board", 
+      "sqlType" : "sqlTypeOther", 
+      "length" : 100, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "DISTRICT", 
+      "type" : "esriFieldTypeString", 
+      "alias" : "District", 
+      "sqlType" : "sqlTypeOther", 
+      "length" : 25, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "DISTRICT_ID", 
+      "type" : "esriFieldTypeString", 
+      "alias" : "District ID", 
+      "sqlType" : "sqlTypeOther", 
+      "length" : 10, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "Shape__Area", 
+      "type" : "esriFieldTypeDouble", 
+      "alias" : "Shape__Area", 
+      "sqlType" : "sqlTypeDouble", 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "Shape__Length", 
+      "type" : "esriFieldTypeDouble", 
+      "alias" : "Shape__Length", 
+      "sqlType" : "sqlTypeDouble", 
+      "domain" : null, 
+      "defaultValue" : null
+    }
+  ], 
+  "features" : [
+    {
+      "attributes" : {
+        "OBJECTID" : 1, 
+        "SCHOOL_BOARD" : "Provo School Board", 
+        "DISTRICT" : "2", 
+        "DISTRICT_ID" : "P2", 
+        "Shape__Area" : 13058629.6015625, 
+        "Shape__Length" : 20351.145758289538
+      }
+    }, 
+    {
+      "attributes" : {
+        "OBJECTID" : 2, 
+        "SCHOOL_BOARD" : "Provo School Board", 
+        "DISTRICT" : "1", 
+        "DISTRICT_ID" : "P1", 
+        "Shape__Area" : 24664476.83203125, 
+        "Shape__Length" : 45574.177848964493
+      }
+    }, 
+    {
+      "attributes" : {
+        "OBJECTID" : 3, 
+        "SCHOOL_BOARD" : "Provo School Board", 
+        "DISTRICT" : "6", 
+        "DISTRICT_ID" : "P6", 
+        "Shape__Area" : 18553641.55078125, 
+        "Shape__Length" : 26451.211496455489
+      }
+    }, 
+    {
+      "attributes" : {
+        "OBJECTID" : 4, 
+        "SCHOOL_BOARD" : "Provo School Board", 
+        "DISTRICT" : "5", 
+        "DISTRICT_ID" : "P5", 
+        "Shape__Area" : 48456585.47265625, 
+        "Shape__Length" : 33242.60612166005
+      }
+    }, 
+    {
+      "attributes" : {
+        "OBJECTID" : 5, 
+        "SCHOOL_BOARD" : "Provo School Board", 
+        "DISTRICT" : "4", 
+        "DISTRICT_ID" : "P4", 
+        "Shape__Area" : 25928411.5859375, 
+        "Shape__Length" : 30646.380214442193
+      }
+    }, 
+    {
+      "attributes" : {
+        "OBJECTID" : 6, 
+        "SCHOOL_BOARD" : "Provo School Board", 
+        "DISTRICT" : "7", 
+        "DISTRICT_ID" : "P7", 
+        "Shape__Area" : 5881944.3125, 
+        "Shape__Length" : 11896.377010604969
+      }
+    }, 
+    {
+      "attributes" : {
+        "OBJECTID" : 7, 
+        "SCHOOL_BOARD" : "Provo School Board", 
+        "DISTRICT" : "3", 
+        "DISTRICT_ID" : "P3", 
+        "Shape__Area" : 10100290.796875, 
+        "Shape__Length" : 19537.993357208714
+      }
+    }, 
+    {
+      "attributes" : {
+        "OBJECTID" : 17, 
+        "SCHOOL_BOARD" : "Nebo School Board", 
+        "DISTRICT" : "5", 
+        "DISTRICT_ID" : "N5", 
+        "Shape__Area" : 162660970.0703125, 
+        "Shape__Length" : 65584.882691862585
+      }
+    }, 
+    {
+      "attributes" : {
+        "OBJECTID" : 18, 
+        "SCHOOL_BOARD" : "Nebo School Board", 
+        "DISTRICT" : "3", 
+        "DISTRICT_ID" : "N3", 
+        "Shape__Area" : 32182423.08984375, 
+        "Shape__Length" : 35545.049638573604
+      }
+    }, 
+    {
+      "attributes" : {
+        "OBJECTID" : 19, 
+        "SCHOOL_BOARD" : "Nebo School Board", 
+        "DISTRICT" : "1", 
+        "DISTRICT_ID" : "N1", 
+        "Shape__Area" : 1581752325.796875, 
+        "Shape__Length" : 307251.07955962495
+      }
+    }, 
+    {
+      "attributes" : {
+        "OBJECTID" : 20, 
+        "SCHOOL_BOARD" : "Nebo School Board", 
+        "DISTRICT" : "6", 
+        "DISTRICT_ID" : "N6", 
+        "Shape__Area" : 115837852.3515625, 
+        "Shape__Length" : 81782.740145791977
+      }
+    }, 
+    {
+      "attributes" : {
+        "OBJECTID" : 21, 
+        "SCHOOL_BOARD" : "Nebo School Board", 
+        "DISTRICT" : "4", 
+        "DISTRICT_ID" : "N4", 
+        "Shape__Area" : 319859215.3125, 
+        "Shape__Length" : 164437.63834000527
+      }
+    }, 
+    {
+      "attributes" : {
+        "OBJECTID" : 22, 
+        "SCHOOL_BOARD" : "Nebo School Board", 
+        "DISTRICT" : "7", 
+        "DISTRICT_ID" : "N7", 
+        "Shape__Area" : 50615112.328125, 
+        "Shape__Length" : 59341.007492930687
+      }
+    }, 
+    {
+      "attributes" : {
+        "OBJECTID" : 23, 
+        "SCHOOL_BOARD" : "Nebo School Board", 
+        "DISTRICT" : "2", 
+        "DISTRICT_ID" : "N2", 
+        "Shape__Area" : 3624564160.8710938, 
+        "Shape__Length" : 411658.09310621687
+      }
+    }, 
+    {
+      "attributes" : {
+        "OBJECTID" : 24, 
+        "SCHOOL_BOARD" : "Alpine School Board", 
+        "DISTRICT" : "7", 
+        "DISTRICT_ID" : "A7", 
+        "Shape__Area" : 76263650.76171875, 
+        "Shape__Length" : 50769.435268629488
+      }
+    }, 
+    {
+      "attributes" : {
+        "OBJECTID" : 25, 
+        "SCHOOL_BOARD" : "Alpine School Board", 
+        "DISTRICT" : "1", 
+        "DISTRICT_ID" : "A1", 
+        "Shape__Area" : 1462249307.890625, 
+        "Shape__Length" : 237755.80340308908
+      }
+    }, 
+    {
+      "attributes" : {
+        "OBJECTID" : 26, 
+        "SCHOOL_BOARD" : "Alpine School Board", 
+        "DISTRICT" : "2", 
+        "DISTRICT_ID" : "A2", 
+        "Shape__Area" : 131671748.5859375, 
+        "Shape__Length" : 114036.2231418921
+      }
+    }, 
+    {
+      "attributes" : {
+        "OBJECTID" : 27, 
+        "SCHOOL_BOARD" : "Alpine School Board", 
+        "DISTRICT" : "3", 
+        "DISTRICT_ID" : "A3", 
+        "Shape__Area" : 118165117.4765625, 
+        "Shape__Length" : 87361.907421839278
+      }
+    }, 
+    {
+      "attributes" : {
+        "OBJECTID" : 28, 
+        "SCHOOL_BOARD" : "Alpine School Board", 
+        "DISTRICT" : "5", 
+        "DISTRICT_ID" : "A5", 
+        "Shape__Area" : 315903117.796875, 
+        "Shape__Length" : 96530.588276134949
+      }
+    }, 
+    {
+      "attributes" : {
+        "OBJECTID" : 29, 
+        "SCHOOL_BOARD" : "Alpine School Board", 
+        "DISTRICT" : "6", 
+        "DISTRICT_ID" : "A6", 
+        "Shape__Area" : 290505401.03515625, 
+        "Shape__Length" : 145950.32596362437
+      }
+    }, 
+    {
+      "attributes" : {
+        "OBJECTID" : 30, 
+        "SCHOOL_BOARD" : "Alpine School Board", 
+        "DISTRICT" : "4", 
+        "DISTRICT_ID" : "A4", 
+        "Shape__Area" : 446276537.3046875, 
+        "Shape__Length" : 145852.46945634374
+      }
+    }
+  ]
+}

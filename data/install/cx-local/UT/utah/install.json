@@ -1,0 +1,230 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "UT",
+  "county": "Utah County",
+  "countyFips": "49049",
+  "populationRank": 88,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:UT",
+  "inputDirectory": "ballot-input",
+  "dataOnly": true,
+  "productionWrites": false,
+  "coverage": {
+    "coverage": "COMPLETE_CURRENT_ORDINARY_LOCAL_NAMED_UNION_PLUS_SEVEN_READY_LOCAL_RETENTIONS_ONE_SCOPE_PENDING",
+    "countyComplete": false,
+    "nativeCompositePages": 162,
+    "publishedStyles": 81,
+    "ordinaryStyles": 79,
+    "federalOnlyStyles": 2,
+    "localOrdinaryOffices": 13,
+    "ordinaryPrintedNames": 21,
+    "localRetentionNamesPrinted": 8,
+    "installableLocalRetentions": 7,
+    "pendingLocalRetentions": 1,
+    "installableContests": 20,
+    "installableCandidacies": 28,
+    "schoolSampleGISParity": "PASS_ALL7",
+    "nativeCorrectedOriginalByteEquality": "PASS",
+    "statewideJudicialRetentionsPreserved": 7,
+    "limits": [
+      "20 ready local fields /28 names installed as input; one further printed local retention, Kelly N. Schaeffer-Bullock, is preserved as source-only pending conflicting voter-scope evidence. County-complete reader coverage is not claimed.",
+      "No justice-court electorate widened from a town/court name. Kelton Patten countywide scope is confirmed in all79 ordinary styles. Springville scope exactly matches all24 current Springville GIS precincts.",
+      "Fourth Judicial District exact held identities and four-county memberships preserved; no duplicate regional or statewide IDs.",
+      "Seven school board district OCDs need River registry/reader joins; full official native source polygons and exact precinct parity supplied.",
+      "Qualified local write-in name roster and actual cancellation/declared-elected orders not acquired. No generic write-in candidate, absence, removal, withdrawal or zero-eligibility claim created.",
+      "Existing statewide, federal, legislative, judicial statewide retention and ballot measures preserved unchanged. Salem Proposition8 and constitutional measure texts are ancillary native sample evidence outside incoming payload.",
+      "Cross-county Draper sample discrepancy kept source-only; no correction to Salt Lake packet or full-city electorate inferred.",
+      "No production, app, git, voter identity lookup or sign-in operations. River owns installation and reader checks."
+    ]
+  },
+  "counts": {
+    "contests": 20,
+    "candidacies": 28,
+    "ordinaryOffices": 13,
+    "ordinaryNames": 21,
+    "readyLocalRetentionFields": 7,
+    "pendingPrintedLocalRetentionFields": 1,
+    "newContests": 15,
+    "refreshedHeldContests": 5,
+    "newCandidates": 23,
+    "preservedHeldCandidateIds": 5,
+    "officialSourcePolygons": 7,
+    "unmatchedReaderDivisions": 8
+  },
+  "subjects": [
+    {
+      "id": "ut-cx-local-2026-utah-county-commission-seat-a",
+      "title": "Utah County \u2014 County Commission Seat A",
+      "ocdId": "ocd-division/country:us/state:ut/county:utah",
+      "type": "CANDIDACY",
+      "candidates": 3
+    },
+    {
+      "id": "ut-cx-local-2026-utah-county-commission-seat-b",
+      "title": "Utah County \u2014 County Commission Seat B",
+      "ocdId": "ocd-division/country:us/state:ut/county:utah",
+      "type": "CANDIDACY",
+      "candidates": 3
+    },
+    {
+      "id": "ut-cx-local-2026-utah-county-attorney",
+      "title": "Utah County \u2014 County Attorney",
+      "ocdId": "ocd-division/country:us/state:ut/county:utah",
+      "type": "CANDIDACY",
+      "candidates": 1
+    },
+    {
+      "id": "ut-cx-local-2026-utah-county-auditor",
+      "title": "Utah County \u2014 County Auditor",
+      "ocdId": "ocd-division/country:us/state:ut/county:utah",
+      "type": "CANDIDACY",
+      "candidates": 2
+    },
+    {
+      "id": "ut-cx-local-2026-utah-county-clerk",
+      "title": "Utah County \u2014 County Clerk",
+      "ocdId": "ocd-division/country:us/state:ut/county:utah",
+      "type": "CANDIDACY",
+      "candidates": 2
+    },
+    {
+      "id": "ut-cx-local-2026-utah-county-sheriff",
+      "title": "Utah County \u2014 County Sheriff",
+      "ocdId": "ocd-division/country:us/state:ut/county:utah",
+      "type": "CANDIDACY",
+      "candidates": 1
+    },
+    {
+      "id": "ut-general-2026-fourth-district-retention-jared-william-eldridge",
+      "title": "Fourth Judicial District \u2014 District Court \u2014 JARED WILLIAM ELDRIDGE \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:ut/judicial_district:4",
+      "type": "RETENTION",
+      "candidates": 1
+    },
+    {
+      "id": "ut-general-2026-fourth-district-retention-kraig-powell",
+      "title": "Fourth Judicial District \u2014 District Court \u2014 KRAIG POWELL \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:ut/judicial_district:4",
+      "type": "RETENTION",
+      "candidates": 1
+    },
+    {
+      "id": "ut-general-2026-fourth-district-retention-thomas-low",
+      "title": "Fourth Judicial District \u2014 District Court \u2014 THOMAS LOW \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:ut/judicial_district:4",
+      "type": "RETENTION",
+      "candidates": 1
+    },
+    {
+      "id": "ut-general-2026-fourth-district-retention-anthony-leonard-howell",
+      "title": "Fourth Judicial District \u2014 District Court \u2014 ANTHONY LEONARD HOWELL \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:ut/judicial_district:4",
+      "type": "RETENTION",
+      "candidates": 1
+    },
+    {
+      "id": "ut-general-2026-fourth-district-retention-douglas-john-nielsen",
+      "title": "Fourth Judicial District \u2014 Juvenile Court \u2014 DOUGLAS JOHN NIELSEN \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:ut/judicial_district:4",
+      "type": "RETENTION",
+      "candidates": 1
+    },
+    {
+      "id": "ut-cx-local-2026-utah-county-justice-court-retention-kelton-shawn-patten",
+      "title": "Utah County Justice Court \u2014 KELTON SHAWN PATTEN \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:ut/county:utah",
+      "type": "RETENTION",
+      "candidates": 1
+    },
+    {
+      "id": "ut-cx-local-2026-nebo-school-board-district-4",
+      "title": "Nebo School District \u2014 Board of Education District 4",
+      "ocdId": "ocd-division/country:us/state:ut/school_district:nebo_school_district/board_district:4",
+      "type": "CANDIDACY",
+      "candidates": 2
+    },
+    {
+      "id": "ut-cx-local-2026-nebo-school-board-district-2",
+      "title": "Nebo School District \u2014 Board of Education District 2",
+      "ocdId": "ocd-division/country:us/state:ut/school_district:nebo_school_district/board_district:2",
+      "type": "CANDIDACY",
+      "candidates": 2
+    },
+    {
+      "id": "ut-cx-local-2026-provo-school-board-district-1",
+      "title": "Provo School District \u2014 Board of Education District 1",
+      "ocdId": "ocd-division/country:us/state:ut/school_district:provo_school_district/board_district:1",
+      "type": "CANDIDACY",
+      "candidates": 1
+    },
+    {
+      "id": "ut-cx-local-2026-provo-school-board-district-2",
+      "title": "Provo School District \u2014 Board of Education District 2",
+      "ocdId": "ocd-division/country:us/state:ut/school_district:provo_school_district/board_district:2",
+      "type": "CANDIDACY",
+      "candidates": 1
+    },
+    {
+      "id": "ut-cx-local-2026-provo-school-board-district-3",
+      "title": "Provo School District \u2014 Board of Education District 3",
+      "ocdId": "ocd-division/country:us/state:ut/school_district:provo_school_district/board_district:3",
+      "type": "CANDIDACY",
+      "candidates": 1
+    },
+    {
+      "id": "ut-cx-local-2026-provo-school-board-district-4",
+      "title": "Provo School District \u2014 Board of Education District 4",
+      "ocdId": "ocd-division/country:us/state:ut/school_district:provo_school_district/board_district:4",
+      "type": "CANDIDACY",
+      "candidates": 1
+    },
+    {
+      "id": "ut-cx-local-2026-nebo-school-board-district-5",
+      "title": "Nebo School District \u2014 Board of Education District 5",
+      "ocdId": "ocd-division/country:us/state:ut/school_district:nebo_school_district/board_district:5",
+      "type": "CANDIDACY",
+      "candidates": 1
+    },
+    {
+      "id": "ut-cx-local-2026-springville-municipal-justice-court-retention-eric-stephen-jewell",
+      "title": "Springville Municipal Justice Court \u2014 ERIC STEPHEN JEWELL \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:ut/place:springville",
+      "type": "RETENTION",
+      "candidates": 1
+    }
+  ],
+  "geographyDependencies": {
+    "file": "geography-dependencies.json",
+    "polygons": "geography-source-polygons.geojson",
+    "unmatchedReaderDivisions": [
+      "ocd-division/country:us/state:ut/judicial_district:4",
+      "ocd-division/country:us/state:ut/school_district:nebo_school_district/board_district:2",
+      "ocd-division/country:us/state:ut/school_district:nebo_school_district/board_district:4",
+      "ocd-division/country:us/state:ut/school_district:nebo_school_district/board_district:5",
+      "ocd-division/country:us/state:ut/school_district:provo_school_district/board_district:1",
+      "ocd-division/country:us/state:ut/school_district:provo_school_district/board_district:2",
+      "ocd-division/country:us/state:ut/school_district:provo_school_district/board_district:3",
+      "ocd-division/country:us/state:ut/school_district:provo_school_district/board_district:4"
+    ],
+    "heldRegionalFourCountyMembershipsUnchanged": true
+  },
+  "sourceScopeFollowUp": "pending-scope-evidence.json",
+  "limits": [
+    "20 ready local fields /28 names installed as input; one further printed local retention, Kelly N. Schaeffer-Bullock, is preserved as source-only pending conflicting voter-scope evidence. County-complete reader coverage is not claimed.",
+    "No justice-court electorate widened from a town/court name. Kelton Patten countywide scope is confirmed in all79 ordinary styles. Springville scope exactly matches all24 current Springville GIS precincts.",
+    "Fourth Judicial District exact held identities and four-county memberships preserved; no duplicate regional or statewide IDs.",
+    "Seven school board district OCDs need River registry/reader joins; full official native source polygons and exact precinct parity supplied.",
+    "Qualified local write-in name roster and actual cancellation/declared-elected orders not acquired. No generic write-in candidate, absence, removal, withdrawal or zero-eligibility claim created.",
+    "Existing statewide, federal, legislative, judicial statewide retention and ballot measures preserved unchanged. Salem Proposition8 and constitutional measure texts are ancillary native sample evidence outside incoming payload.",
+    "Cross-county Draper sample discrepancy kept source-only; no correction to Salt Lake packet or full-city electorate inferred.",
+    "No production, app, git, voter identity lookup or sign-in operations. River owns installation and reader checks."
+  ],
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 42 captured sources and 48 exact saved-source quotes",
+    "productionWrites": "NONE"
+  }
+}

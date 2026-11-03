@@ -1,0 +1,1347 @@
+[
+  {
+    "style": 1,
+    "pages": [
+      1,
+      2
+    ],
+    "precinctCodes": [
+      "25AF01",
+      "25AF03",
+      "25AF09",
+      "25AF10",
+      "25AF11",
+      "25AF12",
+      "25LE04",
+      "25LE05",
+      "25LE06",
+      "25LE07",
+      "25LE09",
+      "25LE10",
+      "25LE11",
+      "25LE12",
+      "25LE13",
+      "25LE14",
+      "25LE21",
+      "25LE22",
+      "25NW12",
+      "25NW13",
+      "25NW15"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 2,
+    "pages": [
+      3,
+      4
+    ],
+    "precinctCodes": [
+      "25AF02",
+      "25CH01",
+      "25CH02",
+      "25CH03",
+      "25CH04",
+      "25CH05",
+      "25CH06",
+      "25CH07",
+      "25CH08",
+      "25LE03",
+      "25NE07",
+      "25NE17",
+      "25NW05",
+      "25PG02"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 3,
+    "pages": [
+      5,
+      6
+    ],
+    "precinctCodes": [
+      "25AF04",
+      "25AF05",
+      "25AF06",
+      "25AF07",
+      "25AF08",
+      "25AF14",
+      "25AF15",
+      "25AF16",
+      "25NE08",
+      "25PG01",
+      "25PG03",
+      "25PG04",
+      "25PG05",
+      "25PG06",
+      "25PG07",
+      "25PG08",
+      "25PG09",
+      "25PG10",
+      "25PG11",
+      "25PG12",
+      "25PG13",
+      "25PG14",
+      "25PG15",
+      "25PG16"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 4,
+    "pages": [
+      7,
+      8
+    ],
+    "precinctCodes": [
+      "25AF13",
+      "25AF20",
+      "25AF21",
+      "25AF22",
+      "25AF23",
+      "25AF24",
+      "25LE08",
+      "25NW14",
+      "25NW19"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 5,
+    "pages": [
+      9,
+      10
+    ],
+    "precinctCodes": [
+      "25AF17",
+      "25AF18",
+      "25AF19",
+      "25AF25",
+      "25NW21",
+      "25PG19"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 6,
+    "pages": [
+      11,
+      12
+    ],
+    "precinctCodes": [
+      "25AL01",
+      "25AL02",
+      "25AL07",
+      "25HI18"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 7,
+    "pages": [
+      13,
+      14
+    ],
+    "precinctCodes": [
+      "25AL03",
+      "25AL04",
+      "25AL05",
+      "25AL06",
+      "25AL08"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 8,
+    "pages": [
+      15,
+      16
+    ],
+    "precinctCodes": [
+      "25BL01",
+      "25LE47"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 9,
+    "pages": [
+      17,
+      18
+    ],
+    "precinctCodes": [
+      "25CF01",
+      "25EM01",
+      "25EM02",
+      "25EM03",
+      "25EM04",
+      "25EM07",
+      "25EM08",
+      "25EM09",
+      "25EM10",
+      "25EM11",
+      "25EM18",
+      "25EM20",
+      "25EM21",
+      "25EM23",
+      "25EM24",
+      "25EM25",
+      "25EM26",
+      "25EM27",
+      "25EM28",
+      "25EM29",
+      "25EM30",
+      "25EM31",
+      "25EM32",
+      "25EM33",
+      "25FF01",
+      "25NW09",
+      "25SR05",
+      "25SW10",
+      "25SW12"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 10,
+    "pages": [
+      19,
+      20
+    ],
+    "precinctCodes": [
+      "25DR01"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 11,
+    "pages": [
+      21,
+      22
+    ],
+    "precinctCodes": [
+      "25DR02",
+      "25DR03",
+      "25LE01",
+      "25LE02",
+      "25NW01",
+      "25NW02"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 12,
+    "pages": [
+      23,
+      24
+    ],
+    "precinctCodes": [
+      "25EM05",
+      "25EM06",
+      "25EM12",
+      "25EM13",
+      "25EM14",
+      "25EM16",
+      "25EM17",
+      "25EM19",
+      "25EM22",
+      "25NW23",
+      "25SR23",
+      "25UL01"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 13,
+    "pages": [
+      25,
+      26
+    ],
+    "precinctCodes": [
+      "25EM15",
+      "25LE49",
+      "25SR06",
+      "25SR07",
+      "25SR09",
+      "25SR10",
+      "25SR11",
+      "25SR12",
+      "25SR13",
+      "25SR14",
+      "25SR18",
+      "25SR19",
+      "25SR20",
+      "25SR21",
+      "25SR22",
+      "25SR24",
+      "25SR25",
+      "25SR26",
+      "25SR27",
+      "25SR28",
+      "25SR29",
+      "25SR30",
+      "25SR31",
+      "25SR32",
+      "25SR33",
+      "25SR34"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 14,
+    "pages": [
+      27,
+      28
+    ],
+    "precinctCodes": [
+      "25ER01",
+      "25PA06",
+      "25PA07",
+      "25PA08",
+      "25PA09",
+      "25PA10",
+      "25PA11",
+      "25PA12",
+      "25PA13",
+      "25PA14",
+      "25SE17",
+      "25SE19",
+      "25SL01",
+      "25SW07"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 15,
+    "pages": [
+      29,
+      30
+    ],
+    "precinctCodes": [
+      "25ER02",
+      "25ER03",
+      "25SE16"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 16,
+    "pages": [
+      31,
+      32
+    ],
+    "precinctCodes": [
+      "25GE01",
+      "25SW01",
+      "25SW11"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 17,
+    "pages": [
+      33,
+      34
+    ],
+    "precinctCodes": [
+      "25GE02",
+      "25GO01",
+      "25SW03",
+      "25SW04",
+      "25SW09"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 18,
+    "pages": [
+      35,
+      36
+    ],
+    "precinctCodes": [
+      "25HI01",
+      "25HI02",
+      "25HI03",
+      "25HI04"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 19,
+    "pages": [
+      37,
+      38
+    ],
+    "precinctCodes": [
+      "25HI05",
+      "25HI06",
+      "25HI07",
+      "25HI08",
+      "25HI09",
+      "25HI10",
+      "25HI11",
+      "25HI12",
+      "25HI13",
+      "25HI14",
+      "25HI15",
+      "25HI17"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 20,
+    "pages": [
+      39,
+      40
+    ],
+    "precinctCodes": [
+      "25HI16"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 21,
+    "pages": [
+      41,
+      42
+    ],
+    "precinctCodes": [
+      "25LE15",
+      "25LE17",
+      "25LE18",
+      "25LE25",
+      "25LE26",
+      "25LE27",
+      "25NW03",
+      "25NW06"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 22,
+    "pages": [
+      43,
+      44
+    ],
+    "precinctCodes": [
+      "25LE16",
+      "25LE23",
+      "25LE28",
+      "25LE29",
+      "25LE30",
+      "25LE31",
+      "25LE32",
+      "25LE33",
+      "25LE34",
+      "25LE35",
+      "25LE36",
+      "25LE37",
+      "25LE38",
+      "25LE40",
+      "25LE41",
+      "25LE42",
+      "25LE43",
+      "25LE44",
+      "25LE51",
+      "25LE52",
+      "25LE53",
+      "25LE56",
+      "25NW11",
+      "25NW17",
+      "25NW18",
+      "25NW24",
+      "25SR16"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 23,
+    "pages": [
+      45,
+      46
+    ],
+    "precinctCodes": [
+      "25LE19",
+      "25LE20",
+      "25LE24",
+      "25LE45",
+      "25LE46",
+      "25LE48",
+      "25LE50",
+      "25NW04",
+      "25SR08"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 24,
+    "pages": [
+      47,
+      48
+    ],
+    "precinctCodes": [
+      "25LE39",
+      "25LE55",
+      "25NW10",
+      "25NW16",
+      "25SR15",
+      "25SR17"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 25,
+    "pages": [
+      49,
+      50
+    ],
+    "precinctCodes": [
+      "25LI01",
+      "25LI02",
+      "25LI03",
+      "25OR54",
+      "25VI04",
+      "25VI05"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 26,
+    "pages": [
+      51,
+      52
+    ],
+    "precinctCodes": [
+      "25LI04",
+      "25LI05"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 27,
+    "pages": [
+      53,
+      54
+    ],
+    "precinctCodes": [
+      "25LI06",
+      "25LI07",
+      "25LI08",
+      "25LI09"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 28,
+    "pages": [
+      55,
+      56
+    ],
+    "precinctCodes": [
+      "25MA01",
+      "25MA02",
+      "25MA03",
+      "25MA04",
+      "25MA05",
+      "25MA06",
+      "25MA07",
+      "25MA08",
+      "25MA09",
+      "25MA10",
+      "25SE03",
+      "25SE06",
+      "25SF04",
+      "25SF05",
+      "25SF06",
+      "25SF11",
+      "25SF12",
+      "25SF13",
+      "25SF18"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 29,
+    "pages": [
+      57,
+      58
+    ],
+    "precinctCodes": [
+      "25NE01"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 30,
+    "pages": [
+      59,
+      60
+    ],
+    "precinctCodes": [
+      "25NE02"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 31,
+    "pages": [
+      61,
+      62
+    ],
+    "precinctCodes": [
+      "25NE03",
+      "25NE05"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 32,
+    "pages": [
+      63,
+      64
+    ],
+    "precinctCodes": [
+      "25NE04",
+      "25NE06",
+      "25NE11",
+      "25NE13",
+      "25OR04",
+      "25OR05",
+      "25OR06",
+      "25OR13",
+      "25OR14",
+      "25OR15",
+      "25OR16",
+      "25OR17",
+      "25OR18",
+      "25OR25",
+      "25OR26",
+      "25OR27",
+      "25OR57",
+      "25PR01"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 33,
+    "pages": [
+      65,
+      66
+    ],
+    "precinctCodes": [
+      "25NE09",
+      "25OR22",
+      "25OR29",
+      "25OR31",
+      "25OR32",
+      "25OR33",
+      "25OR34",
+      "25OR35",
+      "25OR36",
+      "25OR37",
+      "25OR38",
+      "25OR50",
+      "25OR51",
+      "25OR52",
+      "25OR53",
+      "25VI09"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 34,
+    "pages": [
+      67,
+      68
+    ],
+    "precinctCodes": [
+      "25NE10",
+      "25NE16",
+      "25OR43",
+      "25OR44",
+      "25OR45",
+      "25OR46",
+      "25OR47",
+      "25OR48",
+      "25OR49",
+      "25OR59",
+      "25PR18",
+      "25PR19",
+      "25PR20",
+      "25PR21",
+      "25PR22",
+      "25PR23",
+      "25PR24",
+      "25PR25",
+      "25PR26",
+      "25PR40"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 35,
+    "pages": [
+      69,
+      70
+    ],
+    "precinctCodes": [
+      "25NE15",
+      "25OR28",
+      "25OR30",
+      "25OR39",
+      "25OR40",
+      "25OR41",
+      "25OR42",
+      "25PR15"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 36,
+    "pages": [
+      71,
+      72
+    ],
+    "precinctCodes": [
+      "25NE18"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 37,
+    "pages": [
+      73,
+      74
+    ],
+    "precinctCodes": [
+      "25NW07",
+      "25NW08"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 38,
+    "pages": [
+      75,
+      76
+    ],
+    "precinctCodes": [
+      "25NW22"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 39,
+    "pages": [
+      77,
+      78
+    ],
+    "precinctCodes": [
+      "25OR01",
+      "25OR02",
+      "25OR07",
+      "25OR08",
+      "25OR09",
+      "25OR10",
+      "25OR11",
+      "25OR20",
+      "25OR21"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 40,
+    "pages": [
+      79,
+      80
+    ],
+    "precinctCodes": [
+      "25OR03",
+      "25OR23",
+      "25OR24"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 41,
+    "pages": [
+      81,
+      82
+    ],
+    "precinctCodes": [
+      "25OR12",
+      "25OR19"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 42,
+    "pages": [
+      83,
+      84
+    ],
+    "precinctCodes": [
+      "25OR58",
+      "25PR16",
+      "25PR37",
+      "25PR38",
+      "25PR43",
+      "25PR45"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 43,
+    "pages": [
+      85,
+      86
+    ],
+    "precinctCodes": [
+      "25PA01",
+      "25PA02",
+      "25PA03",
+      "25PA04",
+      "25PA05",
+      "25SE11",
+      "25SE18"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 44,
+    "pages": [
+      87,
+      88
+    ],
+    "precinctCodes": [
+      "25PG17",
+      "25PG18",
+      "25PG20"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 45,
+    "pages": [
+      89,
+      90
+    ],
+    "precinctCodes": [
+      "25PG21",
+      "25PG24"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 46,
+    "pages": [
+      91,
+      92
+    ],
+    "precinctCodes": [
+      "25PG22",
+      "25PG23",
+      "25PG25",
+      "25PG26"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 47,
+    "pages": [
+      93,
+      94
+    ],
+    "precinctCodes": [
+      "25PR04",
+      "25PR05",
+      "25PR06",
+      "25PR07",
+      "25PR08",
+      "25PR09",
+      "25PR14"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 48,
+    "pages": [
+      95,
+      96
+    ],
+    "precinctCodes": [
+      "25PR10",
+      "25PR11",
+      "25PR12",
+      "25PR13"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 49,
+    "pages": [
+      97,
+      98
+    ],
+    "precinctCodes": [
+      "25PR17"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 50,
+    "pages": [
+      99,
+      100
+    ],
+    "precinctCodes": [
+      "25PR27",
+      "25PR28"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 51,
+    "pages": [
+      101,
+      102
+    ],
+    "precinctCodes": [
+      "25PR29",
+      "25PR30",
+      "25PR31",
+      "25PR32"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 52,
+    "pages": [
+      103,
+      104
+    ],
+    "precinctCodes": [
+      "25PR33",
+      "25PR34",
+      "25PR35",
+      "25PR36",
+      "25PR47",
+      "25PR48"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 53,
+    "pages": [
+      105,
+      106
+    ],
+    "precinctCodes": [
+      "25PR39",
+      "25PR41",
+      "25PR42",
+      "25PR56",
+      "25PR57",
+      "25PR58",
+      "25UL05",
+      "25UL06",
+      "25UL07"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 54,
+    "pages": [
+      107,
+      108
+    ],
+    "precinctCodes": [
+      "25PR44",
+      "25PR54",
+      "25PR55",
+      "25PR59",
+      "25PR60",
+      "25PR65",
+      "25PR66",
+      "25SE01",
+      "25SF02"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 55,
+    "pages": [
+      109,
+      110
+    ],
+    "precinctCodes": [
+      "25PR46"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 56,
+    "pages": [
+      111,
+      112
+    ],
+    "precinctCodes": [
+      "25PR49",
+      "25PR50",
+      "25PR51",
+      "25PR52",
+      "25PR53",
+      "25PR61",
+      "25PR62",
+      "25PR63",
+      "25PR64"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 57,
+    "pages": [
+      113,
+      114
+    ],
+    "precinctCodes": [
+      "25SA01"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 58,
+    "pages": [
+      115,
+      116
+    ],
+    "precinctCodes": [
+      "25SA02",
+      "25SA04",
+      "25SA05"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 59,
+    "pages": [
+      117,
+      118
+    ],
+    "precinctCodes": [
+      "25SA03"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 60,
+    "pages": [
+      119,
+      120
+    ],
+    "precinctCodes": [
+      "25SA06"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 61,
+    "pages": [
+      121,
+      122
+    ],
+    "precinctCodes": [
+      "25SA07",
+      "25SA08",
+      "25SA09"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 62,
+    "pages": [
+      123,
+      124
+    ],
+    "precinctCodes": [
+      "25SE02"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 63,
+    "pages": [
+      125,
+      126
+    ],
+    "precinctCodes": [
+      "25SE04",
+      "25SE14"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 64,
+    "pages": [
+      127,
+      128
+    ],
+    "precinctCodes": [
+      "25SE07",
+      "25SF17",
+      "25SF30"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 65,
+    "pages": [
+      129,
+      130
+    ],
+    "precinctCodes": [
+      "25SE08",
+      "25SE12",
+      "25SF01",
+      "25SF07",
+      "25SF08",
+      "25SF09",
+      "25SF10",
+      "25SF15",
+      "25SF16",
+      "25SF19",
+      "25SF20",
+      "25SF21",
+      "25SF22",
+      "25SF23",
+      "25SF24",
+      "25SF25",
+      "25SF26"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 66,
+    "pages": [
+      131,
+      132
+    ],
+    "precinctCodes": [
+      "25SE10"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 67,
+    "pages": [
+      133,
+      134
+    ],
+    "precinctCodes": [
+      "25SE13",
+      "25SE21",
+      "25SF27",
+      "25SF28",
+      "25SF29"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 68,
+    "pages": [
+      135,
+      136
+    ],
+    "precinctCodes": [
+      "25SE15",
+      "25SW06",
+      "25WH01"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 69,
+    "pages": [
+      137,
+      138
+    ],
+    "precinctCodes": [
+      "25SE20"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 70,
+    "pages": [
+      139,
+      140
+    ],
+    "precinctCodes": [
+      "25SL02",
+      "25SQ01",
+      "25SQ02",
+      "25SQ03",
+      "25SQ04",
+      "25SQ05",
+      "25SQ06",
+      "25SQ07",
+      "25SQ08",
+      "25SQ09",
+      "25SW08",
+      "25SW13",
+      "25SW14"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 71,
+    "pages": [
+      141,
+      142
+    ],
+    "precinctCodes": [
+      "25SP01",
+      "25SP06",
+      "25SP07",
+      "25SP19",
+      "25SP21"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 72,
+    "pages": [
+      143,
+      144
+    ],
+    "precinctCodes": [
+      "25SP02",
+      "25SP03",
+      "25SP04"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 73,
+    "pages": [
+      145,
+      146
+    ],
+    "precinctCodes": [
+      "25SP05",
+      "25SP08",
+      "25SP09",
+      "25SP10",
+      "25SP11",
+      "25SP12",
+      "25SP13",
+      "25SP14",
+      "25SP16",
+      "25SP18"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 74,
+    "pages": [
+      147,
+      148
+    ],
+    "precinctCodes": [
+      "25SP15",
+      "25SP17",
+      "25SP22",
+      "25SP23",
+      "25SP24"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 75,
+    "pages": [
+      149,
+      150
+    ],
+    "precinctCodes": [
+      "25SP20"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 76,
+    "pages": [
+      151,
+      152
+    ],
+    "precinctCodes": [
+      "25SR01",
+      "25SR02",
+      "25SR03",
+      "25SR04"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 77,
+    "pages": [
+      153,
+      154
+    ],
+    "precinctCodes": [
+      "25SW05"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 78,
+    "pages": [
+      155,
+      156
+    ],
+    "precinctCodes": [
+      "25UL02",
+      "25UL03",
+      "25UL04"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 79,
+    "pages": [
+      157,
+      158
+    ],
+    "precinctCodes": [
+      "25VI01",
+      "25VI02",
+      "25VI03",
+      "25VI06",
+      "25VI07",
+      "25VI08"
+    ],
+    "federalOnly": false
+  },
+  {
+    "style": 80,
+    "pages": [
+      159,
+      160
+    ],
+    "precinctCodes": [
+      "FED301"
+    ],
+    "federalOnly": true
+  },
+  {
+    "style": 81,
+    "pages": [
+      161,
+      162
+    ],
+    "precinctCodes": [
+      "FED401"
+    ],
+    "federalOnly": true
+  }
+]

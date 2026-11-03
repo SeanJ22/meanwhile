@@ -1,0 +1,98 @@
+{
+  "inputs": [
+    {
+      "path": "data/ballot/2026-general/ut.json",
+      "sha256": "d12bb3c5b631647622593c3091dfd050eb510d0deb78cc0f7cd0ff2e5a044528",
+      "contests": 142,
+      "candidacies": 267
+    },
+    {
+      "path": "data/install/cx-local/UT/salt-lake/ballot-input/ut.json",
+      "sha256": "97a4b130d0c1eb554eb2de989ad3ae6373cf23e740f3e3e1f941bf16a91da696",
+      "contests": 40,
+      "candidacies": 55
+    }
+  ],
+  "freshCxVotesSnapshot": {
+    "ref": "79402c8d32e5a7f2daca15219e21ce512de7cfe0",
+    "files": []
+  },
+  "retainedHeldRegionalContestAndCandidateIds": [
+    {
+      "contestId": "ut-general-2026-fourth-district-retention-jared-william-eldridge",
+      "candidateId": "ut-general-2026-fourth-district-retention-jared-william-eldridge-jared-william-eldridge"
+    },
+    {
+      "contestId": "ut-general-2026-fourth-district-retention-kraig-powell",
+      "candidateId": "ut-general-2026-fourth-district-retention-kraig-powell-kraig-powell"
+    },
+    {
+      "contestId": "ut-general-2026-fourth-district-retention-thomas-low",
+      "candidateId": "ut-general-2026-fourth-district-retention-thomas-low-thomas-low"
+    },
+    {
+      "contestId": "ut-general-2026-fourth-district-retention-anthony-leonard-howell",
+      "candidateId": "ut-general-2026-fourth-district-retention-anthony-leonard-howell-anthony-leonard-howell"
+    },
+    {
+      "contestId": "ut-general-2026-fourth-district-retention-douglas-john-nielsen",
+      "candidateId": "ut-general-2026-fourth-district-retention-douglas-john-nielsen-douglas-john-nielsen"
+    }
+  ],
+  "sharedSaltLakeRetentionsAdded": false,
+  "newContestIds": 15,
+  "newCandidateIds": 23,
+  "refreshedHeldContests": 5,
+  "refreshedHeldCandidateIds": 5,
+  "statewideJudicialRetentionsPreserved": [
+    {
+      "printedName": "JILL M. POHLMAN",
+      "heldContestId": "ut-ltgov-2026-retention-jill-m-pohlman",
+      "heldCandidateId": "ut-ltgov-2026-retention-jill-m-pohlman-790687f116b1962c",
+      "sampleOccurrences": 79,
+      "action": "PRESERVE_HELD_UNCHANGED"
+    },
+    {
+      "printedName": "MICHELE M. CHRISTIANSEN FORSTER",
+      "heldContestId": "ut-ltgov-2026-retention-michele-m-christiansen-forster",
+      "heldCandidateId": "ut-ltgov-2026-retention-michele-m-christiansen-forster-54d6c9dd3a3bef78",
+      "sampleOccurrences": 79,
+      "action": "PRESERVE_HELD_UNCHANGED"
+    },
+    {
+      "printedName": "DAVID NED MORTENSEN",
+      "heldContestId": "ut-ltgov-2026-retention-david-ned-mortensen",
+      "heldCandidateId": "ut-ltgov-2026-retention-david-ned-mortensen-3dc3a381063b0107",
+      "sampleOccurrences": 79,
+      "action": "PRESERVE_HELD_UNCHANGED"
+    },
+    {
+      "printedName": "JOHN DAVID LUTHY",
+      "heldContestId": "ut-ltgov-2026-retention-john-david-luthy",
+      "heldCandidateId": "ut-ltgov-2026-retention-john-david-luthy-b2f9d07aa386f8ce",
+      "sampleOccurrences": 79,
+      "action": "PRESERVE_HELD_UNCHANGED"
+    },
+    {
+      "printedName": "RYAN M. HARRIS",
+      "heldContestId": "ut-ltgov-2026-retention-ryan-m-harris",
+      "heldCandidateId": "ut-ltgov-2026-retention-ryan-m-harris-7e5b7dcd31dd44bd",
+      "sampleOccurrences": 79,
+      "action": "PRESERVE_HELD_UNCHANGED"
+    },
+    {
+      "printedName": "AMY JO OLIVER",
+      "heldContestId": "ut-ltgov-2026-retention-amy-jo-oliver",
+      "heldCandidateId": "ut-ltgov-2026-retention-amy-jo-oliver-0ae229dc07ffc473",
+      "sampleOccurrences": 79,
+      "action": "PRESERVE_HELD_UNCHANGED"
+    },
+    {
+      "printedName": "GREGORY KEITH ORME",
+      "heldContestId": "ut-ltgov-2026-retention-gregory-keith-orme",
+      "heldCandidateId": "ut-ltgov-2026-retention-gregory-keith-orme-c00bf425564d217f",
+      "sampleOccurrences": 79,
+      "action": "PRESERVE_HELD_UNCHANGED"
+    }
+  ]
+}

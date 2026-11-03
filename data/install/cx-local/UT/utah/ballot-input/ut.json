@@ -1,0 +1,915 @@
+{
+  "ballots": {
+    "UT:ut-2026-11-03-general": {
+      "election": {
+        "id": "ut-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "UT"
+      },
+      "contests": [
+        {
+          "id": "ut-cx-local-2026-utah-county-commission-seat-a",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:utah",
+          "divisionVintage": "2026",
+          "title": "Utah County — County Commission Seat A",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "County Commission Seat A\nVote for One\nJEANNE MARIE BOWEN\nDEM\nMICHELLE KAUFUSI\nREP\nJACOB D. OAKS\nIAP"
+          },
+          "scopeNote": "Complete current printed ordinary choices; school seats are distinct voter electorates, not countywide residency seats. County offices use the whole county electorate. No generic write-in person or cancellation inferred."
+        },
+        {
+          "id": "ut-cx-local-2026-utah-county-commission-seat-b",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:utah",
+          "divisionVintage": "2026",
+          "title": "Utah County — County Commission Seat B",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "County Commission Seat B\nVote for One\nJ. ALLEN\nDEM\nDAVID M. SPENCER\nREP\nDAVID HINCKLEY\nFWD"
+          },
+          "scopeNote": "Complete current printed ordinary choices; school seats are distinct voter electorates, not countywide residency seats. County offices use the whole county electorate. No generic write-in person or cancellation inferred."
+        },
+        {
+          "id": "ut-cx-local-2026-utah-county-attorney",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:utah",
+          "divisionVintage": "2026",
+          "title": "Utah County — County Attorney",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "County Attorney\nVote for One\nJEFF GRAY\nREP"
+          },
+          "scopeNote": "Complete current printed ordinary choices; school seats are distinct voter electorates, not countywide residency seats. County offices use the whole county electorate. No generic write-in person or cancellation inferred."
+        },
+        {
+          "id": "ut-cx-local-2026-utah-county-auditor",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:utah",
+          "divisionVintage": "2026",
+          "title": "Utah County — County Auditor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "County Auditor\nVote for One\nGINA TANNER\nREP\nHANS V. ANDERSEN\nIAP"
+          },
+          "scopeNote": "Complete current printed ordinary choices; school seats are distinct voter electorates, not countywide residency seats. County offices use the whole county electorate. No generic write-in person or cancellation inferred."
+        },
+        {
+          "id": "ut-cx-local-2026-utah-county-clerk",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:utah",
+          "divisionVintage": "2026",
+          "title": "Utah County — County Clerk",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "County Clerk\nVote for One\nCOREY K ASTILL\nREP\nRUSS J RAMPTON\nFWD"
+          },
+          "scopeNote": "Complete current printed ordinary choices; school seats are distinct voter electorates, not countywide residency seats. County offices use the whole county electorate. No generic write-in person or cancellation inferred."
+        },
+        {
+          "id": "ut-cx-local-2026-utah-county-sheriff",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:utah",
+          "divisionVintage": "2026",
+          "title": "Utah County — County Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "County Sheriff\nVote for One\nMIKE SMITH\nREP"
+          },
+          "scopeNote": "Complete current printed ordinary choices; school seats are distinct voter electorates, not countywide residency seats. County offices use the whole county electorate. No generic write-in person or cancellation inferred."
+        },
+        {
+          "id": "ut-general-2026-fourth-district-retention-jared-william-eldridge",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "Fourth Judicial District — District Court — JARED WILLIAM ELDRIDGE — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact held Fourth Judicial District identity retained, including its Juab, Millard, Utah and Wasatch electorate and four held whole-county links.",
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "Shall JARED WILLIAM ELDRIDGE be\nretained in the office of Judge of the\nDistrict Court of the Fourth Judicial\nDistrict?\nYES\nNO"
+          }
+        },
+        {
+          "id": "ut-general-2026-fourth-district-retention-kraig-powell",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "Fourth Judicial District — District Court — KRAIG POWELL — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact held Fourth Judicial District identity retained, including its Juab, Millard, Utah and Wasatch electorate and four held whole-county links.",
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "Shall KRAIG POWELL be retained in\nthe office of Judge of the District Court\nof the Fourth Judicial District?\nYES\nNO"
+          }
+        },
+        {
+          "id": "ut-general-2026-fourth-district-retention-thomas-low",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "Fourth Judicial District — District Court — THOMAS LOW — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact held Fourth Judicial District identity retained, including its Juab, Millard, Utah and Wasatch electorate and four held whole-county links.",
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "Shall THOMAS LOW be retained in the\noffice of Judge of the District Court of\nthe Fourth Judicial District?\nYES\nNO"
+          }
+        },
+        {
+          "id": "ut-general-2026-fourth-district-retention-anthony-leonard-howell",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "Fourth Judicial District — District Court — ANTHONY LEONARD HOWELL — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact held Fourth Judicial District identity retained, including its Juab, Millard, Utah and Wasatch electorate and four held whole-county links.",
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "Shall ANTHONY LEONARD HOWELL\nbe retained in the office of Judge of the\nDistrict Court of the Fourth Judicial\nDistrict?\nYES\nNO"
+          }
+        },
+        {
+          "id": "ut-general-2026-fourth-district-retention-douglas-john-nielsen",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "Fourth Judicial District — Juvenile Court — DOUGLAS JOHN NIELSEN — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact held Fourth Judicial District identity retained, including its Juab, Millard, Utah and Wasatch electorate and four held whole-county links.",
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "Shall DOUGLAS JOHN NIELSEN be\nretained in the office of Judge of the\nJuvenile Court of the Fourth Juvenile\nCourt District?\nYES\nNO"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-utah-county-justice-court-retention-kelton-shawn-patten",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:utah",
+          "divisionVintage": "2026",
+          "title": "Utah County Justice Court — KELTON SHAWN PATTEN — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "Shall KELTON SHAWN PATTEN be\nretained in the office of Judge of the\nUtah County Justice Court?\nYES\nNO"
+          },
+          "scopeNote": "Countywide voter electorate independently shown in all79 ordinary styles and consistent with current20A-12-201(7)(a)."
+        },
+        {
+          "id": "ut-cx-local-2026-nebo-school-board-district-4",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:nebo_school_district/board_district:4",
+          "divisionVintage": "2026",
+          "title": "Nebo School District — Board of Education District 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "School Board Nebo 4\nVote for One\nPERRY C. EWELL\nRICK B. AINGE"
+          },
+          "scopeNote": "Complete current printed ordinary choices; school seats are distinct voter electorates, not countywide residency seats. County offices use the whole county electorate. No generic write-in person or cancellation inferred."
+        },
+        {
+          "id": "ut-cx-local-2026-nebo-school-board-district-2",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:nebo_school_district/board_district:2",
+          "divisionVintage": "2026",
+          "title": "Nebo School District — Board of Education District 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "School Board Nebo 2\nVote for One\nJOSEPH EARNEST\nSCOTT P. CARD"
+          },
+          "scopeNote": "Complete current printed ordinary choices; school seats are distinct voter electorates, not countywide residency seats. County offices use the whole county electorate. No generic write-in person or cancellation inferred."
+        },
+        {
+          "id": "ut-cx-local-2026-provo-school-board-district-1",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:provo_school_district/board_district:1",
+          "divisionVintage": "2026",
+          "title": "Provo School District — Board of Education District 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "School Board Provo 1\nVote for One\nLISA BOYCE"
+          },
+          "scopeNote": "Complete current printed ordinary choices; school seats are distinct voter electorates, not countywide residency seats. County offices use the whole county electorate. No generic write-in person or cancellation inferred."
+        },
+        {
+          "id": "ut-cx-local-2026-provo-school-board-district-2",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:provo_school_district/board_district:2",
+          "divisionVintage": "2026",
+          "title": "Provo School District — Board of Education District 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "School Board Provo 2\nVote for One\nMELANIE HALL"
+          },
+          "scopeNote": "Complete current printed ordinary choices; school seats are distinct voter electorates, not countywide residency seats. County offices use the whole county electorate. No generic write-in person or cancellation inferred."
+        },
+        {
+          "id": "ut-cx-local-2026-provo-school-board-district-3",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:provo_school_district/board_district:3",
+          "divisionVintage": "2026",
+          "title": "Provo School District — Board of Education District 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "School Board Provo 3\nVote for One\nMEGAN VAN WAGENEN"
+          },
+          "scopeNote": "Complete current printed ordinary choices; school seats are distinct voter electorates, not countywide residency seats. County offices use the whole county electorate. No generic write-in person or cancellation inferred."
+        },
+        {
+          "id": "ut-cx-local-2026-provo-school-board-district-4",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:provo_school_district/board_district:4",
+          "divisionVintage": "2026",
+          "title": "Provo School District — Board of Education District 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "School Board Provo 4\nVote for One\nJENNIFER PARTRIDGE"
+          },
+          "scopeNote": "Complete current printed ordinary choices; school seats are distinct voter electorates, not countywide residency seats. County offices use the whole county electorate. No generic write-in person or cancellation inferred."
+        },
+        {
+          "id": "ut-cx-local-2026-nebo-school-board-district-5",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:nebo_school_district/board_district:5",
+          "divisionVintage": "2026",
+          "title": "Nebo School District — Board of Education District 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "School Board Nebo 5\nVote for One\nSHANNON M. ACOR"
+          },
+          "scopeNote": "Complete current printed ordinary choices; school seats are distinct voter electorates, not countywide residency seats. County offices use the whole county electorate. No generic write-in person or cancellation inferred."
+        },
+        {
+          "id": "ut-cx-local-2026-springville-municipal-justice-court-retention-eric-stephen-jewell",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/place:springville",
+          "divisionVintage": "2026",
+          "title": "Springville Municipal Justice Court — ERIC STEPHEN JEWELL — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "Shall ERIC STEPHEN JEWELL be\nretained in the office of Judge of the\nSpringville Municipal Justice Court?\nYES\nNO"
+          },
+          "scopeNote": "Printed only on the five styles whose24 precinct codes equal every current GIS precinct assigned to Springville City. Exact Springville municipal voter electorate."
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ut-cx-local-2026-utah-county-commission-seat-a-jeanne-marie-bowen",
+          "contestId": "ut-cx-local-2026-utah-county-commission-seat-a",
+          "givenName": "",
+          "familyName": "JEANNE MARIE BOWEN",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "JEANNE MARIE BOWEN"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-utah-county-commission-seat-a-michelle-kaufusi",
+          "contestId": "ut-cx-local-2026-utah-county-commission-seat-a",
+          "givenName": "",
+          "familyName": "MICHELLE KAUFUSI",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "MICHELLE KAUFUSI"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-utah-county-commission-seat-a-jacob-d-oaks",
+          "contestId": "ut-cx-local-2026-utah-county-commission-seat-a",
+          "givenName": "",
+          "familyName": "JACOB D. OAKS",
+          "partyLabel": "Independent American",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "JACOB D. OAKS"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-utah-county-commission-seat-b-j-allen",
+          "contestId": "ut-cx-local-2026-utah-county-commission-seat-b",
+          "givenName": "",
+          "familyName": "J. ALLEN",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "J. ALLEN"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-utah-county-commission-seat-b-david-m-spencer",
+          "contestId": "ut-cx-local-2026-utah-county-commission-seat-b",
+          "givenName": "",
+          "familyName": "DAVID M. SPENCER",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "DAVID M. SPENCER"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-utah-county-commission-seat-b-david-hinckley",
+          "contestId": "ut-cx-local-2026-utah-county-commission-seat-b",
+          "givenName": "",
+          "familyName": "DAVID HINCKLEY",
+          "partyLabel": "Forward",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "DAVID HINCKLEY"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-utah-county-attorney-jeff-gray",
+          "contestId": "ut-cx-local-2026-utah-county-attorney",
+          "givenName": "",
+          "familyName": "JEFF GRAY",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "JEFF GRAY"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-utah-county-auditor-gina-tanner",
+          "contestId": "ut-cx-local-2026-utah-county-auditor",
+          "givenName": "",
+          "familyName": "GINA TANNER",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "GINA TANNER"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-utah-county-auditor-hans-v-andersen",
+          "contestId": "ut-cx-local-2026-utah-county-auditor",
+          "givenName": "",
+          "familyName": "HANS V. ANDERSEN",
+          "partyLabel": "Independent American",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "HANS V. ANDERSEN"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-utah-county-clerk-corey-k-astill",
+          "contestId": "ut-cx-local-2026-utah-county-clerk",
+          "givenName": "",
+          "familyName": "COREY K ASTILL",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "COREY K ASTILL"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-utah-county-clerk-russ-j-rampton",
+          "contestId": "ut-cx-local-2026-utah-county-clerk",
+          "givenName": "",
+          "familyName": "RUSS J RAMPTON",
+          "partyLabel": "Forward",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "RUSS J RAMPTON"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-utah-county-sheriff-mike-smith",
+          "contestId": "ut-cx-local-2026-utah-county-sheriff",
+          "givenName": "",
+          "familyName": "MIKE SMITH",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "MIKE SMITH"
+          }
+        },
+        {
+          "id": "ut-general-2026-fourth-district-retention-jared-william-eldridge-jared-william-eldridge",
+          "contestId": "ut-general-2026-fourth-district-retention-jared-william-eldridge",
+          "familyName": "JARED WILLIAM ELDRIDGE",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "JARED WILLIAM ELDRIDGE"
+          }
+        },
+        {
+          "id": "ut-general-2026-fourth-district-retention-kraig-powell-kraig-powell",
+          "contestId": "ut-general-2026-fourth-district-retention-kraig-powell",
+          "familyName": "KRAIG POWELL",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "KRAIG POWELL"
+          }
+        },
+        {
+          "id": "ut-general-2026-fourth-district-retention-thomas-low-thomas-low",
+          "contestId": "ut-general-2026-fourth-district-retention-thomas-low",
+          "familyName": "THOMAS LOW",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "THOMAS LOW"
+          }
+        },
+        {
+          "id": "ut-general-2026-fourth-district-retention-anthony-leonard-howell-anthony-leonard-howell",
+          "contestId": "ut-general-2026-fourth-district-retention-anthony-leonard-howell",
+          "familyName": "ANTHONY LEONARD HOWELL",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "ANTHONY LEONARD HOWELL"
+          }
+        },
+        {
+          "id": "ut-general-2026-fourth-district-retention-douglas-john-nielsen-douglas-john-nielsen",
+          "contestId": "ut-general-2026-fourth-district-retention-douglas-john-nielsen",
+          "familyName": "DOUGLAS JOHN NIELSEN",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "DOUGLAS JOHN NIELSEN"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-utah-county-justice-court-retention-kelton-shawn-patten-kelton-shawn-patten",
+          "contestId": "ut-cx-local-2026-utah-county-justice-court-retention-kelton-shawn-patten",
+          "givenName": "",
+          "familyName": "KELTON SHAWN PATTEN",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "KELTON SHAWN PATTEN"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-nebo-school-board-district-4-perry-c-ewell",
+          "contestId": "ut-cx-local-2026-nebo-school-board-district-4",
+          "givenName": "",
+          "familyName": "PERRY C. EWELL",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "PERRY C. EWELL"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-nebo-school-board-district-4-rick-b-ainge",
+          "contestId": "ut-cx-local-2026-nebo-school-board-district-4",
+          "givenName": "",
+          "familyName": "RICK B. AINGE",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "RICK B. AINGE"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-nebo-school-board-district-2-joseph-earnest",
+          "contestId": "ut-cx-local-2026-nebo-school-board-district-2",
+          "givenName": "",
+          "familyName": "JOSEPH EARNEST",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "JOSEPH EARNEST"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-nebo-school-board-district-2-scott-p-card",
+          "contestId": "ut-cx-local-2026-nebo-school-board-district-2",
+          "givenName": "",
+          "familyName": "SCOTT P. CARD",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "SCOTT P. CARD"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-provo-school-board-district-1-lisa-boyce",
+          "contestId": "ut-cx-local-2026-provo-school-board-district-1",
+          "givenName": "",
+          "familyName": "LISA BOYCE",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "LISA BOYCE"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-provo-school-board-district-2-melanie-hall",
+          "contestId": "ut-cx-local-2026-provo-school-board-district-2",
+          "givenName": "",
+          "familyName": "MELANIE HALL",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "MELANIE HALL"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-provo-school-board-district-3-megan-van-wagenen",
+          "contestId": "ut-cx-local-2026-provo-school-board-district-3",
+          "givenName": "",
+          "familyName": "MEGAN VAN WAGENEN",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "MEGAN VAN WAGENEN"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-provo-school-board-district-4-jennifer-partridge",
+          "contestId": "ut-cx-local-2026-provo-school-board-district-4",
+          "givenName": "",
+          "familyName": "JENNIFER PARTRIDGE",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "JENNIFER PARTRIDGE"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-nebo-school-board-district-5-shannon-m-acor",
+          "contestId": "ut-cx-local-2026-nebo-school-board-district-5",
+          "givenName": "",
+          "familyName": "SHANNON M. ACOR",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "SHANNON M. ACOR"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-springville-municipal-justice-court-retention-eric-stephen-jewell-eric-stephen-jewell",
+          "contestId": "ut-cx-local-2026-springville-municipal-justice-court-retention-eric-stephen-jewell",
+          "givenName": "",
+          "familyName": "ERIC STEPHEN JEWELL",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+            "sourceOrg": "Utah County Clerk",
+            "collectedAt": "2026-11-03T08:45:30.066132+00:00",
+            "verifiedAt": "2026-11-03T08:58:43.434886+00:00",
+            "quote": "ERIC STEPHEN JEWELL"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "districtMemberships": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:58:43.434886+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+        "finalUrl": "https://vote.utahcounty.gov/api/media/file/2026%20Sample%20Ballots.PDF",
+        "publisher": "Utah County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "cf28e34fde3fcef9d3904110708c979686e0303619c3804a9c3f17d36592da76",
+        "retrievedAt": "2026-11-03T08:45:30.066132+00:00",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current county homepage direct link to162-page complete current general sample.81 two-page styles:79 ordinary and2 federal-only. Official corrected PMN attachment is byte-identical. Every local ordinary printed block and all retention blocks parsed; Kelly Highland/Alpine withheld from installable input due unresolved scope contradiction."
+      },
+      {
+        "requestedUrl": "https://www.utah.gov/pmn/files/1493069.PDF",
+        "finalUrl": "https://www.utah.gov/pmn/files/1493069.PDF",
+        "publisher": "Utah County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "cf28e34fde3fcef9d3904110708c979686e0303619c3804a9c3f17d36592da76",
+        "retrievedAt": "2026-11-03T08:49:08.271081+00:00",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official September24 amended sample notice attachment, byte-identical to current county homepage sample. Exact complete field evidence."
+      },
+      {
+        "requestedUrl": "https://www.utah.gov/pmn/files/1483311.pdf",
+        "finalUrl": "https://www.utah.gov/pmn/files/1483311.pdf",
+        "publisher": "Utah County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "fa79132fde105bb491e2df610ffb9fa3ac242bb3e9fbe357b42caf4eb8e59cf7",
+        "retrievedAt": "2026-11-03T08:49:11.395917+00:00",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official county certification first page independently lists all13 local ordinary offices and21 names with matching parties. Remaining scanned pages preserved as original bytes; no home addresses quoted."
+      }
+    ]
+  }
+}

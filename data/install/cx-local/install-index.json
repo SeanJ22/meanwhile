@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T09:05:23.274599+00:00",
+  "preparedAt": "2026-11-03T09:06:53.669725+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -2102,6 +2102,47 @@
         "Revere current election page links native10page bilingual PDF stampedDRAFT. Its4local names corroborate Winthrop; draft status is preserved and never represented as finalized specimen. Separate old2025OnMyBallot download rejected for2026. Chelsea municipal native/reader challenge and Boston municipal populated specimen remain acquisition gaps; no entire county/municipal local completeness claim.",
         "Candidate-only packet. OriginalWinthrop3specimen pages and Revere10page draft retain statewide/local questions as evidence; held question/legislative/explanatory fields untouched. Separate named qualified-writein certification not acquired; no absence asserted, no cancellation/withdrawal/declared-elected status inferred from one-name blocks. No git or production operation."
       ]
+    },
+    {
+      "state": "UT",
+      "county": "Utah County",
+      "populationRank": 88,
+      "manifest": "UT/utah/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 20,
+      "measureContests": 0,
+      "candidacies": 28,
+      "newContests": 15,
+      "refreshedContests": 5,
+      "sourceInputSha256": "55b328460750a41e2f40224405d8ac5b659a9437aca847b2704a39a6fe9d048f",
+      "coverage": {
+        "coverage": "COMPLETE_CURRENT_ORDINARY_LOCAL_NAMED_UNION_PLUS_SEVEN_READY_LOCAL_RETENTIONS_ONE_SCOPE_PENDING",
+        "countyComplete": false,
+        "nativeCompositePages": 162,
+        "publishedStyles": 81,
+        "ordinaryStyles": 79,
+        "federalOnlyStyles": 2,
+        "localOrdinaryOffices": 13,
+        "ordinaryPrintedNames": 21,
+        "localRetentionNamesPrinted": 8,
+        "installableLocalRetentions": 7,
+        "pendingLocalRetentions": 1,
+        "installableContests": 20,
+        "installableCandidacies": 28,
+        "schoolSampleGISParity": "PASS_ALL7",
+        "nativeCorrectedOriginalByteEquality": "PASS",
+        "statewideJudicialRetentionsPreserved": 7,
+        "limits": [
+          "20 ready local fields /28 names installed as input; one further printed local retention, Kelly N. Schaeffer-Bullock, is preserved as source-only pending conflicting voter-scope evidence. County-complete reader coverage is not claimed.",
+          "No justice-court electorate widened from a town/court name. Kelton Patten countywide scope is confirmed in all79 ordinary styles. Springville scope exactly matches all24 current Springville GIS precincts.",
+          "Fourth Judicial District exact held identities and four-county memberships preserved; no duplicate regional or statewide IDs.",
+          "Seven school board district OCDs need River registry/reader joins; full official native source polygons and exact precinct parity supplied.",
+          "Qualified local write-in name roster and actual cancellation/declared-elected orders not acquired. No generic write-in candidate, absence, removal, withdrawal or zero-eligibility claim created.",
+          "Existing statewide, federal, legislative, judicial statewide retention and ballot measures preserved unchanged. Salem Proposition8 and constitutional measure texts are ancillary native sample evidence outside incoming payload.",
+          "Cross-county Draper sample discrepancy kept source-only; no correction to Salt Lake packet or full-city electorate inferred.",
+          "No production, app, git, voter identity lookup or sign-in operations. River owns installation and reader checks."
+        ]
+      }
     }
   ],
   "sourceReviewCounties": [
@@ -2156,17 +2197,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 82,
-    "packetsPrepared": 83,
-    "candidateAndRetentionContests": 4123,
+    "countiesPrepared": 83,
+    "packetsPrepared": 84,
+    "candidateAndRetentionContests": 4143,
     "measureContests": 115,
-    "candidacyEntries": 9320,
-    "newContestEntriesAgainstCheckedInBaseline": 3464,
-    "distinctPreparedContestIds": 4144,
-    "distinctPreparedCandidateIds": 9135,
-    "distinctNewContestsAgainstCheckedInBaseline": 3418,
+    "candidacyEntries": 9348,
+    "newContestEntriesAgainstCheckedInBaseline": 3479,
+    "distinctPreparedContestIds": 4164,
+    "distinctPreparedCandidateIds": 9163,
+    "distinctNewContestsAgainstCheckedInBaseline": 3433,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 84
+    "distinctCountyHandoffs": 85
   },
   "remainingWork": [
     {

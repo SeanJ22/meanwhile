@@ -1,0 +1,150 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-fresno-j",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:coalinga",
+          "title": "Coalinga sales tax extension — Measure J",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Fresno County Clerk/Registrar of Voters",
+            "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/coalinga-sales-tax/resolution-no.-4337_redacted.pdf",
+            "collectedAt": "2026-11-03T09:52:31.560249+00:00",
+            "verifiedAt": "2026-11-03T09:58:10.158800+00:00",
+            "quote": "Shall the measure for The City of Coalinga that seeks to extend its general-purpose, one-cent sales tax, Measure J, which is expected to generate $2,000,000 annually, representing approximately 25% of the City's General Fund revenues, with annual citizen review and independent audits to April 1, 2039 be adopted?"
+          },
+          "measureTextUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/coalinga-sales-tax/exhibit-a_redacted.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-fresno-j-text",
+          "contestId": "ca-2026-fresno-j",
+          "officialNumber": "Measure J",
+          "questionText": "Shall the measure for The City of Coalinga that seeks to extend its general-purpose, one-cent sales tax, Measure J, which is expected to generate $2,000,000 annually, representing approximately 25% of the City's General Fund revenues, with annual citizen review and independent audits to April 1, 2039 be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Fresno County Clerk/Registrar of Voters",
+            "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/coalinga-sales-tax/resolution-no.-4337_redacted.pdf",
+            "collectedAt": "2026-11-03T09:52:31.560249+00:00",
+            "verifiedAt": "2026-11-03T09:58:10.158800+00:00",
+            "quote": "Shall the measure for The City of Coalinga that seeks to extend its general-purpose, one-cent sales tax, Measure J, which is expected to generate $2,000,000 annually, representing approximately 25% of the City's General Fund revenues, with annual citizen review and independent audits to April 1, 2039 be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Extends Coalinga’s existing 1% local sales tax from its current April 1, 2029 expiration to April 1, 2039. The rate stays the same, and the money remains available for any lawful City general-fund purpose.",
+          "yesMeans": "Keep the existing one-cent-per-dollar tax until April 1, 2039, with citizen advisory review, revenue and spending reports, and annual independent audits.",
+          "noMeans": "Do not approve this extension; the existing tax remains scheduled to expire April 1, 2029.",
+          "contestId": "ca-2026-fresno-j",
+          "parts": [
+            {
+              "id": "ca-2026-fresno-j#amount",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Rate and revenue estimate",
+              "what": "The measure keeps the existing 1% rate rather than adding another percentage point. The City estimates about $2 million a year, approximately 25% of its general-fund revenues. These are estimates, not guaranteed collections."
+            },
+            {
+              "id": "ca-2026-fresno-j#uses",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "General City services",
+              "what": "Proceeds stay in Coalinga’s general fund and may support any lawful general-fund purpose. Police, fire and other services are examples, not binding spending earmarks."
+            },
+            {
+              "id": "ca-2026-fresno-j#oversight",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Citizen review and public reports",
+              "what": "In the first quarter of each budget year, the City must advertise for a citizens’ advisory committee to review priorities and recommend how to use revenue. It must publish quarterly collection reports and an annual spending report. Independent auditors must report tax receipts and spending by December 31 each year."
+            },
+            {
+              "id": "ca-2026-fresno-j#approval",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Approval and effective date",
+              "what": "A majority of votes cast on Measure J must approve it. The amendment takes effect 30 days after County election certification. The tax’s new expiration is April 1, 2039."
+            }
+          ],
+          "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/coalinga-sales-tax/exhibit-a_redacted.pdf",
+          "sourceHash": "5145a1d1166ea35fccba9296459802a2c966b09bbc253e18e3c4593163d41bd3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:58:10.158800+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:58:10.158800+00:00",
+    "reviewedBy": "CX-VOTES current Fresno official source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election",
+        "finalUrl": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election",
+        "httpStatus": 200,
+        "rawHash": "4bebce1ec5f55b0f783263909e0afeeeabcc387f488f4afd09b072d6e36abfd1",
+        "retrievedAt": "2026-11-03T09:50:35.448457+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official election inventory"
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/3/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press/26-08-12-fresno-county-measure-letter-assignments-for-november-2026-amended.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/3/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press/26-08-12-fresno-county-measure-letter-assignments-for-november-2026-amended.pdf",
+        "httpStatus": 200,
+        "rawHash": "f60c8f84772377222fb4934ada6e7b4410289716165a44f095b9a49998cea87f",
+        "retrievedAt": "2026-11-03T09:51:13.425713+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current amended nine-measure designation list"
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/coalinga-sales-tax/exhibit-a_redacted.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/coalinga-sales-tax/exhibit-a_redacted.pdf",
+        "httpStatus": 200,
+        "rawHash": "5145a1d1166ea35fccba9296459802a2c966b09bbc253e18e3c4593163d41bd3",
+        "retrievedAt": "2026-11-03T09:52:32.305642+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official filed neutral analysis, fiscal statement, calling resolution or operative voter ordinance; no submitted arguments."
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/coalinga-sales-tax/resolution-no.-4337_redacted.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/coalinga-sales-tax/resolution-no.-4337_redacted.pdf",
+        "httpStatus": 200,
+        "rawHash": "c04766ae58c27522b50fd99b861284d2cbe6a567e86aec1e2ff48a595ca7312e",
+        "retrievedAt": "2026-11-03T09:52:31.560249+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official filed neutral analysis, fiscal statement, calling resolution or operative voter ordinance; no submitted arguments."
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/coalinga-sales-tax/filed-impartial-analysis_redacted.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/coalinga-sales-tax/filed-impartial-analysis_redacted.pdf",
+        "httpStatus": 200,
+        "rawHash": "58369ee79de9690398cda5eac626e90c54ef63cd5f882f3c4e958cde234602e0",
+        "retrievedAt": "2026-11-03T09:51:12.085081+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official filed neutral analysis, fiscal statement, calling resolution or operative voter ordinance; no submitted arguments."
+      }
+    ]
+  }
+}

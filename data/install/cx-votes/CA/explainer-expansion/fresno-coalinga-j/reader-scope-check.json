@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-11-03T09:58:44.326Z",
+  "status": "PASS",
+  "exactDivisionReaderSelection": "PASS",
+  "outsideSelectionsExcluded": "PASS",
+  "scope": "CoalingaJ exactcityelectorate.",
+  "checks": [
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:coalinga",
+      "contests": [
+        "ca-2026-fresno-j"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/county:fresno",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:fresno",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:sanger",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:fowler",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:orange_cove",
+      "contests": [],
+      "status": "PASS"
+    }
+  ],
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

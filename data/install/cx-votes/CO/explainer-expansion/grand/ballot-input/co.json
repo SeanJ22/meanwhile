@@ -1,0 +1,282 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-hot-sulphur-springs-2026-ballot-2a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:hot_sulphur_springs",
+          "divisionVintage": "2026",
+          "title": "Town of Hot Sulphur Springs Ballot Question 2A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL TOWN OF HOT SULPHUR SPRINGS TAXES BE INCREASED ANNUALLY BY $200,000 IN THE FIRST FULL FISCAL YEAR OF COLLECTION COMMENCING JANUARY 1, 2027, AND BY WHATEVER AMOUNT IS RAISED ANNUALLY THEREAFTER, BY THE IMPOSITION OF A FOUR PERCENT (4.0%) USE TAX ON THE PRIVILEGE OF STORING, USING, OR CONSUMING ANY CONSTRUCTION AND BUILDING MATERIALS IN THE TOWN, GENERALLY TO BE COLLECTED AT THE TIME A BUILDING PERMIT IS ISSUED, SUCH USE TAX REVENUES TO BE APPROPRIATED AND SPENT FOR ANY MUNICIPAL PURPOSE, IN ACCORDANCE WITH SUCH TERMS, CONDITIONS, AND POLICIES AS MAY BE ADOPTED BY THE BOARD OF TRUSTEES, ALL IN ACCORDANCE WITH ORDINANCE NO. 2026-08-20-430; AND SHALL ALL REVENUES FROM SUCH TAXES AND ANY EARNINGS THEREON BE COLLECTED, RETAINED AND SPENT AS A VOTER-APPROVED REVENUE CHANGE WITHOUT LIMITATION OR CONDITION CONTAINED IN ARTICLE X SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Grand County Clerk and Recorder",
+            "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+            "collectedAt": "2026-11-03T07:33:19.010129+00:00",
+            "verifiedAt": "2026-11-03T07:57:29.851757+00:00"
+          }
+        },
+        {
+          "id": "co-grand-county-library-district-2026-ballot-6b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:grand_county_library_district",
+          "divisionVintage": "2026",
+          "title": "Grand County Library District Ballot Issue 6B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "WITH NO INCREASE IN ANY DISTRICT TAX, SHALL THE GRAND COUNTY LIBRARY DISTRICT'S EXPIRING AD VALOREM PROPERTY TAX MILL LEVY IMPOSED AT A RATE NOT TO EXCEED 0.95 MILLS BE EXTENDED WITHOUT EXPIRATION, FOR A TOTAL CONTINUING MILL LEVY OF 3.36 MILLS, FOR THE PURPOSES OF OPERATING, MAINTAINING AND IMPROVING LIBRARY FACILITIES AND LIBRARY SERVICES; AND SHALL SUCH TAX PROCEEDS BE COLLECTED AND SPENT BY THE DISTRICT AS VOTER APPROVED REVENUE AND SPENDING CHANGES IN EACH YEAR, WITHOUT REGARD TO ANY SPENDING OR REVENUE LIMITATION CONTAINED IN ANY COLORADO LAW INCLUDING THE COLORADO CONSTITUTION AND COLORADO REVISED STATUTES?",
+            "sourceOrg": "Grand County Clerk and Recorder",
+            "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+            "collectedAt": "2026-11-03T07:33:19.010129+00:00",
+            "verifiedAt": "2026-11-03T07:57:29.851757+00:00"
+          }
+        },
+        {
+          "id": "co-grand-county-library-district-2026-ballot-6c",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:grand_county_library_district",
+          "divisionVintage": "2026",
+          "title": "Grand County Library District Ballot Issue 6C",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE GRAND COUNTY LIBRARY DISTRICT WAIVE THE 5.25% PROPERTY TAX LIMIT FOR ALL FUTURE PROPERTY TAX YEARS, AS PERMITTED BY SEC. 29-1-1704(1), C.R.S., WITHOUT ANY INCREASE IN ANY DISTRICT TAX RATE, TO CONTINUE TO SUPPORT INCREASED DEMAND FOR LIBRARY SERVICES?",
+            "sourceOrg": "Grand County Clerk and Recorder",
+            "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+            "collectedAt": "2026-11-03T07:33:19.010129+00:00",
+            "verifiedAt": "2026-11-03T07:57:29.851757+00:00"
+          }
+        },
+        {
+          "id": "co-east-grand-fire-protection-district-4-2026-ballot-6d",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:east_grand_fire_protection_district_4",
+          "divisionVintage": "2026",
+          "title": "East Grand County Fire Protection District No. 4 Ballot Issue 6D",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.co.grand.co.us/DocumentCenter/View/30990/Ballot-Style-006-07-SAMPLE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL EAST GRAND COUNTY FIRE PROTECTION DISTRICT NO. 4 TAXES BE INCREASED BY $875,000 ANNUALLY COMMENCING ON JANUARY 1, 2027, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, FROM A 0.28 PERCENT SALES TAX ON SALES AND INCIDENTS TAXED BY THE STATE, FOR THE PURPOSE OF MAINTAINING HIGH LEVELS OF FIRE AND EMERGENCY SERVICES, INCLUDING RECRUITING VOLUNTEER AND PAID FIREFIGHTERS, AND REINFORCING REVENUE SOURCES FOR WILDFIRE MITIGATION, COMMUNITY EDUCATION, EMERGENCY RESPONSE CAPABILITY AND NECESSARY FIREFIGHTER EQUIPMENT ACQUISITION AND UPKEEP, SUCH SALES TAX TO BE IN ADDITION TO ALL OTHER TAXES LEVIED BY THE DISTRICT AND NOT TO SUPPLANT ANY FUNDING THAT THE DISTRICT VOTERS PREVIOUSLY AUTHORIZED OR WHICH IT IS ENTITLED TO RECEIVE BY LAW?",
+            "sourceOrg": "Grand County Clerk and Recorder",
+            "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30990/Ballot-Style-006-07-SAMPLE",
+            "collectedAt": "2026-11-03T07:33:18.585532+00:00",
+            "verifiedAt": "2026-11-03T07:57:29.851757+00:00"
+          }
+        },
+        {
+          "id": "co-east-grand-fire-protection-district-4-2026-ballot-6e",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:east_grand_fire_protection_district_4",
+          "divisionVintage": "2026",
+          "title": "East Grand County Fire Protection District No. 4 Ballot Issue 6E",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.co.grand.co.us/DocumentCenter/View/30990/Ballot-Style-006-07-SAMPLE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE EAST GRAND COUNTY FIRE PROTECTION DISTRICT NO. 4 WAIVE THE 5.25% PROPERTY TAX LIMIT (10.5% LIMIT FOR THE TWO-YEAR ASSESSMENT PERIOD) ESTABLISHED IN SECTION 29-1-1702, C.R.S., FOR THE PROPERTY TAX YEAR COMMENCING JANUARY 1, 2026 AND ALL FUTURE PROPERTY TAX YEARS?",
+            "sourceOrg": "Grand County Clerk and Recorder",
+            "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30990/Ballot-Style-006-07-SAMPLE",
+            "collectedAt": "2026-11-03T07:33:18.585532+00:00",
+            "verifiedAt": "2026-11-03T07:57:29.851757+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-hot-sulphur-springs-2026-ballot-2a#question",
+          "contestId": "co-hot-sulphur-springs-2026-ballot-2a",
+          "officialNumber": "2A",
+          "questionText": "SHALL TOWN OF HOT SULPHUR SPRINGS TAXES BE INCREASED ANNUALLY BY $200,000 IN THE FIRST FULL FISCAL YEAR OF COLLECTION COMMENCING JANUARY 1, 2027, AND BY WHATEVER AMOUNT IS RAISED ANNUALLY THEREAFTER, BY THE IMPOSITION OF A FOUR PERCENT (4.0%) USE TAX ON THE PRIVILEGE OF STORING, USING, OR CONSUMING ANY CONSTRUCTION AND BUILDING MATERIALS IN THE TOWN, GENERALLY TO BE COLLECTED AT THE TIME A BUILDING PERMIT IS ISSUED, SUCH USE TAX REVENUES TO BE APPROPRIATED AND SPENT FOR ANY MUNICIPAL PURPOSE, IN ACCORDANCE WITH SUCH TERMS, CONDITIONS, AND POLICIES AS MAY BE ADOPTED BY THE BOARD OF TRUSTEES, ALL IN ACCORDANCE WITH ORDINANCE NO. 2026-08-20-430; AND SHALL ALL REVENUES FROM SUCH TAXES AND ANY EARNINGS THEREON BE COLLECTED, RETAINED AND SPENT AS A VOTER-APPROVED REVENUE CHANGE WITHOUT LIMITATION OR CONDITION CONTAINED IN ARTICLE X SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL TOWN OF HOT SULPHUR SPRINGS TAXES BE INCREASED ANNUALLY BY $200,000 IN THE FIRST FULL FISCAL YEAR OF COLLECTION COMMENCING JANUARY 1, 2027, AND BY WHATEVER AMOUNT IS RAISED ANNUALLY THEREAFTER, BY THE IMPOSITION OF A FOUR PERCENT (4.0%) USE TAX ON THE PRIVILEGE OF STORING, USING, OR CONSUMING ANY CONSTRUCTION AND BUILDING MATERIALS IN THE TOWN, GENERALLY TO BE COLLECTED AT THE TIME A BUILDING PERMIT IS ISSUED, SUCH USE TAX REVENUES TO BE APPROPRIATED AND SPENT FOR ANY MUNICIPAL PURPOSE, IN ACCORDANCE WITH SUCH TERMS, CONDITIONS, AND POLICIES AS MAY BE ADOPTED BY THE BOARD OF TRUSTEES, ALL IN ACCORDANCE WITH ORDINANCE NO. 2026-08-20-430; AND SHALL ALL REVENUES FROM SUCH TAXES AND ANY EARNINGS THEREON BE COLLECTED, RETAINED AND SPENT AS A VOTER-APPROVED REVENUE CHANGE WITHOUT LIMITATION OR CONDITION CONTAINED IN ARTICLE X SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Grand County Clerk and Recorder",
+            "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+            "collectedAt": "2026-11-03T07:33:19.010129+00:00",
+            "verifiedAt": "2026-11-03T07:57:29.851757+00:00"
+          }
+        },
+        {
+          "id": "co-grand-county-library-district-2026-ballot-6b#question",
+          "contestId": "co-grand-county-library-district-2026-ballot-6b",
+          "officialNumber": "6B",
+          "questionText": "WITH NO INCREASE IN ANY DISTRICT TAX, SHALL THE GRAND COUNTY LIBRARY DISTRICT'S EXPIRING AD VALOREM PROPERTY TAX MILL LEVY IMPOSED AT A RATE NOT TO EXCEED 0.95 MILLS BE EXTENDED WITHOUT EXPIRATION, FOR A TOTAL CONTINUING MILL LEVY OF 3.36 MILLS, FOR THE PURPOSES OF OPERATING, MAINTAINING AND IMPROVING LIBRARY FACILITIES AND LIBRARY SERVICES; AND SHALL SUCH TAX PROCEEDS BE COLLECTED AND SPENT BY THE DISTRICT AS VOTER APPROVED REVENUE AND SPENDING CHANGES IN EACH YEAR, WITHOUT REGARD TO ANY SPENDING OR REVENUE LIMITATION CONTAINED IN ANY COLORADO LAW INCLUDING THE COLORADO CONSTITUTION AND COLORADO REVISED STATUTES?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "WITH NO INCREASE IN ANY DISTRICT TAX, SHALL THE GRAND COUNTY LIBRARY DISTRICT'S EXPIRING AD VALOREM PROPERTY TAX MILL LEVY IMPOSED AT A RATE NOT TO EXCEED 0.95 MILLS BE EXTENDED WITHOUT EXPIRATION, FOR A TOTAL CONTINUING MILL LEVY OF 3.36 MILLS, FOR THE PURPOSES OF OPERATING, MAINTAINING AND IMPROVING LIBRARY FACILITIES AND LIBRARY SERVICES; AND SHALL SUCH TAX PROCEEDS BE COLLECTED AND SPENT BY THE DISTRICT AS VOTER APPROVED REVENUE AND SPENDING CHANGES IN EACH YEAR, WITHOUT REGARD TO ANY SPENDING OR REVENUE LIMITATION CONTAINED IN ANY COLORADO LAW INCLUDING THE COLORADO CONSTITUTION AND COLORADO REVISED STATUTES?",
+            "sourceOrg": "Grand County Clerk and Recorder",
+            "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+            "collectedAt": "2026-11-03T07:33:19.010129+00:00",
+            "verifiedAt": "2026-11-03T07:57:29.851757+00:00"
+          }
+        },
+        {
+          "id": "co-grand-county-library-district-2026-ballot-6c#question",
+          "contestId": "co-grand-county-library-district-2026-ballot-6c",
+          "officialNumber": "6C",
+          "questionText": "SHALL THE GRAND COUNTY LIBRARY DISTRICT WAIVE THE 5.25% PROPERTY TAX LIMIT FOR ALL FUTURE PROPERTY TAX YEARS, AS PERMITTED BY SEC. 29-1-1704(1), C.R.S., WITHOUT ANY INCREASE IN ANY DISTRICT TAX RATE, TO CONTINUE TO SUPPORT INCREASED DEMAND FOR LIBRARY SERVICES?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE GRAND COUNTY LIBRARY DISTRICT WAIVE THE 5.25% PROPERTY TAX LIMIT FOR ALL FUTURE PROPERTY TAX YEARS, AS PERMITTED BY SEC. 29-1-1704(1), C.R.S., WITHOUT ANY INCREASE IN ANY DISTRICT TAX RATE, TO CONTINUE TO SUPPORT INCREASED DEMAND FOR LIBRARY SERVICES?",
+            "sourceOrg": "Grand County Clerk and Recorder",
+            "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+            "collectedAt": "2026-11-03T07:33:19.010129+00:00",
+            "verifiedAt": "2026-11-03T07:57:29.851757+00:00"
+          }
+        },
+        {
+          "id": "co-east-grand-fire-protection-district-4-2026-ballot-6d#question",
+          "contestId": "co-east-grand-fire-protection-district-4-2026-ballot-6d",
+          "officialNumber": "6D",
+          "questionText": "SHALL EAST GRAND COUNTY FIRE PROTECTION DISTRICT NO. 4 TAXES BE INCREASED BY $875,000 ANNUALLY COMMENCING ON JANUARY 1, 2027, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, FROM A 0.28 PERCENT SALES TAX ON SALES AND INCIDENTS TAXED BY THE STATE, FOR THE PURPOSE OF MAINTAINING HIGH LEVELS OF FIRE AND EMERGENCY SERVICES, INCLUDING RECRUITING VOLUNTEER AND PAID FIREFIGHTERS, AND REINFORCING REVENUE SOURCES FOR WILDFIRE MITIGATION, COMMUNITY EDUCATION, EMERGENCY RESPONSE CAPABILITY AND NECESSARY FIREFIGHTER EQUIPMENT ACQUISITION AND UPKEEP, SUCH SALES TAX TO BE IN ADDITION TO ALL OTHER TAXES LEVIED BY THE DISTRICT AND NOT TO SUPPLANT ANY FUNDING THAT THE DISTRICT VOTERS PREVIOUSLY AUTHORIZED OR WHICH IT IS ENTITLED TO RECEIVE BY LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL EAST GRAND COUNTY FIRE PROTECTION DISTRICT NO. 4 TAXES BE INCREASED BY $875,000 ANNUALLY COMMENCING ON JANUARY 1, 2027, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, FROM A 0.28 PERCENT SALES TAX ON SALES AND INCIDENTS TAXED BY THE STATE, FOR THE PURPOSE OF MAINTAINING HIGH LEVELS OF FIRE AND EMERGENCY SERVICES, INCLUDING RECRUITING VOLUNTEER AND PAID FIREFIGHTERS, AND REINFORCING REVENUE SOURCES FOR WILDFIRE MITIGATION, COMMUNITY EDUCATION, EMERGENCY RESPONSE CAPABILITY AND NECESSARY FIREFIGHTER EQUIPMENT ACQUISITION AND UPKEEP, SUCH SALES TAX TO BE IN ADDITION TO ALL OTHER TAXES LEVIED BY THE DISTRICT AND NOT TO SUPPLANT ANY FUNDING THAT THE DISTRICT VOTERS PREVIOUSLY AUTHORIZED OR WHICH IT IS ENTITLED TO RECEIVE BY LAW?",
+            "sourceOrg": "Grand County Clerk and Recorder",
+            "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30990/Ballot-Style-006-07-SAMPLE",
+            "collectedAt": "2026-11-03T07:33:18.585532+00:00",
+            "verifiedAt": "2026-11-03T07:57:29.851757+00:00"
+          }
+        },
+        {
+          "id": "co-east-grand-fire-protection-district-4-2026-ballot-6e#question",
+          "contestId": "co-east-grand-fire-protection-district-4-2026-ballot-6e",
+          "officialNumber": "6E",
+          "questionText": "SHALL THE EAST GRAND COUNTY FIRE PROTECTION DISTRICT NO. 4 WAIVE THE 5.25% PROPERTY TAX LIMIT (10.5% LIMIT FOR THE TWO-YEAR ASSESSMENT PERIOD) ESTABLISHED IN SECTION 29-1-1702, C.R.S., FOR THE PROPERTY TAX YEAR COMMENCING JANUARY 1, 2026 AND ALL FUTURE PROPERTY TAX YEARS?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE EAST GRAND COUNTY FIRE PROTECTION DISTRICT NO. 4 WAIVE THE 5.25% PROPERTY TAX LIMIT (10.5% LIMIT FOR THE TWO-YEAR ASSESSMENT PERIOD) ESTABLISHED IN SECTION 29-1-1702, C.R.S., FOR THE PROPERTY TAX YEAR COMMENCING JANUARY 1, 2026 AND ALL FUTURE PROPERTY TAX YEARS?",
+            "sourceOrg": "Grand County Clerk and Recorder",
+            "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30990/Ballot-Style-006-07-SAMPLE",
+            "collectedAt": "2026-11-03T07:33:18.585532+00:00",
+            "verifiedAt": "2026-11-03T07:57:29.851757+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-hot-sulphur-springs-2026-ballot-2a",
+          "whatItDoes": "Create a 4% use tax on storing, using or consuming construction and building materials in town, generally collected when a building permit is issued. It would begin January 1, 2027, authorizing $200,000 in the first full collection year and whatever it raises later, with no stated end date. Money could pay for any town purpose under terms and policies set by the town board in accordance with Ordinance 2026-08-20-430. The tax and its earnings could be collected, retained and spent outside the stated constitutional and other legal revenue limits.",
+          "yesMeans": "Approve the construction-materials use tax and its proposed revenue-limit exception.",
+          "noMeans": "Do not approve this use tax or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+          "sourceHash": "b8ee5cf37506520737083f293d141a9c8391bef68cb5f8de92bb655a738ab7e6",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:57:29.851757+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-grand-county-library-district-2026-ballot-6b",
+          "whatItDoes": "Continue the library district’s expiring property-tax levy of up to 0.95 mills without a new expiration date, for a total ongoing district levy of 3.36 mills. Money would operate, maintain and improve library facilities and services. The question proposes continuing the levy without a district-tax increase and allows its revenue to be collected and spent every year outside Colorado constitutional and statutory revenue and spending limits.",
+          "yesMeans": "Extend the expiring library levy indefinitely and approve its revenue and spending limit exceptions.",
+          "noMeans": "Do not extend this expiring levy or approve its proposed limit exceptions through this measure.",
+          "parts": [],
+          "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+          "sourceHash": "b8ee5cf37506520737083f293d141a9c8391bef68cb5f8de92bb655a738ab7e6",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:57:29.851757+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-grand-county-library-district-2026-ballot-6c",
+          "whatItDoes": "Waive the library district’s 5.25% property-tax growth limit for all future property-tax years to support library services. This question would not increase any district tax rate.",
+          "yesMeans": "Approve the property-tax growth-limit waiver without changing the district’s tax rates through this question.",
+          "noMeans": "Do not approve this property-tax growth-limit waiver.",
+          "parts": [],
+          "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+          "sourceHash": "b8ee5cf37506520737083f293d141a9c8391bef68cb5f8de92bb655a738ab7e6",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:57:29.851757+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-east-grand-fire-protection-district-4-2026-ballot-6d",
+          "whatItDoes": "Create a 0.28% sales tax on sales and other transactions taxed by the state, beginning January 1, 2027. The question authorizes $875,000 annually and whatever additional amounts the tax raises later, with no stated end date. Money would pay for fire and emergency services, including recruiting volunteer and paid firefighters, wildfire prevention, community education, emergency-response capacity and firefighter equipment. The tax would be additional to other district taxes and could not replace funding previously approved by voters or funding the district is legally entitled to receive.",
+          "yesMeans": "Approve the additional sales tax for the stated district fire and emergency services.",
+          "noMeans": "Do not approve this additional sales tax.",
+          "parts": [],
+          "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30990/Ballot-Style-006-07-SAMPLE",
+          "sourceHash": "5d4d9c7d65597d4d668d076112d85df52c8d91b4c36ec26a1d47e3c971bd341f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:57:29.851757+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-east-grand-fire-protection-district-4-2026-ballot-6e",
+          "whatItDoes": "Waive the district’s 5.25% property-tax growth limit, stated as 10.5% over a two-year assessment period, for the property-tax year beginning January 1, 2026 and all future property-tax years. The question states no new tax rate.",
+          "yesMeans": "Approve the property-tax growth-limit waiver for 2026 and future property-tax years.",
+          "noMeans": "Do not approve this property-tax growth-limit waiver.",
+          "parts": [],
+          "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30990/Ballot-Style-006-07-SAMPLE",
+          "sourceHash": "5d4d9c7d65597d4d668d076112d85df52c8d91b4c36ec26a1d47e3c971bd341f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:57:29.851757+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:57:29.851757+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+        "finalUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+        "publisher": "Grand County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:33:19.010129+00:00",
+        "httpStatus": 200,
+        "rawHash": "b8ee5cf37506520737083f293d141a9c8391bef68cb5f8de92bb655a738ab7e6",
+        "reviewedEvidence": "Complete original currentNovember3,2026 county samples and TABOR notice. All24sample styles checked for a seven-question local union. Five new full questions attached to exact existing town, library and fire-district divisions. One fire waiver remains source-ready pending exact district scope. Existing school question cross-referenced without duplication. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://www.co.grand.co.us/DocumentCenter/View/30990/Ballot-Style-006-07-SAMPLE",
+        "finalUrl": "https://www.co.grand.co.us/DocumentCenter/View/30990/Ballot-Style-006-07-SAMPLE",
+        "publisher": "Grand County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:33:18.585532+00:00",
+        "httpStatus": 200,
+        "rawHash": "5d4d9c7d65597d4d668d076112d85df52c8d91b4c36ec26a1d47e3c971bd341f",
+        "reviewedEvidence": "Complete original currentNovember3,2026 county samples and TABOR notice. All24sample styles checked for a seven-question local union. Five new full questions attached to exact existing town, library and fire-district divisions. One fire waiver remains source-ready pending exact district scope. Existing school question cross-referenced without duplication. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://www.co.grand.co.us/DocumentCenter/View/31043",
+        "finalUrl": "https://www.co.grand.co.us/DocumentCenter/View/31043/Grand-County-2026-Tabor-Notice?bidId=",
+        "publisher": "Grand County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:32:36.368609+00:00",
+        "httpStatus": 200,
+        "rawHash": "afbf41e18df74aa12027560ccda9f340b16197355b5c44d346dbb57c3e756e09",
+        "reviewedEvidence": "Complete original currentNovember3,2026 county samples and TABOR notice. All24sample styles checked for a seven-question local union. Five new full questions attached to exact existing town, library and fire-district divisions. One fire waiver remains source-ready pending exact district scope. Existing school question cross-referenced without duplication. No advocacy used."
+      }
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "county": "Teller",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 1,
+  "newPendingExactTerritoryCount": 0,
+  "officialCompositeLocalMeasureCount": 6,
+  "crossReferencedCoverage": "Completes the charter gap listed in ../teller/pending-official-text.json; together with Teller4and existingGreenMountainFalls3A,the source union remains six questions, not seven.",
+  "sourceCaveats": [
+    "Full charter is supplied by the official city’s May6,2026 meeting packet with Resolution2026-15; next official packet contains approval minutes. Teller’s current sample labels the adopted proposal2A.",
+    "Government-domain linking evidence identifies the city’s .com publisher. Bounded native text captures are explicitly distinguished from original PDF bytes."
+  ],
+  "limits": "This one charter question completes the known six-question Teller sample union; not statewide local completeness."
+}

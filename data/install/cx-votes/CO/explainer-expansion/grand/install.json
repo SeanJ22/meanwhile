@@ -1,0 +1,39 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-hot-sulphur-springs-2026-ballot-2a",
+      "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE"
+    },
+    {
+      "id": "co-grand-county-library-district-2026-ballot-6b",
+      "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE"
+    },
+    {
+      "id": "co-grand-county-library-district-2026-ballot-6c",
+      "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE"
+    },
+    {
+      "id": "co-east-grand-fire-protection-district-4-2026-ballot-6d",
+      "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30990/Ballot-Style-006-07-SAMPLE"
+    },
+    {
+      "id": "co-east-grand-fire-protection-district-4-2026-ballot-6e",
+      "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30990/Ballot-Style-006-07-SAMPLE"
+    }
+  ],
+  "operation": "Merge only these 5 new measure-only contests, questions and explainers. Preserve unrelated ballot data. No candidates, polling, app, production or external-model writes.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

@@ -1,0 +1,39 @@
+[
+  {
+    "requestedUrl": "https://www.cityofcripplecreek.com/media/4726",
+    "retrievedAt": "2026-11-03T07:33:50.093052+00:00",
+    "finalUrl": "https://www.cityofcripplecreek.com/media/4726",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "c06279af458debf587207ff41a41ef1c1ffc5c0c6b26bbf770b6799fb64b8848",
+    "bytes": 1910050,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "cripple-may6-packet.pdf",
+    "documentDescription": "Official May6,2026 council meeting packet,75pages, including proposed charter and Resolution2026-15",
+    "sourceOrg": "City of Cripple Creek",
+    "savedFile": "sources/c06279af458debf587207ff41a41ef1c1ffc5c0c6b26bbf770b6799fb64b8848.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "633f4fb34dbfe7a37a39f54a536b84ef7efa666b6e1e36a335e0ecd150c9ad98",
+    "storedBytes": 1857635,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes.",
+    "publisherAuthority": "publisher-authority.json"
+  },
+  {
+    "requestedUrl": "https://www.tellercounty.gov/DocumentCenter/View/5213/Sample-Ballot-to-Include-City-of-Cripple-Creek-Question-PDF",
+    "retrievedAt": "2026-11-03T07:22:26.200463+00:00",
+    "finalUrl": "https://www.tellercounty.gov/DocumentCenter/View/5213/Sample-Ballot-to-Include-City-of-Cripple-Creek-Question-PDF",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "b871ed410914a25a2b25d9c1fc049f8cba689db9b34541b6387f463be0495632",
+    "bytes": 348752,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "teller-style-5.pdf",
+    "sourceOrg": "Teller County Clerk and Recorder",
+    "savedFile": "sources/b871ed410914a25a2b25d9c1fc049f8cba689db9b34541b6387f463be0495632.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "d78b3ff50290ffcee46174418961908537b63bb5155bc72a17fe941757c11dc1",
+    "storedBytes": 180400,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes.",
+    "publisherAuthority": "../teller/publisher-authority.json"
+  }
+]

@@ -1,0 +1,125 @@
+{
+  "captures": [
+    {
+      "requestedUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "retrievedAt": "2026-11-03T06:26:41.712128+00:00",
+      "finalUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "sha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "bytes": 46150,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "co-sos-county-offices.html",
+      "savedFile": "sources/co-sos-county-offices.sanitized.html",
+      "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "sanitization": {
+        "originalSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.co.grand.co.us/147/Elections",
+      "retrievedAt": "2026-11-03T07:31:33.102517+00:00",
+      "finalUrl": "https://www.co.grand.co.us/147/Elections",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "db9241778f0741777c75337abbd29585b7224e7db159d752b5ddd54dab191102",
+      "bytes": 98416,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "grand-elections-index.html",
+      "savedFile": "sources/grand-elections-index.sanitized.html",
+      "savedSha256": "bc2e23b2658a8f550e3cfec0070f051e0c3b89bcef0ee00e5a4ddbefa90b119b",
+      "sanitization": {
+        "originalSha256": "db9241778f0741777c75337abbd29585b7224e7db159d752b5ddd54dab191102",
+        "savedSha256": "bc2e23b2658a8f550e3cfec0070f051e0c3b89bcef0ee00e5a4ddbefa90b119b",
+        "replacements": 1,
+        "redactions": [
+          {
+            "classId": "google_api_key",
+            "fingerprint": "142ea3c41e7c",
+            "length": 39,
+            "line": 388,
+            "occurrences": 1,
+            "confirmed": true
+          }
+        ],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.co.grand.co.us/1591/2026-General-Election-Sample-Ballots",
+      "retrievedAt": "2026-11-03T07:32:36.363480+00:00",
+      "finalUrl": "https://www.co.grand.co.us/1591/2026-General-Election-Sample-Ballots",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "1caa32e5d69af31357769a7afcb6b3938cbbc4df575dfc89af6ee7d3a93f2e42",
+      "bytes": 95430,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "grand-samples-index.html",
+      "savedFile": "sources/grand-samples-index.sanitized.html",
+      "savedSha256": "353993ef17ca0884047a43bdffc97047bcaadea4a0e7516b1c2039c6a4fc2c03",
+      "sanitization": {
+        "originalSha256": "1caa32e5d69af31357769a7afcb6b3938cbbc4df575dfc89af6ee7d3a93f2e42",
+        "savedSha256": "353993ef17ca0884047a43bdffc97047bcaadea4a0e7516b1c2039c6a4fc2c03",
+        "replacements": 1,
+        "redactions": [
+          {
+            "classId": "google_api_key",
+            "fingerprint": "142ea3c41e7c",
+            "length": 39,
+            "line": 389,
+            "occurrences": 1,
+            "confirmed": true
+          }
+        ],
+        "preserved": []
+      }
+    }
+  ],
+  "chain": [
+    {
+      "from": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "linkText": "Grand",
+      "to": "https://www.co.grand.co.us/147/Elections"
+    },
+    {
+      "from": "https://www.co.grand.co.us/147/Elections",
+      "links": [
+        "https://www.co.grand.co.us/1591/2026-General-Election-Sample-Ballots",
+        "https://www.co.grand.co.us/DocumentCenter/View/31043"
+      ]
+    },
+    {
+      "from": "https://www.co.grand.co.us/1591/2026-General-Election-Sample-Ballots",
+      "links": [
+        "https://www.co.grand.co.us/DocumentCenter/View/30983/Ballot-Style-001-01-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/30984/Ballot-Style-002-01-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/30985/Ballot-Style-002-02-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/30986/Ballot-Style-003-01-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/30987/Ballot-Style-003-02-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/30988/Ballot-Style-004-03-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/30989/Ballot-Style-005-03-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/30990/Ballot-Style-006-07-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/30991/Ballot-Style-007-07-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/30992/Ballot-Style-007-08-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/30993/Ballot-Style-008-01-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/30994/Ballot-Style-008-03-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/30995/Ballot-Style-008-04-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/30997/Ballot-Style-008-06-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/30998/Ballot-Style-009-06-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/30999/Ballot-Style-009-07-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/31000/Ballot-Style-009-08-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/31001/Ballot-Style-010-01-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/31002/Ballot-Style-011-01-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/31003/Ballot-Style-011-07-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/31004/Ballot-Style-012-01-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/31005/Ballot-Style-012-07-SAMPLE",
+        "https://www.co.grand.co.us/DocumentCenter/View/31006/State-Ballot-SAMPLE"
+      ]
+    }
+  ]
+}

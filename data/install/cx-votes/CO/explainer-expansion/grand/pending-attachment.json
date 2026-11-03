@@ -1,0 +1,24 @@
+[
+  {
+    "contestId": "co-hot-sulphur-springs-parshall-fire-protection-district-2026-ballot-6a",
+    "title": "Hot Sulphur Springs–Parshall Fire Protection District Ballot Question 6A",
+    "officialNumber": "6A",
+    "ocdId": null,
+    "attachment": "UNRESOLVED_EXACT_EXISTING_DISTRICT_DIVISION",
+    "scopeNote": "Hot Sulphur Springs–Parshall Fire Protection District only. No exact district division found locally. The town, ParshallCDP,GrandCounty and GrandFireProtectionDistrict1 cannot substitute; official exact district territory and government match required.",
+    "questionText": "Shall Hot Sulphur Springs - Parshall Fire Protection District waive the 5.25% property tax limit for all future property tax years?",
+    "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+    "measureRecord": {
+      "contestId": "co-hot-sulphur-springs-parshall-fire-protection-district-2026-ballot-6a",
+      "whatItDoes": "Waive the district’s 5.25% property-tax growth limit for all future property-tax years. The question states no new tax rate or specific start year.",
+      "yesMeans": "Approve the district’s property-tax growth-limit waiver.",
+      "noMeans": "Do not approve this property-tax growth-limit waiver.",
+      "parts": [],
+      "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+      "sourceHash": "b8ee5cf37506520737083f293d141a9c8391bef68cb5f8de92bb655a738ab7e6",
+      "sourceHashKind": "CAPTURE_BYTES",
+      "writtenAt": "2026-11-03T07:57:29.921728+00:00",
+      "citation": "measure-source"
+    }
+  }
+]

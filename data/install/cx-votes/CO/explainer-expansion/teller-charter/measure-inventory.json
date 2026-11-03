@@ -1,0 +1,16 @@
+[
+  {
+    "contestId": "co-cripple-creek-2026-ballot-2a",
+    "officialTitle": "City of Cripple Creek Ballot Question 2A",
+    "officialNumber": "2A",
+    "ocdId": "ocd-division/country:us/state:co/place:cripple_creek",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:cripple_creek",
+      "place",
+      "0818530",
+      "Cripple Creek city"
+    ],
+    "sourceUrl": "https://www.cityofcripplecreek.com/media/4726",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

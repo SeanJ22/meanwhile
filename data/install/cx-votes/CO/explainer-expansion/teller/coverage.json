@@ -5,7 +5,7 @@
   "newPendingExactTerritoryCount": 0,
   "officialCompositeLocalMeasureCount": 6,
   "currentBallotStylesChecked": 6,
-  "newPendingOfficialTextCount": 1,
+  "newPendingOfficialTextCount": 0,
   "crossCountyExistingMeasures": [
     {
       "contestId": "co-green-mountain-falls-2026-ballot-3a",
@@ -14,8 +14,16 @@
     }
   ],
   "sourceCaveats": [
-    "Six current official styles contain six local questions: these four complete new tax explanations, existingGreenMountainFalls3A,andCrippleCreek2Aadopting an entire proposed charter. The charter’s full official text is being acquired before its material provisions are summarized.",
+    "Six current official styles contain six local questions: the four tax explanations in this packet, existing Green Mountain Falls 3A, and Cripple Creek 2A adopting the complete proposed charter, now prepared in the separate teller-charter packet. These questions are not duplicated.",
     "RainbowValley6B is conditional on approval of6A; question-year and fiscal-year starts differ and are preserved."
   ],
-  "limits": "Current official six-style Teller sample union only; CrippleCreek full-charter explanation still pending, not a complete county claim."
+  "limits": "Current official six-style Teller sample union only. All six known questions are prepared across the referenced packets; root independent review and River installation remain. Not statewide local completeness.",
+  "resolvedOfficialTextMeasures": [
+    {
+      "contestId": "co-cripple-creek-2026-ballot-2a",
+      "packet": "../teller-charter/ballot-input/co.json",
+      "status": "PREPARED_FOR_ROOT_REVIEW",
+      "doNotDuplicateContest": true
+    }
+  ]
 }

@@ -1,0 +1,163 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-cripple-creek-2026-ballot-2a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:cripple_creek",
+          "divisionVintage": "2026",
+          "title": "City of Cripple Creek Ballot Question 2A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.cityofcripplecreek.com/media/4726",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall the proposed home rule charter for the City of Cripple Creek be adopted?",
+            "sourceOrg": "Teller County Clerk and Recorder",
+            "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5213/Sample-Ballot-to-Include-City-of-Cripple-Creek-Question-PDF",
+            "collectedAt": "2026-11-03T07:22:26.200463+00:00",
+            "verifiedAt": "2026-11-03T07:52:04.425741+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-cripple-creek-2026-ballot-2a#question",
+          "contestId": "co-cripple-creek-2026-ballot-2a",
+          "officialNumber": "2A",
+          "questionText": "Shall the proposed home rule charter for the City of Cripple Creek be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall the proposed home rule charter for the City of Cripple Creek be adopted?",
+            "sourceOrg": "Teller County Clerk and Recorder",
+            "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5213/Sample-Ballot-to-Include-City-of-Cripple-Creek-Question-PDF",
+            "collectedAt": "2026-11-03T07:22:26.200463+00:00",
+            "verifiedAt": "2026-11-03T07:52:04.425741+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-cripple-creek-2026-ballot-2a",
+          "whatItDoes": "Adopt a home rule charter, the city’s basic rulebook for local government. It would establish a council-manager government and the city’s local self-government powers within the state and federal constitutions. It sets rules for elections, public meetings, citizen petitions, budgets, taxes, borrowing, utilities, ethics and the transition to the charter. The main provisions are described below.",
+          "yesMeans": "Adopt the proposed home rule charter for Cripple Creek.",
+          "noMeans": "Do not adopt the proposed home rule charter through this question.",
+          "parts": [
+            {
+              "id": "co-cripple-creek-2026-ballot-2a#council-elections",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Council and elections",
+              "what": "The council would have four members, two elected from each of two wards, and a mayor elected citywide with a council vote. Full terms would last four years, with council terms staggered within each ward. The mayor and council members would be limited to two successive four-year terms; partial terms would not count. Regular nonpartisan city elections would be in November of odd-numbered years."
+            },
+            {
+              "id": "co-cripple-creek-2026-ballot-2a#appointments",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Appointed officials",
+              "what": "Appointing or removing the city manager or city attorney would require two-thirds of the full five-member council, meaning at least four votes. Municipal judges would also be appointed by that threshold and could be removed by it only for the stated legal grounds. The manager would run city administration, supervise staff and prepare the budget; council members would deal with subordinate employees through the manager or city attorney."
+            },
+            {
+              "id": "co-cripple-creek-2026-ballot-2a#open-government",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Public meetings and ethics",
+              "what": "Council meetings would be public with an opportunity to speak, normally with at least 24 hours’ notice. Closed sessions would need a two-thirds vote of members present and a legally permitted purpose; final actions would remain public. Public records would be available under state law. Officials with conflicts of interest would have to disclose them, avoid formal action and closed-session participation, and refrain from influencing the decision. Confidential city information could not be used for private gain."
+            },
+            {
+              "id": "co-cripple-creek-2026-ballot-2a#petitions",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Citizen initiatives and referendums",
+              "what": "Initiative and referendum petitions would require signatures from at least 5% of the city’s registered voters, counted when the clerk approves the petition form. Initiative signatures must be collected within 90 days after that approval. Referendums would exclude budget, capital-program, appropriation, tax-levy, special-election, pay and employment-term ordinances, and emergency ordinances. A timely referendum on a utility or other franchise would still be allowed even if the ordinance declares an emergency. Initiated or referred ordinance changes and charter amendments would have to address one subject."
+            },
+            {
+              "id": "co-cripple-creek-2026-ballot-2a#citizen-votes",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Protection of citizen votes",
+              "what": "The council could not substantially change or repeal a voter-initiated ordinance for six months after its election. During the next six months, that would require two-thirds of the full council. An ordinance rejected in a referendum could not be substantially readopted for six months."
+            },
+            {
+              "id": "co-cripple-creek-2026-ballot-2a#recall",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Recall petitions",
+              "what": "An initial recall petition would need eligible signatures equal to at least 25% of all votes cast for that office when the official was elected. Council-member petitions would be signed by voters of that ward; mayoral petitions by city voters. After one recall petition and election in the same term, another petition would require 50% of that vote total. No recall would be accepted if the office would be filled at a regular city election within 90 days. Other city or statewide elections within 90 days would be combined with the recall as the charter specifies."
+            },
+            {
+              "id": "co-cripple-creek-2026-ballot-2a#finance",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Budgets, taxes and borrowing",
+              "what": "The city would hold a public hearing each year on its budget and five-year capital program and obtain an annual independent financial audit available for public inspection. Taxes and borrowing would be authorized by ordinance within state constitutional limits, including applicable voter-approval requirements. The council could choose the form and terms of borrowing within those limits. The charter itself states no new tax rate or borrowing amount."
+            },
+            {
+              "id": "co-cripple-creek-2026-ballot-2a#utilities",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "City utilities and franchises",
+              "what": "Utility rates would be set to cover service, debt, refunds, improvements, a reasonable return on city investment, administrative overhead and an amount the council considers equivalent to a franchise fee or utility occupation tax, subject to utility-bond agreements. Utility accounts would be separate; loans to other city accounts would require council approval, a specified term and interest. Franchises could last no more than 15 years and remain subject to a timely referendum."
+            },
+            {
+              "id": "co-cripple-creek-2026-ballot-2a#park-land",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "City park land",
+              "what": "Transferring ownership of land the city owns and uses for parks would require approval of city voters at a regular or special election."
+            },
+            {
+              "id": "co-cripple-creek-2026-ballot-2a#transition",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "When it takes effect",
+              "what": "The charter would take effect after voter approval when filed and recorded with Colorado’s secretary of state. Current terms of elected officials and board members would continue, and employees would remain employed; the city administrator’s title would become city manager. Existing city rules consistent with the charter would remain, while inconsistent provisions would be repealed. Existing property, contract, pension and other legal rights would be preserved."
+            }
+          ],
+          "sourceUrl": "https://www.cityofcripplecreek.com/media/4726",
+          "sourceHash": "c06279af458debf587207ff41a41ef1c1ffc5c0c6b26bbf770b6799fb64b8848",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:52:04.425741+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:52:04.425741+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.cityofcripplecreek.com/media/4726",
+        "finalUrl": "https://www.cityofcripplecreek.com/media/4726",
+        "publisher": "City of Cripple Creek",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:33:50.093052+00:00",
+        "httpStatus": 200,
+        "rawHash": "c06279af458debf587207ff41a41ef1c1ffc5c0c6b26bbf770b6799fb64b8848",
+        "reviewedEvidence": "Original official75-pageMay6,2026 council packet supplies the full proposed charter and ballot resolution. Complete operative charter Articles1–16read, excluding promotional synopsis as support. Official next-packet minutes corroborate unanimous approval; current official Teller sample supplies2A designation. Exact existing CrippleCreek city scope, no third-party prose or mirror used."
+      },
+      {
+        "requestedUrl": "https://www.tellercounty.gov/DocumentCenter/View/5213/Sample-Ballot-to-Include-City-of-Cripple-Creek-Question-PDF",
+        "finalUrl": "https://www.tellercounty.gov/DocumentCenter/View/5213/Sample-Ballot-to-Include-City-of-Cripple-Creek-Question-PDF",
+        "publisher": "Teller County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:22:26.200463+00:00",
+        "httpStatus": 200,
+        "rawHash": "b871ed410914a25a2b25d9c1fc049f8cba689db9b34541b6387f463be0495632",
+        "reviewedEvidence": "Original official75-pageMay6,2026 council packet supplies the full proposed charter and ballot resolution. Complete operative charter Articles1–16read, excluding promotional synopsis as support. Official next-packet minutes corroborate unanimous approval; current official Teller sample supplies2A designation. Exact existing CrippleCreek city scope, no third-party prose or mirror used."
+      }
+    ]
+  }
+}

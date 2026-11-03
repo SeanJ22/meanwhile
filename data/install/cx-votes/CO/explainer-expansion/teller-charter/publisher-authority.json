@@ -1,0 +1,92 @@
+{
+  "captures": [
+    {
+      "requestedUrl": "https://www.cityofcripplecreek.com/",
+      "retrievedAt": "2026-11-03T07:23:50.256496+00:00",
+      "finalUrl": "https://www.cityofcripplecreek.com/",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "1f025a9b1b8c09a9dff9677955c425f25660110e60c68e8c57fadabfb3e96e90",
+      "bytes": 73252,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "cripple-current-index.html",
+      "savedFile": "sources/cripple-current-index.sanitized.html",
+      "savedSha256": "1f025a9b1b8c09a9dff9677955c425f25660110e60c68e8c57fadabfb3e96e90",
+      "sanitization": {
+        "originalSha256": "1f025a9b1b8c09a9dff9677955c425f25660110e60c68e8c57fadabfb3e96e90",
+        "savedSha256": "1f025a9b1b8c09a9dff9677955c425f25660110e60c68e8c57fadabfb3e96e90",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.cityofcripplecreek.com/meetings",
+      "retrievedAt": "2026-11-03T07:29:20.514719+00:00",
+      "finalUrl": "https://www.cityofcripplecreek.com/meetings",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "7eda1c04fae453c8ba55e4ecd71a71baaf9155568f8b246e838278666e159436",
+      "bytes": 48864,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "cripple-meetings-index.html",
+      "savedFile": "sources/cripple-meetings-index.sanitized.html",
+      "savedSha256": "7eda1c04fae453c8ba55e4ecd71a71baaf9155568f8b246e838278666e159436",
+      "sanitization": {
+        "originalSha256": "7eda1c04fae453c8ba55e4ecd71a71baaf9155568f8b246e838278666e159436",
+        "savedSha256": "7eda1c04fae453c8ba55e4ecd71a71baaf9155568f8b246e838278666e159436",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.cityofcripplecreek.com/meetings/recent?field_smart_date_end_value=2026-05-31&field_smart_date_value_1=2026-05-01",
+      "retrievedAt": "2026-11-03T07:32:36.371948+00:00",
+      "finalUrl": "https://www.cityofcripplecreek.com/meetings/recent?field_smart_date_end_value=2026-05-31&field_smart_date_value_1=2026-05-01",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "83ec32e28bbb57b3c48b6ac6dd9d021f1ac4c198fa767db70223c52ac09a0857",
+      "bytes": 128343,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "cripple-recent-may.html",
+      "savedFile": "sources/cripple-recent-may.sanitized.html",
+      "savedSha256": "83ec32e28bbb57b3c48b6ac6dd9d021f1ac4c198fa767db70223c52ac09a0857",
+      "sanitization": {
+        "originalSha256": "83ec32e28bbb57b3c48b6ac6dd9d021f1ac4c198fa767db70223c52ac09a0857",
+        "savedSha256": "83ec32e28bbb57b3c48b6ac6dd9d021f1ac4c198fa767db70223c52ac09a0857",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    }
+  ],
+  "corroborationManifest": "corroboration-manifest.json",
+  "chain": [
+    {
+      "from": "https://tellercounty.gov/DocumentCenter/View/1405/Teller-County-Hazard-Mitigation-Plan-2021-PDF",
+      "exactQuote": "City of Cripple Creek website:",
+      "to": "https://cityofcripplecreek.com/",
+      "evidence": "sources/county-official-city-website.captured-text.txt.gz",
+      "scope": "Publisher authority only; not election freshness."
+    },
+    {
+      "from": "https://www.cityofcripplecreek.com/",
+      "linkText": "Agendas & Minutes",
+      "to": "https://www.cityofcripplecreek.com/meetings"
+    },
+    {
+      "from": "https://www.cityofcripplecreek.com/meetings/recent?field_smart_date_end_value=2026-05-31&field_smart_date_value_1=2026-05-01",
+      "meetingDate": "2026-05-06",
+      "links": [
+        "https://www.cityofcripplecreek.com/media/4716",
+        "https://www.cityofcripplecreek.com/media/4726"
+      ]
+    },
+    {
+      "from": "https://www.cityofcripplecreek.com/meetings/recent?field_smart_date_end_value=2026-05-31&field_smart_date_value_1=2026-05-01",
+      "meetingDate": "2026-05-20",
+      "to": "https://www.cityofcripplecreek.com/media/4756"
+    }
+  ]
+}

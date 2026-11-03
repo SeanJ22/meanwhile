@@ -1,0 +1,62 @@
+[
+  {
+    "contestId": "co-hot-sulphur-springs-2026-ballot-2a",
+    "whatItDoes": "Create a 4% use tax on storing, using or consuming construction and building materials in town, generally collected when a building permit is issued. It would begin January 1, 2027, authorizing $200,000 in the first full collection year and whatever it raises later, with no stated end date. Money could pay for any town purpose under terms and policies set by the town board in accordance with Ordinance 2026-08-20-430. The tax and its earnings could be collected, retained and spent outside the stated constitutional and other legal revenue limits.",
+    "yesMeans": "Approve the construction-materials use tax and its proposed revenue-limit exception.",
+    "noMeans": "Do not approve this use tax or its proposed revenue-limit exception.",
+    "parts": [],
+    "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+    "sourceHash": "b8ee5cf37506520737083f293d141a9c8391bef68cb5f8de92bb655a738ab7e6",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:57:29.851757+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-grand-county-library-district-2026-ballot-6b",
+    "whatItDoes": "Continue the library district’s expiring property-tax levy of up to 0.95 mills without a new expiration date, for a total ongoing district levy of 3.36 mills. Money would operate, maintain and improve library facilities and services. The question proposes continuing the levy without a district-tax increase and allows its revenue to be collected and spent every year outside Colorado constitutional and statutory revenue and spending limits.",
+    "yesMeans": "Extend the expiring library levy indefinitely and approve its revenue and spending limit exceptions.",
+    "noMeans": "Do not extend this expiring levy or approve its proposed limit exceptions through this measure.",
+    "parts": [],
+    "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+    "sourceHash": "b8ee5cf37506520737083f293d141a9c8391bef68cb5f8de92bb655a738ab7e6",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:57:29.851757+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-grand-county-library-district-2026-ballot-6c",
+    "whatItDoes": "Waive the library district’s 5.25% property-tax growth limit for all future property-tax years to support library services. This question would not increase any district tax rate.",
+    "yesMeans": "Approve the property-tax growth-limit waiver without changing the district’s tax rates through this question.",
+    "noMeans": "Do not approve this property-tax growth-limit waiver.",
+    "parts": [],
+    "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+    "sourceHash": "b8ee5cf37506520737083f293d141a9c8391bef68cb5f8de92bb655a738ab7e6",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:57:29.851757+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-east-grand-fire-protection-district-4-2026-ballot-6d",
+    "whatItDoes": "Create a 0.28% sales tax on sales and other transactions taxed by the state, beginning January 1, 2027. The question authorizes $875,000 annually and whatever additional amounts the tax raises later, with no stated end date. Money would pay for fire and emergency services, including recruiting volunteer and paid firefighters, wildfire prevention, community education, emergency-response capacity and firefighter equipment. The tax would be additional to other district taxes and could not replace funding previously approved by voters or funding the district is legally entitled to receive.",
+    "yesMeans": "Approve the additional sales tax for the stated district fire and emergency services.",
+    "noMeans": "Do not approve this additional sales tax.",
+    "parts": [],
+    "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30990/Ballot-Style-006-07-SAMPLE",
+    "sourceHash": "5d4d9c7d65597d4d668d076112d85df52c8d91b4c36ec26a1d47e3c971bd341f",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:57:29.851757+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-east-grand-fire-protection-district-4-2026-ballot-6e",
+    "whatItDoes": "Waive the district’s 5.25% property-tax growth limit, stated as 10.5% over a two-year assessment period, for the property-tax year beginning January 1, 2026 and all future property-tax years. The question states no new tax rate.",
+    "yesMeans": "Approve the property-tax growth-limit waiver for 2026 and future property-tax years.",
+    "noMeans": "Do not approve this property-tax growth-limit waiver.",
+    "parts": [],
+    "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30990/Ballot-Style-006-07-SAMPLE",
+    "sourceHash": "5d4d9c7d65597d4d668d076112d85df52c8d91b4c36ec26a1d47e3c971bd341f",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:57:29.851757+00:00",
+    "citation": "measure-source"
+  }
+]

@@ -1,0 +1,76 @@
+[
+  {
+    "contestId": "co-hot-sulphur-springs-2026-ballot-2a",
+    "officialTitle": "Town of Hot Sulphur Springs Ballot Question 2A",
+    "officialNumber": "2A",
+    "ocdId": "ocd-division/country:us/state:co/place:hot_sulphur_springs",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:hot_sulphur_springs",
+      "place",
+      "0837600",
+      "Hot Sulphur Springs town"
+    ],
+    "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-grand-county-library-district-2026-ballot-6b",
+    "officialTitle": "Grand County Library District Ballot Issue 6B",
+    "officialNumber": "6B",
+    "ocdId": "ocd-division/country:us/state:co/special_district:grand_county_library_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:grand_county_library_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#25032",
+      "Grand County Library District",
+      "library"
+    ],
+    "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-grand-county-library-district-2026-ballot-6c",
+    "officialTitle": "Grand County Library District Ballot Issue 6C",
+    "officialNumber": "6C",
+    "ocdId": "ocd-division/country:us/state:co/special_district:grand_county_library_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:grand_county_library_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#25032",
+      "Grand County Library District",
+      "library"
+    ],
+    "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30996/Ballot-Style-008-05-SAMPLE",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-east-grand-fire-protection-district-4-2026-ballot-6d",
+    "officialTitle": "East Grand County Fire Protection District No. 4 Ballot Issue 6D",
+    "officialNumber": "6D",
+    "ocdId": "ocd-division/country:us/state:co/special_district:east_grand_fire_protection_district_4",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:east_grand_fire_protection_district_4",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#25003",
+      "East Grand Fire Protection District 4",
+      "fire"
+    ],
+    "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30990/Ballot-Style-006-07-SAMPLE",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-east-grand-fire-protection-district-4-2026-ballot-6e",
+    "officialTitle": "East Grand County Fire Protection District No. 4 Ballot Issue 6E",
+    "officialNumber": "6E",
+    "ocdId": "ocd-division/country:us/state:co/special_district:east_grand_fire_protection_district_4",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:east_grand_fire_protection_district_4",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#25003",
+      "East Grand Fire Protection District 4",
+      "fire"
+    ],
+    "sourceUrl": "https://www.co.grand.co.us/DocumentCenter/View/30990/Ballot-Style-006-07-SAMPLE",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "county": "Grand",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 5,
+  "newPendingExactTerritoryCount": 1,
+  "officialCompositeLocalMeasureCount": 7,
+  "currentBallotStylesChecked": 24,
+  "crossCountyExistingMeasures": [
+    {
+      "contestId": "co-west-grand-school-district-1jt-2026-ballot-5a",
+      "packet": "../summit/ballot-input/co.json",
+      "doNotDuplicateContest": true
+    }
+  ],
+  "sourceCaveats": [
+    "All24current county samples acquired. Their union has seven distinct local questions: five new attached here, one fire-district growth-limit waiver pending exact scope, and existing WestGrand5A prepared once in Summit.",
+    "HotSulphurSprings–ParshallFire6A has no exact district division in the local snapshot. The town or ParshallCDP is not substituted.",
+    "Two complete original samples contain every new operative question; current official TABOR notice corroborates financial questions. All24complete native PDF text extractions are retained as text captures, with independent original PDF hashes; text hashes are not labeled as PDF byte hashes."
+  ],
+  "limits": "Current official24-style Grand county sample union and TABOR notice only; not statewide local completeness."
+}

@@ -1,0 +1,36 @@
+[
+  {
+    "requestedUrl": "https://www.cityofcripplecreek.com/media/4756",
+    "finalUrl": "https://www.cityofcripplecreek.com/media/4756",
+    "retrievedAt": "2026-11-03T07:35:10.222048+00:00",
+    "originHttpStatus": 200,
+    "originalPDFSha256": "762ae1656b941c0a18a0f865cc736025b44747ac7a6bead32c251a79d98d0343",
+    "originalPDFBytes": 10866430,
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete bounded native PDF text extraction from the specified official pages; not original PDF bytes.",
+    "pages": "2–5",
+    "purpose": "Complete May6minutes record unanimous charter-resolution approval.",
+    "sha256": "95c2660117560af6eb1263d84e534b99ec6f6f9f25a70aade29ff4c5fb372736",
+    "savedFile": "sources/may6-complete-minutes.captured-text.txt.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "9904d73b8b4e114df698a3b9513e9ab96b1db1f8de4eb4093524b3a79abdf9eb",
+    "storedBytes": 3450
+  },
+  {
+    "requestedUrl": "https://tellercounty.gov/DocumentCenter/View/1405/Teller-County-Hazard-Mitigation-Plan-2021-PDF",
+    "finalUrl": "https://tellercounty.gov/DocumentCenter/View/1405/Teller-County-Hazard-Mitigation-Plan-2021-PDF",
+    "retrievedAt": "2026-11-03T07:46:59.877168+00:00",
+    "originHttpStatus": 200,
+    "originalPDFSha256": "99f3811cf0568aa32bd7eb4b5ebb0a26ad0311723370b74cc55c0cf3f1324380",
+    "originalPDFBytes": 41179510,
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete bounded native PDF text extraction from the specified official pages; not original PDF bytes.",
+    "pages": "180 (CrippleCreekannex reference page26of28)",
+    "purpose": "County.govpublication explicitly identifies the CityofCrippleCreek website and same .com host.",
+    "sha256": "ea310c68c275a427598cef800d1f5a5151fa9302ab019725fb045c2aff8fa9f7",
+    "savedFile": "sources/county-official-city-website.captured-text.txt.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "b00f69bc4250e0f8085e86e7c90901bad194e78d4c1eaa35d5656db8138ab56a",
+    "storedBytes": 1101
+  }
+]

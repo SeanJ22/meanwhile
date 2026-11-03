@@ -1,0 +1,48 @@
+{
+  "state": "CO",
+  "county": "grand",
+  "preparedAttachedMeasures": 5,
+  "pendingExactTerritory": 1,
+  "officialLocalSourceDenominator": 7,
+  "currentMeasureRecordContract": "PASS",
+  "originalAndStoredSourceHashes": "PASS",
+  "literalFieldQuotesChecked": 18,
+  "exactExistingRegisteredAttachments": 5,
+  "actualCurrentBallotReader": [
+    {
+      "ocdId": "ocd-division/country:us/state:co/place:hot_sulphur_springs",
+      "completeExplainers": 1
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/special_district:grand_county_library_district",
+      "completeExplainers": 2
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/special_district:east_grand_fire_protection_district_4",
+      "completeExplainers": 2
+    }
+  ],
+  "countyAndStateControlsDoNotReceiveOutOfScopeQuestions": "PASS",
+  "credentialScan": {
+    "scannedFiles": 47,
+    "confirmedFindings": 0
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Offline source/contract/current ballot selector checks only. Root independent semantic review and River data install/live checks remain.",
+  "allCurrentCountyStyles": {
+    "count": 24,
+    "originalCaptureHashesAndCompleteExtractionHashes": "PASS",
+    "distinctLocalNumbers": [
+      "2A",
+      "5A",
+      "6A",
+      "6B",
+      "6C",
+      "6D",
+      "6E"
+    ],
+    "distinctLocalQuestions": 7
+  }
+}

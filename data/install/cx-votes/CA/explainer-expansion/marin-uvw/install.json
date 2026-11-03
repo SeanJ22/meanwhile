@@ -1,0 +1,47 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-marin-u",
+      "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-u-110326"
+    },
+    {
+      "id": "ca-2026-marin-v",
+      "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-v-110326"
+    },
+    {
+      "id": "ca-2026-marin-w",
+      "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-w-110326"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with CA and this ballot-input directory; preserve all prior contests, candidates, measures and unrelated explanations. No app release.",
+  "coverage": {
+    "state": "CA",
+    "county": "Marin",
+    "officialCountyDenominator": 20,
+    "preparedLabels": [
+      "U",
+      "V",
+      "W"
+    ],
+    "preparedAttached": 3,
+    "scope": "Only measures and exact jurisdictions in this packet. Remaining Marin measures and other local inventories remain standing work.",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "sourceSupport": "source-support.json",
+  "validation": "source-reader-check.json and reader-scope-check.json",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

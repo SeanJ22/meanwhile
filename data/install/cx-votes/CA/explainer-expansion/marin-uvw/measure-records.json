@@ -1,0 +1,160 @@
+[
+  {
+    "whatItDoes": "Extends Ross’s paramedic services tax for four more years, through June 30, 2031, and raises its starting rate to $107.50 per residential unit or per 1,000 square feet of nonresidential building space. Later Council-approved increases are capped at $4 a year and $118 in the final year.",
+    "yesMeans": "Continue and increase the restricted paramedic tax for fiscal years 2027–28 through 2030–31, with the new nonresidential calculation and annual rate limits.",
+    "noMeans": "Do not extend the tax; the existing paramedic tax expires June 30, 2027.",
+    "contestId": "ca-2026-marin-u",
+    "parts": [
+      {
+        "id": "ca-2026-marin-u#rate",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Rates and nonresidential change",
+        "what": "The current rate is $103.50 per residential unit or per 1,500 square feet of nonresidential space. The new tax starts at $107.50 per unit or per 1,000 square feet in 2027–28. The Council must approve later increases; they are not automatic, cannot exceed $4 a year, and cannot exceed $118 in 2030–31."
+      },
+      {
+        "id": "ca-2026-marin-u#residential-units",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Which residential units count",
+        "what": "A dwelling includes a building designed for or occupied by one family, even if under construction. A second unit registered with Ross, or an accessory structure occupied by family members, occasional guests or servants, does not count as a separate dwelling for this tax."
+      },
+      {
+        "id": "ca-2026-marin-u#purpose",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Restricted spending and estimated revenue",
+        "what": "The money may fund only paramedic and pre-hospital emergency medical services through the Ross Valley Paramedic Authority. The ballot estimates $111,000 a year and requires annual audits and public spending disclosure."
+      },
+      {
+        "id": "ca-2026-marin-u#duration",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Expiration and collection of existing debts",
+        "what": "The extension ends June 30, 2031. Collection and enforcement of unpaid taxes already levied can continue after that date. Each parcel has its own assessor’s parcel number; county assessor records as of March 1 determine its use and improvements for the next fiscal year."
+      },
+      {
+        "id": "ca-2026-marin-u#limit",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Spending limit and approval",
+        "what": "The measure raises the Town’s constitutional spending limit by the tax proceeds. Future increases in that limit require majority voter approval. At least two-thirds of votes cast on Measure U must be yes."
+      },
+      {
+        "id": "ca-2026-marin-u#severability",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "If part is invalidated",
+        "what": "If a court invalidates part of the ordinance, the remaining provisions continue as far as the law allows."
+      }
+    ],
+    "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-u-110326",
+    "sourceHash": "4dfd38e24c93913677e93f9a6461673b59eaf8aa1a850908506a02cb1ebc9e28",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T09:00:24.457153+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Extends San Anselmo’s paramedic services tax through June 30, 2031. It starts at $107.50 per residential unit or per 1,000 square feet of nonresidential building space in 2027–28, with later Council-approved increases of up to $4 a year, capped at $118 in the final year.",
+    "yesMeans": "Continue and increase the restricted paramedic tax for four years, change the nonresidential calculation, and authorize the stated annual rate limits and oversight rules.",
+    "noMeans": "Do not approve this four-year extension and increase of the paramedic tax.",
+    "contestId": "ca-2026-marin-v",
+    "parts": [
+      {
+        "id": "ca-2026-marin-v#rate",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Rates and annual Council decisions",
+        "what": "The current rate is $103.50 per residential unit or per 1,500 square feet of developed nonresidential property. The new rate starts at $107.50 per unit or per 1,000 square feet in 2027–28. Beginning in 2028–29, the Council may approve increases of up to $4 a year, with a maximum of $118 in 2030–31; increases are not automatic."
+      },
+      {
+        "id": "ca-2026-marin-v#purpose",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Restricted local services",
+        "what": "The tax applies to developed parcels and supports paramedic and pre-hospital emergency services through the Ross Valley Paramedic Authority. Money must go into a separate special fund for those purposes. The estimate is $688,000 a year."
+      },
+      {
+        "id": "ca-2026-marin-v#accountability",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Annual rate and spending reports",
+        "what": "The Council must receive an annual report and approve the tax levy each year within the authorized limits. The Finance Director must report the money collected and spent and the status of any funded project. The ballot requires annual audits and public spending disclosure."
+      },
+      {
+        "id": "ca-2026-marin-v#properties",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Property rules and exemptions",
+        "what": "Each parcel has its own assessor’s parcel number. County records as of March 1 determine its use and improvements for the following year. Exemptions required by the Constitution or other applicable law remain. The charge is not based on the property’s value."
+      },
+      {
+        "id": "ca-2026-marin-v#collection",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Collection and end date",
+        "what": "The extension ends June 30, 2031. Collection follows county property-tax dates and rules, including penalties, interest, liens and personal liability for unpaid amounts. Collection and enforcement of taxes already levied can continue after expiration."
+      },
+      {
+        "id": "ca-2026-marin-v#approval",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Spending limit and approval",
+        "what": "The Town’s constitutional spending limit rises by the tax proceeds. At least two-thirds of votes cast on Measure V must be yes. If a court invalidates one provision, the remaining provisions continue as far as the law allows."
+      }
+    ],
+    "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-v-110326",
+    "sourceHash": "1ca021863f5a24bd8b80fc0e0f8db464524c3090d5157f4d06edce2ff7082193",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T09:00:24.457153+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Raises San Rafael’s one-time real property transfer tax from 0.2% to 1% of the transaction value. The money goes to the City’s general fund for city services, with annual independent audits and review by the existing tax oversight committee.",
+    "yesMeans": "Approve the higher transfer tax, effective ten days after the Council declares the election result, with no scheduled expiration and voter control over future changes.",
+    "noMeans": "Keep the current 0.2% transfer tax rate.",
+    "contestId": "ca-2026-marin-w",
+    "parts": [
+      {
+        "id": "ca-2026-marin-w#amount",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "How the transfer charge changes",
+        "what": "The tax rises from $2 to $10 for each $1,000, or fraction of $1,000, of consideration when the transaction value exceeds $100. On a $1 million sale, that is $10,000 instead of $2,000. It is a one-time transfer charge, separate from annual property tax; buyer and seller can agree how to divide payment."
+      },
+      {
+        "id": "ca-2026-marin-w#revenue",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Revenue estimate and uses",
+        "what": "The City estimates $6 million in additional yearly revenue, bringing total transfer-tax revenue to about $7.5 million a year. This is a general tax that may support any lawful city purpose, including emergency services, streets, homelessness response and other services; it does not earmark money for particular projects."
+      },
+      {
+        "id": "ca-2026-marin-w#oversight",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Annual oversight",
+        "what": "The existing Voter-Approved Tax Oversight Committee must report to the Council at least annually on whether proceeds are properly spent. The proceeds also undergo the City’s generally applicable independent annual audits."
+      },
+      {
+        "id": "ca-2026-marin-w#effective",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Start and duration",
+        "what": "A majority of votes cast on Measure W must approve it. The change takes effect ten days after the Council declares the result and stays in effect unless voters change it."
+      },
+      {
+        "id": "ca-2026-marin-w#legal",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Other legal conditions",
+        "what": "The tax itself approves no particular construction or private project. A later funded project still receives any legally required environmental review. If a court invalidates part of the ordinance, other provisions that can operate remain in effect."
+      }
+    ],
+    "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-w-110326",
+    "sourceHash": "4db22371f85481837a3fae8ffa852e1d8b3187c46cd50aed6537787749e6d7b7",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T09:00:24.457153+00:00",
+    "citation": "measure-source"
+  }
+]

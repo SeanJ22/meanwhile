@@ -7,6 +7,8 @@ import type { WorkerResultRecord } from "./workers/types.ts";
 import type { ScoutResult } from "./scheduler/scout-result.ts";
 import type { DetectiveResult } from "./workers/research-types.ts";
 import { slotFor, waitingForSlot } from "../facts/finding-slots.ts";
+import { fileLeads, leadOf } from "../core/leads.ts";
+import { workId } from "../core/work.ts";
 
 /** References into the existing result and artifact stores, never another evidence store. */
 export interface BoxOrigin {
@@ -71,8 +73,6 @@ interface BoxQueue {
   due(input: { readonly slots: Readonly<Record<string, number | string>>; readonly now: string; readonly limit: number }): Promise<readonly BoxFinding[]>;
   /** Waiting rows handed to one builder, by the reason it gave them. */
   waitingFor(reason: string, limit: number, subjectIds?: readonly string[]): Promise<readonly BoxFinding[]>;
-  /** Waiting rows handed to one builder, by the reason it gave them, about any board of the given governments (`<government>`, `<government>#governing`, `#board`, `#body:<slug>`); at most `limit` per government. */
-  waitingUnder(reason: string, limit: number, governmentIds: readonly string[]): Promise<readonly BoxFinding[]>;
 }
 export type BoxRepository = AggregateRepository<BoxFinding> & BoxQueue;
 
@@ -96,10 +96,6 @@ export function listedBoxRepository(repo: AggregateRepository<BoxFinding>): BoxR
     waitingFor: async (reason, limit, subjectIds) => {
       const subjects = subjectIds ? new Set(subjectIds) : null;
       return (await rows()).filter(row => row.state === "waiting" && row.waitingFor?.reason === reason && (!subjects || subjects.has(row.subjectId))).slice(0, limit);
-    },
-    waitingUnder: async (reason, limit, governmentIds) => {
-      const all = (await rows()).filter(row => row.state === "waiting" && row.waitingFor?.reason === reason);
-      return governmentIds.flatMap(id => all.filter(row => row.subjectId === id || row.subjectId.startsWith(`${id}#`)).slice(0, limit));
     },
   };
 }
@@ -248,29 +244,40 @@ export function otherSources(row: BoxFinding): readonly { readonly origin: BoxOr
 /** Used by both Scout writers and the historical-result backfill. No finding is filtered out. */
 type BoxScoutResult = Pick<ScoutResult, "findings" | "subjectId" | "attemptId" | "workItemId" | "recordedAt"> & Partial<Pick<ScoutResult, "obligationId" | "recordClass">>;
 export async function indexScoutFindings(repo: AggregateRepository<BoxFinding>, result: BoxScoutResult, now: string): Promise<readonly BoxFinding[]> {
-  const indexed: BoxFinding[] = [];
-  for (const [findingIndex, finding] of result.findings.entries()) indexed.push(await indexBoxFinding(repo, {
-    subjectId: finding.subjectId ?? result.subjectId, exactQuote: finding.exactQuote ?? null, sourceUrl: finding.sourceUrl ?? null,
-    origin: { kind: "SCOUT", resultId: result.attemptId, ...(result.obligationId ? { resultKey: result.obligationId } : {}), workItemId: result.workItemId, findingIndex,
-      artifactIds: finding.artifactIds, recordedAt: result.recordedAt, ...(finding.missionPart ? { missionPart: finding.missionPart } : {}) },
-    ...(finding.field && finding.value !== undefined && finding.value !== null ? { fact: { field: finding.field, value: finding.value, recordClass: result.recordClass ?? null } } : {}),
-  }, now));
+  const indexed: BoxFinding[] = [], links = [];
+  for (const [findingIndex, finding] of result.findings.entries()) {
+    const subjectId = finding.subjectId ?? result.subjectId;
+    const lead = finding.field && finding.value !== undefined && finding.value !== null ? leadOf({ subjectId, field: finding.field, value: finding.value,
+      recordClass: result.recordClass ?? null, exactQuote: finding.exactQuote ?? null, sourceUrl: finding.sourceUrl ?? null, recordedAt: result.recordedAt, workItemId: result.workItemId }) : null;
+    if (lead) { links.push(lead); continue; }
+    indexed.push(await indexBoxFinding(repo, {
+      subjectId, exactQuote: finding.exactQuote ?? null, sourceUrl: finding.sourceUrl ?? null,
+      origin: { kind: "SCOUT", resultId: result.attemptId, ...(result.obligationId ? { resultKey: result.obligationId } : {}), workItemId: result.workItemId, findingIndex,
+        artifactIds: finding.artifactIds, recordedAt: result.recordedAt, ...(finding.missionPart ? { missionPart: finding.missionPart } : {}) },
+      ...(finding.field && finding.value !== undefined && finding.value !== null ? { fact: { field: finding.field, value: finding.value, recordClass: result.recordClass ?? null } } : {}),
+    }, now));
+  }
+  await fileLeads(links);
   return indexed;
 }
 
-/** A finding a Scout dropped mid-walk (`report_finding`), keyed by its attempt and drop order. */
+/** A finding a Scout dropped mid-walk (`report_finding`), keyed by its attempt and drop order. A link goes to the work list, and `row` is null. */
 export async function indexReportedFinding(repo: AggregateRepository<BoxFinding>, input: {
   readonly workItemId: string; readonly attemptId: string; readonly obligationId?: string; readonly missionPart: string | null;
   readonly finding: { readonly subjectId: string; readonly field: string; readonly value: string | number | boolean; readonly exactQuote: string;
     readonly sourceUrl: string; readonly artifactIds: readonly string[]; readonly subjectHint: string | null; readonly index: number };
-}, now: string): Promise<BoxFinding> {
+}, now: string): Promise<{ readonly id: string; readonly row: BoxFinding | null }> {
   const { finding } = input;
-  return indexBoxFinding(repo, { subjectId: finding.subjectId, exactQuote: finding.exactQuote, sourceUrl: finding.sourceUrl,
+  const lead = leadOf({ subjectId: finding.subjectId, field: finding.field, value: finding.value, recordClass: null, exactQuote: finding.exactQuote,
+    sourceUrl: finding.sourceUrl, recordedAt: now, workItemId: input.workItemId });
+  if (lead) { await fileLeads([lead]); return { id: workId(lead), row: null }; }
+  const row = await indexBoxFinding(repo, { subjectId: finding.subjectId, exactQuote: finding.exactQuote, sourceUrl: finding.sourceUrl,
     origin: { kind: "SCOUT", resultId: input.attemptId, ...(input.obligationId ? { resultKey: input.obligationId } : {}), workItemId: input.workItemId,
       findingIndex: finding.index, collection: "reported", artifactIds: finding.artifactIds, recordedAt: now,
       ...(input.missionPart ? { missionPart: input.missionPart } : {}),
       reported: { field: finding.field, value: finding.value, subjectHint: finding.subjectHint } },
     fact: { field: finding.field, value: finding.value, recordClass: null } }, now);
+  return { id: row.id, row };
 }
 
 interface BoxDetectiveRecord {

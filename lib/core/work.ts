@@ -78,6 +78,10 @@ export interface ClaimWhere {
   readonly plainOnly?: boolean;
   /** Only the links on this kind of website; the row's value names it. */
   readonly platform?: string;
+  /** Only links that name no kind of website: pages on a government's own site. */
+  readonly untagged?: boolean;
+  /** Only rows filed under this government or one of its boards. */
+  readonly government?: string;
 }
 
 /** The work table, its claim indexes and its waiting counts. Applied by bootstrap and by the SPN-01B migration. */
@@ -199,6 +203,11 @@ export const LEAD_DDL = [
   `CREATE INDEX IF NOT EXISTS work_lead_claim ON work ((value->>'platform'), work_tier_rank(tier), priority DESC, due_at, id) WHERE kind = 'lead' AND status = 'waiting'`,
 ] as const;
 
+/** A government's own pages are claimed by the government they were found under, so its walk never reads past other governments' links. Applied by bootstrap and by the SPN-01P2 migration. */
+export const LEAD_GOVERNMENT_DDL = [
+  `CREATE INDEX IF NOT EXISTS work_lead_government ON work ((subject_id COLLATE "C"), work_tier_rank(tier), priority DESC, due_at, id) WHERE kind = 'lead' AND status = 'waiting' AND value->>'platform' IS NULL`,
+] as const;
+
 /** A link found later is read first within its tier: its priority is the seconds since 2026 began, which fit the column until 2094. */
 export const newestFirst = (foundAt: string): number => Math.max(0, Math.floor((Date.parse(foundAt) - Date.UTC(2026, 0, 1)) / 1000));
 
@@ -251,6 +260,8 @@ export const CLAIM_WORK_SQL = `WITH selected AS MATERIALIZED (
     AND ($7::text IS NULL OR state = $7)
     AND ($8::boolean IS NOT TRUE OR value->>'plain' = 'true')
     AND ($9::text IS NULL OR value->>'platform' = $9)
+    AND ($10::boolean IS NOT TRUE OR value->>'platform' IS NULL)
+    AND ($11::text IS NULL OR subject_id COLLATE "C" = $11 OR (subject_id COLLATE "C" >= $11 || '#' AND subject_id COLLATE "C" < $11 || '$'))
   ORDER BY work_tier_rank(tier), priority DESC, due_at, id FOR UPDATE SKIP LOCKED LIMIT $3
 ) UPDATE work w SET status = 'taken', lease_owner = $4,
     lease_until = $2::timestamptz + $5::int * interval '1 millisecond',
@@ -266,8 +277,11 @@ export const EXPIRE_WORK_SQL = `WITH expired AS MATERIALIZED (
 ) UPDATE work w SET status = 'waiting', lease_until = NULL, lease_owner = NULL, lease_version = NULL
   FROM expired WHERE w.id = expired.id RETURNING w.id`;
 
-// A source fingerprint identifies the record, independently of the page pointer it came in on.
-const VALUE_CHANGED_SQL = `(CASE WHEN EXCLUDED.value->>'$sourceFingerprint' ~ '^[a-f0-9]{64}$'
+// A source fingerprint identifies the record, independently of the page pointer it came in on. A link reported for a subject it was not yet
+// reported for is read again, so its facts are filed for that subject too.
+const VALUE_CHANGED_SQL = `(work.kind = 'lead' AND EXISTS (SELECT 1 FROM jsonb_array_elements(EXCLUDED.reports) n WHERE NOT EXISTS (
+    SELECT 1 FROM jsonb_array_elements(work.reports) o WHERE o->>'subjectId' = n->>'subjectId' AND o->>'placeId' = n->>'placeId'))
+  OR CASE WHEN EXCLUDED.value->>'$sourceFingerprint' ~ '^[a-f0-9]{64}$'
   AND work.value->>'$sourceFingerprint' ~ '^[a-f0-9]{64}$'
   THEN work.value->>'$sourceFingerprint' IS DISTINCT FROM EXCLUDED.value->>'$sourceFingerprint'
   ELSE work.value IS DISTINCT FROM EXCLUDED.value END OR work.quote IS DISTINCT FROM EXCLUDED.quote
@@ -404,9 +418,10 @@ export function workList(query: Query, options: { readonly owner: string; readon
     if (inputs.length > 1_000) throw new Error("WORK_INVALID_BATCH");
     return JSON.stringify(inputs.map(input => prepared(input, at)));
   };
-  const release = async (claim: WorkRow): Promise<boolean> => (await query(`UPDATE work SET status = 'waiting', lease_owner = NULL, lease_until = NULL,
-    lease_version = NULL, attempts = greatest(attempts - 1, 0) WHERE id = $1 AND lease_owner = $2 AND status = 'taken' RETURNING id`,
-  [claim.id, claim.leaseOwner])).length === 1;
+  /** A claimed row goes back to waiting without the claim counting as an attempt; with `until` it is not due before then. */
+  const release = async (claim: WorkRow, until?: string): Promise<boolean> => (await query(`UPDATE work SET status = 'waiting', lease_owner = NULL, lease_until = NULL,
+    lease_version = NULL, attempts = greatest(attempts - 1, 0), due_at = coalesce($3::timestamptz, due_at) WHERE id = $1 AND lease_owner = $2 AND status = 'taken' RETURNING id`,
+  [claim.id, claim.leaseOwner, until ?? null])).length === 1;
   return {
     async add(input: WorkInput): Promise<WorkRow> {
       if (input.series !== undefined) throw new Error("WORK_INVALID_INPUT");
@@ -418,9 +433,15 @@ export function workList(query: Query, options: { readonly owner: string; readon
     /** One tenant's pointer rows cross together; no response or parsed record is copied into the list. */
     async addMany(inputs: readonly WorkInput[]): Promise<number> {
       if (!inputs.length) return 0;
-      if (inputs.some(input => !input.field?.trim() || input.series !== undefined)) throw new Error("WORK_INVALID_INPUT");
-      const at = timestamp();
-      return (await query(`INSERT INTO work (${COLUMNS}) ${SELECT_RECORDS} WHERE true ${UPSERT_SQL} RETURNING id`, [records(inputs, at), at])).length;
+      if (inputs.some(input => input.kind !== "lead" && !input.field?.trim() || input.series !== undefined)) throw new Error("WORK_INVALID_INPUT");
+      const at = timestamp(), rows = new Map<string, ReturnType<typeof prepared>>();
+      for (const input of inputs) {
+        // A link offered twice in one batch is one row that keeps every report.
+        const one = prepared(input, at), held = rows.get(one.id);
+        rows.set(one.id, held ? { ...held, reports: [...held.reports, ...one.reports], sources: [...new Set([...held.sources, ...one.sources])] } : one);
+      }
+      if (rows.size > 1_000) throw new Error("WORK_INVALID_BATCH");
+      return (await query(`INSERT INTO work (${COLUMNS}) ${SELECT_RECORDS} WHERE true ${UPSERT_SQL} RETURNING id`, [JSON.stringify([...rows.values()]), at])).length;
     },
     /** Each row is made to wait again, due now, whatever it was; rows already waiting are not written. */
     async touch(inputs: readonly WorkInput[]): Promise<number> {
@@ -487,7 +508,7 @@ export function workList(query: Query, options: { readonly owner: string; readon
       const taken: WorkRow[] = [];
       for (const kind of typeof kinds === "string" ? [kinds] : kinds) {
         taken.push(...(await query(CLAIM_WORK_SQL, [kind, at, n, owner, leaseMs, where.subjectPrefix ?? null, where.state?.toUpperCase() ?? null,
-          where.plainOnly ?? null, where.platform ?? null])).map(row));
+          where.plainOnly ?? null, where.platform ?? null, where.untagged ?? null, where.government ?? null])).map(row));
       }
       taken.sort(IN_TIER_ORDER);
       for (const extra of taken.splice(n)) await release(extra);

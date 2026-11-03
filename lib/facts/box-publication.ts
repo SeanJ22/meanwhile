@@ -13,6 +13,7 @@ import { captureProvenance, fetchCapture } from "./capture.ts";
 import { boundedIndexOf, checkFact, isOwnUrl, pageNamesEntity, linkQuote, normalizeText, type FieldKind } from "./check.ts";
 import { looksLikeNameCell, splitPersonTitle } from "../hunt/roster-page.ts";
 import { isPlainSentence, OTHER_NOTICE, schedulePhrase } from "../hunt/page-rules.ts";
+import { fileLeads, leadOf } from "../core/leads.ts";
 import { readPassCursor, writePassCursor } from "./db.ts";
 import { bodyNamed, canonicalSubject, ensureGoverningBody, learnOfficialHost, officeNamed, splitSubject } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
@@ -319,8 +320,14 @@ async function publishBoxPass(input: {
     if (!raw || !row.exactQuote || !row.sourceUrl) { await hold(row, "other", "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE"); continue; }
     const slot = slotFor(raw.field, raw.value, raw.recordClass, row.exactQuote, row.sourceUrl, row.subjectId);
     if ("waiting" in slot) { await hold(row, slot.class, slot.waiting); continue; }
-    // A link is a page to go read: the next walk of the government's own site reads it first and turns what it holds into facts.
-    if ("handoff" in slot) { await wait(row, slot.class, slot.handoff === "site-walk" ? SITE_WALK_LEAD : COMMENT_SUMMARY_LEAD); report.handed++; continue; }
+    // A link is a page to go read: it goes on the work list, where its kind of website's reader or the next walk of the government's own site takes it.
+    if ("handoff" in slot && slot.handoff === "site-walk") {
+      const lead = leadOf({ subjectId: row.subjectId, field: raw.field, value: raw.value, recordClass: raw.recordClass, exactQuote: row.exactQuote, sourceUrl: row.sourceUrl,
+        recordedAt: row.lastRecordedAt ?? raw.origin.recordedAt, workItemId: raw.origin.workItemId, alsoOn: otherSources(row).map(other => other.sourceUrl) });
+      if (!lead) { await hold(row, slot.class, "LINK_IS_NOT_AN_ADDRESS"); continue; }
+      await fileLeads([lead]); await wait(row, slot.class, SITE_WALK_LEAD); report.handed++; continue;
+    }
+    if ("handoff" in slot) { await wait(row, slot.class, COMMENT_SUMMARY_LEAD); report.handed++; continue; }
     if ("lead" in slot) { await wait(row, slot.class, slot.lead === "campaign-site" ? CAMPAIGN_SITE_LEAD : CANDIDATE_PROFILE_LEAD); report.handed++; continue; }
     const subject = await subjectOf(row.subjectId);
     const finding: Finding = { row, subject, origin: raw.origin, field: raw.field, value: raw.value, exactQuote: row.exactQuote, sourceUrl: row.sourceUrl, recordClass: raw.recordClass };

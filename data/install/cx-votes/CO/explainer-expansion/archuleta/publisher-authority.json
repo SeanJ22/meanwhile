@@ -1,0 +1,97 @@
+{
+  "captures": [
+    {
+      "requestedUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "retrievedAt": "2026-11-03T06:26:41.712128+00:00",
+      "finalUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "sha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "bytes": 46150,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "co-sos-county-offices.html",
+      "savedFile": "sources/co-sos-county-offices.sanitized.html",
+      "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "sanitization": {
+        "originalSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.archuletacounty.gov/county-government/elected-offices/clerk-recorder/elections/",
+      "retrievedAt": "2026-11-03T08:00:10.399364+00:00",
+      "finalUrl": "https://www.archuletacounty.gov/county-government/elected-offices/clerk-recorder/elections/",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "181359abf2ea090b7a946ddaa55fe8c1eeb5cf9c21c4439bdf1d6a0f946f9574",
+      "bytes": 383609,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "archuleta-elections-index.html",
+      "savedFile": "sources/archuleta-elections-index.sanitized.html",
+      "savedSha256": "76db36458c32d36565d9a08ee67210190a54b5991d82e66d1f0239304f6d61e6",
+      "sanitization": {
+        "originalSha256": "181359abf2ea090b7a946ddaa55fe8c1eeb5cf9c21c4439bdf1d6a0f946f9574",
+        "savedSha256": "76db36458c32d36565d9a08ee67210190a54b5991d82e66d1f0239304f6d61e6",
+        "replacements": 1,
+        "redactions": [
+          {
+            "classId": "google_api_key",
+            "fingerprint": "43690adb7159",
+            "length": 39,
+            "line": 1566,
+            "occurrences": 1,
+            "confirmed": true
+          }
+        ],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.archuletacounty.gov/county-government/elected-offices/clerk-recorder/elections/general-election-november-3-2026/2026-archuleta-county-sample-ballot/",
+      "retrievedAt": "2026-11-03T08:02:32.281071+00:00",
+      "finalUrl": "https://www.archuletacounty.gov/county-government/elected-offices/clerk-recorder/elections/general-election-november-3-2026/2026-archuleta-county-sample-ballot/",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "d11ff7e6d182717bfb4705f6a02abb72f6b5f240528d14a7c7aeb22574d0679e",
+      "bytes": 343725,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "archuleta-samples-index.html",
+      "savedFile": "sources/archuleta-samples-index.sanitized.html",
+      "savedSha256": "57ad83290b8ef9ce15af2993bf8ba6ec856ec97298c188e033e5ba55fe6ef3e3",
+      "sanitization": {
+        "originalSha256": "d11ff7e6d182717bfb4705f6a02abb72f6b5f240528d14a7c7aeb22574d0679e",
+        "savedSha256": "57ad83290b8ef9ce15af2993bf8ba6ec856ec97298c188e033e5ba55fe6ef3e3",
+        "replacements": 1,
+        "redactions": [
+          {
+            "classId": "google_api_key",
+            "fingerprint": "43690adb7159",
+            "length": 39,
+            "line": 1275,
+            "occurrences": 1,
+            "confirmed": true
+          }
+        ],
+        "preserved": []
+      }
+    }
+  ],
+  "chain": [
+    {
+      "from": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "linkText": "Archuleta",
+      "to": "https://www.archuletacounty.gov/county-government/elected-offices/clerk-recorder/elections/"
+    },
+    {
+      "from": "https://www.archuletacounty.gov/county-government/elected-offices/clerk-recorder/elections/",
+      "to": "https://www.archuletacounty.gov/county-government/elected-offices/clerk-recorder/elections/general-election-november-3-2026/2026-archuleta-county-sample-ballot/"
+    },
+    {
+      "from": "https://www.archuletacounty.gov/county-government/elected-offices/clerk-recorder/elections/general-election-november-3-2026/2026-archuleta-county-sample-ballot/",
+      "to": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf"
+    }
+  ]
+}

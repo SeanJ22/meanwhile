@@ -1,0 +1,34 @@
+{
+  "state": "CO",
+  "county": "archuleta",
+  "preparedAttachedMeasures": 3,
+  "pendingExactTerritory": 0,
+  "officialLocalSourceDenominator": 3,
+  "currentMeasureRecordContract": "PASS",
+  "originalAndStoredSourceHashes": "PASS",
+  "literalFieldQuotesChecked": 10,
+  "exactExistingRegisteredAttachments": 3,
+  "actualCurrentBallotReader": [
+    {
+      "ocdId": "ocd-division/country:us/state:co/county:archuleta",
+      "completeExplainers": 1
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/school_district:archuleta_county_school_district_50_jt",
+      "completeExplainers": 1
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/special_district:upper_san_juan_health_service_district",
+      "completeExplainers": 1
+    }
+  ],
+  "countyAndStateControlsDoNotReceiveOutOfScopeQuestions": "PASS",
+  "credentialScan": {
+    "scannedFiles": 17,
+    "confirmedFindings": 0
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Offline source/contract/current ballot selector checks only. Root independent semantic review and River data install/live checks remain."
+}

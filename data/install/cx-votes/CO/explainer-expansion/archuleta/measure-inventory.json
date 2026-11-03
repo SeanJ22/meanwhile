@@ -1,0 +1,45 @@
+[
+  {
+    "contestId": "co-archuleta-county-2026-ballot-1a",
+    "officialTitle": "Archuleta County Ballot Issue 1A",
+    "officialNumber": "1A",
+    "ocdId": "ocd-division/country:us/state:co/county:archuleta",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/county:archuleta",
+      "county",
+      "08007",
+      "Archuleta County"
+    ],
+    "sourceUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-archuleta-county-school-district-50jt-2026-ballot-5a",
+    "officialTitle": "Archuleta County School District 50JT Ballot Issue 5A",
+    "officialNumber": "5A",
+    "ocdId": "ocd-division/country:us/state:co/school_district:archuleta_county_school_district_50_jt",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:archuleta_county_school_district_50_jt",
+      "unsd",
+      "0802190",
+      "Archuleta County School District 50-JT"
+    ],
+    "sourceUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-upper-san-juan-health-service-district-2026-ballot-7b",
+    "officialTitle": "Upper San Juan Health Service District Ballot Issue 7B",
+    "officialNumber": "7B",
+    "ocdId": "ocd-division/country:us/state:co/special_district:upper_san_juan_health_service_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:upper_san_juan_health_service_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#64144",
+      "Upper San Juan Health Service District",
+      "hospital"
+    ],
+    "sourceUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

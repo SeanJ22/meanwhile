@@ -1,0 +1,14 @@
+{
+  "county": "Archuleta",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 3,
+  "newPendingExactTerritoryCount": 0,
+  "officialCompositeLocalMeasureCount": 3,
+  "currentPublishedGeneralSampleDocumentsChecked": 1,
+  "sourceCaveats": [
+    "Current official county general-sample page links one complete2026GeneralSamplePDF with three distinct local questions.",
+    "Lodging tax expressly excludes Pagosa Springs; the county question is still attached to the county voter scope, with tax applicability explained.",
+    "General-election landing route returned a tunnel403while current index, nested sample page and original sample PDF succeeded; no failure is treated as absence."
+  ],
+  "limits": "Current official published general-sample union only; not a claim that separate cross-county notices or statewide local measures are complete."
+}

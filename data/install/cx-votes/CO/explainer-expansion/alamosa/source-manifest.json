@@ -1,0 +1,38 @@
+[
+  {
+    "requestedUrl": "https://www.alamosacounty.org/DocumentCenter/View/1867",
+    "retrievedAt": "2026-11-03T08:04:47.594941+00:00",
+    "finalUrl": "https://www.alamosacounty.org/DocumentCenter/View/1867/01-County?bidId=",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "8d9a172f1d59168ea2c225fc94e7b6bfbbf0fe28a2ae0c4339fbf4f062b9cc0a",
+    "bytes": 883622,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "alamosa-style-1.pdf",
+    "sourceOrg": "Alamosa County Clerk and Recorder",
+    "savedFile": "sources/8d9a172f1d59168ea2c225fc94e7b6bfbbf0fe28a2ae0c4339fbf4f062b9cc0a.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "d4f1af6d42b6918d3e5462a6afbfe5c388ff7e0f941840dbd2d5694f2ae1c009",
+    "storedBytes": 702532,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes.",
+    "publisherAuthority": "publisher-authority.json"
+  },
+  {
+    "requestedUrl": "https://www.alamosacounty.org/DocumentCenter/View/1868",
+    "retrievedAt": "2026-11-03T08:04:47.590586+00:00",
+    "finalUrl": "https://www.alamosacounty.org/DocumentCenter/View/1868/02City-and-County?bidId=",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "9509a5d8b0e140f7ecaafd6781a284246e426fa9f53c9e23fb329e325bcd9843",
+    "bytes": 923857,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "alamosa-style-2.pdf",
+    "sourceOrg": "Alamosa County Clerk and Recorder",
+    "savedFile": "sources/9509a5d8b0e140f7ecaafd6781a284246e426fa9f53c9e23fb329e325bcd9843.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "d448cc3cdeb2d154cf7be6f7a6a515b788270ee21d6206074923332b5b496638",
+    "storedBytes": 739248,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes.",
+    "publisherAuthority": "publisher-authority.json"
+  }
+]

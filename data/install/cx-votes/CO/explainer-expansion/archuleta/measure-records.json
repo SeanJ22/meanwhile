@@ -1,0 +1,46 @@
+[
+  {
+    "contestId": "co-archuleta-county-2026-ballot-1a",
+    "whatItDoes": "Increase the county lodging-tax rate from 2% to 6% beginning January 1, 2027, on accommodations rented for fewer than 30 consecutive days. It would apply outside Pagosa Springs, which has its own lodging tax. The question estimates an additional $1.08 million annually at first, with later amounts depending on revenue. Of the increase, 80% would go to county-road maintenance and improvements, 10% to public safety and emergency dispatch, and 10% to childcare for the local workforce. Revenue could be collected and spent outside the stated constitutional and other legal limits, with no stated end date.",
+    "yesMeans": "Approve the higher lodging tax outside Pagosa Springs, its required allocations and its revenue-limit exception.",
+    "noMeans": "Do not approve this lodging-tax increase or its proposed revenue-limit exception.",
+    "parts": [],
+    "sourceUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+    "sourceHash": "8cd750a69c4bca7efe2078f9493551f3c7f1fe82dd957537361d78af4b7bf6a9",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T08:11:48.322004+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-archuleta-county-school-district-50jt-2026-ballot-5a",
+    "whatItDoes": "Allow the district to borrow up to $79.9 million, with total repayment capped at $156.5 million, only if it receives a state BEST grant that does not have to be repaid. Money would build and equip a new preschool-through-eighth-grade school and update and equip educational facilities at Pagosa Peak Open School. Annual repayment property taxes could rise by up to $6.7 million, with no mill-rate ceiling, to pay debt or refinancing-debt principal, any premium and interest, or create a repayment reserve. Spending would receive an annual independent third-party audit, and all spending details must appear on the district website. The new tax revenue could be retained and spent under the stated constitutional and other legal revenue-limit exception.",
+    "yesMeans": "Approve the school bonds and repayment taxes if the state grant condition is met, with the stated limits and oversight.",
+    "noMeans": "Do not authorize this debt, its repayment taxes or its proposed revenue-limit exception through this measure.",
+    "parts": [
+      {
+        "id": "co-archuleta-county-school-district-50jt-2026-ballot-5a#bond-terms",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Bond terms",
+        "what": "The school board would set interest rates, maturity and issuance dates, and sale prices above, below or equal to principal for one or more series of general-obligation bonds. Any early-repayment premium would be capped at 3%."
+      }
+    ],
+    "sourceUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+    "sourceHash": "8cd750a69c4bca7efe2078f9493551f3c7f1fe82dd957537361d78af4b7bf6a9",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T08:11:48.322004+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-upper-san-juan-health-service-district-2026-ballot-7b",
+    "whatItDoes": "Let the health district continue collecting, retaining and spending all its revenue in every future fiscal year outside the stated constitutional revenue and spending limits and the cited statutory limit. The district operates Pagosa Springs Medical Center and provides ambulance, hospital and outpatient medical services. The question does not authorize a tax increase.",
+    "yesMeans": "Approve the ongoing authority to retain and spend all district revenue outside the stated limits.",
+    "noMeans": "Do not approve this ongoing revenue-limit exception through this question.",
+    "parts": [],
+    "sourceUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+    "sourceHash": "8cd750a69c4bca7efe2078f9493551f3c7f1fe82dd957537361d78af4b7bf6a9",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T08:11:48.322004+00:00",
+    "citation": "measure-source"
+  }
+]

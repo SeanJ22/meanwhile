@@ -1,0 +1,24 @@
+[
+  {
+    "contestId": "co-12th-judicial-district-2026-ballot-7a",
+    "title": "12th Judicial District Ballot Question 7A",
+    "officialNumber": "7A",
+    "ocdId": null,
+    "attachment": "UNRESOLVED_EXACT_JUDICIAL_DISTRICT_DIVISION",
+    "scopeNote": "Entire12thJudicialDistrict,Colorado. No exact registered district division found. Need official legal extent and exact reader place-map attachment; AlamosaCounty or City of Alamosa cannot replace the judicial district.",
+    "questionText": "Pursuant to the authority granted by C.R.S. §1-4-1404, shall the term limits for the District Attorney of the 12th Judicial District established in Article XVIII §11(1) of the Colorado Constitution be eliminated, allowing the District Attorney of the 12th Judicial District to serve an indefinite number of terms?",
+    "sourceUrl": "https://www.alamosacounty.org/DocumentCenter/View/1868",
+    "measureRecord": {
+      "contestId": "co-12th-judicial-district-2026-ballot-7a",
+      "whatItDoes": "Remove the constitutional term limits for the 12th Judicial District’s district attorney, allowing an unlimited number of terms.",
+      "yesMeans": "Remove the stated term limits for the district attorney.",
+      "noMeans": "Keep the stated constitutional term limits.",
+      "parts": [],
+      "sourceUrl": "https://www.alamosacounty.org/DocumentCenter/View/1868",
+      "sourceHash": "9509a5d8b0e140f7ecaafd6781a284246e426fa9f53c9e23fb329e325bcd9843",
+      "sourceHashKind": "CAPTURE_BYTES",
+      "writtenAt": "2026-11-03T08:11:48.392666+00:00",
+      "citation": "measure-source"
+    }
+  }
+]

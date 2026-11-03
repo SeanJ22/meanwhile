@@ -1,0 +1,92 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-alamosa-2026-ballot-2a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:alamosa",
+          "divisionVintage": "2026",
+          "title": "City of Alamosa Ballot Issue 2A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.alamosacounty.org/DocumentCenter/View/1868",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL CITY OF ALAMOSA TAXES BE INCREASED BY $ 2,500,000 IN THE FIRST FISCAL YEAR, BEGINNING JANUARY 1, 2030, AND BY SUCH AMOUNTS AS ARE RAISED ANNUALLY THEREAFTER FOR A TEN YEAR PERIOD ENDING DECEMBER 31, 2039, BY CONTINUING THE CURRENT ONE-HALF PERCENT (ONE-HALF CENT PER DOLLAR SPENT) SALES TAX AND USE TAX WHICH IS SET TO EXPIRE ON DECEMBER 31, 2029, TO BE USED SOLELY TO FUND STREET MAINTENANCE AND IMPROVEMENTS FOR THOSE STREETS IDENTIFIED IN RESOLUTION NO. 7-2026 AND FOR NO OTHER PURPOSE, AND WITHOUT ANY INCREASE WHATSOEVER IN THE EXISTING CITY SALES TAX RATE OR THE CITY’S EXISTING PROPERTY TAXES, WITH THE RESULTING TAX REVENUES ALLOWED TO BE COLLECTED AND SPENT, NOTWITHSTANDING ANY EXPENDITURE, REVENUE RAISING, OR OTHER LIMITATION CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LIMITATIONS PROVIDED BY LAW?",
+            "sourceOrg": "Alamosa County Clerk and Recorder",
+            "sourceUrl": "https://www.alamosacounty.org/DocumentCenter/View/1868",
+            "collectedAt": "2026-11-03T08:04:47.590586+00:00",
+            "verifiedAt": "2026-11-03T08:11:48.336238+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-alamosa-2026-ballot-2a#question",
+          "contestId": "co-alamosa-2026-ballot-2a",
+          "officialNumber": "2A",
+          "questionText": "SHALL CITY OF ALAMOSA TAXES BE INCREASED BY $ 2,500,000 IN THE FIRST FISCAL YEAR, BEGINNING JANUARY 1, 2030, AND BY SUCH AMOUNTS AS ARE RAISED ANNUALLY THEREAFTER FOR A TEN YEAR PERIOD ENDING DECEMBER 31, 2039, BY CONTINUING THE CURRENT ONE-HALF PERCENT (ONE-HALF CENT PER DOLLAR SPENT) SALES TAX AND USE TAX WHICH IS SET TO EXPIRE ON DECEMBER 31, 2029, TO BE USED SOLELY TO FUND STREET MAINTENANCE AND IMPROVEMENTS FOR THOSE STREETS IDENTIFIED IN RESOLUTION NO. 7-2026 AND FOR NO OTHER PURPOSE, AND WITHOUT ANY INCREASE WHATSOEVER IN THE EXISTING CITY SALES TAX RATE OR THE CITY’S EXISTING PROPERTY TAXES, WITH THE RESULTING TAX REVENUES ALLOWED TO BE COLLECTED AND SPENT, NOTWITHSTANDING ANY EXPENDITURE, REVENUE RAISING, OR OTHER LIMITATION CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LIMITATIONS PROVIDED BY LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL CITY OF ALAMOSA TAXES BE INCREASED BY $ 2,500,000 IN THE FIRST FISCAL YEAR, BEGINNING JANUARY 1, 2030, AND BY SUCH AMOUNTS AS ARE RAISED ANNUALLY THEREAFTER FOR A TEN YEAR PERIOD ENDING DECEMBER 31, 2039, BY CONTINUING THE CURRENT ONE-HALF PERCENT (ONE-HALF CENT PER DOLLAR SPENT) SALES TAX AND USE TAX WHICH IS SET TO EXPIRE ON DECEMBER 31, 2029, TO BE USED SOLELY TO FUND STREET MAINTENANCE AND IMPROVEMENTS FOR THOSE STREETS IDENTIFIED IN RESOLUTION NO. 7-2026 AND FOR NO OTHER PURPOSE, AND WITHOUT ANY INCREASE WHATSOEVER IN THE EXISTING CITY SALES TAX RATE OR THE CITY’S EXISTING PROPERTY TAXES, WITH THE RESULTING TAX REVENUES ALLOWED TO BE COLLECTED AND SPENT, NOTWITHSTANDING ANY EXPENDITURE, REVENUE RAISING, OR OTHER LIMITATION CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LIMITATIONS PROVIDED BY LAW?",
+            "sourceOrg": "Alamosa County Clerk and Recorder",
+            "sourceUrl": "https://www.alamosacounty.org/DocumentCenter/View/1868",
+            "collectedAt": "2026-11-03T08:04:47.590586+00:00",
+            "verifiedAt": "2026-11-03T08:11:48.336238+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-alamosa-2026-ballot-2a",
+          "whatItDoes": "Continue the city’s existing 0.5% sales and use tax for ten more years, from January 1, 2030 through December 31, 2039, after its current expiration at the end of 2029. The question authorizes $2.5 million in the first extension year and whatever the tax raises later. Money could be used only for maintenance and improvements to streets identified in Resolution 7-2026. The extension would not raise the existing city sales-tax rate or city property taxes. Revenue could be collected and spent outside the stated constitutional and other legal limits.",
+          "yesMeans": "Extend the existing street sales and use tax through 2039 for the specified streets and approve its revenue-limit exception.",
+          "noMeans": "Do not extend this tax beyond its current 2029 expiration or approve the proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://www.alamosacounty.org/DocumentCenter/View/1868",
+          "sourceHash": "9509a5d8b0e140f7ecaafd6781a284246e426fa9f53c9e23fb329e325bcd9843",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:11:48.336238+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:11:48.336238+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.alamosacounty.org/DocumentCenter/View/1867",
+        "finalUrl": "https://www.alamosacounty.org/DocumentCenter/View/1867/01-County?bidId=",
+        "publisher": "Alamosa County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T08:04:47.594941+00:00",
+        "httpStatus": 200,
+        "rawHash": "8d9a172f1d59168ea2c225fc94e7b6bfbbf0fe28a2ae0c4339fbf4f062b9cc0a",
+        "reviewedEvidence": "Complete original current November3,2026 official county sample PDFs. Exact city tax-extension question transcribed and visually verified because embedded-font extraction is corrupted. City scope is existing and exact. Separate districtwide term-limits question source-ready pending its exact judicial-district scope. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://www.alamosacounty.org/DocumentCenter/View/1868",
+        "finalUrl": "https://www.alamosacounty.org/DocumentCenter/View/1868/02City-and-County?bidId=",
+        "publisher": "Alamosa County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T08:04:47.590586+00:00",
+        "httpStatus": 200,
+        "rawHash": "9509a5d8b0e140f7ecaafd6781a284246e426fa9f53c9e23fb329e325bcd9843",
+        "reviewedEvidence": "Complete original current November3,2026 official county sample PDFs. Exact city tax-extension question transcribed and visually verified because embedded-font extraction is corrupted. City scope is existing and exact. Separate districtwide term-limits question source-ready pending its exact judicial-district scope. No advocacy used."
+      }
+    ]
+  }
+}

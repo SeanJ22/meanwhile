@@ -1,0 +1,20 @@
+[
+  {
+    "requestedUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+    "retrievedAt": "2026-11-03T08:04:47.597547+00:00",
+    "finalUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "8cd750a69c4bca7efe2078f9493551f3c7f1fe82dd957537361d78af4b7bf6a9",
+    "bytes": 216322,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "archuleta-all-sample.pdf",
+    "sourceOrg": "Archuleta County Clerk and Recorder",
+    "savedFile": "sources/8cd750a69c4bca7efe2078f9493551f3c7f1fe82dd957537361d78af4b7bf6a9.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "bae5a326240bd9c3f0b1cc69ef3b088ab3e59804ac64291c3f8f19f21ef40f2e",
+    "storedBytes": 192192,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes.",
+    "publisherAuthority": "publisher-authority.json"
+  }
+]

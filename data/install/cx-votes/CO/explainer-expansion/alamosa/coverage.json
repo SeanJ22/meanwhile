@@ -1,0 +1,14 @@
+{
+  "county": "Alamosa",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 1,
+  "newPendingExactTerritoryCount": 1,
+  "officialCompositeLocalMeasureCount": 2,
+  "currentBallotStylesChecked": 2,
+  "sourceCaveats": [
+    "Two current official county styles: County contains district-attorney term-limits7A; City&County also contains city street-tax extension2A. Union is two local questions.",
+    "District-attorney7A belongs to the entire12thJudicialDistrict; exact attachment remains pending, without county/city substitution.",
+    "First native index request timed out. A fresh successful official web view exposed current sample links; a bounded later native fetch succeeded for index and both originals. Both failure and successful metadata remain in scratch."
+  ],
+  "limits": "Current official two-style Alamosa union only; not statewide local completeness."
+}

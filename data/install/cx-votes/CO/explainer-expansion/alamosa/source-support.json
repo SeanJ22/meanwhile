@@ -1,0 +1,46 @@
+[
+  {
+    "contestId": "co-alamosa-2026-ballot-2a",
+    "sourceUrl": "https://www.alamosacounty.org/DocumentCenter/View/1868",
+    "originalSha256": "9509a5d8b0e140f7ecaafd6781a284246e426fa9f53c9e23fb329e325bcd9843",
+    "officialExcerptFile": "excerpts/co-alamosa-2026-ballot-2a.txt",
+    "subjectQuote": "City of Alamosa Ballot Issue 2A - Extension of Streets\nTrust Fund Sales Tax",
+    "retrievedAt": "2026-11-03T08:04:47.590586+00:00",
+    "fields": {
+      "whatItDoes": [
+        "SHALL CITY OF ALAMOSA TAXES BE INCREASED BY $ 2,500,000 IN THE FIRST FISCAL YEAR, BEGINNING JANUARY 1, 2030, AND BY SUCH AMOUNTS AS ARE RAISED ANNUALLY THEREAFTER FOR A TEN YEAR PERIOD ENDING DECEMBER 31, 2039, BY CONTINUING THE CURRENT ONE-HALF PERCENT (ONE-HALF CENT PER DOLLAR SPENT) SALES TAX AND USE TAX WHICH IS SET TO EXPIRE ON DECEMBER 31, 2029, TO BE USED SOLELY TO FUND STREET MAINTENANCE AND IMPROVEMENTS FOR THOSE STREETS IDENTIFIED IN RESOLUTION NO. 7-2026 AND FOR NO OTHER PURPOSE, AND WITHOUT ANY INCREASE WHATSOEVER IN THE EXISTING CITY SALES TAX RATE OR THE CITY’S EXISTING PROPERTY TAXES, WITH THE RESULTING TAX REVENUES ALLOWED TO BE COLLECTED AND SPENT, NOTWITHSTANDING ANY EXPENDITURE, REVENUE RAISING, OR OTHER LIMITATION CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LIMITATIONS PROVIDED BY LAW?"
+      ],
+      "yesMeans": [
+        "SHALL CITY OF ALAMOSA TAXES BE INCREASED BY $ 2,500,000 IN THE FIRST FISCAL YEAR, BEGINNING JANUARY 1, 2030, AND BY SUCH AMOUNTS AS ARE RAISED ANNUALLY THEREAFTER FOR A TEN YEAR PERIOD ENDING DECEMBER 31, 2039, BY CONTINUING THE CURRENT ONE-HALF PERCENT (ONE-HALF CENT PER DOLLAR SPENT) SALES TAX AND USE TAX WHICH IS SET TO EXPIRE ON DECEMBER 31, 2029, TO BE USED SOLELY TO FUND STREET MAINTENANCE AND IMPROVEMENTS FOR THOSE STREETS IDENTIFIED IN RESOLUTION NO. 7-2026 AND FOR NO OTHER PURPOSE, AND WITHOUT ANY INCREASE WHATSOEVER IN THE EXISTING CITY SALES TAX RATE OR THE CITY’S EXISTING PROPERTY TAXES, WITH THE RESULTING TAX REVENUES ALLOWED TO BE COLLECTED AND SPENT, NOTWITHSTANDING ANY EXPENDITURE, REVENUE RAISING, OR OTHER LIMITATION CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LIMITATIONS PROVIDED BY LAW?"
+      ],
+      "noMeans": [
+        "SHALL CITY OF ALAMOSA TAXES BE INCREASED BY $ 2,500,000 IN THE FIRST FISCAL YEAR, BEGINNING JANUARY 1, 2030, AND BY SUCH AMOUNTS AS ARE RAISED ANNUALLY THEREAFTER FOR A TEN YEAR PERIOD ENDING DECEMBER 31, 2039, BY CONTINUING THE CURRENT ONE-HALF PERCENT (ONE-HALF CENT PER DOLLAR SPENT) SALES TAX AND USE TAX WHICH IS SET TO EXPIRE ON DECEMBER 31, 2029, TO BE USED SOLELY TO FUND STREET MAINTENANCE AND IMPROVEMENTS FOR THOSE STREETS IDENTIFIED IN RESOLUTION NO. 7-2026 AND FOR NO OTHER PURPOSE, AND WITHOUT ANY INCREASE WHATSOEVER IN THE EXISTING CITY SALES TAX RATE OR THE CITY’S EXISTING PROPERTY TAXES, WITH THE RESULTING TAX REVENUES ALLOWED TO BE COLLECTED AND SPENT, NOTWITHSTANDING ANY EXPENDITURE, REVENUE RAISING, OR OTHER LIMITATION CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LIMITATIONS PROVIDED BY LAW?"
+      ]
+    },
+    "reviewNotes": [
+      "Native PDF embedded-font mappings and overlapping hidden text produce corrupted extraction. The entire bounded visible English question was transcribed and checked from the original PDF image. The city’s extension begins2030, not2027; only streets named by the cited resolution qualify."
+    ]
+  },
+  {
+    "contestId": "co-12th-judicial-district-2026-ballot-7a",
+    "sourceUrl": "https://www.alamosacounty.org/DocumentCenter/View/1868",
+    "originalSha256": "9509a5d8b0e140f7ecaafd6781a284246e426fa9f53c9e23fb329e325bcd9843",
+    "officialExcerptFile": "excerpts/co-12th-judicial-district-2026-ballot-7a.txt",
+    "subjectQuote": "12th Judicial District Ballot Question 7A",
+    "retrievedAt": "2026-11-03T08:04:47.590586+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Pursuant to the authority granted by C.R.S. §1-4-1404, shall the term limits for the District Attorney of the 12th Judicial District established in Article XVIII §11(1) of the Colorado Constitution be eliminated, allowing the District Attorney of the 12th Judicial District to serve an indefinite number of terms?"
+      ],
+      "yesMeans": [
+        "Pursuant to the authority granted by C.R.S. §1-4-1404, shall the term limits for the District Attorney of the 12th Judicial District established in Article XVIII §11(1) of the Colorado Constitution be eliminated, allowing the District Attorney of the 12th Judicial District to serve an indefinite number of terms?"
+      ],
+      "noMeans": [
+        "Pursuant to the authority granted by C.R.S. §1-4-1404, shall the term limits for the District Attorney of the 12th Judicial District established in Article XVIII §11(1) of the Colorado Constitution be eliminated, allowing the District Attorney of the 12th Judicial District to serve an indefinite number of terms?"
+      ]
+    },
+    "reviewNotes": [
+      "Full visible English question transcribed from native original. No unstated number of current allowed terms or term length is invented."
+    ]
+  }
+]

@@ -1,0 +1,180 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-archuleta-county-2026-ballot-1a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:archuleta",
+          "divisionVintage": "2026",
+          "title": "Archuleta County Ballot Issue 1A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "County ballot question; the proposed lodging tax applies outside the Town of Pagosa Springs, as expressly excluded in the operative question. County voter scope and tax-applicability territory are distinguished.",
+          "provenance": {
+            "quote": "SHALL ARCHULETA COUNTY LODGING TAXES BE INCREASED BY APPROXIMATELY $1,080,000 ANNUALLY COMMENCING ON JANUARY 1, 2027, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BY INCREASING THE LODGING TAX RATE FROM TWO PERCENT (2%) TO SIX PERCENT (6%), SUCH LODGING TAX TO BE LEVIED ON THE RENTAL FEE, PRICE, OR OTHER CONSIDERATION PAID OR CHARGED FOR THE LEASING, RENTAL, SALE OR FURNISHING OF A ROOM OR ACCOMMODATION FOR A SHORT-TERM PERIOD OF LESS THAN THIRTY (30) CONSECUTIVE DAYS IN ARCHULETA COUNTY (EXCLUDING THE TOWN OF PAGOSA SPRINGS THAT CURRENTLY HAS ITS OWN ADOPTED LODGING TAX), WITH SUCH INCREASE TO LODGING TAX REVENUES USED AS FOLLOWS: EIGHTY PERCENT (80%) FOR COUNTY ROADS MAINTENANCE AND IMPROVEMENT; TEN PERCENT (10%) FOR PUBLIC SAFETY AND EMERGENCY DISPATCH; TEN PERCENT (10%) FOR CHILDCARE FOR OUR LOCAL WORKFORCE, AND SHALL THE FIRST-YEAR REVENUES, AND WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BE COLLECTED AND SPENT AS A VOTER APPROVED REVENUE CHANGE NOTWITHSTANDING ANY LIMITATION OR CONDITION UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER PROVISION OF LAW?",
+            "sourceOrg": "Archuleta County Clerk and Recorder",
+            "sourceUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+            "collectedAt": "2026-11-03T08:04:47.597547+00:00",
+            "verifiedAt": "2026-11-03T08:11:48.322004+00:00"
+          }
+        },
+        {
+          "id": "co-archuleta-county-school-district-50jt-2026-ballot-5a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/school_district:archuleta_county_school_district_50_jt",
+          "divisionVintage": "2026",
+          "title": "Archuleta County School District 50JT Ballot Issue 5A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL ARCHULETA COUNTY SCHOOL DISTRICT NO. 50JT DEBT BE INCREASED BY UP TO $79,900,000, WITH A REPAYMENT COST OF UP TO $156,500,000, WITH THE INCREASE TO OCCUR ONLY IF THE DISTRICT RECEIVES A \"BEST\" GRANT AWARD FROM THE STATE OF COLORADO THAT DOESN'T HAVE TO BE REPAID, FOR THE PURPOSE OF PROVIDING A HIGH-QUALITY LEARNING ENVIRONMENT FOR STUDENTS, INCLUDING BUT NOT LIMITED TO: CONSTRUCTING AND EQUIPPING A NEW PK-8 SCHOOL THAT WILL IMPROVE SAFETY AND SECURITY WHILE MEETING THE EDUCATIONAL NEEDS OF OUR STUDENTS; PROVIDING FUNDING TO PAGOSA PEAK OPEN SCHOOL TO UPDATE AND EQUIP EDUCATIONAL FACILITIES FOR STUDENTS; WITH FUNDING SUBJECT TO AN ANNUAL AUDIT BY AN INDEPENDENT THIRD-PARTY EXPERT AND WITH THE SPENDING OF ALL FUNDS DETAILED ON THE DISTRICT'S WEBSITE; AND SHALL DISTRICT TAXES BE INCREASED BY UP TO $6,700,000 ANNUALLY TO REPAY THIS DEBT; AND SHALL THE MILL LEVY BE IMPOSED IN ANY YEAR IN AN AMOUNT SUFFICIENT TO PAY THE PRINCIPAL OF, PREMIUM, IF ANY, AND INTEREST ON SUCH DEBT OR ANY REFUNDING DEBT (OR TO CREATE A RESERVE FOR SUCH PAYMENT) REGARDLESS OF RATE; WHICH DEBT SHALL CONSIST OF ONE OR MORE SERIES OF GENERAL OBLIGATION BONDS TO BEAR INTEREST, MATURE, BE SUBJECT TO REDEMPTION, WITH NO MORE THAN A 3% PREMIUM, AND BE ISSUED AT SUCH TIME, AT SUCH PRICE (AT, ABOVE, OR BELOW PAR) AND IN SUCH MANNER AND CONTAINING SUCH TERMS CONSISTENT WITH THIS BALLOT ISSUE AS THE BOARD OF EDUCATION MAY DETERMINE AND ALLOWING THE DISTRICT TO COLLECT, RETAIN AND SPEND ALL PROCEEDS OF THE NEW TAX REVENUE AS A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Archuleta County Clerk and Recorder",
+            "sourceUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+            "collectedAt": "2026-11-03T08:04:47.597547+00:00",
+            "verifiedAt": "2026-11-03T08:11:48.322004+00:00"
+          }
+        },
+        {
+          "id": "co-upper-san-juan-health-service-district-2026-ballot-7b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:upper_san_juan_health_service_district",
+          "divisionVintage": "2026",
+          "title": "Upper San Juan Health Service District Ballot Issue 7B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "WITHOUT RAISING TAXES, SHALL THE UPPER SAN JUAN HEALTH SERVICE DISTRICT (WHICH OPERATES PAGOSA SPRINGS MEDICAL CENTER AND PROVIDES EMS/AMBULANCE SERVICES, HOSPITAL AND OUTPATIENT MEDICAL CARE TO THE COMMUNITY) BE AUTHORIZED TO CONTINUE TO COLLECT, RETAIN, AND SPEND ALL REVENUES OF THE DISTRICT IN EACH FISCAL YEAR HEREAFTER WITHOUT REGARD TO ANY REVENUE OR SPENDING LIMITATION CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR SECTION 29-1-301, C.R.S.?",
+            "sourceOrg": "Archuleta County Clerk and Recorder",
+            "sourceUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+            "collectedAt": "2026-11-03T08:04:47.597547+00:00",
+            "verifiedAt": "2026-11-03T08:11:48.322004+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-archuleta-county-2026-ballot-1a#question",
+          "contestId": "co-archuleta-county-2026-ballot-1a",
+          "officialNumber": "1A",
+          "questionText": "SHALL ARCHULETA COUNTY LODGING TAXES BE INCREASED BY APPROXIMATELY $1,080,000 ANNUALLY COMMENCING ON JANUARY 1, 2027, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BY INCREASING THE LODGING TAX RATE FROM TWO PERCENT (2%) TO SIX PERCENT (6%), SUCH LODGING TAX TO BE LEVIED ON THE RENTAL FEE, PRICE, OR OTHER CONSIDERATION PAID OR CHARGED FOR THE LEASING, RENTAL, SALE OR FURNISHING OF A ROOM OR ACCOMMODATION FOR A SHORT-TERM PERIOD OF LESS THAN THIRTY (30) CONSECUTIVE DAYS IN ARCHULETA COUNTY (EXCLUDING THE TOWN OF PAGOSA SPRINGS THAT CURRENTLY HAS ITS OWN ADOPTED LODGING TAX), WITH SUCH INCREASE TO LODGING TAX REVENUES USED AS FOLLOWS: EIGHTY PERCENT (80%) FOR COUNTY ROADS MAINTENANCE AND IMPROVEMENT; TEN PERCENT (10%) FOR PUBLIC SAFETY AND EMERGENCY DISPATCH; TEN PERCENT (10%) FOR CHILDCARE FOR OUR LOCAL WORKFORCE, AND SHALL THE FIRST-YEAR REVENUES, AND WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BE COLLECTED AND SPENT AS A VOTER APPROVED REVENUE CHANGE NOTWITHSTANDING ANY LIMITATION OR CONDITION UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER PROVISION OF LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL ARCHULETA COUNTY LODGING TAXES BE INCREASED BY APPROXIMATELY $1,080,000 ANNUALLY COMMENCING ON JANUARY 1, 2027, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BY INCREASING THE LODGING TAX RATE FROM TWO PERCENT (2%) TO SIX PERCENT (6%), SUCH LODGING TAX TO BE LEVIED ON THE RENTAL FEE, PRICE, OR OTHER CONSIDERATION PAID OR CHARGED FOR THE LEASING, RENTAL, SALE OR FURNISHING OF A ROOM OR ACCOMMODATION FOR A SHORT-TERM PERIOD OF LESS THAN THIRTY (30) CONSECUTIVE DAYS IN ARCHULETA COUNTY (EXCLUDING THE TOWN OF PAGOSA SPRINGS THAT CURRENTLY HAS ITS OWN ADOPTED LODGING TAX), WITH SUCH INCREASE TO LODGING TAX REVENUES USED AS FOLLOWS: EIGHTY PERCENT (80%) FOR COUNTY ROADS MAINTENANCE AND IMPROVEMENT; TEN PERCENT (10%) FOR PUBLIC SAFETY AND EMERGENCY DISPATCH; TEN PERCENT (10%) FOR CHILDCARE FOR OUR LOCAL WORKFORCE, AND SHALL THE FIRST-YEAR REVENUES, AND WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BE COLLECTED AND SPENT AS A VOTER APPROVED REVENUE CHANGE NOTWITHSTANDING ANY LIMITATION OR CONDITION UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER PROVISION OF LAW?",
+            "sourceOrg": "Archuleta County Clerk and Recorder",
+            "sourceUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+            "collectedAt": "2026-11-03T08:04:47.597547+00:00",
+            "verifiedAt": "2026-11-03T08:11:48.322004+00:00"
+          }
+        },
+        {
+          "id": "co-archuleta-county-school-district-50jt-2026-ballot-5a#question",
+          "contestId": "co-archuleta-county-school-district-50jt-2026-ballot-5a",
+          "officialNumber": "5A",
+          "questionText": "SHALL ARCHULETA COUNTY SCHOOL DISTRICT NO. 50JT DEBT BE INCREASED BY UP TO $79,900,000, WITH A REPAYMENT COST OF UP TO $156,500,000, WITH THE INCREASE TO OCCUR ONLY IF THE DISTRICT RECEIVES A \"BEST\" GRANT AWARD FROM THE STATE OF COLORADO THAT DOESN'T HAVE TO BE REPAID, FOR THE PURPOSE OF PROVIDING A HIGH-QUALITY LEARNING ENVIRONMENT FOR STUDENTS, INCLUDING BUT NOT LIMITED TO: CONSTRUCTING AND EQUIPPING A NEW PK-8 SCHOOL THAT WILL IMPROVE SAFETY AND SECURITY WHILE MEETING THE EDUCATIONAL NEEDS OF OUR STUDENTS; PROVIDING FUNDING TO PAGOSA PEAK OPEN SCHOOL TO UPDATE AND EQUIP EDUCATIONAL FACILITIES FOR STUDENTS; WITH FUNDING SUBJECT TO AN ANNUAL AUDIT BY AN INDEPENDENT THIRD-PARTY EXPERT AND WITH THE SPENDING OF ALL FUNDS DETAILED ON THE DISTRICT'S WEBSITE; AND SHALL DISTRICT TAXES BE INCREASED BY UP TO $6,700,000 ANNUALLY TO REPAY THIS DEBT; AND SHALL THE MILL LEVY BE IMPOSED IN ANY YEAR IN AN AMOUNT SUFFICIENT TO PAY THE PRINCIPAL OF, PREMIUM, IF ANY, AND INTEREST ON SUCH DEBT OR ANY REFUNDING DEBT (OR TO CREATE A RESERVE FOR SUCH PAYMENT) REGARDLESS OF RATE; WHICH DEBT SHALL CONSIST OF ONE OR MORE SERIES OF GENERAL OBLIGATION BONDS TO BEAR INTEREST, MATURE, BE SUBJECT TO REDEMPTION, WITH NO MORE THAN A 3% PREMIUM, AND BE ISSUED AT SUCH TIME, AT SUCH PRICE (AT, ABOVE, OR BELOW PAR) AND IN SUCH MANNER AND CONTAINING SUCH TERMS CONSISTENT WITH THIS BALLOT ISSUE AS THE BOARD OF EDUCATION MAY DETERMINE AND ALLOWING THE DISTRICT TO COLLECT, RETAIN AND SPEND ALL PROCEEDS OF THE NEW TAX REVENUE AS A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL ARCHULETA COUNTY SCHOOL DISTRICT NO. 50JT DEBT BE INCREASED BY UP TO $79,900,000, WITH A REPAYMENT COST OF UP TO $156,500,000, WITH THE INCREASE TO OCCUR ONLY IF THE DISTRICT RECEIVES A \"BEST\" GRANT AWARD FROM THE STATE OF COLORADO THAT DOESN'T HAVE TO BE REPAID, FOR THE PURPOSE OF PROVIDING A HIGH-QUALITY LEARNING ENVIRONMENT FOR STUDENTS, INCLUDING BUT NOT LIMITED TO: CONSTRUCTING AND EQUIPPING A NEW PK-8 SCHOOL THAT WILL IMPROVE SAFETY AND SECURITY WHILE MEETING THE EDUCATIONAL NEEDS OF OUR STUDENTS; PROVIDING FUNDING TO PAGOSA PEAK OPEN SCHOOL TO UPDATE AND EQUIP EDUCATIONAL FACILITIES FOR STUDENTS; WITH FUNDING SUBJECT TO AN ANNUAL AUDIT BY AN INDEPENDENT THIRD-PARTY EXPERT AND WITH THE SPENDING OF ALL FUNDS DETAILED ON THE DISTRICT'S WEBSITE; AND SHALL DISTRICT TAXES BE INCREASED BY UP TO $6,700,000 ANNUALLY TO REPAY THIS DEBT; AND SHALL THE MILL LEVY BE IMPOSED IN ANY YEAR IN AN AMOUNT SUFFICIENT TO PAY THE PRINCIPAL OF, PREMIUM, IF ANY, AND INTEREST ON SUCH DEBT OR ANY REFUNDING DEBT (OR TO CREATE A RESERVE FOR SUCH PAYMENT) REGARDLESS OF RATE; WHICH DEBT SHALL CONSIST OF ONE OR MORE SERIES OF GENERAL OBLIGATION BONDS TO BEAR INTEREST, MATURE, BE SUBJECT TO REDEMPTION, WITH NO MORE THAN A 3% PREMIUM, AND BE ISSUED AT SUCH TIME, AT SUCH PRICE (AT, ABOVE, OR BELOW PAR) AND IN SUCH MANNER AND CONTAINING SUCH TERMS CONSISTENT WITH THIS BALLOT ISSUE AS THE BOARD OF EDUCATION MAY DETERMINE AND ALLOWING THE DISTRICT TO COLLECT, RETAIN AND SPEND ALL PROCEEDS OF THE NEW TAX REVENUE AS A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Archuleta County Clerk and Recorder",
+            "sourceUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+            "collectedAt": "2026-11-03T08:04:47.597547+00:00",
+            "verifiedAt": "2026-11-03T08:11:48.322004+00:00"
+          }
+        },
+        {
+          "id": "co-upper-san-juan-health-service-district-2026-ballot-7b#question",
+          "contestId": "co-upper-san-juan-health-service-district-2026-ballot-7b",
+          "officialNumber": "7B",
+          "questionText": "WITHOUT RAISING TAXES, SHALL THE UPPER SAN JUAN HEALTH SERVICE DISTRICT (WHICH OPERATES PAGOSA SPRINGS MEDICAL CENTER AND PROVIDES EMS/AMBULANCE SERVICES, HOSPITAL AND OUTPATIENT MEDICAL CARE TO THE COMMUNITY) BE AUTHORIZED TO CONTINUE TO COLLECT, RETAIN, AND SPEND ALL REVENUES OF THE DISTRICT IN EACH FISCAL YEAR HEREAFTER WITHOUT REGARD TO ANY REVENUE OR SPENDING LIMITATION CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR SECTION 29-1-301, C.R.S.?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "WITHOUT RAISING TAXES, SHALL THE UPPER SAN JUAN HEALTH SERVICE DISTRICT (WHICH OPERATES PAGOSA SPRINGS MEDICAL CENTER AND PROVIDES EMS/AMBULANCE SERVICES, HOSPITAL AND OUTPATIENT MEDICAL CARE TO THE COMMUNITY) BE AUTHORIZED TO CONTINUE TO COLLECT, RETAIN, AND SPEND ALL REVENUES OF THE DISTRICT IN EACH FISCAL YEAR HEREAFTER WITHOUT REGARD TO ANY REVENUE OR SPENDING LIMITATION CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR SECTION 29-1-301, C.R.S.?",
+            "sourceOrg": "Archuleta County Clerk and Recorder",
+            "sourceUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+            "collectedAt": "2026-11-03T08:04:47.597547+00:00",
+            "verifiedAt": "2026-11-03T08:11:48.322004+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-archuleta-county-2026-ballot-1a",
+          "whatItDoes": "Increase the county lodging-tax rate from 2% to 6% beginning January 1, 2027, on accommodations rented for fewer than 30 consecutive days. It would apply outside Pagosa Springs, which has its own lodging tax. The question estimates an additional $1.08 million annually at first, with later amounts depending on revenue. Of the increase, 80% would go to county-road maintenance and improvements, 10% to public safety and emergency dispatch, and 10% to childcare for the local workforce. Revenue could be collected and spent outside the stated constitutional and other legal limits, with no stated end date.",
+          "yesMeans": "Approve the higher lodging tax outside Pagosa Springs, its required allocations and its revenue-limit exception.",
+          "noMeans": "Do not approve this lodging-tax increase or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+          "sourceHash": "8cd750a69c4bca7efe2078f9493551f3c7f1fe82dd957537361d78af4b7bf6a9",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:11:48.322004+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-archuleta-county-school-district-50jt-2026-ballot-5a",
+          "whatItDoes": "Allow the district to borrow up to $79.9 million, with total repayment capped at $156.5 million, only if it receives a state BEST grant that does not have to be repaid. Money would build and equip a new preschool-through-eighth-grade school and update and equip educational facilities at Pagosa Peak Open School. Annual repayment property taxes could rise by up to $6.7 million, with no mill-rate ceiling, to pay debt or refinancing-debt principal, any premium and interest, or create a repayment reserve. Spending would receive an annual independent third-party audit, and all spending details must appear on the district website. The new tax revenue could be retained and spent under the stated constitutional and other legal revenue-limit exception.",
+          "yesMeans": "Approve the school bonds and repayment taxes if the state grant condition is met, with the stated limits and oversight.",
+          "noMeans": "Do not authorize this debt, its repayment taxes or its proposed revenue-limit exception through this measure.",
+          "parts": [
+            {
+              "id": "co-archuleta-county-school-district-50jt-2026-ballot-5a#bond-terms",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Bond terms",
+              "what": "The school board would set interest rates, maturity and issuance dates, and sale prices above, below or equal to principal for one or more series of general-obligation bonds. Any early-repayment premium would be capped at 3%."
+            }
+          ],
+          "sourceUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+          "sourceHash": "8cd750a69c4bca7efe2078f9493551f3c7f1fe82dd957537361d78af4b7bf6a9",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:11:48.322004+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-upper-san-juan-health-service-district-2026-ballot-7b",
+          "whatItDoes": "Let the health district continue collecting, retaining and spending all its revenue in every future fiscal year outside the stated constitutional revenue and spending limits and the cited statutory limit. The district operates Pagosa Springs Medical Center and provides ambulance, hospital and outpatient medical services. The question does not authorize a tax increase.",
+          "yesMeans": "Approve the ongoing authority to retain and spend all district revenue outside the stated limits.",
+          "noMeans": "Do not approve this ongoing revenue-limit exception through this question.",
+          "parts": [],
+          "sourceUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+          "sourceHash": "8cd750a69c4bca7efe2078f9493551f3c7f1fe82dd957537361d78af4b7bf6a9",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:11:48.322004+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:11:48.322004+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+        "finalUrl": "https://www.archuletacounty.gov/wp-content/uploads/2026-Archuleta-County-General-Election-Sample-Ballot.pdf",
+        "publisher": "Archuleta County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T08:04:47.597547+00:00",
+        "httpStatus": 200,
+        "rawHash": "8cd750a69c4bca7efe2078f9493551f3c7f1fe82dd957537361d78af4b7bf6a9",
+        "reviewedEvidence": "Complete original current November3,2026 county GeneralSamplePDF linked by official county election and sample pages. Three full new operative questions, exact existing county, school and health-district scopes. BEST-grant condition, borrowing/tax/premium limits, oversight and lodging-tax exclusions preserved. No advocacy used."
+      }
+    ]
+  }
+}

@@ -149,6 +149,7 @@ interface ViewTarget {
 const EMPTY_MEETINGS: Meeting[] = [];
 const NO_VENUES: Venue[] = [];
 const NO_VOTING_PINS: VotingSitePin[] = [];
+const NO_INSETS = { top: 0, right: 0, bottom: 0, left: 0 };
 const RESULT_DISTRICT = /\/(?:cd|sldu|sldl):/;
 if (typeof window !== "undefined") prepareMapWorkers();
 let arrivingAsk: Promise<typeof import("@/components/ask/ask-box")> | null = null;
@@ -1660,7 +1661,7 @@ function MapEntryInner() {
             narrowedDistricts={narrowedDistricts}
             onDistrictClick={onDistrictClick}
             theme={theme}
-            insets={mapInsets}
+            insets={resultsOpen ? NO_INSETS : mapInsets}
             fitNonce={fitNonce}
             onDistrictError={onDistrictError}
             onDrawnDistricts={setDrawnDistricts}

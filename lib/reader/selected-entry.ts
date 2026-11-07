@@ -2,6 +2,8 @@ import {PERSON_ID_NAMESPACES} from "../officials/people-identity.ts";
 import {promotedPayloadSha256} from "../civic-data/attested-promotion.ts";
 import {parseUnchangedConfirmation} from "../civic-data/unchanged-confirmation.ts";
 import {registerIntegrityCheckedEdgeEntries,type PromotedEdgeEntry} from "../civic-data/read-model.ts";
+import { withBallotResultFacts, type BallotResultFacts } from "../ballot/election-results.ts";
+import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 
 export const selectedPointerSql = `SELECT p.*,c.retrieved_at,
   (SELECT e.detail FROM civic_data_candidate_events e WHERE e.candidate_id=p.current_version_id
@@ -20,11 +22,13 @@ export function selectedStateEntry(recordClass: import("../civic-data/types.ts")
   row: Record<string, unknown> | null | undefined): PromotedEdgeEntry {
   if (!row) return {kind:"NOT_RECORDED",recordClass,scope};
   if (row.published !== true) throw new Error("READER_PUBLISHED_POINTER_INVALID");
+  const payload = recordClass === "BALLOT_CANDIDACY" && row.election_results
+    ? withBallotResultFacts(row.payload as GenericBallotProjection, row.election_results as BallotResultFacts) : row.payload;
   const entry: Extract<PromotedEdgeEntry,{kind:"PROMOTED"}> = {kind:"PROMOTED",projection:{key:String(row.key),sourceId:String(row.source_id),recordClass,scope,
     versionId:String(row.current_version_id),lastKnownGoodVersionId:String(row.last_known_good_version_id),
-    promotedAt:String(row.promoted_at),payload:row.payload,
+    promotedAt:String(row.promoted_at),payload,
     receipt:row.validation_receipt as Extract<PromotedEdgeEntry,{kind:"PROMOTED"}>["projection"]["receipt"]},
-    attested:{recordClass,scope,versionId:String(row.current_version_id),payloadSha256:promotedPayloadSha256(row.payload),
+    attested:{recordClass,scope,versionId:String(row.current_version_id),payloadSha256:promotedPayloadSha256(payload),
       retrievedAt:String(row.retrieved_at),staleAtRetrieval:false,version:null,sourceThrough:null}};
   const confirmation = typeof row.confirmation==="string" ? parseUnchangedConfirmation(row.confirmation) : null;
   if (confirmation?.versionId===entry.projection.versionId && confirmation.pointerKey===entry.projection.key) Object.assign(entry.projection,{latestConfirmation:confirmation});

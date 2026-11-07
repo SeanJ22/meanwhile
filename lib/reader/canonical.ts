@@ -11,6 +11,9 @@ import { isCivicPayloadPart } from "../civic-data/payload-codec.ts";
 import { serverReaderValue } from "./memory.ts";
 import { createHash } from "node:crypto";
 import { MEETING_HELD_LOOKBACK_DAYS } from "../meetings/constants.ts";
+import { BALLOT_RESULT_VERSION_SQL, ballotResultFactsSql, withBallotResultFacts, type BallotResultFacts } from "../ballot/election-results.ts";
+import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
+import type { Query } from "../facts/publish.ts";
 
 const refuse = (reason: string) => async (): Promise<never> => { throw new Error(reason); };
 type Pointer = { recordClass: RoutineRecordClass; scope: string };
@@ -32,8 +35,13 @@ type SharedSnapshot = { readonly fingerprint: string; readonly rows: readonly Ro
 type PendingSnapshot = { readonly expected: Promise<string>; readonly body: Promise<SharedSnapshot> };
 const inFlight = serverReaderValue("canonical-in-flight-by-publication-v2", () => new Map<string, Set<PendingSnapshot>>());
 
+const includesBallots = (keys: readonly string[]) => keys.some(key => key.startsWith("BALLOT_CANDIDACY:"));
+const publicationFingerprintSql = (keys: readonly string[]) => !includesBallots(keys) ? PUBLICATION_FINGERPRINT
+  : `SELECT encode(sha256(convert_to(versions.value||${BALLOT_RESULT_VERSION_SQL},'UTF8')),'hex') AS value
+      FROM (${PUBLICATION_FINGERPRINT}) versions`;
+
 async function publicationFingerprint(query: ReadOnlyQuery, params: readonly unknown[]): Promise<string> {
-  const [[row]] = await query([{ text: PUBLICATION_FINGERPRINT, params }]);
+  const [[row]] = await query([{ text: publicationFingerprintSql(params[0] as readonly string[]), params }]);
   if (typeof row?.value !== "string" || !/^[a-f0-9]{64}$/.test(row.value)) throw new Error("READER_PUBLICATION_FINGERPRINT_MISSING");
   return row.value;
 }
@@ -66,7 +74,7 @@ async function sharedCanonicalRead(query: ReadOnlyQuery, statement: Statement, s
   const expected = current();
   void expected.catch(() => {});
   const offset = statement.params.length;
-  const fingerprintSql = PUBLICATION_FINGERPRINT.replace(/\$(\d+)/g, (_, index: string) => `$${Number(index) + offset}`);
+  const fingerprintSql = publicationFingerprintSql(sources.keys).replace(/\$(\d+)/g, (_, index: string) => `$${Number(index) + offset}`);
   const text = `${statement.text} UNION ALL SELECT 'publication-fingerprint',empty.*,NULL::text,to_jsonb(versions.value)
     FROM (${fingerprintSql}) versions LEFT JOIN LATERAL (${EMPTY_SHELF}) empty ON true`;
   const readBody = (query as PublishedQuery).canonicalBody ?? query;
@@ -117,6 +125,7 @@ export function readCanonicalPackages(groups: readonly (readonly Pointer[])[], q
       for (const row of promotions) { visit(row.payload); visit(row.validation_receipt); }
       const selectedRows: Row[] = [...promotions];
       for (const hash of needed) { const part = parts.get(hash); if (part) selectedRows.push(part); }
+      selectedRows.push(...rows.filter(row => row.row_kind === "ballot-results" && selected.has(String(row.part_hash))));
       if (extra) selectedRows.push(extra);
       return [structuredClone(selectedRows)];
     }, index === 0 ? additional : undefined);
@@ -185,7 +194,10 @@ function canonicalStatement(keys: readonly string[], additional?: Additional): S
     FROM (SELECT coalesce(jsonb_agg(to_jsonb(item)), '[]'::jsonb) AS rows FROM (
       ${additional.canonicalKeys ? "SELECT * FROM additional" : additionalSql}
     ) item) extra LEFT JOIN LATERAL (${EMPTY_SHELF}) empty ON true` : "";
-  return {text:shelfSql+extra,params:[keys,...additional?.params ?? []]};
+  const results = includesBallots(keys) ? ` UNION ALL SELECT 'ballot-results',empty.*,selected.key,
+    ${ballotResultFactsSql("selected.payload")} FROM shelf selected
+    LEFT JOIN LATERAL (${EMPTY_SHELF}) empty ON true WHERE selected.record_class='BALLOT_CANDIDACY' AND selected.published` : "";
+  return {text:shelfSql+extra+results,params:[keys,...additional?.params ?? []]};
 }
 
 /** Read canonical promotions once; source evidence was checked when each fact was published. */
@@ -221,6 +233,12 @@ export async function readCanonicalShelf(entries: readonly { recordClass: Routin
   const held = new Map(decoded.map(({ root }) => [root.kind === "PROMOTED" ? root.projection.key : `${root.recordClass}:${root.scope}`, root]));
   for (const entry of held.values()) if (entry.kind === "PROMOTED") {
     if (canonicalCivicDataHash(entry.projection.payload) !== entry.attested.payloadSha256) throw new Error("READER_PUBLISHED_PAYLOAD_HASH_MISMATCH");
+    const results = loaded.find(row => row.row_kind === "ballot-results" && row.part_hash === entry.projection.key)?.part_payload;
+    if (entry.projection.recordClass === "BALLOT_CANDIDACY" && results) {
+      const payload = withBallotResultFacts(entry.projection.payload as GenericBallotProjection, results as BallotResultFacts);
+      Object.assign(entry.projection, { payload });
+      Object.assign(entry.attested, { payloadSha256: canonicalCivicDataHash(payload) });
+    }
   }
   registerIntegrityCheckedEdgeEntries([...held.values()]);
   return {
@@ -270,3 +288,12 @@ export const ARCHIVED_MEETINGS_SQL = (collection: "meetings" | "agendaDocuments"
       JOIN sittings s ON s.id=reader_payload_node(d.item)->>'meetingId'
     ORDER BY reader_payload_node(d.item)->>'id',v.retrieved_at DESC
   ) SELECT body,value FROM papers`}`;
+
+/** Source-clock fingerprints and the current ballot version, without reading any ballot record. */
+export function electionResultClockRows(query: Query, scopes: readonly { readonly name: string; readonly scope: string | null; readonly hashMD5?: string }[]) {
+  return query(`SELECT requested.name,md5(c.position) AS clock_hash,
+    CASE WHEN md5(c.position)=requested.hash THEN NULL ELSE c.position END AS position,p.current_version_id AS ballot_version
+    FROM unnest($1::text[],$2::text[],$3::text[]) requested(name,scope,hash) LEFT JOIN pass_cursor c ON c.name=requested.name
+    LEFT JOIN civic_data_promotions p ON p.record_class='BALLOT_CANDIDACY' AND p.scope=requested.scope`,
+    [scopes.map(row => row.name), scopes.map(row => row.scope), scopes.map(row => row.hashMD5 ?? null)]);
+}

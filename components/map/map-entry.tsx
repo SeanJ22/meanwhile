@@ -13,6 +13,7 @@ import { flushSync } from "react-dom";
 import { forgetCamera } from "@/lib/map/camera-memory";
 
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 
 import { CountBadge } from "@/components/map/count-badge";
 import { Legend } from "@/components/map/legend";
@@ -53,6 +54,7 @@ import { PostalZipNotice } from "./postal-zip-notice";
 import { TutorialReplayButton, useTutorialRequested } from "./tutorial-overlay";
 import { useSidebarVisible } from "@/hooks/use-sidebar-visible";
 import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
+import { closeResults, useResultsScope } from "@/lib/map/results-scope";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
 import { logEvent } from "@/lib/log/client";
@@ -108,6 +110,11 @@ const EntityModal = dynamic(
   () => import("./popup/entity-modal").then((m) => m.EntityModal),
   { ssr: false },
 );
+// Nothing of the results map loads until the reader taps "See the map".
+const ResultsMap = dynamic(
+  () => import("./results-map"),
+  { ssr: false },
+);
 const WelcomeOverlay = dynamic(
   () => import("./welcome-overlay").then((m) => m.WelcomeOverlay),
   { ssr: false },
@@ -140,6 +147,9 @@ interface ViewTarget {
 }
 
 const EMPTY_MEETINGS: Meeting[] = [];
+const NO_VENUES: Venue[] = [];
+const NO_VOTING_PINS: VotingSitePin[] = [];
+const RESULT_DISTRICT = /\/(?:cd|sldu|sldl):/;
 if (typeof window !== "undefined") prepareMapWorkers();
 let arrivingAsk: Promise<typeof import("@/components/ask/ask-box")> | null = null;
 function prepareAsk() {
@@ -865,17 +875,24 @@ function MapEntryInner() {
 
   // Drawn overlays: the checked district types, gated by the master toggle
   // (lib/state/district-intent.ts).
+  const resultsScope = useResultsScope();
+  const resultsOpen = resultsScope.open;
+  const router = useRouter();
   const activeDistrictTypes = useMemo(
     () =>
-      deriveActiveDistrictTypes(
-        showDistricts,
-        districtsFailed,
-        ui.filters.districtTypes as DistrictType[],
-        // The same Local/State/Federal selection the meeting list filters on.
-        ui.tiers,
-      ),
-    [showDistricts, districtsFailed, ui.filters.districtTypes, ui.tiers],
+      resultsOpen
+        // The results draw on the boundary source; one district type keeps it loaded while they do.
+        ? (resultsScope.districts ? ["congressional" as DistrictType] : [])
+        : deriveActiveDistrictTypes(
+          showDistricts,
+          districtsFailed,
+          ui.filters.districtTypes as DistrictType[],
+          // The same Local/State/Federal selection the meeting list filters on.
+          ui.tiers,
+        ),
+    [resultsOpen, resultsScope.districts, showDistricts, districtsFailed, ui.filters.districtTypes, ui.tiers],
   );
+  const resultsYours = useMemo(() => (shown?.governingOcdIds ?? []).filter(id => RESULT_DISTRICT.test(id)), [shown?.governingOcdIds]);
 
   const selectedDistrict = useMemo(
     () =>
@@ -1615,6 +1632,7 @@ function MapEntryInner() {
         onFocusCapture={event => {
           if (event.target instanceof Element && event.target.closest(".ask-pill")) void prepareAsk();
         }}
+        data-results={resultsOpen ? "open" : undefined}
         data-sidebar={sidebarUp ? "open" : "closed"}
         data-bp={layoutBp}
         style={
@@ -1626,10 +1644,10 @@ function MapEntryInner() {
       >
         <div className="mw-map-layer absolute inset-0">
           {districtsRestored && (view !== null || failure !== null || (restored && !location)) && <MapCanvas
-            venues={allVenues}
+            venues={resultsOpen ? NO_VENUES : allVenues}
             visibleVenueKeys={visibleVenueKeys}
             camera={camera}
-            here={location && contains(location.lat, location.lng) ? location : null}
+            here={!resultsOpen && location && contains(location.lat, location.lng) ? location : null}
             focus={focus}
             selectedVenueKey={ui.selectedVenueKey}
             frameAllVenues={
@@ -1649,10 +1667,10 @@ function MapEntryInner() {
             onSelectVenue={onSelectVenue}
             onTileError={onTileError}
             onTilesRecovered={onTilesRecovered}
-            onViewportSettle={onViewportSettle}
-            allowAutoFrame={view?.kind !== "settled"}
-            focusStateOcdId={focusState.activeOcdId}
-            officeSites={officeSites}
+            onViewportSettle={resultsOpen ? undefined : onViewportSettle}
+            allowAutoFrame={view?.kind !== "settled" && !resultsOpen}
+            focusStateOcdId={resultsOpen ? null : focusState.activeOcdId}
+            officeSites={resultsOpen ? undefined : officeSites}
             selectedOfficeId={large?.kind === "official" ? (large.office?.id ?? null) : null}
             onSelectOffice={id => {
               const office = officePins.pins.find(value => value.id === id);
@@ -1661,8 +1679,21 @@ function MapEntryInner() {
               dispatch({ type: "select/district", ocdId: null, districtType: null });
               openOffice(office);
             }}
-            onBoundsChange={onMapBounds}
-            votingSites={votingPins}
+            onBoundsChange={resultsOpen ? undefined : onMapBounds}
+            votingSites={resultsOpen ? NO_VOTING_PINS : votingPins}
+            results={resultsOpen ? map => (
+              <ResultsMap
+                map={map}
+                theme={theme}
+                phone={layoutBp === "phone"}
+                yours={resultsYours}
+                zip={clusterZip}
+                onBack={() => {
+                  closeResults();
+                  if (clusterZip) router.push(`/ballot?zip=${clusterZip}`);
+                }}
+              />
+            ) : undefined}
             votingAddressPoint={votingAddressPoint}
             onSelectVotingSite={setSelectedVotingSiteId}
             selectedVotingSiteId={selectedVotingSiteId}

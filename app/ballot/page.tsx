@@ -61,6 +61,9 @@ import {
   type CandidateCardData,
 } from "@/lib/ballot/candidate-cards";
 import { BallotAskPill } from "@/components/ballot/ballot-ask-pill";
+import { SeeTheMap } from "@/components/ballot/see-the-map";
+import { jurisdictionFromOcdId } from "@/lib/coverage/states";
+import { US_STATES } from "@/lib/control-plane/readiness/catalog";
 import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
 import { JurisdictionMark, JurisdictionNote } from "@/components/ballot/jurisdiction-note";
 import { CandidateBattlecard } from "@/components/ballot/candidate-battlecard";
@@ -812,10 +815,13 @@ export default readerRoute("/ballot", async function BallotPage({
   const filingRows = filingProjection?.kind === "PROMOTED"
     ? filingsForDivisions(filingProjection.value.records as unknown as OfficialFiling[], askOcdIds) : [];
 
+  const homeState = askOcdIds.map(jurisdictionFromOcdId).find(Boolean) ?? null;
+  const homeName = homeState ? US_STATES.find(entry => entry.code === homeState.slug)?.name ?? null : null;
   return (
 
     <>
 
+      {homeState && homeName && <p className="mb-4"><SeeTheMap abbr={homeState.usps} name={homeName} /></p>}
       <OfficialFilings rows={filingRows} />
       <StateOfficeContacts offices={stateOfficesForDivisions(askOcdIds).filter(office => office.kind === "CAMPAIGN_FINANCE_OFFICE" || !navigation.has(office.state))} />
 

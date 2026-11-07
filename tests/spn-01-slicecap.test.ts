@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { WORK_DDL, workList } from "../lib/core/work.ts";
-import { metered, owedMs, runSliceLane, SLICE_BYTES_PER_HOUR } from "../lib/reader/slice-lane.ts";
+import { countNeonBytes } from "../lib/db/transfer-by-caller.ts";
+import { owedMs, runSliceLane, SLICE_BYTES_PER_HOUR } from "../lib/reader/slice-lane.ts";
 import { migratedFactDb } from "./helpers/migrated-reader-db.ts";
 
 const ONE = "ocd-division/country:us/state:az/place:p001";
@@ -10,6 +11,8 @@ test("the lane builds places nobody asked for only while it owes no time, and ma
   const db = await migratedFactDb();
   try {
     for (const ddl of WORK_DDL) await db.pg.exec(ddl);
+    // What the database meter would count of each request and its answer.
+    const metered = (query: typeof db.query): typeof db.query => async (text, params = []) => { const rows = await query(text, params); countNeonBytes("reader", JSON.stringify(rows).length, Date.now(), { requests: 1, bytes: text.length + JSON.stringify(params).length }); return rows; };
     await db.query("INSERT INTO entity(id,kind,name,state) SELECT 'ocd-division/country:us/state:az/place:p'||lpad(n::text,3,'0'),'place','P','AZ' FROM generate_series(1,150) n");
     const list = workList(metered(db.query), { owner: "cap-test" }), facts = metered(db.query);
     let now = 1_000_000, built = 0;

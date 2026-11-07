@@ -1,4 +1,6 @@
 import type { Query } from "../facts/publish.ts";
+import { CHECKED_EVERY_MS } from "../reader/canonical.ts";
+import { cardsAsBuilt } from "../reader/slice-meetings.ts";
 import { cardsOfKind, SLICE_CARDS, type SliceCard } from "../reader/slices.ts";
 import { controlPlaneQuery, workList, type WorkList } from "./work.ts";
 
@@ -23,8 +25,7 @@ const encodedBoard = /^source:[^:]+:body:([^:]+)/;
 
 /**
  * The slices a published calendar or registration reaches, read after its rows are in place. A calendar's partition reaches the meetings of
- * the boards it holds (a board folded into another is marked under the one it was folded into) and, for a state's family, the places
- * its rows name without a board. A history partition reaches only the history; a new version of a calendar reaches the history too, since the version it replaced may now hold sittings the held window no longer does.
+ * the boards it holds (a board folded into another is marked under the one it was folded into) and, for a state's family, the places its rows name without a board. A history partition reaches only the history; a new version of a calendar reaches the history too, since the version it replaced may now hold sittings the held window no longer does.
  * A registration reaches the bodies card of every place it names. A registry's runtime model is held on the shelf, whose version moves with the pointer.
  */
 async function slicesOfPublication(query: Query, input: { readonly recordClass: string; readonly scope: string }): Promise<readonly SliceMark[]> {
@@ -40,7 +41,9 @@ async function slicesOfPublication(query: Query, input: { readonly recordClass: 
   const subjects = [...new Set(rows.map(row => row.ocd ? String(row.ocd) : row.board ? String(row.board) : ""))].filter(Boolean);
   const canonical = subjects.length ? await query("SELECT s.id,coalesce(x.entity_id,s.id) AS canonical FROM unnest($1::text[]) s(id) LEFT JOIN entity_external_id x ON x.scheme='body-alias' AND x.value=s.id", [subjects]) : [];
   const cards: readonly SliceCard[] = input.scope.endsWith(":history") ? ["history"] : ["meetings", "agenda", "history"];
-  return [...new Set(canonical.map(row => String(row.canonical)))].flatMap(subject => cards.map(card => ({ placeId: subject, card })));
+  // Only the cards that now differ from those held are marked: a calendar read again, with nothing new but the moments it was read at, changes nothing a card shows.
+  const held = [...new Set(canonical.map(row => String(row.canonical)))], all = held.flatMap(subject => cards.map(card => ({ placeId: subject, card })));
+  try { const { asBuilt } = await cardsAsBuilt(query, held); return all.filter(mark => !asBuilt.has(`${mark.placeId}\t${mark.card}`)); } catch { return all; }
 }
 
 let list = (): WorkList => workList(controlPlaneQuery(), { owner: "slide" });
@@ -50,12 +53,12 @@ export function markSlicesOn(next: () => WorkList): void { list = next; unavaila
 
 /**
  * The marks go on the work list as `slice` rows, after the commit. A row already waiting is left as it is, so a burst of facts for one place
- * is one rebuild. The fact is live whatever happens here; a mark that could not be made is said once, and the slice is rebuilt at the next change to its place.
+ * is one rebuild. Facts only checked again (`rechecked`) wait out the day a card's checked time is kept to; a mark that is owed sooner brings the row forward. The fact is live whatever happens here; a mark that could not be made is said once, and the slice is rebuilt at the next change to its place.
  */
-export async function markSlices(marks: readonly SliceMark[] | Promise<readonly SliceMark[]>): Promise<void> {
+export async function markSlices(marks: readonly SliceMark[] | Promise<readonly SliceMark[]>, rechecked = false): Promise<void> {
   try {
-    const waiting = await marks;
-    if (waiting.length) await list().touch(waiting.map(mark => ({ kind: "slice" as const, placeId: mark.placeId, subjectId: mark.placeId, field: mark.card,
+    const waiting = await marks, dueAt = new Date(Date.now() + (rechecked ? CHECKED_EVERY_MS : 0)).toISOString();
+    if (waiting.length) await list().touch(waiting.map(mark => ({ kind: "slice" as const, placeId: mark.placeId, subjectId: mark.placeId, field: mark.card, dueAt,
       origin: { from: "loader" as const }, source: { source: "The Slide filed a fact here" } })));
   } catch (error) {
     if (unavailable) return;

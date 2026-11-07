@@ -1,0 +1,53 @@
+{
+  "n": 185,
+  "branch": "release/185",
+  "head_sha": "f2469df86d2b2234e2cf9f91ee2aede5f31fbb74",
+  "base_river_sha": "92ab73508b08777008dd9daed8532736b9b9d5fd",
+  "main_sha": "46561979d8c6d5653ed0e93b9f4daed40f85bd6f",
+  "lanes": [
+    {
+      "lane": "install-job",
+      "steps": [
+        "IJ-02"
+      ],
+      "ready_sha": "ebd51d097ddcff3127f12cf8f67391002679ccf4",
+      "result_sha": "ca7b316026156bef2ad52c801b31512479bdf51c"
+    },
+    {
+      "lane": "cx-compute",
+      "steps": [
+        "CX-COMPUTE"
+      ],
+      "ready_sha": "22d3e0456660201b4e7fa197ba68524f041c466a",
+      "result_sha": "ef9157d5bbd7cbf69ef7db9c15cf23e2e392fa99"
+    },
+    {
+      "lane": "spn-01-e6",
+      "steps": [
+        "SPN-01"
+      ],
+      "ready_sha": "b95349b4603a9d91d07f6516988012a6a27a2b58",
+      "result_sha": "aabea280c75c8d6415c516adf4c04567894435b8"
+    },
+    {
+      "lane": "keys-reason",
+      "steps": [
+        "KR-01"
+      ],
+      "ready_sha": "befdd147d35e205478000ab85fb8f92d3109bb8b",
+      "result_sha": "f2469df86d2b2234e2cf9f91ee2aede5f31fbb74"
+    }
+  ],
+  "steps": [
+    "IJ-02",
+    "CX-COMPUTE",
+    "SPN-01",
+    "KR-01"
+  ],
+  "pr": {
+    "number": 904,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/904"
+  },
+  "ci": "running",
+  "at": "2026-11-07T21:58:22Z"
+}

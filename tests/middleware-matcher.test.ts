@@ -12,14 +12,17 @@ import * as pageStaticInfo from "next/dist/build/analysis/get-page-static-info.j
 import { getMiddlewareRouteMatcher } from "next/dist/shared/lib/router/utils/middleware-route-matcher.js";
 
 import { config } from "@/middleware.ts";
-import { ADMIN_ORIGIN } from "@/lib/ops/origins.ts";
+import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 // Next ships no declaration for this internal; it is the function `next build` itself uses to compile `config.matcher`.
 const getMiddlewareMatchers = (pageStaticInfo as unknown as { getMiddlewareMatchers(matcher: unknown, nextConfig: object): never }).getMiddlewareMatchers;
 const matches = getMiddlewareRouteMatcher(getMiddlewareMatchers(config.matcher, {}));
 
-function runs(path: string, host = "meanwhileusa.com"): boolean {
+const PUBLIC_HOST = new URL(PUBLIC_SITE_ORIGIN).host;
+const ADMIN_HOST = new URL(ADMIN_ORIGIN).host;
+
+function runs(path: string, host = PUBLIC_HOST): boolean {
   return matches(path, { headers: { host } } as never, {});
 }
 
@@ -62,8 +65,7 @@ test("pages and API routes that need the middleware still run it", () => {
 });
 
 test("every admin route is matched on both hosts, even one that looks like a file", () => {
-  const adminHost = new URL(ADMIN_ORIGIN).host;
-  for (const host of ["meanwhileusa.com", adminHost, "unknown.invalid"]) {
+  for (const host of [PUBLIC_HOST, ADMIN_HOST, "unknown.invalid"]) {
     for (const path of ["/admin", "/admin/login", "/admin/fleet", "/admin/x.js", "/admin/data.json", "/api/admin/session", "/api/admin/v6/resident-tasks/shot/a.png"]) {
       assert.equal(runs(path, host), true, `${path} on ${host} must run the middleware`);
     }
@@ -71,9 +73,8 @@ test("every admin route is matched on both hosts, even one that looks like a fil
 });
 
 test("the admin host still refuses every non-admin path, files included", () => {
-  assert.equal(new URL(ADMIN_ORIGIN).host, "admin.meanwhileusa.com", "the matcher literal mirrors ADMIN_ORIGIN");
   for (const path of ["/", "/geo/state-outlines.geojson", "/maplibre-gl-worker.mjs", "/place/az"]) {
-    assert.equal(runs(path, "admin.meanwhileusa.com"), true, `${path} on the admin host must run the middleware`);
+    assert.equal(runs(path, ADMIN_HOST), true, `${path} on the admin host must run the middleware`);
   }
 });
 

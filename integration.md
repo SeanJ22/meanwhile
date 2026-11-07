@@ -437,3 +437,11 @@ One line per batch folded into river.
 - 2026-11-07T09:15:33Z · install-job · IJ-01 · ready 995139a12293 · river ec907f7aacea · GitHub CI passed on release 182
 - 2026-11-07T09:15:33Z · keys-reason · KR-01 · ready befdd147d35e · river ec907f7aacea · GitHub CI passed on release 182
 - 2026-11-07T09:15:33Z · spn-01-e6 · SPN-01 · ready b95349b4603a · river ec907f7aacea · GitHub CI passed on release 182
+- 2026-11-07T20:33:39Z · census-progress · CN-01 · ready 2a2347ef04ef · river 92ab73508b08 · GitHub CI passed on release 184
+- 2026-11-07T20:33:39Z · edge-static · TC-02 · ready f2138a232da6 · river 92ab73508b08 · GitHub CI passed on release 184
+- 2026-11-07T20:33:39Z · research-worklist · RC-01 · ready 0c4afd52d00d · river 92ab73508b08 · GitHub CI passed on release 184
+- 2026-11-07T20:33:39Z · runner-check-local · TC-01 · ready 38e3d3457ead · river 92ab73508b08 · GitHub CI passed on release 184
+- 2026-11-07T20:33:39Z · runner-switch-heal · SW-01 · ready 9d9195c175b7 · river 92ab73508b08 · GitHub CI passed on release 184
+- 2026-11-07T20:33:39Z · spn-01-askdaily · SPN-01 · ready 58904d5e119e · river 92ab73508b08 · GitHub CI passed on release 184
+- 2026-11-07T20:33:39Z · trim-184 · TR-01 · ready 8723a0f2c0a6 · river 92ab73508b08 · GitHub CI passed on release 184
+- 2026-11-07T20:33:39Z · trim-sw01 · TR-02 · ready 8c54dd4bd068 · river 92ab73508b08 · GitHub CI passed on release 184

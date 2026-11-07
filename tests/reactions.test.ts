@@ -10,17 +10,21 @@ import {
   SCALE_BREAKS,
   SCALE_V1,
   SCALE_V2_FUNDING,
+  SCALE_V4_VOTE_CAST,
   VERIFICATION_TIERS,
   isPlausibleTargetId,
   isValidReactionKey,
   isValidReactionValue,
   isValidTargetType,
   isValueOnScaleFor,
+  questionForRow,
   questionForTargetType,
   scaleForTargetType,
+  voteCastContestPrefix,
   valuesForScaleVersion,
 } from "../lib/signal/reactions.ts";
-import { hashReactionKey, writeReaction } from "../lib/db/reactions.ts";
+import { hashReactionKey, voteCastPlan, writeReaction } from "../lib/db/reactions.ts";
+import { voteCastTargetIds } from "../lib/reactions/authority-targets.ts";
 
 test("aggregation: reactions in, per-division tier-split tallies out, n stated", () => {
   const rows = [
@@ -591,4 +595,50 @@ test("a planted verbatim reaches no aggregate — the input type has no room for
   );
   assert.ok(iface.length > 0);
   assert.doesNotMatch(iface, /freeText|free_text|text\s*[?:]/);
+});
+
+test("vote-cast: its own instrument, asked as 'How did you vote?', yes or no only", () => {
+  assert.equal(isValidTargetType("VOTE_CAST"), true);
+  assert.equal(scaleForTargetType("VOTE_CAST"), SCALE_V4_VOTE_CAST);
+  assert.equal(SCALE_V4_VOTE_CAST.version, 4);
+  assert.deepEqual(valuesForScaleVersion(4), ["YES", "NO"]);
+  assert.equal(questionForTargetType("VOTE_CAST"), "How did you vote? Tell us why.");
+  assert.equal(questionForRow("VOTE_CAST", 4), "How did you vote? Tell us why.");
+  assert.equal(isValueOnScaleFor("VOTE_CAST", "YES"), true);
+  assert.equal(isValueOnScaleFor("VOTE_CAST", "NO"), true);
+  assert.equal(isValueOnScaleFor("VOTE_CAST", "UNSURE"), false);
+  assert.equal(isValueOnScaleFor("VOTE_CAST", "LOVE"), false);
+  assert.equal(SCALE_BREAKS.filter((b) => b.targetTypes.includes("VOTE_CAST")).length, 1);
+  assert.equal(isPlausibleTargetId("x".repeat(200)), false);
+  assert.equal(isPlausibleTargetId("x".repeat(200), 512), true);
+});
+
+test("vote-cast: a YES replaces the reader's other answers in that contest, a NO withdraws, nothing else changes", () => {
+  const yes = voteCastPlan({ targetType: "VOTE_CAST", targetId: "c_1@cand_a", reaction: "YES" });
+  assert.deepEqual(yes, { kind: "replace", contestPrefix: "c_1@" });
+  assert.deepEqual(voteCastPlan({ targetType: "VOTE_CAST", targetId: "c_1@cand_a", reaction: "NO" }), { kind: "withdraw" });
+  assert.deepEqual(voteCastPlan({ targetType: "CANDIDATE", targetId: "c_1@cand_a", reaction: "NO" }), { kind: "upsert" });
+  assert.deepEqual(voteCastPlan({ targetType: "VOTE_CAST", targetId: "no-contest-part", reaction: "YES" }), { kind: "upsert" });
+  assert.equal(voteCastContestPrefix("@x"), null);
+});
+
+test("vote-cast: the valid answers are the contest's candidates, Yes and No on a measure, and none", () => {
+  const contest = (id: string, type: "CANDIDACY" | "MEASURE" | "RETENTION") => ({ id, type, aliases: [`${id}-old`] });
+  const candidate = (id: string, contestId: string) => ({ id, contestId, givenName: "A", familyName: id });
+  const ballot = {
+    contests: [contest("c1", "CANDIDACY"), contest("c2", "MEASURE"), contest("c3", "RETENTION")],
+    candidacies: [candidate("c1-a", "c1"), { ...candidate("c1-b", "c1"), aliases: ["old-b"] }, candidate("c2-x", "other")],
+  } as unknown as BallotSet;
+
+  const race = voteCastTargetIds(ballot, "c1@c1-a");
+  assert.ok(race.has("c1@c1-a") && race.has("c1@c1-b") && race.has("c1@old-b") && race.has("c1@NONE"));
+  assert.ok(!race.has("c1@YES") && !race.has("c1@c2-x") && !race.has("c2@NONE"));
+  assert.ok(voteCastTargetIds(ballot, "c1-old@NONE").has("c1-old@c1-a"), "an earlier contest id still resolves");
+
+  for (const measure of ["c2", "c3"]) {
+    const set = voteCastTargetIds(ballot, `${measure}@YES`);
+    assert.deepEqual([...set].sort(), [`${measure}@NO`, `${measure}@NONE`, `${measure}@YES`]);
+  }
+  assert.equal(voteCastTargetIds(ballot, "c9@NONE").size, 0);
+  assert.equal(voteCastTargetIds(ballot, "c1").size, 0);
 });

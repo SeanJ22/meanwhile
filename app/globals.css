@@ -5117,10 +5117,6 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   margin-top: var(--space-4);
 }
 
-.ballot-office-card[data-office-tier-start="true"] {
-  border-top-width: 3px;
-}
-
 .ballot-candidate-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);

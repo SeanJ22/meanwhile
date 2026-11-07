@@ -592,7 +592,7 @@ export async function readReactions(
     /* An answer value that never came in is absent, not zero. */
     const byAnswer: AnswerGroup[] = [];
     for (const targetType of REACTION_TARGET_TYPES) {
-      for (const version of [1, 2, 3] as ScaleVersion[]) {
+      for (const version of [1, 2, 3, 4] as ScaleVersion[]) {
         for (const choice of REACTION_VALUES) {
           const count = answers.get(`${targetType} ${version} ${choice}`);
           if (count === undefined || count === 0) continue;

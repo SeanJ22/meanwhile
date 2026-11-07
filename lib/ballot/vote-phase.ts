@@ -1,0 +1,66 @@
+import { readReaderSetting } from "../civic-data/reader-settings-publication.ts";
+import { registerSetting } from "../control-plane/settings.ts";
+import { ocdStateCode } from "../ocd/state-of.ts";
+import { COUNTY_TIME_ZONES, governmentTimeZone } from "../time/county-time-zones.ts";
+import { toZonedIso } from "../time/zoned.ts";
+import type { ContestResult } from "./results.ts";
+
+/**
+ * Which question a contest's card asks: "Would you vote for them?" before its polls close, "How did you
+ * vote? Tell us why." after. Each contest switches on its own; one Admin setting overrides all of them.
+ */
+export type VoteQuestionPhase = "before" | "after";
+export type VoteQuestionSetting = "auto" | "before" | "after";
+
+export const VOTE_QUESTION_SETTING = "ballot.voteQuestion";
+const CHOICES = [
+  { value: "auto", label: "Switch on each contest's own poll close" },
+  { value: "before", label: "Always ask Would you vote for them?" },
+  { value: "after", label: "Always ask How did you vote?" },
+] as const;
+const isSetting = (value: unknown): value is VoteQuestionSetting => CHOICES.some(choice => choice.value === value);
+
+registerSetting({ key: VOTE_QUESTION_SETTING, label: "Vote question on ballot cards", defaultValue: "auto",
+  readerFacing: true, control: "choice", choices: CHOICES, validate: isSetting });
+
+export async function readVoteQuestionSetting(): Promise<VoteQuestionSetting> {
+  const value = await readReaderSetting<string>(VOTE_QUESTION_SETTING, "auto");
+  return isSetting(value) ? value : "auto";
+}
+
+/** Where a contest's state votes. A state with several clocks uses the one most of its counties keep. */
+const principalZones = new Map<string, string | null>();
+function stateZone(state: string): string | null {
+  const code = state.toUpperCase();
+  if (!principalZones.has(code)) {
+    const tally = new Map<string, number>();
+    for (const row of COUNTY_TIME_ZONES.values()) {
+      if (row.stateCode === code && row.timeZones.length === 1) tally.set(row.timeZones[0]!, (tally.get(row.timeZones[0]!) ?? 0) + 1);
+    }
+    const [principal] = [...tally].sort((a, b) => b[1] - a[1])[0] ?? [];
+    principalZones.set(code, governmentTimeZone(code) ?? principal ?? null);
+  }
+  return principalZones.get(code)!;
+}
+
+/** With no state to read, the latest clock in the country, so a card never switches early. */
+const LATEST_ZONE = "Pacific/Honolulu";
+const CLOSE_HOUR = 21;
+
+export function voteQuestionPhase(input: {
+  setting: VoteQuestionSetting;
+  contest: { result?: Pick<ContestResult, "status" | "statusDate">; ocdId: string };
+  electionDate: string | null;
+  now: Date;
+}): VoteQuestionPhase {
+  if (input.setting !== "auto") return input.setting;
+  const { result } = input.contest;
+  /* A count in progress or a call exists only once the polls are shut. A runoff and an unopposed seat say nothing about the day, so they follow the clock. */
+  if (result && (result.status === "counting" || result.status === "called" || result.status === "certified")) return "after";
+  const votingDay = result?.status === "runoff" ? result.statusDate : input.electionDate;
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(votingDay ?? "");
+  if (!match) return "before";
+  const zone = stateZone(ocdStateCode(input.contest.ocdId) ?? "") ?? LATEST_ZONE;
+  const close = Date.parse(toZonedIso(Number(match[1]), Number(match[2]), Number(match[3]), CLOSE_HOUR, 0, zone));
+  return input.now.getTime() >= close ? "after" : "before";
+}

@@ -5,6 +5,7 @@ import type { AzCandidateIdentity, AzContestIdentity, LineupReconciliation } fro
 import type { MeasureRecord } from "./measure-records.ts";
 import type { OcdId, Provenance } from "../sources/types.ts";
 import type { RetrievalEvidence } from "../civic-data/types.ts";
+import type { CandidateResult, ContestResult, MeasureResult, Scorecard } from "./results.ts";
 
 export interface Election {
   id: string;
@@ -36,6 +37,7 @@ export interface Contest {
   termYears: number | null;
   scopeNote: string | null;
   provenance: Provenance;
+  result?: ContestResult;
 }
 
 export interface Candidacy {
@@ -72,6 +74,7 @@ export interface Candidacy {
   /** The candidate's own site, only as stated in the filing. Never found. */
   websiteUrl: string | null;
   provenance: Provenance;
+  result?: CandidateResult;
 }
 
 export interface Measure {
@@ -84,6 +87,7 @@ export interface Measure {
   /** The official interpretive statement or analysis, verbatim, if any. */
   officialStatement: string | null;
   provenance: Provenance;
+  result?: MeasureResult;
 }
 
 export interface BallotAbsence {
@@ -137,6 +141,8 @@ export interface BallotSet {
   /** Source notes with explicit applicability; never widened from a county
    * or one measured ZIP to every reader of a statewide source. */
   scopedCoverageNotes?: readonly ScopedBallotCoverageNote[];
+  /** Chamber seats and flips by scope: the state's code and "US". */
+  scorecards?: Readonly<Record<string, Scorecard>>;
 }
 
 export interface HeldBallotContest extends Pick<Contest, "id" | "electionId" | "ocdId" | "title" | "provenance"> {

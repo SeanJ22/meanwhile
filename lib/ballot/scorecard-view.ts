@@ -9,7 +9,6 @@ import type { ChamberScore, PartyKey, Scorecard, SeatCounts } from "./results.ts
 const PARTY_PLURAL: Readonly<Record<PartyKey, string>> = { D: "Democrats", R: "Republicans", O: "Other parties" };
 const PARTY_SINGULAR: Readonly<Record<PartyKey, string>> = { D: "Democrat", R: "Republican", O: "Independent" };
 export const partyPlural = (party: PartyKey): string => PARTY_PLURAL[party];
-export const partySingular = (party: PartyKey): string => PARTY_SINGULAR[party];
 
 const PARTY_ORDER: readonly PartyKey[] = ["D", "R", "O"];
 

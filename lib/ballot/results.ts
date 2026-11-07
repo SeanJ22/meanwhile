@@ -1,4 +1,4 @@
-import type { Candidacy, Contest, Measure } from "./types.ts";
+import type { Candidacy } from "./types.ts";
 
 /**
  * The election-result fields the ballot data carries (added by CX-ELECTION-RESULTS).
@@ -66,11 +66,6 @@ export interface Scorecard {
   sources: readonly { what: string; from: string; checked: string; url: string }[];
 }
 
-export const resultOf = (contest: Pick<Contest, "result">): ContestResult | null => contest.result ?? null;
-
-/** Candidate choices in ballot order, each with the result the data carries. */
-export const hasResults = (contest: Contest): boolean => contest.result !== undefined && contest.result.status !== "pending";
-
 export function winnersOf(candidates: readonly Candidacy[]): Candidacy[] {
   return candidates.filter(c => c.result?.outcome === "won");
 }
@@ -79,8 +74,6 @@ export function winnersOf(candidates: readonly Candidacy[]): Candidacy[] {
 export function leadersOf(candidates: readonly Candidacy[], seats: number): Candidacy[] {
   return candidates.filter(c => c.result).sort((a, b) => b.result!.votes - a.result!.votes).slice(0, Math.max(1, seats));
 }
-
-export const measureHasResult = (measure: Measure | null): boolean => measure?.result?.outcome != null;
 
 const SHORT_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 /** "Nov 5" from "2026-11-05"; with the year when asked ("Dec 8, 2026"). */

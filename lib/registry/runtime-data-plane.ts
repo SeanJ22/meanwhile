@@ -3,7 +3,6 @@ import { canonicalCivicDataHash } from "../civic-data/canonical-hash.ts";
 import { consumeStatePublicationRecord, immutableStateHash, immutableStateValue, rememberStatePublicationHashes, rememberStatePublicationPrior } from "../civic-data/state-publication.ts";
 import type { PromotionOutcome } from "../civic-data/promotion.ts";
 import type { PublishedCandidateMetadata } from "../civic-data/store.ts";
-import { createHash } from "node:crypto";
 import { withJsonArraySpool } from "../ops/json-file.ts";
 
 import { civicRecordsFor } from "../civic-data/changes.ts";
@@ -36,6 +35,7 @@ import { ballotCandidateDisplayName } from "../ballot/name-case.ts";
 import { withCandidateTickets } from "../ballot/tickets.ts";
 import type { BallotSet, Candidacy, Contest } from "../ballot/types.ts";
 import { sameSourcedExecutivePerson } from "./candidacy-holder-identity.ts";
+import { sha256 } from "../sha256.ts";
 
 /** Two names standing in one exact seat (a division and an office), which the surrounding code has already established. */
 const seatedName = (division: string, office: string | null, id: string, name: ReturnType<typeof nameParts>) => ({ id, name, seats: [`${division}\u0000${office}`] });
@@ -339,10 +339,6 @@ interface RegistryIsolationResult {
   readonly rejectedCurrentMembers: number;
   readonly hasProjectionMetadata: boolean;
   readonly removalEvidence: readonly RoutineRemovalEvidence[];
-}
-
-function sha256(value: string): string {
-  return createHash("sha256").update(value).digest("hex");
 }
 
 function httpsUrls(values: readonly (string | null | undefined)[]): string[] {

@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 
 import { authorityFor } from "../civic-data/source-authority.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../civic-data/types.ts";
@@ -9,6 +8,7 @@ import { federalKeyVoteSelectionV1Issue } from "./key-vote-selection-v1.ts";
 import { partyBreakdownFor, type PartyTally } from "./party-breakdown.ts";
 import { federalKeyVoteSourceHash,type FederalKeyVoteSourceProbe } from "./key-vote-source-hash.ts";
 import type { MemberVote, RollCallVote, VotePosition, VotesSnapshot } from "./types.ts";
+import { sha256 } from "../sha256.ts";
 
 export const FEDERAL_VOTES_SOURCE_ID = "federal-legislative-records" as const;
 export const FEDERAL_ROLLCALL_SCOPE = "US:recent-federal-rollcalls" as const;
@@ -85,10 +85,6 @@ export interface FederalKeyVotesReadModel {
   readonly selectionVersion: "v1";
   readonly snapshot: FederalKeyVotesSnapshot;
   readonly positions: FederalKeyVotePositions;
-}
-
-function sha256(value: string): string {
-  return createHash("sha256").update(value).digest("hex");
 }
 
 function candidateId(scope: string, acquisitions: readonly HeldAcquisition[], retrievedAt: string, normalizedHash: string): string {

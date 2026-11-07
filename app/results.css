@@ -68,3 +68,7 @@
 .rc-body .ballot-candidate-grid > li { display: flex; flex-direction: column; }
 .rc-body .candidate-row, .rc-body .candidate-row > .min-w-0 { display: flex; flex-direction: column; flex: 1 1 auto; }
 .rc-body .cr-cta { margin-top: auto; padding-top: 10px; }
+
+.rc-map-pill { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 14px; border-radius: 999px; background: var(--action); color: var(--action-on); font-size: 0.8125rem; font-weight: 600; text-decoration: none; }
+@media (min-width: 1024px) { .rc-map-pill { font-size: 0.875rem; } }
+.rc-subline { margin-top: var(--space-4); font-size: 0.875rem; color: var(--text-dim); }

@@ -161,6 +161,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { ResultAccordion, ResultCard } from "@/components/ballot/result-card";
 import { CandidateResultLine, MeasureResultBody, MeasureSummary, RaceSummary, WhatHappensNow } from "@/components/ballot/contest-result";
 import { withFixtureResults } from "@/lib/ballot/results-fixture";
+import { shortDate } from "@/lib/ballot/results";
 import { ScorecardCard } from "@/components/ballot/scorecard";
 import { VoteCastBox } from "@/components/ballot/vote-cast";
 import { readVoteQuestionSetting, voteQuestionPhase } from "@/lib/ballot/vote-phase";
@@ -1107,6 +1108,7 @@ export default readerRoute("/ballot", async function BallotPage({
         </Card>
       )}
 
+      {set && <p className="rc-subline" data-election-day="">Election day {set.election.date < new Date().toISOString().slice(0, 10) ? "was" : "is"} {shortDate(set.election.date)}</p>}
       <ResultAccordion>
       {set?.scorecards && <ScorecardCard scorecards={set.scorecards} homeScope={set.election.state} />}
       {set && matched && (
@@ -1485,6 +1487,7 @@ export default readerRoute("/ballot", async function BallotPage({
         </div>
         <Link href={`/about-area?zip=${zip}`} prefetch={false} className="ballot-top-pill">About this area</Link>
         <BallotAskPill zip={zip} ocdIds={askOcdIds} activeSubjects={askSubjects} />
+        <Link href="/" prefetch={false} className="rc-map-pill">See the map <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2 6h7M6.5 3l3 3-3 3" /></svg></Link>
       </>}
     </>
   ) };

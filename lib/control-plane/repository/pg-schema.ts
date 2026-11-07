@@ -159,6 +159,13 @@ function onlineIndex(name: string, on: string): OnlineIndex {
 export const RESEARCH_REVISION_INDEXES: readonly OnlineIndex[] = ["cp_occurrences", "cp_occurrences_archive"].map(table =>
   onlineIndex(`${table}_state_revision`, `${table} (cp_control_state(value),id) INCLUDE (revision)`));
 
+/**
+ * The work items that carry a plan, by state. The coordinator names the planned ids from these without opening a value;
+ * without them it scanned the 840,000-row archive for 17 s and passed its 25 s bound on a busy compute.
+ */
+export const PLANNED_WORK_ITEM_INDEXES: readonly OnlineIndex[] = ["cp_work_items", "cp_work_items_archive"].map(table =>
+  onlineIndex(`${table}_planned`, `${table} (cp_control_state(value),id) WHERE value->'autonomousPlan' IS NOT NULL`));
+
 /** The publisher class a Box finding waits on; a refused seat waits on rosters. */
 export const BOX_CLASS_SQL = "coalesce(CASE WHEN value->>'refusal' = 'SEAT_NOT_IN_QUOTE' THEN 'rosters' ELSE value #>> '{waitingFor,class}' END, '')";
 /** The slot version a Box finding waits on; a retired source hash counts as version 1. */
@@ -446,7 +453,7 @@ export const FIELD_MANUAL_ENTRIES_KIND_INDEX_DDL =
   "CREATE INDEX IF NOT EXISTS cp_field_manual_entries_kind ON cp_field_manual_entries ((value->>'kind'));";
 
 export const ONLINE_INDEXES: ReadonlyMap<string, OnlineIndex> = new Map(
-  [ARTIFACT_SOURCE_INDEX, ...SCOPED_HISTORY_INDEXES, ...RESEARCH_REVISION_INDEXES, ...CHANGED_AT_INDEXES, ...ROUTE_TASK_INDEXES].map(index => [index.ddl, index] as const));
+  [ARTIFACT_SOURCE_INDEX, ...SCOPED_HISTORY_INDEXES, ...RESEARCH_REVISION_INDEXES, ...PLANNED_WORK_ITEM_INDEXES, ...CHANGED_AT_INDEXES, ...ROUTE_TASK_INDEXES].map(index => [index.ddl, index] as const));
 
 const WORK_ITEM_PUBLICATION_INDEXES = [...SCOPED_HISTORY_INDEXES, ...CHANGED_AT_INDEXES].filter(index =>
   ["cp_work_items_publication_contract", "cp_work_items_publication_body", "cp_work_items_contract_subject", "cp_work_items_changed_at"].includes(index.name));
@@ -722,6 +729,7 @@ END $$;`,
   VITAL_SIGNS_TABLE_DDL,
   ...CONTROL_READS_EXPAND_DDL,
   ...RESEARCH_REVISION_INDEXES.map(index => index.ddl),
+  ...PLANNED_WORK_ITEM_INDEXES.map(index => index.ddl),
   ...WORK_DDL,
   ...WORK_RUN_DDL,
   ...LEAD_DDL,

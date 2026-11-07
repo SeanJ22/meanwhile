@@ -3,15 +3,15 @@ import { test } from "node:test";
 
 import { VOTE_QUESTION_SETTING, voteQuestionPhase, type VoteQuestionSetting } from "../lib/ballot/vote-phase.ts";
 import { settingDefinition } from "../lib/control-plane/settings.ts";
-import type { ContestResult } from "../lib/ballot/results.ts";
+import type { ContestResult } from "../lib/ballot/election-results.ts";
 
 const AZ = "ocd-division/country:us/state:az/cd:6";
 const TX = "ocd-division/country:us/state:tx";
 const NOWHERE = "ocd-division/country:us";
-const phase = (input: { setting?: VoteQuestionSetting; ocdId?: string; status?: ContestResult["status"]; statusDate?: string | null; date: string | null; now: string }) =>
+const phase = (input: { setting?: VoteQuestionSetting; ocdId?: string; status?: ContestResult["status"]; date: string | null; now: string }) =>
   voteQuestionPhase({
     setting: input.setting ?? "auto",
-    contest: { ocdId: input.ocdId ?? AZ, ...(input.status ? { result: { status: input.status, statusDate: input.statusDate ?? null } } : {}) },
+    contest: { ocdId: input.ocdId ?? AZ, ...(input.status ? { result: { status: input.status } } : {}) },
     electionDate: input.date,
     now: new Date(input.now),
   });
@@ -49,11 +49,9 @@ test("auto: pending, unopposed and no result follow the clock", () => {
   }
 });
 
-test("auto: a runoff switches on the runoff day, not the first round's", () => {
-  const runoff = { status: "runoff" as const, statusDate: "2026-12-01" };
-  assert.equal(phase({ ...runoff, date: "2026-11-03", now: "2026-11-20T12:00:00Z" }), "before");
-  assert.equal(phase({ ...runoff, date: "2026-11-03", now: "2026-12-02T04:00:00Z" }), "after");
-  assert.equal(phase({ status: "runoff", statusDate: null, date: "2026-11-03", now: "2026-12-20T12:00:00Z" }), "before");
+test("auto: a contest headed to a runoff keeps asking about the runoff", () => {
+  assert.equal(phase({ status: "runoff", date: "2026-11-03", now: "2026-11-20T12:00:00Z" }), "before");
+  assert.equal(phase({ status: "runoff", date: "2026-11-03", now: "2026-12-20T12:00:00Z" }), "before");
 });
 
 test("auto: an unknown date stays on the earlier question, and a place with no state never switches early", () => {

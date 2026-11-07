@@ -160,8 +160,9 @@ import {
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ResultAccordion, ResultCard } from "@/components/ballot/result-card";
 import { CandidateResultLine, MeasureResultBody, MeasureSummary, RaceSummary, WhatHappensNow } from "@/components/ballot/contest-result";
-import { withFixtureResults } from "@/lib/ballot/results-fixture";
 import { shortDate } from "@/lib/ballot/results";
+import { scorecardsFromResults } from "@/lib/ballot/scorecard-view";
+import { stateName } from "@/lib/facts/entity-read";
 import { ScorecardCard } from "@/components/ballot/scorecard";
 import { VoteCastBox } from "@/components/ballot/vote-cast";
 import { readVoteQuestionSetting, voteQuestionPhase } from "@/lib/ballot/vote-phase";
@@ -551,7 +552,7 @@ export default readerRoute("/ballot", async function BallotPage({
       return ids;
     })) {
       try {
-        const candidate = withFixtureResults(source.normalize(await source.fetch()));
+        const candidate = source.normalize(await source.fetch());
         const selection = { purpose: "election" as const, asOf: phoenixToday(), electionDate: candidate.election.date };
         const electionIds = electionDivisions.get(candidate.election.id)!;
         const hit = { contests: candidate.contests, absences: candidate.absences, heldContests: [...candidate.heldContests ?? []] };
@@ -823,9 +824,13 @@ export default readerRoute("/ballot", async function BallotPage({
     contest.termYears ? `${contest.termYears}-year term` : null,
   ].filter(Boolean).join(" · ") || null;
   const candidateNames = (ballot: BallotSet, contest: Contest) => new Map(candidatesOf(ballot, contest).map(choice => [choice.id, ballotCandidateDisplayName(choice)] as const));
-  const resultSource = (contest: Contest) => contest.result && contest.result.status !== "pending" ? [{ what: "Vote counts and the race call",
-    provenance: { sourceUrl: contest.result.source.url, sourceOrg: contest.result.source.credits ? `${contest.result.source.name}, which credits ${contest.result.source.credits}` : contest.result.source.name,
-      collectedAt: contest.result.source.checkedAt, verifiedAt: null } }] : [];
+  const resultSource = (contest: Contest) => {
+    const [read, ...credited] = contest.result?.sources ?? [];
+    return contest.result && contest.result.status !== "pending" && read ? [{ what: "Vote counts and the race call",
+      provenance: { sourceUrl: read.url ?? "", sourceOrg: credited.length ? `${read.name}, which credits ${credited.map(source => source.name).join(" and ")}` : read.name,
+        collectedAt: contest.result.checkedAt, verifiedAt: null } }] : [];
+  };
+  const scorecards = scorecardsFromResults(set?.results, set?.election.state ?? "", set ? stateName(set.election.state) ?? set.election.state : "");
   const contestSources = (contest: Contest, lineup: NonNullable<BallotSet["generalLineup"]>["contests"][number] | undefined) => [
     { what: readerScopeNotes.get(contest.id) ?? "Candidates and voting instructions", provenance: contest.provenance },
     ...resultSource(contest),
@@ -1110,7 +1115,7 @@ export default readerRoute("/ballot", async function BallotPage({
 
       {set && <p className="rc-subline" data-election-day="">Election day {set.election.date < phoenixToday() ? "was" : "is"} {shortDate(set.election.date)}</p>}
       <ResultAccordion>
-      {set?.scorecards && <ScorecardCard scorecards={set.scorecards} homeScope={set.election.state} />}
+      {set && scorecards && <ScorecardCard scorecards={scorecards} homeScope={set.election.state} />}
       {set && matched && (
       <div className="ballot-office-list">
       {candidacyContests.map((contest) => {
@@ -1181,7 +1186,7 @@ export default readerRoute("/ballot", async function BallotPage({
                           nameSlot={<IncumbentName holder={holder} name={name} context={context} />}
                           resultSlot={<CandidateResultLine candidate={candidate}
                             incumbent={personResolutions.get(candidate.id)?.decisions.get(candidate.id)?.standing === "INCUMBENT"}
-                            lost={Boolean(contest.result?.incumbentLost) && candidate.result?.outcome !== "won"} />}
+                            lost={contest.result?.incumbentLost === true && candidate.result?.won !== true} />}
                           battlecardSlot={<BallotBattlecard name={name}
                             partyLine={readerPartyLabel(candidate.partyLabel)} partyLabel={readerPartyLabel(candidate.partyLabel)}
                             card={card} links={links} targetKey={candidate.id} filingSource={candidate.provenance}
@@ -1291,7 +1296,7 @@ export default readerRoute("/ballot", async function BallotPage({
 
                 {summary && (summary.yesMeans || summary.noMeans) && <WhatHappensNow yes={summary.yesMeans ? readerText(summary.yesMeans, "sentence", askSubjects.map(subject => subject.name)) : null}
                   no={summary.noMeans ? readerText(summary.noMeans, "sentence", askSubjects.map(subject => subject.name)) : null}
-                  outcome={measure?.result?.outcome ?? null} closed={contest.result !== undefined && contest.result.status !== "pending"} />}
+                  outcome={measure?.result?.outcome ?? null} closed={measure?.result !== undefined && measure.result.outcome !== "counting" || contest.result !== undefined && contest.result.status !== "pending" && contest.result.status !== "counting"} />}
 
                 {provisionsForContest(contest.id, measureRecords).length > 0 && (
                   <details className="mt-3.5" data-provisions>

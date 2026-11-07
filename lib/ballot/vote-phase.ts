@@ -3,7 +3,7 @@ import { registerSetting } from "../control-plane/settings.ts";
 import { ocdStateCode } from "../ocd/state-of.ts";
 import { COUNTY_TIME_ZONES, governmentTimeZone } from "../time/county-time-zones.ts";
 import { toZonedIso } from "../time/zoned.ts";
-import type { ContestResult } from "./results.ts";
+import type { ContestResult } from "./election-results.ts";
 
 /**
  * Which question a contest's card asks: "Would you vote for them?" before its polls close, "How did you
@@ -30,7 +30,7 @@ export async function readVoteQuestionSetting(): Promise<VoteQuestionSetting> {
 
 /** Where a contest's state votes. A state with several clocks uses the one most of its counties keep. */
 const principalZones = new Map<string, string | null>();
-function stateZone(state: string): string | null {
+export function stateZone(state: string): string | null {
   const code = state.toUpperCase();
   if (!principalZones.has(code)) {
     const tally = new Map<string, number>();
@@ -49,16 +49,16 @@ const CLOSE_HOUR = 21;
 
 export function voteQuestionPhase(input: {
   setting: VoteQuestionSetting;
-  contest: { result?: Pick<ContestResult, "status" | "statusDate">; ocdId: string };
+  contest: { result?: Pick<ContestResult, "status">; ocdId: string };
   electionDate: string | null;
   now: Date;
 }): VoteQuestionPhase {
   if (input.setting !== "auto") return input.setting;
   const { result } = input.contest;
-  /* A count in progress or a call exists only once the polls are shut. A runoff and an unopposed seat say nothing about the day, so they follow the clock. */
+  /* A count in progress or a call exists only once the polls are shut. A contest headed to a runoff asks about the runoff, whose day the results do not carry: it stays "before" until the runoff is its own election. An unopposed seat says nothing about the day, so it follows the clock. */
+  if (result?.status === "runoff") return "before";
   if (result && (result.status === "counting" || result.status === "called" || result.status === "certified")) return "after";
-  const votingDay = result?.status === "runoff" ? result.statusDate : input.electionDate;
-  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(votingDay ?? "");
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(input.electionDate ?? "");
   if (!match) return "before";
   const zone = stateZone(ocdStateCode(input.contest.ocdId) ?? "") ?? LATEST_ZONE;
   const close = Date.parse(toZonedIso(Number(match[1]), Number(match[2]), Number(match[3]), CLOSE_HOUR, 0, zone));

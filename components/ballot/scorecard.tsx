@@ -4,8 +4,8 @@ import { useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";
 import { ResultCard } from "@/components/ballot/result-card";
 import { CardGapContribution, CardGapSection } from "@/components/ui/card-gap-context";
 import { stateName } from "@/lib/facts/entity-read";
-import type { PartyKey, Scorecard } from "@/lib/ballot/results";
 import {
+  type PartyKey, type Scorecard,
   chamberFlipped, chamberHeaderRows, controlSummary, governorBlock, partyLines, partyPlural, scorecardSources, scorecardTitle,
   seatCountParts, seatGrid, statewideFlips, type DotKind,
 } from "@/lib/ballot/scorecard-view";

@@ -5,8 +5,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import type { ChamberScore, Scorecard, SeatCounts } from "../lib/ballot/results.ts";
 import {
+  scorecardsFromResults,
+  type ChamberScore, type Scorecard, type SeatCounts,
   chamberFlipped, chamberHeaderRows, columnsFor, controlSummary, dotSize, governorBlock, partyLines, scorecardSources, scorecardTitle,
   seatCountParts, seatGrid, statewideFlips,
 } from "../lib/ballot/scorecard-view.ts";
@@ -185,4 +186,26 @@ test("titles", () => {
   assert.equal(scorecardTitle(arizona, "Arizona", "AZ"), "Arizona after the election");
   assert.equal(scorecardTitle(undefined, "Texas", "TX"), "Texas after the election");
   assert.equal(scorecardTitle(nation, "United States", "US"), "Congress after the election");
+});
+
+test("the ballot's result summaries become the state and United States scorecards", () => {
+  const summary = (state: string, chambers: { name: string; before: Record<string, number>; now: Record<string, number>; counting: number; controlBefore: string; controlNow: string }[]) => ({
+    state, governor: { before: "R", now: "D" }, statewideOfficesFlipped: [{ office: "Treasurer", from: "R", to: "D" }],
+    chambers: chambers.map(chamber => ({ name: chamber.name, seatsBefore: chamber.before, seatsNow: chamber.now, stillCounting: chamber.counting,
+      controlBefore: chamber.controlBefore, controlNow: chamber.controlNow })),
+    source: { name: "MultiState", url: "https://example.test/ms" }, creditedSources: [{ name: "State election office" }], checkedAt: "2026-11-06T12:00:00.000Z" });
+  const cards = scorecardsFromResults({
+    state: summary("AZ", [{ name: "House", before: { D: 27, R: 33 }, now: { D: 37, R: 20 }, counting: 3, controlBefore: "R", controlNow: "D" }]),
+    nation: summary("US", [{ name: "us_senate", before: { D: 47, R: 53, I: 0 }, now: { D: 48, R: 50, I: 2, Vacant: 0 }, counting: 0, controlBefore: "R", controlNow: "R" }]),
+  }, "AZ", "Arizona");
+  assert.ok(cards);
+  const house = cards.AZ.chambers[0];
+  assert.deepEqual([house.name, house.seats, house.toControl, house.now.counting], ["State House", 60, 31, 3]);
+  assert.equal(chamberFlipped(house), "D");
+  const senate = cards.US.chambers[0];
+  assert.deepEqual([senate.name, senate.now.O, senate.controlNow], ["U.S. Senate", 2, "R"]);
+  assert.equal(cards.AZ.governor?.flipped, true);
+  assert.deepEqual(cards.AZ.statewide?.flipped, [{ office: "Treasurer", to: "D" }]);
+  assert.deepEqual(cards.AZ.sources.map(source => source.from), ["MultiState", "State election office"]);
+  assert.equal(scorecardsFromResults(undefined, "AZ", "Arizona"), undefined);
 });

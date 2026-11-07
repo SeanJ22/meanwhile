@@ -5,7 +5,7 @@
  *
  * ```
  *   Facts reaching readers: 12,081 a day before, after: measuring
- *   ZIPs usable in under 3 seconds (of 50): phone 21→measuring, tablet 30→measuring, desktop 33→measuring
+ *   ZIPs usable in under 3 seconds (of 10): phone 21→measuring, tablet 30→measuring, desktop 33→measuring
  *   Database reads: 3.42 GB an hour before, after: measuring
  *   Lines of code: 696,315 before, 695,402 after (−913)
  * ```
@@ -35,7 +35,7 @@ export function measureLines(m: Measures): string[] {
     : ` (${m.lines.after === m.lines.before ? "no change" : `${m.lines.after > m.lines.before ? "+" : "−"}${whole(Math.abs(m.lines.after - m.lines.before), "")}`})`;
   return [
     `Facts reaching readers: ${whole(m.facts.before, "not measured")} a day before, ${facts}`,
-    `ZIPs usable in under 3 seconds (of 50): ${DEVICES.map((d) => `${d} ${whole(m.zips[d].before, "not measured")}→${whole(m.zips[d].after, "measuring")}`).join(", ")}`,
+    `ZIPs usable in under 3 seconds (of 10): ${DEVICES.map((d) => `${d} ${whole(m.zips[d].before, "not measured")}→${whole(m.zips[d].after, "measuring")}`).join(", ")}`,
     `Database reads: ${gb(m.reads.before, "not measured")} an hour before, ${m.reads.after === null ? "after: measuring" : `${gb(m.reads.after, "")} after`}`,
     `Lines of code: ${whole(m.lines.before, "not measured")} before, ${whole(m.lines.after, "not measured")} after${change}`,
   ];
@@ -57,7 +57,7 @@ export function parseMeasures(body: string | null | undefined): Measures | null 
   const block = body?.split(MEASURES_START)[1]?.split(MEASURES_END)[0];
   if (block === undefined) return null;
   const facts = new RegExp(`^- Facts reaching readers: ${N} a day before, (?:after: measuring(?: \\(first (\\d+) hours: ([\\d,]+) an hour\\))?|${N} after)$`, "m").exec(block);
-  const zips = new RegExp(`^- ZIPs usable in under 3 seconds \\(of 50\\): ${DEVICES.map((d) => `${d} ${N}→${N}`).join(", ")}$`, "m").exec(block);
+  const zips = new RegExp(`^- ZIPs usable in under 3 seconds \\(of 10\\): ${DEVICES.map((d) => `${d} ${N}→${N}`).join(", ")}$`, "m").exec(block);
   const reads = new RegExp(`^- Database reads: (?:${N} GB|not measured) an hour before, (?:after: measuring|${N} GB after)$`, "m").exec(block);
   const lines = new RegExp(`^- Lines of code: ${N} before, ${N} after`, "m").exec(block);
   if (!facts || !zips || !reads || !lines) return null;

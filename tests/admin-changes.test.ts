@@ -108,12 +108,12 @@ test("a release's four numbers round-trip: River writes the block, Admin reads t
     reads: { before: 3.42, after: null },
     lines: { before: 696315, after: 695402 },
   };
-  const filled: Measures = { ...pending, facts: { before: 12081, after: 13002, early: null }, zips: { phone: { before: 21, after: 24 }, tablet: { before: 30, after: 30 }, desktop: { before: 0, after: 50 } }, reads: { before: 3.42, after: 2.9 } };
+  const filled: Measures = { ...pending, facts: { before: 12081, after: 13002, early: null }, zips: { phone: { before: 21, after: 24 }, tablet: { before: 30, after: 30 }, desktop: { before: 0, after: 10 } }, reads: { before: 3.42, after: 2.9 } };
   const unmeasured: Measures = { facts: { before: null, after: null, early: null }, zips: { phone: { before: null, after: null }, tablet: { before: null, after: null }, desktop: { before: null, after: null } }, reads: { before: null, after: null }, lines: { before: 10, after: 10 } };
   for (const m of [pending, filled, unmeasured]) assert.deepEqual(parseMeasures(`notes\n${measuresBlock(m, ["Slowest ZIPs before: phone 59801 MT 4.1 s."])}\nmore`), m);
   assert.deepEqual(measureLines(pending), [
     "Facts reaching readers: 12,081 a day before, after: measuring (first 3 hours: 512 an hour)",
-    "ZIPs usable in under 3 seconds (of 50): phone 21→measuring, tablet 30→measuring, desktop 0→measuring",
+    "ZIPs usable in under 3 seconds (of 10): phone 21→measuring, tablet 30→measuring, desktop 0→measuring",
     "Database reads: 3.42 GB an hour before, after: measuring",
     "Lines of code: 696,315 before, 695,402 after (−913)",
   ]);

@@ -27,6 +27,7 @@ import {
   decideLock,
   decideObserve,
   drawZips,
+  ensureZipTimes,
   failingTests,
   foldOrder,
   linesOfCode,
@@ -320,18 +321,28 @@ test("lines of code: tracked source, styles and SQL, counted as wc -l counts new
   }
 });
 
-test("ZIP sampling: one random ZIP in each of the 50 states, from the ZIP index", () => {
+test("a repeated measure on the same side makes no new page loads", async () => {
+  const zips = drawZips(zipsByState(process.cwd()));
+  let loads = 0;
+  const load = async (drawn: unknown[]) => { loads += drawn.length; return { phone: [1], tablet: [1], desktop: [1] }; };
+  const before: Record<string, unknown> = {};
+  await ensureZipTimes({ zips }, before, load);
+  await ensureZipTimes({ zips }, before, load);
+  assert.equal(loads, 10, "ten ZIPs loaded once, the second call reused the saved times");
+});
+
+test("ZIP sampling: one random ZIP in each of 10 random states, from the ZIP index", () => {
   const byState = zipsByState(process.cwd());
   assert.equal(FIFTY_STATES.length, 50);
   let calls = 0;
   const drawn = drawZips(byState, () => ((calls += 1) * 0.37) % 1);
-  assert.equal(drawn.length, 50);
-  assert.equal(new Set(drawn.map((place: { state: string }) => place.state)).size, 50, "50 distinct states");
-  assert.equal(new Set(drawn.map((place: { zip: string }) => place.zip)).size, 50);
+  assert.equal(drawn.length, 10);
+  assert.equal(new Set(drawn.map((place: { state: string }) => place.state)).size, 10, "10 distinct states");
+  assert.equal(new Set(drawn.map((place: { zip: string }) => place.zip)).size, 10);
   for (const { state, zip } of drawn) assert.ok(byState.get(state).includes(zip), `${zip} is a ${state} ZIP`);
   assert.ok(!FIFTY_STATES.includes("DC") && !FIFTY_STATES.includes("PR"));
   assert.notDeepEqual(drawZips(byState).map((place: { zip: string }) => place.zip), drawZips(byState).map((place: { zip: string }) => place.zip), "drawn fresh each time");
-  assert.throws(() => drawZips(new Map([["AL", ["35004"]]])), /no ZIP for AK/);
+  assert.throws(() => drawZips(new Map([["AL", ["35004"]]])), /no ZIP for [A-Z]{2}/);
   const sql = measureSql("2026-10-29T06:51:00Z", false);
   assert.match(sql.facts, /f\.status = 'live' AND f\.live_at >= timestamptz '2026-10-29T06:51:00Z' - interval '24 hours'/);
   assert.match(sql.facts, /NOT EXISTS \(SELECT 1 FROM fact p .* p\.value_text = f\.value_text\)/, "a value already shown doesn't count");
@@ -501,7 +512,7 @@ test("fold, migrations, the quick check, release, settle and the lock protocol w
     assert.match(released.out, /ACTION NEEDED: then enable auto-merge \(merge commit\)/);
     assert.match(released.out, /GitHub CI on this pull request is the full test of this exact commit/);
     assert.match(released.out, /Lines of code: 9 before, 8 after \(−1\)/);
-    assert.match(released.out, /ZIPs usable in under 3 seconds \(of 50\): phone not measured→measuring/);
+    assert.match(released.out, /ZIPs usable in under 3 seconds \(of 10\): phone not measured→measuring/);
     assert.doesNotMatch(released.out, /pnpm gates/);
     assert.equal(remoteSha(riverCheckout, "release/1"), head);
     assert.equal(remoteSha(riverCheckout, "river"), base, "river waits for GitHub CI");

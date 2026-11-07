@@ -27,7 +27,7 @@
  *   node scripts/river.mjs return <lane> --check C [--output-file F]   send a failure back (returns/<lane>.md)
  *   node scripts/river.mjs lock claim|heartbeat|release --branch B --file F --token T [--worker W --run-id R]
  *   node scripts/river.mjs observe <sha> [--dry-run]     one post-deploy reading per deployed SHA
- *   node scripts/river.mjs measure [--after] [--fresh] [--facts N|N/H] [--reads GB] [--at ISO] [--pr N]
+ *   node scripts/river.mjs measure [--after] [--facts N|N/H] [--reads GB] [--at ISO] [--pr N]
  *                                                        the four release numbers (rulings §5), into the release notes
  *
  * A release, in order: `measure` on the live site, `fold`, `migrations`,
@@ -501,9 +501,17 @@ export function zipsByState(root = ROOT) {
   return byState;
 }
 
-/** One random ZIP in each of the 50 states, drawn fresh for each release. */
+/** How many ZIPs a release's speed check loads: one each in this many different states. */
+export const ZIPS_PER_RELEASE = 10;
+
+/** One random ZIP in each of 10 random states, drawn fresh for each release. */
 export function drawZips(byState, random = Math.random) {
-  return FIFTY_STATES.map((state) => {
+  const states = [...FIFTY_STATES];
+  for (let i = states.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [states[i], states[j]] = [states[j], states[i]];
+  }
+  return states.slice(0, ZIPS_PER_RELEASE).sort().map((state) => {
     const zips = byState.get(state) ?? [];
     if (!zips.length) throw new Refusal(`the ZIP index holds no ZIP for ${state}`);
     return { state, zip: zips[Math.floor(random() * zips.length)] };
@@ -1371,10 +1379,10 @@ function measureNotes(record) {
     .map(({ zip, state, ms }) => `${zip} ${state} ${ms === null ? "over 15 s" : `${(ms / 1000).toFixed(1)} s`}`).join(", ")}`).join("; ");
   return [
     ...["before", "after"].filter((side) => record[side]?.zips).map((side) => `Slowest ZIPs ${side} (${record[side].at}, live ${record[side].live?.slice(0, 7) ?? "unknown"}): ${slowest(side)}.`),
-    ...(record.zips.length ? [`The 50 ZIPs: ${record.zips.map(({ zip, state }) => `${zip} ${state}`).join(", ")}.`] : []),
+    ...(record.zips.length ? [`The ${record.zips.length} ZIPs: ${record.zips.map(({ zip, state }) => `${zip} ${state}`).join(", ")}.`] : []),
     "",
     "Facts reaching readers: facts that went live in the 24 hours ending at the deploy, then in the first 24 hours on the release, counted once each, and only when the value is new for that thing and field (no earlier shown row holds the same value), is still the current value, and is on a reader's page (a place page built since it went live depends on its thing; a meeting counts when its body is on a place page). Replaced rows and reloads of values already shown don't count. An early read gives facts an hour over the first full hours.",
-    `ZIPs usable: one random ZIP in each of the 50 states, the same 50 before and after, each opened cold (new browser context, empty cache) on ${PUBLIC_SITE_ORIGIN} on a phone (390×844, touch, 12 Mbps down, 3 up, 70 ms), a tablet (820×1180, touch) and a desktop (1440×900), both 30 Mbps down, 10 up, 40 ms. Usable means the side panel shows the place with no loading note (with its count badge where the panel is a sheet) and the map, basemap included, has finished drawing; counted when under 3 seconds.`,
+    `ZIPs usable: one random ZIP in each of 10 random states, drawn once per release, the same 10 before and after, loaded once each side, each opened cold (new browser context, empty cache) on ${PUBLIC_SITE_ORIGIN} on a phone (390×844, touch, 12 Mbps down, 3 up, 70 ms), a tablet (820×1180, touch) and a desktop (1440×900), both 30 Mbps down, 10 up, 40 ms. Usable means the side panel shows the place with no loading note (with its count badge where the panel is a sheet) and the map, basemap included, has finished drawing; counted when under 3 seconds.`,
     "Database reads: response bytes (the data Neon bills) in database_transfer_hourly, both databases, in GB an hour, averaged over the 6 full hours before the deploy and the first 6 full hours after the runner switched.",
     "Lines of code: lines in every tracked .ts, .tsx, .mts, .cts, .mjs, .cjs, .js, .jsx, .css and .sql file, except .d.ts, *.min.*, node_modules, .next and public/vendor; river at the release base, then the release head.",
   ];
@@ -1400,8 +1408,15 @@ export function measureSql(at, after) {
   };
 }
 
+/** Load the ZIPs once per side of a release; a side that already has times is reused, never reloaded. */
+export async function ensureZipTimes(record, phase, load) {
+  if (phase.zips) return phase;
+  const build = await fetch(`${PUBLIC_SITE_ORIGIN}/api/build`, { signal: AbortSignal.timeout(10_000) }).then((r) => r.json()).catch(() => ({}));
+  return Object.assign(phase, { at: nowIso(), live: typeof build.commit === "string" ? build.commit : null, zips: await load(record.zips) });
+}
+
 /**
- * Measure the live site before a deploy (a fresh draw of 50 ZIPs) or, with
+ * Measure the live site before a deploy (a fresh draw of 10 ZIPs) or, with
  * `--after`, the same ZIPs once the release is live. Facts and reads come from
  * SQL River runs itself (printed when absent) and are given back as flags. The
  * block goes into the release's pull request once `release` has opened it.
@@ -1410,7 +1425,7 @@ async function measure(flags) {
   const after = flags.after === true;
   let record = readScratch("measure.json");
   if (after && !record?.before?.zips) throw new Refusal("no before measurement in .scratch/river/measure.json; measure before the deploy first");
-  if (!after && (flags.fresh || !record || record.after)) record = { zips: drawZips(zipsByState()), before: {} };
+  if (!after && (!record || record.after)) record = { zips: drawZips(zipsByState()), before: {} };
   const phase = after ? (record.after ??= {}) : record.before;
   if (flags.facts !== undefined) {
     const [count, hours] = String(flags.facts).split("/").map(Number);
@@ -1418,10 +1433,7 @@ async function measure(flags) {
     else phase.facts = count;
   }
   if (flags.reads !== undefined) phase.reads = Number(flags.reads);
-  if (!phase.zips) {
-    const build = await fetch(`${PUBLIC_SITE_ORIGIN}/api/build`, { signal: AbortSignal.timeout(10_000) }).then((r) => r.json()).catch(() => ({}));
-    Object.assign(phase, { at: nowIso(), live: typeof build.commit === "string" ? build.commit : null, zips: await zipTimes(record.zips) });
-  }
+  await ensureZipTimes(record, phase, zipTimes);
   if (!record.lines) {
     fetchBranches([RIVER]);
     record.lines = { before: linesOfCode(remoteRef(RIVER)), after: linesOfCode("HEAD") };

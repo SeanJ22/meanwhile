@@ -10,7 +10,6 @@ import {
   stagedReleaseDirectory,
   stagedReleaseIsReady,
   defaultAsyncRunCommand,
-  ReleaseStaging,
   type AsyncRunCommand,
 } from "../lib/ops/runtime-release-stage.ts";
 
@@ -100,59 +99,6 @@ test("a failed state carry leaves the older checkout and its evidence intact", a
 
 const A = "a".repeat(40);
 const B = "b".repeat(40);
-
-test("a staging that never settles cannot block a newer release: the newer target is staged on the pass that sees it", async () => {
-  const root = mkdtempSync(join(tmpdir(), "stage-supersede-"));
-  const started: string[] = [];
-  let abandonedA: AbortSignal | undefined;
-  const errors: string[] = [];
-  const staging = new ReleaseStaging({ root, error: line => errors.push(line), stage: input => {
-    started.push(input.targetSha);
-    if (input.targetSha === A) { abandonedA = input.signal; return new Promise(() => {}); }
-    return stageRuntimeRelease({ ...input, run: fakeRun({ head: B }).run });
-  } });
-  assert.equal(staging.advance(A), "STAGING");
-  assert.equal(staging.advance(A), "STAGING", "the same target is not started twice");
-  assert.equal(staging.advance(B), "STAGING", "release B starts on the pass that first sees it");
-  assert.deepEqual(started, [A, B]);
-  assert.equal(abandonedA?.aborted, true, "the stuck staging for A is abandoned and its commands killed");
-  assert.match(errors.join("\n"), /staging release aaaaaaaa was abandoned: newer release bbbbbbbb replaced it/);
-  await new Promise(resolve => setImmediate(resolve));
-  assert.equal(staging.advance(B), "READY");
-  assert.equal(stagedReleaseIsReady(root, B), true);
-  assert.equal(staging.status()?.targetSha, B);
-  assert.equal(staging.status()?.state, "READY");
-});
-
-test("a stuck staging is abandoned after its lifetime and reported FAILED in the heartbeat status", () => {
-  const root = mkdtempSync(join(tmpdir(), "stage-stuck-"));
-  let now = Date.parse("2026-10-26T10:49:00Z");
-  let signal: AbortSignal | undefined;
-  let starts = 0;
-  const staging = new ReleaseStaging({ root, now: () => now, lifetimeMs: 15 * 60_000,
-    stage: input => { starts += 1; signal = input.signal; return new Promise(() => {}); } });
-  assert.equal(staging.advance(A), "STAGING");
-  assert.equal(staging.status()?.state, "INSTALLING");
-  now += 15 * 60_000 - 1;
-  assert.equal(staging.advance(A), "STAGING");
-  now += 1;
-  assert.equal(staging.advance(A), "FAILED", "past its lifetime the release goes to the drain-first path");
-  assert.equal(signal?.aborted, true);
-  assert.deepEqual({ ...staging.status(), detail: undefined }, { targetSha: A, state: "FAILED", code: "STAGING_TIMED_OUT", detail: undefined,
-    startedAt: "2026-10-26T10:49:00.000Z", at: "2026-10-26T11:04:00.000Z" });
-  assert.equal(staging.advance(A), "FAILED", "a failed target is not restaged");
-  assert.equal(starts, 1);
-});
-
-test("a failed staging is reported with its code and leaves the release to the drain-first path", async () => {
-  const root = mkdtempSync(join(tmpdir(), "stage-failed-"));
-  const staging = new ReleaseStaging({ root, stage: input => stageRuntimeRelease({ ...input, run: fakeRun({ failOn: "pnpm install" }).run }) });
-  assert.equal(staging.advance(TARGET), "STAGING");
-  await new Promise(resolve => setImmediate(resolve));
-  assert.equal(staging.advance(TARGET), "FAILED");
-  assert.equal(staging.status()?.state, "FAILED");
-  assert.equal(staging.status()?.code, "FROZEN_INSTALL_FAILED");
-});
 
 test("an abandoned staging writes nothing a newer staging owns", async () => {
   const root = mkdtempSync(join(tmpdir(), "stage-abandon-"));

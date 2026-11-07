@@ -1646,10 +1646,6 @@
       "table": "cp_work_items"
     },
     {
-      "file": "lib/control-plane/repository/pg-store.ts",
-      "table": "cp_work_items_history"
-    },
-    {
       "file": "lib/control-plane/repository/running-jobs.ts",
       "table": "cp_attempts"
     },

@@ -125,8 +125,9 @@ async function openDoor(page: Page, word: string): Promise<boolean> {
   }, word, { timeout: WAIT_MS, polling: 100 }).then(() => true, () => false);
 }
 
-async function shoot(target: LookTarget): Promise<{ screen: ShotScreen; image: LookScreenshot | null }> {
+async function shoot(target: LookTarget): Promise<{ screen: ShotScreen; image: LookScreenshot | null } | null> {
   const visit = await site.next({ runId: browsers.runId, writes: false });
+  if (visit === null) return null;
   const browser = await browsers.forVisit(visit);
   const context = await browser.context({ viewport: { ...LOOK_PROFILES[target.profile] }, deviceScaleFactor: 1, reducedMotion: "reduce" });
   await context.addInitScript(() => { try { localStorage.setItem("wtp.tutorial_seen", "1"); } catch { /* defaults are fine */ } });
@@ -164,12 +165,20 @@ async function shoot(target: LookTarget): Promise<{ screen: ShotScreen; image: L
 
 const shots: { screen: ShotScreen; image: LookScreenshot | null }[] = [];
 try {
-  for (const t of targets) shots.push(await shoot(t));
+  for (const t of targets) {
+    const shot = await shoot(t);
+    if (shot === null) break;
+    shots.push(shot);
+  }
 } finally {
   await browsers.close();
   await site.stop();
 }
 
+if (shots.length < targets.length) {
+  console.log(`look pass: not every screen could be visited${site.note()}; nothing was recorded and this deploy is still owed its look`);
+  process.exit(0);
+}
 const sent = shots.filter((s) => s.image !== null);
 const task = [
   "A resident opens Meanwhile at their ZIP code to understand what their local government is doing. On these screens they try to:",
@@ -195,4 +204,4 @@ if (DRY) {
   pass = withFixIds(pass, ids);
   await recordLookPass(repos!, pass);
 }
-console.log(`look pass: deploy ${sha.slice(0, 8)} is ${pass.verdict}: ${pass.red} red, ${pass.green} green, ${pass.notReviewed} not reviewed, at ${pass.zips.join(", ")}${pass.reviewerSays ? ` (${pass.reviewerSays})` : ""} (run ${pass.runId})`);
+console.log(`look pass: deploy ${sha.slice(0, 8)} is ${pass.verdict}: ${pass.red} red, ${pass.green} green, ${pass.notReviewed} not reviewed, at ${pass.zips.join(", ")}${pass.reviewerSays ? ` (${pass.reviewerSays})` : ""} (run ${pass.runId})${site.note()}`);

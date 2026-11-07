@@ -12,8 +12,6 @@ const stateOfficeTrace = [
 ];
 
 const nextConfig: NextConfig = {
-  // The runner's own copy of a release is built from a commit CI has already type-checked; the whole-program check is what makes a build need ~4 GiB more.
-  ...(process.env.WTP_LOCAL_SITE_BUILD === "1" ? { typescript: { ignoreBuildErrors: true } } : {}),
   productionBrowserSourceMaps: process.env.WTP_ATTRIBUTION_BUILD === "1",
   // Load a route's server code on its first request instead of every route on cold start.
   experimental: {

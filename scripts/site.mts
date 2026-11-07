@@ -1,33 +1,22 @@
 /**
- * Where a runner check opens the site.
- *
- * The browser checks (look pass, resident tasks, speed pass, publication
- * readbacks) used to open https://meanwhileusa.com on every visit, which is
- * what costs Netlify requests and database reads. Now the bulk of the visits
- * go to a copy of this same release served on the runner itself, and each
- * check spends only a few live visits a day (Admin: "Live-site browser visits
- * per check per day"). The copy is the same code with the runner's own
- * settings, so it reads the same production data the live site reads. It
- * cannot see what only the real site has: the CDN and its caching, edge
- * functions, Netlify headers, the real network path. The live visits are for
- * those.
- *
- * The copy is the standalone Next build of the runner's checkout, built once
- * per release under the checkout and served on 127.0.0.1 for as long as the
- * check runs; the check starts it and stops it. It reads the same saved keys
- * (and so the same production data) as the runner, which the runner's loader
- * opens before the site starts. No fallback to the live site:
- * a copy that cannot start fails the check, and the failure is printed.
+ * Where a runner check opens the site: a copy of this release served on the
+ * runner (the standalone build CI uploads as artifact `local-site-<sha>`,
+ * fetched with the runner's saved GitHub key; the runner never builds it), or
+ * the live site for the few visits a day the Admin setting allows. The copy
+ * reads the same saved keys, so the same production data; it cannot show the
+ * CDN, edge functions, Netlify headers or the real network, which the live
+ * visits are for. With no copy of the release yet, only the live allowance is
+ * visited, and the check says so.
  */
 import { spawn, execFileSync, type ChildProcess } from "node:child_process";
 import http from "node:http";
-import { cpSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import net from "node:net";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 
-import { availableWorkerMemoryBytes } from "../lib/control-plane/workers/worker-slots.ts";
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 import { makeRunId, SYNTHETIC_RUN_HEADER } from "../lib/db/run-marker.ts";
 import { isLiveWriteRequest } from "../lib/ops/live-write-guard.ts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";
@@ -37,32 +26,11 @@ import { ADMIN_CONFIG_ID, isAdminConfig } from "../lib/control-plane/gateway/adm
 import { readSetting } from "../lib/control-plane/settings.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 
-const BUILD_LIMIT_MS = 25 * 60_000;
 const READY_LIMIT_MS = 90_000;
-/** The build's heap. The whole build (Turbopack workers included, no type check: CI has checked the commit) measured about 4.1 GiB at its peak. */
-const BUILD_HEAP_MB = 2048;
-/** Free memory the build waits for: its measured peak plus the host's 0.75 GiB margin. */
-const BUILD_NEEDS_BYTES = 4.9 * 1024 ** 3;
-const BUILD_MEMORY_WAIT_MS = 20 * 60_000;
-
-/** The build starts only when the host can hold it and keep its margin; workers are admitted by free memory, so they make room as they finish. */
-async function waitForBuildMemory(): Promise<void> {
-  const until = Date.now() + BUILD_MEMORY_WAIT_MS;
-  while (availableWorkerMemoryBytes() < BUILD_NEEDS_BYTES) {
-    if (Date.now() > until) throw new Error("local site: the host never had enough free memory to build this release's copy; nothing was built");
-    await sleep(15_000);
-  }
-}
+const REPOSITORY = "SeanJ22/meanwhile";
 
 function readLiveVisitLedger(path: string): LiveVisitLedger | null {
-  try {
-    const parsed = JSON.parse(readFileSync(path, "utf8")) as { day?: unknown; counts?: unknown };
-    if (typeof parsed.day !== "string" || !parsed.counts || typeof parsed.counts !== "object") return null;
-    const counts = Object.fromEntries(Object.entries(parsed.counts).filter((e): e is [string, number] => Number.isFinite(e[1])));
-    return { day: parsed.day, counts };
-  } catch {
-    return null;
-  }
+  try { return JSON.parse(readFileSync(path, "utf8")) as LiveVisitLedger; } catch { return null; }
 }
 
 function writeLiveVisitLedger(path: string, ledger: LiveVisitLedger): void {
@@ -80,57 +48,30 @@ export function cacheFolder(label: string): string {
   return join(hostDirectory(), "browser-cache", label);
 }
 
-const standaloneDir = (root: string) => join(root, ".next", "standalone");
-const stampPath = (root: string) => join(root, ".next", "local-site.json");
+const siteRoot = () => join(hostDirectory(), "local-site");
 
-function currentSha(root: string): string {
-  return execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
-}
-
-function builtFor(root: string, sha: string): boolean {
-  try {
-    return existsSync(join(standaloneDir(root), "server.js")) && (JSON.parse(readFileSync(stampPath(root), "utf8")) as { sha?: string }).sha === sha;
-  } catch {
-    return false;
-  }
-}
-
-async function withBuildLock<T>(work: () => Promise<T>): Promise<T> {
-  const lock = join(hostDirectory(), "local-site-build.lock");
-  mkdirSync(hostDirectory(), { recursive: true });
-  const until = Date.now() + BUILD_LIMIT_MS + READY_LIMIT_MS;
-  for (;;) {
-    try { mkdirSync(lock); break; } catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
-      if (Date.now() > until) throw new Error("local site: the build lock stayed held; nothing was built");
-      await sleep(5_000);
-    }
-  }
-  try { return await work(); } finally { rmSync(lock, { recursive: true, force: true }); }
-}
-
-/** Build this checkout's standalone site if it is not built for the checkout's commit. */
-async function ensureBuilt(root: string): Promise<string> {
-  const sha = currentSha(root);
-  if (builtFor(root, sha)) return sha;
-  await withBuildLock(async () => {
-    if (builtFor(root, sha)) return;
-    await waitForBuildMemory();
-    await new Promise<void>((resolve, reject) => {
-      const build = spawn(process.execPath, [join(root, "node_modules", "next", "dist", "bin", "next"), "build"], {
-        cwd: root, stdio: ["ignore", "inherit", "inherit"],
-        env: { ...process.env, NEXT_PRIVATE_STANDALONE: "true", COMMIT_REF: "", WTP_LOCAL_SITE_BUILD: "1", NODE_OPTIONS: `--max-old-space-size=${BUILD_HEAP_MB}` },
-      });
-      const timer = setTimeout(() => build.kill("SIGKILL"), BUILD_LIMIT_MS);
-      build.on("error", reject);
-      build.on("exit", (code) => { clearTimeout(timer); code === 0 ? resolve() : reject(new Error(`local site: the build ended with code ${code}`)); });
-    });
-    // Next's standalone server serves its own static files and public folder only when they sit beside it.
-    cpSync(join(root, ".next", "static"), join(standaloneDir(root), ".next", "static"), { recursive: true });
-    if (existsSync(join(root, "public"))) cpSync(join(root, "public"), join(standaloneDir(root), "public"), { recursive: true });
-    writeFileSync(stampPath(root), JSON.stringify({ sha, builtAt: new Date().toISOString() }));
-  });
-  return sha;
+/** The unpacked CI build for this commit, downloaded once; null when CI has not uploaded it (yet). */
+async function releaseCopy(sha: string): Promise<string | null> {
+  const dir = join(siteRoot(), sha);
+  if (existsSync(join(dir, "server.js"))) return dir;
+  const token = storedKeyValue("GH_TOKEN") ?? storedKeyValue("GITHUB_TOKEN");
+  if (!token) return null;
+  const headers = { authorization: `Bearer ${token}`, accept: "application/vnd.github+json", "user-agent": "meanwhile-runner" };
+  const found = await fetch(`https://api.github.com/repos/${REPOSITORY}/actions/artifacts?name=local-site-${sha}&per_page=5`, { headers, signal: AbortSignal.timeout(30_000) });
+  const artifact = found.ok ? ((await found.json()) as { artifacts?: { expired: boolean; archive_download_url: string }[] }).artifacts?.find((a) => !a.expired) : undefined;
+  if (!artifact) return null;
+  const zip = await fetch(artifact.archive_download_url, { headers, signal: AbortSignal.timeout(300_000) });
+  if (!zip.ok) return null;
+  if (existsSync(siteRoot())) for (const old of readdirSync(siteRoot())) rmSync(join(siteRoot(), old), { recursive: true, force: true });
+  const work = join(siteRoot(), `${sha}.partial`);
+  mkdirSync(work, { recursive: true });
+  writeFileSync(join(work, "artifact.zip"), Buffer.from(await zip.arrayBuffer()));
+  execFileSync("python3", ["-m", "zipfile", "-e", "artifact.zip", "."], { cwd: work });
+  mkdirSync(join(work, "site"));
+  execFileSync("tar", ["-xzf", "local-site.tgz", "-C", "site"], { cwd: work });
+  renameSync(join(work, "site"), dir);
+  rmSync(work, { recursive: true, force: true });
+  return dir;
 }
 
 function freePort(): Promise<number> {
@@ -173,13 +114,15 @@ export function guardProxy(upstreamPort: number, run: { runId: string; writes: b
   return new Promise((resolve, reject) => { server.once("error", reject); server.listen(0, "127.0.0.1", () => resolve(server)); });
 }
 
-/** Build if needed, serve on a free localhost port, and return once /api/build answers. */
-export async function startLocalSite(root: string = process.cwd()): Promise<LocalSite> {
-  const sha = await ensureBuilt(root);
+/** Fetch this commit's CI build if needed, serve it on a free localhost port, and return once /api/build answers; null when CI has no build for it yet. */
+export async function startLocalSite(root: string = process.cwd()): Promise<LocalSite | null> {
+  const sha = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
+  const dir = await releaseCopy(sha).catch(() => null);
+  if (!dir) return null;
   const port = await freePort();
   // Started through the runner's own loader, which opens the saved keys from the control plane before the site's first line runs.
   const server: ChildProcess = spawn(process.execPath, ["--experimental-strip-types", "--import", join(root, "scripts", "register-test-loader.mjs"), "server.js"], {
-    cwd: standaloneDir(root), stdio: ["ignore", "inherit", "inherit"],
+    cwd: dir, stdio: ["ignore", "inherit", "inherit"],
     env: { ...process.env, NODE_ENV: "production", PORT: String(port), HOSTNAME: "127.0.0.1" },
   });
   let exited = false;
@@ -220,8 +163,10 @@ export interface Visit {
 }
 
 export interface Site {
-  /** Where the next visit goes: the live site while this check's allowance for the day lasts, otherwise the runner's own copy. */
-  next(run: { runId: string; writes: boolean }): Promise<Visit>;
+  /** Where the next visit goes: the live site while this check's allowance for the day lasts, otherwise the runner's own copy; null when the release has no copy yet and the allowance is spent. */
+  next(run: { runId: string; writes: boolean }): Promise<Visit | null>;
+  /** Said in the run's output when a visit could not go to the release's copy. */
+  note(): string;
   /** The live site while the allowance lasts, otherwise null (for checks that mean nothing on a copy, like real-network speed). */
   nextLive(): Visit | null;
   stop(): Promise<void>;
@@ -235,12 +180,13 @@ export interface SiteOptions {
   /** A base URL someone asked for by hand (SHOOT_BASE_URL): every visit goes there and nothing is counted. */
   readonly fixedOrigin?: string;
   readonly ledgerPath?: string;
-  readonly start?: () => Promise<LocalSite>;
+  readonly start?: () => Promise<LocalSite | null>;
 }
 
 export function openSite(options: SiteOptions): Site {
   const ledgerPath = options.ledgerPath ?? join(hostDirectory(), "live-visits.json");
-  let local: Promise<LocalSite> | null = null;
+  let local: Promise<LocalSite | null> | null = null;
+  let missing = false;
   const takeLive = (): boolean => {
     const taken = takeLiveVisit(readLiveVisitLedger(ledgerPath), options.label, options.now, options.perDay);
     if (taken.live) writeLiveVisitLedger(ledgerPath, taken.ledger);
@@ -252,10 +198,13 @@ export function openSite(options: SiteOptions): Site {
       if (options.fixedOrigin) return { origin: options.fixedOrigin, live: true };
       if (takeLive()) return live;
       local ??= (options.start ?? startLocalSite)();
-      return { origin: await (await local).address(run), live: false };
+      const copy = await local;
+      if (!copy) { missing = true; return null; }
+      return { origin: await copy.address(run), live: false };
     },
+    note: () => (missing ? " (CI has no build of this release for the runner yet, so only the live allowance was visited)" : ""),
     nextLive: () => (takeLive() ? live : null),
-    async stop() { if (local) await (await local.catch(() => null))?.stop(); },
+    async stop() { await (await local?.catch(() => null))?.stop(); },
   };
 }
 

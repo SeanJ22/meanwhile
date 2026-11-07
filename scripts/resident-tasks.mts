@@ -189,9 +189,10 @@ async function keep(key: string, bytes: Uint8Array): Promise<string | null> {
   }
 }
 
-async function runTask(task: ResidentTask, zip: string, profile: TaskProfile): Promise<TaskRun> {
+async function runTask(task: ResidentTask, zip: string, profile: TaskProfile): Promise<TaskRun | null> {
   const browsers = task.start === "ask" ? asker : reader;
   const visit = await site.next({ runId: browsers.runId, writes: task.start === "ask" });
+  if (visit === null) return null;
   const browser = await browsers.forVisit(visit);
   const script = TASK_SCRIPTS[task.id];
   const context = await browser.context({ viewport: TASK_PROFILES[profile], deviceScaleFactor: 1, reducedMotion: "reduce" });
@@ -273,13 +274,21 @@ const reader = visitBrowsers({ label: "resident-tasks", now, blockWrites: true, 
 const asker = visitBrowsers({ label: "resident-tasks-ask", now, blockWrites: false, args: BROWSER_ARGS });
 const runs: TaskRun[] = [];
 try {
-  for (const t of targets) runs.push(await runTask(t.task, t.zip, t.profile));
+  for (const t of targets) {
+    const run = await runTask(t.task, t.zip, t.profile);
+    if (run === null) break;
+    runs.push(run);
+  }
 } finally {
   await reader.close();
   await asker.close();
   await site.stop();
 }
 
+if (runs.length < targets.length) {
+  console.log(`resident tasks: not every task could be visited${site.note()}; nothing was recorded and new ZIPs stay queued`);
+  process.exit(0);
+}
 const pass = taskPass(runs, now, reader.runId, queued);
 if (DRY) {
   for (const run of pass.runs) {
@@ -289,4 +298,4 @@ if (DRY) {
 } else {
   await recordTaskPass(repos!, pass);
 }
-console.log(`resident tasks: ${pass.passed} passed, ${pass.failed} failed, at ${pass.zips.join(", ")}${pass.queued.length ? ` (first run for ${pass.queued.join(", ")})` : ""} (run ${reader.runId})`);
+console.log(`resident tasks: ${pass.passed} passed, ${pass.failed} failed, at ${pass.zips.join(", ")}${pass.queued.length ? ` (first run for ${pass.queued.join(", ")})` : ""} (run ${reader.runId})${site.note()}`);

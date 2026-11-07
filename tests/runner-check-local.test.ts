@@ -60,7 +60,7 @@ describe("where a check opens the site", () => {
     const { calls, start } = stub();
     const site = openSite({ label: "look-pass", now: MORNING, perDay: 2, ledgerPath: dir(), start });
     const seen = [];
-    for (let i = 0; i < 6; i += 1) seen.push(await site.next(run));
+    for (let i = 0; i < 6; i += 1) seen.push((await site.next(run))!);
     assert.deepEqual(seen.map((v) => v.live), [true, true, false, false, false, false]);
     assert.deepEqual(seen.slice(0, 2).map((v) => v.origin), [PUBLIC_SITE_ORIGIN, PUBLIC_SITE_ORIGIN]);
     assert.equal(seen[5].origin, "http://127.0.0.1:4000");
@@ -73,9 +73,9 @@ describe("where a check opens the site", () => {
     const path = dir();
     const { start } = stub();
     const first = openSite({ label: "resident-tasks", now: MORNING, perDay: 1, ledgerPath: path, start });
-    assert.equal((await first.next(run)).live, true);
+    assert.equal((await first.next(run))?.live, true);
     const second = openSite({ label: "resident-tasks", now: "2026-11-07T10:00:00.000Z", perDay: 1, ledgerPath: path, start });
-    assert.equal((await second.next(run)).live, false);
+    assert.equal((await second.next(run))?.live, false);
   });
 
   it("never starts the copy when every visit is live, and stops nothing it never started", async () => {
@@ -89,10 +89,19 @@ describe("where a check opens the site", () => {
     assert.equal(calls.started, 0);
   });
 
+  it("uses only the live allowance, and says so, when CI has no build of the release yet", async () => {
+    const site = openSite({ label: "look-pass", now: MORNING, perDay: 2, ledgerPath: dir(), start: async () => null });
+    assert.equal(site.note(), "");
+    assert.equal((await site.next(run))?.live, true);
+    assert.equal((await site.next(run))?.live, true);
+    assert.equal(await site.next(run), null, "no copy and no allowance left: nothing to visit, and nothing is built");
+    assert.match(site.note(), /CI has no build of this release/);
+  });
+
   it("goes to a base URL someone asked for by hand and counts nothing", async () => {
     const { calls, start } = stub();
     const site = openSite({ label: "look-pass", now: MORNING, perDay: 0, ledgerPath: dir(), start, fixedOrigin: "http://localhost:3000" });
-    assert.equal((await site.next(run)).origin, "http://localhost:3000");
+    assert.equal((await site.next(run))?.origin, "http://localhost:3000");
     assert.equal(calls.started, 0);
   });
 });

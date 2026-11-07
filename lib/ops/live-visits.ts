@@ -21,7 +21,7 @@ const dayOf = (nowIso: string) => nowIso.slice(0, 10);
 /** Spend one live visit for `label` if its allowance for the day has room. */
 export function takeLiveVisit(ledger: LiveVisitLedger | null, label: string, nowIso: string, perDay: number): { live: boolean; ledger: LiveVisitLedger } {
   const day = dayOf(nowIso);
-  const counts = ledger?.day === day ? ledger.counts : {};
+  const counts = ledger?.day === day ? ledger.counts ?? {} : {};
   const used = counts[label] ?? 0;
   if (!(perDay > used)) return { live: false, ledger: { day, counts } };
   return { live: true, ledger: { day, counts: { ...counts, [label]: used + 1 } } };

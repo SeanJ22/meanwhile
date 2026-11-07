@@ -1,9 +1,10 @@
-import { createHash,randomUUID } from "node:crypto";
+import { randomUUID } from "node:crypto";
 import { readZipEntries } from "../sources/archive.ts";
 import { continueOfficialVoteDocument } from "../state-rollcalls/source-continuation.ts";
 import { rawCaptureVault } from "./raw-capture-remote.ts";
 import { runtimeCivicReadCache } from "../db/civic-read-cache.ts";
 import { passDeadlineFromEnv } from "../ops/independent-runtime-pass.ts";
+import { sha256 } from "../sha256.ts";
 
 export const CENSUS_GOVERNMENT_UNITS_URL =
   "https://www2.census.gov/programs-surveys/gus/datasets/2022/govt_units_2022.ZIP" as const;
@@ -95,10 +96,6 @@ const PRODUCTION_DENOMINATORS: WorkbookDenominators = {
   school: 12_546,
   dependent: 1_313,
 };
-
-function sha256(bytes: Uint8Array): string {
-  return createHash("sha256").update(bytes).digest("hex");
-}
 
 function failed(input: Omit<JurisdictionReferenceAcquisitionFailure, "kind">): JurisdictionReferenceAcquisitionFailure {
   return { kind: "FAILED", ...input };

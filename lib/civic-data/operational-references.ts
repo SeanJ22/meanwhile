@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 
 import type { JurisdictionRegistry } from "../hunt/jurisdiction-universe.ts";
 import {
@@ -31,6 +30,7 @@ import {
   websiteCorrectionReceiptIssue,
   websiteCorrectionRowIssue,
 } from "./website-corrections.ts";
+import { sha256 } from "../sha256.ts";
 
 export const OPERATIONAL_REFERENCE_RECORD_CLASS = "OPERATIONAL_REFERENCE" as const;
 export const JURISDICTION_REFERENCE_SOURCE_ID = "jurisdiction-operational-reference" as const;
@@ -55,10 +55,6 @@ export interface AzOperationalReferenceBundle {
 let installedBundle: OperationalReferenceBundle | null = null;
 let installedAzBundle: AzOperationalReferenceBundle | null = null;
 let installedStateRegistries: Readonly<Record<string, JurisdictionRegistry>> = {};
-
-function sha256(value: string): string {
-  return createHash("sha256").update(value).digest("hex");
-}
 
 function sourceThrough(registries: Readonly<Partial<Record<JurisdictionReferenceState, JurisdictionRegistry>>>): string {
   const latest = Object.values(registries)

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { parseCsv } from "../lib/sources/prl/index.ts";
+import { parseCsv } from "../lib/reference/csv.ts";
 import { PRL_FORBIDDEN_COLUMN_PATTERN } from "../lib/sources/prl/types.ts";
 import {
   aggregatePrimaryRhetoric,

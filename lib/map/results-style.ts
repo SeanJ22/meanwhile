@@ -80,6 +80,10 @@ export function resultLayers(
     ...layer("yours"), type: "line", filter: withBase(on.base, idsIn(options.yours)),
     layout: { "line-join": "round" }, paint: { "line-color": ink.you, "line-width": 2.5 },
   } as LayerSpecification);
+  // The national House view keeps the state lines on top of its 435 districts.
+  if (surface.kind === "districts" && !surface.state) layers.push({
+    id: resultsLayerId("state-lines"), source: RESULTS_STATES_SOURCE, type: "line", layout: { "line-join": "round" }, paint: { "line-color": ink.line, "line-width": 1.1 },
+  } as LayerSpecification);
   if (surface.kind === "districts") {
     for (const party of ["D", "R", "O"] as const) {
       const flipped = Object.values(results).filter(result => flipParty(result) === party).map(result => result.ocdId);

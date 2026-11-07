@@ -6,7 +6,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, typ
 import { NATIONAL_BOUNDARIES_SOURCE } from "@/lib/map/districts";
 import { CONUS_BOUNDS } from "@/lib/map/style";
 import { loadStateOutlines, stateAbbrFromOcdId, stateFilter, type StateOutlines } from "@/lib/map/state-focus";
-import { houseFlipsByState, stateOcd, type DistrictResult } from "@/lib/map/results";
+import { houseFlipsByState, parseDistrictOcd, stateOcd, type DistrictResult } from "@/lib/map/results";
 import { districtCard, houseStateMeta, senateCard } from "@/lib/map/results-card";
 import { countyChoices, outlineBounds, type CountyChoice } from "@/lib/map/results-counties";
 import { canDrawResults, clearResultLayers, drawResultLayers } from "@/lib/map/results-apply";
@@ -133,7 +133,7 @@ export default function ResultsMap({ map, theme, phone, yours, zip, scorecard, o
     const ensure = () => {
       if (attaching || !canDrawResults(map, surface.kind === "districts")) return;
       attaching = true;
-      try { drawResultLayers(map, specs.layers, { theme, states: surface.kind === "states", badges: specs.badges }); }
+      try { drawResultLayers(map, specs.layers, { theme, states: surface.kind === "states" || !surface.state, badges: specs.badges }); }
       catch { /* The style is mid-change; the next styledata puts the layers back. */ }
       finally { attaching = false; }
     };
@@ -227,6 +227,14 @@ export default function ResultsMap({ map, theme, phone, yours, zip, scorecard, o
   const card = (() => {
     if (!picked) return null;
     const close = () => setPicked(null);
+    if (surface.kind === "districts" && nation && !phone) {
+      // On the national House map a district opens its state's card.
+      const abbr = parseDistrictOcd(picked.ocdId)?.state.toUpperCase() ?? "", name = stateName(abbr);
+      const model = houseStateMeta(name, flips[abbr.toLowerCase()]?.count ?? 0, abbr === home.abbr);
+      return <MapCard title={model.title} meta={model.meta} onClose={close}>
+        <PillButton arrow="right" onClick={() => showResultsState({ abbr, name })}>See more about {name}</PillButton>
+      </MapCard>;
+    }
     if (surface.kind === "districts") {
       const model = districtCard(picked.ocdId, results?.[picked.ocdId], yours.includes(picked.ocdId));
       return <MapCard title={model.title} meta={model.meta} flip={model.flip} onClose={close}>

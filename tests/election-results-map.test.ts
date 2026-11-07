@@ -142,6 +142,7 @@ test("a state with no results draws every district neutral, with no pattern laye
 test("the national House view draws every state's districts: no state filter", () => {
   const layers = resultLayers({ kind: "districts", boundary: "congressional", state: null }, {}, { theme: "dark", yours: [] });
   assert.deepEqual((layers[0] as unknown as { filter: unknown }).filter, ["==", ["get", "boundaryType"], "congressional"]);
+  assert.ok(layers.some(l => l.id === "results-state-lines" && (l as { source: string }).source === RESULTS_STATES_SOURCE), "state lines sit on top of the districts");
 });
 
 test("state shapes draw from the state source, and flip badges are not drawn on districts there", () => {
@@ -299,6 +300,7 @@ test("Senate and House state cards", () => {
 import { outlineBounds } from "../lib/map/results-counties.ts";
 test("a state's box covers every part of its outline", () => {
   assert.deepEqual(outlineBounds({ geometry: { coordinates: [[[0, 0], [10, 0], [10, 5], [0, 0]], [[20, 20], [21, 22], [20, 20]]] } }), [[0, 0], [21, 22]]);
+  assert.deepEqual(outlineBounds({ geometry: { coordinates: [[[-170, 60], [-130, 55], [-150, 70], [-170, 60]], [[172, 52], [179, 51], [175, 53], [172, 52]]] } }), [[-188, 51], [-130, 70]]);
   assert.equal(outlineBounds(null), null);
   assert.equal(outlineBounds({ geometry: { coordinates: [] } }), null);
 });

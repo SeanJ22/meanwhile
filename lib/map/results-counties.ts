@@ -30,12 +30,15 @@ export function matchCounties(counties: readonly CountyChoice[], query: string):
 
 export const countyLabel = (county: CountyChoice) => `${county.name} County`;
 
-/** The box around a state's outline, for fitting the camera to it. */
+/** The box around a state's outline, for fitting the camera to it. Parts east of the antimeridian (Alaska's Aleutians) count as west of it. */
 export function outlineBounds(feature: { geometry: { coordinates: number[][][] } } | null): [[number, number], [number, number]] | null {
   if (!feature) return null;
+  const points = feature.geometry.coordinates.flat();
+  const lngs = points.map(([x]) => x), span = Math.max(...lngs) - Math.min(...lngs);
+  const wrap = span > 180 ? (x: number) => x > 0 ? x - 360 : x : (x: number) => x;
   let west = Infinity, south = Infinity, east = -Infinity, north = -Infinity;
-  for (const ring of feature.geometry.coordinates) for (const [x, y] of ring) {
-    west = Math.min(west, x); east = Math.max(east, x); south = Math.min(south, y); north = Math.max(north, y);
+  for (const [x, y] of points) {
+    west = Math.min(west, wrap(x)); east = Math.max(east, wrap(x)); south = Math.min(south, y); north = Math.max(north, y);
   }
   return Number.isFinite(west) && Number.isFinite(north) ? [[west, south], [east, north]] : null;
 }

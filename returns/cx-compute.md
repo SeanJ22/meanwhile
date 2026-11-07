@@ -7,7 +7,7 @@ check: Neon compute, reads and parts growth on test copies
 ready: no step ids unknown
 river: b342a72847a2f771bc434cf690f37bbc6c252e81
 at: 2026-11-07T06:30:34Z
-state: returned
+state: cleared: integrated ready 22d3e0456660201b4e7fa197ba68524f041c466a on river ec907f7aaceaebf536a98f17b86b14fd9ad4c7ef
 fix_subject: fix:bf9d1f19
 fix: River · stream/cx-compute — Neon compute, reads and parts growth on test copies failed for cx-compute: READY 23bd23abe (CX-COMPUTE) returned by River on 2026-11-07. Sean's bar for this lane: on test copies, Neon's own numbers show lower compute units per hour on EACH database, fewer reads per hour, and the stored payload parts table stops gr
 

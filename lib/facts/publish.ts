@@ -119,6 +119,6 @@ export async function restampFacts(db: FactDb, facts: readonly { readonly id: nu
     }
     return changed.length ? eligible.length : 0;
   });
-  await markSlices(marks, true);
+  await markSlices(marks);
   return restamped;
 }

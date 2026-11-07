@@ -52,7 +52,7 @@ test("each sitting a body's door reads becomes facts found on the saved feed; a 
   const entityId=meetingEntityId(first.id);
   const [clock]=await db.query("SELECT now() AS at");
   const due=new Date(Date.parse(String(clock.at))-60000).toISOString();
-  await db.query("UPDATE blank SET detail='-',next_try_at=$1 WHERE entity_id=$2 AND field='map_pin'",[due,entityId]);
+  await db.query("UPDATE blank SET next_try_at=$1 WHERE entity_id=$2 AND field='map_pin'",[due,entityId]);
   const [before]=await db.query("SELECT next_try_at,attempts FROM blank WHERE entity_id=$1 AND field='map_pin'",[entityId]);
   for(const offset of [60000,120000]){
     const checkedAt=new Date(NOW.getTime()+offset).toISOString();

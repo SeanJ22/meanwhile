@@ -9,6 +9,8 @@ import { test } from "node:test";
 import { createContext, runInContext } from "node:vm";
 import { spawnSync } from "node:child_process";
 import ts from "typescript";
+import { DEFAULT_HANG_KILL_MS } from "../scripts/runner-hang-watchdog.mts";
+import { RUNTIME_RELEASE_MAX_BLOCKING_MS } from "../lib/ops/runtime-release-handoff.ts";
 import { admitJobLaunch, JOB_SLOWED_WORDS } from "../lib/control-plane/job-breaker-local.ts";
 import { runResearchLoop } from "../lib/control-plane/scheduler/research-loop.ts";
 
@@ -183,10 +185,11 @@ test("recovered install exits for freshly loaded dependencies before inspecting 
   const fn = source.match(/async function reconcileRuntimeReleaseAtBoundary\([\s\S]*?\n\}/)?.[0];
   assert.ok(fn);
   const context = createContext({ storedKeyEnvironment, AUTO_RELEASE_HANDOFF: true, ROOT: ".", console: { log: () => {} },
-    resumeRuntimeReleaseInstall: async () => ({ state: "UPDATED", detail: "installed" }),
+    resumeRuntimeReleaseInstall: () => ({ state: "UPDATED", detail: "installed" }),
     inspectRuntimeRelease: () => { throw new Error("must reload dependencies before inspecting"); },
   });
   assert.equal(await runInContext(stripTypeScriptTypes(fn) + "\nreconcileRuntimeReleaseAtBoundary()", context), 0);
+  assert.ok(DEFAULT_HANG_KILL_MS > RUNTIME_RELEASE_MAX_BLOCKING_MS);
 });
 
 test("console children use the research idle guard", async () => {

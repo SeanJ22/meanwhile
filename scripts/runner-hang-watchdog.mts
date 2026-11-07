@@ -7,12 +7,13 @@
  * timestamp on a timer (async awaits leave the loop free, so only a blocked loop
  * lets it go stale); past the threshold the worker force-terminates the process.
  *
- * Tunable/disable via env: `WTP_RUNNER_HANG_KILL_MS` (default 10 min; <= 0
+ * Tunable/disable via env: `WTP_RUNNER_HANG_KILL_MS` (default 34 min; <= 0
  * disables) and `WTP_RUNNER_HANG_PING_MS` (default 30 s).
  */
 import { Worker } from "node:worker_threads";
+import { RUNTIME_RELEASE_MAX_BLOCKING_MS } from "../lib/ops/runtime-release-handoff.ts";
 
-export const DEFAULT_HANG_KILL_MS = 10 * 60_000;
+export const DEFAULT_HANG_KILL_MS = RUNTIME_RELEASE_MAX_BLOCKING_MS + 60_000;
 export const DEFAULT_HANG_PING_MS = 30_000;
 
 export interface HangWatchdog {

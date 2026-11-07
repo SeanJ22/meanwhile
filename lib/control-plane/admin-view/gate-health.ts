@@ -53,7 +53,7 @@ function runningRelease(r: GateHealthReadings): GateHealthRow {
   const staging = r.heartbeat.releaseStaging;
   if (staging?.state === "FAILED") {
     return row("GATE-02", name, "attention", `Release ${staging.targetSha.slice(0, 8)} could not be installed beside the running code ` +
-      `(${staging.code ?? "unknown"}: ${staging.detail}); the runner keeps serving the current code and tries again.`);
+      `(${staging.code ?? "unknown"}: ${staging.detail}); the runner applies it by draining and restarting.`);
   }
   const verdict = r.heartbeat.codeIdentity?.verdict ?? null;
   if (verdict === null || verdict === "CANNOT_TELL") {

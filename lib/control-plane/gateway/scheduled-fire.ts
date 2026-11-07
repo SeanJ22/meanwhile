@@ -1,4 +1,4 @@
-import { dailyBriefDue, writeDailyBrief } from "../admin-view/brief.ts";
+import { writeDailyBrief } from "../admin-view/brief.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig, type AdminConfig } from "./admin-config.ts";
 import { refreshFixDispatchHonors } from "../fix-list.ts";
 import { migrateQueuedFixes } from "./fix-migrate.ts";
@@ -11,17 +11,13 @@ import { scheduledOrders, type ScheduledOrder } from "./scheduled-orders.ts";
 const REPEAT_MS = { hourly: 3_600_000, daily: 86_400_000, weekly: 7 * 86_400_000 } as const;
 
 /** The moment this order is next due, or null while it waits on another order, or when it has run out. */
-export function dueAt(order: ScheduledOrder, lastFiredAt: string | null): string | null {
+export function dueAt(order: ScheduledOrder, all: readonly ScheduledOrder[], lastFiredAt: string | null): string | null {
   if (order.after) return null; // Completion must be read, never inferred from removal.
   if (order.repeat) {
     const base = lastFiredAt ?? order.startAt ?? order.decidedAt;
     return lastFiredAt ? new Date(Date.parse(base) + REPEAT_MS[order.repeat]).toISOString() : base;
   }
   return order.startAt ?? order.decidedAt;
-}
-
-export function scheduledWorkDue(config:AdminConfig|null,at:string):boolean {
-  return !!config&&(!config.legacyFixQueueImportedAt||dailyBriefDue(config,at)||scheduledOrders(config).some(order=>order.after||Date.parse(dueAt(order,order.lastFiredAt??null)??"")<=Date.parse(at)));
 }
 
 export interface FiredOrder { readonly id: string; readonly orderType: string; readonly occurrence: string; readonly ok: boolean }
@@ -44,7 +40,7 @@ export async function fireDueOrders(deps: GatewayDeps, nowIso: string, lastFired
   const moved = new Map<string, string>();
   for (const order of all) {
     const afterDone = order.after ? await completedDependency(deps, order.after, nowMs) : false;
-    const due = order.after && afterDone ? order.startAt ?? order.decidedAt : dueAt(order, order.lastFiredAt ?? lastFired.get(order.id) ?? null);
+    const due = order.after && afterDone ? order.startAt ?? order.decidedAt : dueAt(order, all, order.lastFiredAt ?? lastFired.get(order.id) ?? null);
     if (due === null || Date.parse(due) > nowMs) continue;
     const outcome = await submit({ type: order.orderType, subject: order.subject ?? "", input: order.input, stateVersion: null,
       idempotencyKey: occurrenceKey(order.id, due), scheduleOrigin: { id: order.id, occurrence: due, finishBy: order.finishBy }, caller: "OWNER_SESSION", actorRef: order.decidedBy }, deps);

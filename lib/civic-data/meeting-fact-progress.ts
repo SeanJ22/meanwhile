@@ -107,7 +107,7 @@ export async function continueMeetingFactPublication(input: {
   return {...tally,complete:true};
 }
 
-/** Called after the parsed meetings and agenda content match the accepted source. */
+/** Called only after all actual source hashes have matched the pointed source plan. */
 export async function finishUnchangedMeetingFacts(input: {
   readonly facts:FactDb&{readonly query:Query};readonly vault:EvidenceStore;readonly head:Pick<SourceHead,"versionId">|null;readonly observations:readonly RetainedSourceResponse[];
   readonly clocks:Clocks;readonly now:Date;

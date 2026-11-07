@@ -1,0 +1,89 @@
+{
+  "n": 184,
+  "branch": "release/184",
+  "head_sha": "92ab73508b08777008dd9daed8532736b9b9d5fd",
+  "base_river_sha": "4aec59b0bc1c70847c252be4f505e6548412f1d7",
+  "main_sha": null,
+  "lanes": [
+    {
+      "lane": "census-progress",
+      "steps": [
+        "CN-01"
+      ],
+      "ready_sha": "2a2347ef04efb6b7b4347fc44a3d3821f166f89c",
+      "result_sha": "688d4224f0ace9282bc30a9107ef992277416399"
+    },
+    {
+      "lane": "edge-static",
+      "steps": [
+        "TC-02"
+      ],
+      "ready_sha": "f2138a232da65046de3c2f68bd5ef22c3d90d402",
+      "result_sha": "834cf7fbabc0fa9f39bde5c46685dfc5965dd1ca"
+    },
+    {
+      "lane": "research-worklist",
+      "steps": [
+        "RC-01"
+      ],
+      "ready_sha": "0c4afd52d00d79d2982561c98d67a09b8bce1b79",
+      "result_sha": "1aebe93f1bf517a8a780d869e8c2dbe80ff00ade"
+    },
+    {
+      "lane": "runner-check-local",
+      "steps": [
+        "TC-01"
+      ],
+      "ready_sha": "38e3d3457ead0e151e682420cbadb8473399d6b4",
+      "result_sha": "77f8feaa8cc9a15c18fadfc34ccf2ada38321bd0"
+    },
+    {
+      "lane": "runner-switch-heal",
+      "steps": [
+        "SW-01"
+      ],
+      "ready_sha": "9d9195c175b7fee645f419168ee9268451dd7e09",
+      "result_sha": "0fa9d5a847e4ee82ad0722971295c7ed9d1c650b"
+    },
+    {
+      "lane": "spn-01-askdaily",
+      "steps": [
+        "SPN-01"
+      ],
+      "ready_sha": "58904d5e119e59f55cb4fdb348407cca53e37923",
+      "result_sha": "bb56c8f8a9ea1fc71cde2b4319fbcf38aca72097"
+    },
+    {
+      "lane": "trim-184",
+      "steps": [
+        "TR-01"
+      ],
+      "ready_sha": "8723a0f2c0a68921db947f0c64079ed400c3dd00",
+      "result_sha": "a87f1541b2b76439afc7877f39a218259143380f"
+    },
+    {
+      "lane": "trim-sw01",
+      "steps": [
+        "TR-02"
+      ],
+      "ready_sha": "8c54dd4bd068adc5b5157c7053e7fc01755e65ff",
+      "result_sha": "92ab73508b08777008dd9daed8532736b9b9d5fd"
+    }
+  ],
+  "steps": [
+    "CN-01",
+    "TC-02",
+    "RC-01",
+    "TC-01",
+    "SW-01",
+    "SPN-01",
+    "TR-01",
+    "TR-02"
+  ],
+  "pr": {
+    "number": 903,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/903"
+  },
+  "ci": "running",
+  "at": "2026-11-07T20:08:21Z"
+}

@@ -5,6 +5,7 @@ import type { AzCandidateIdentity, AzContestIdentity, LineupReconciliation } fro
 import type { MeasureRecord } from "./measure-records.ts";
 import type { OcdId, Provenance } from "../sources/types.ts";
 import type { RetrievalEvidence } from "../civic-data/types.ts";
+import type { BallotElectionSummary, CandidateResult, ContestResult, MeasureResult } from "./election-results.ts";
 
 export interface Election {
   id: string;
@@ -16,6 +17,7 @@ export interface Election {
 export type ContestType = "CANDIDACY" | "MEASURE" | "RETENTION";
 
 export interface Contest {
+  result?: ContestResult;
   /** Earlier source keys for this same election, office and division. */
   aliases?: readonly string[];
   sources?: readonly Provenance[];
@@ -39,6 +41,7 @@ export interface Contest {
 }
 
 export interface Candidacy {
+  result?: CandidateResult;
   /** Every previously published candidacy and card key for this person in this race. */
   aliases?: readonly string[];
   sources?: readonly Provenance[];
@@ -75,6 +78,7 @@ export interface Candidacy {
 }
 
 export interface Measure {
+  result?: MeasureResult;
   id: string;
   contestId: string;
   /** The publisher's designation, when held; never generated from list order. */
@@ -110,6 +114,7 @@ export interface CandidacyRemoval {
 }
 
 export interface BallotSet {
+  results?: { readonly state?: BallotElectionSummary; readonly nation?: BallotElectionSummary };
   /** Pairings stated by the election authority, never inferred from party. */
   candidateTickets?: readonly { id: string; leadCandidacyId: string;
     runningMate: Candidacy & { office?: string }; provenance: Provenance }[];

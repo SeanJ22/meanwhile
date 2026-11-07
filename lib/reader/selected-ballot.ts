@@ -1,6 +1,7 @@
 import { canonicalCongressionalDivision } from "../ocd/fips.ts";
 import { stateBallotScope } from "../civic-data/state-scopes.ts";
 import { selectedPointerSql, selectedMetadataSql } from "./selected-entry.ts";
+import { ballotResultFactsSql } from "../ballot/election-results.ts";
 
 /** The same contest, candidate and related-record membership as ballotForDivisions, selected before transport. */
 export function selectedBallotStatement(state: string, divisions: readonly string[], divisionSql = "SELECT unnest($2::text[]) AS id") {
@@ -55,7 +56,8 @@ export function selectedBallotStatement(state: string, divisions: readonly strin
         ${optional.map(([key,value])=>`||CASE WHEN ballot.value?'${key}' THEN jsonb_build_object('${key}',${value}) ELSE '{}'::jsonb END`).join("\n")}
         AS value WHERE EXISTS(SELECT 1 FROM contests UNION ALL SELECT 1 FROM held_contests)
     ) sliced)
-    SELECT ${selectedMetadataSql},CASE WHEN published THEN reader_payload_value(root.value-'ballots')||jsonb_build_object('ballots',
+    , projected AS (SELECT ${selectedMetadataSql},CASE WHEN published THEN reader_payload_value(root.value-'ballots')||jsonb_build_object('ballots',
       coalesce((SELECT jsonb_object_agg(key,value) FROM selected),'{}'::jsonb)) END AS payload
-    FROM pointer LEFT JOIN root ON true`};
+    FROM pointer LEFT JOIN root ON true)
+    SELECT projected.*,${ballotResultFactsSql("projected.payload")} AS election_results FROM projected`};
 }

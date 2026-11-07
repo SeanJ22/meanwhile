@@ -163,7 +163,7 @@ test("a publish-now minute with nothing owed ends quietly with exit 0, before an
 test("the standing runner starts publish-now each minute on its own lane, beside the routine pass", () => {
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
   const lanes = pilot.slice(pilot.indexOf("const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler(["));
-  assert.match(lanes.slice(0, lanes.indexOf("], (outcome) =>")), /\{ id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, budgetMs: ROUTINE_PASS_BUDGET_MS, run: runRoutineCivicData \},[\s\S]*publishNowLane\(runPublishNow\),\n  placeMapsLane\(deadlineMs => runRoutineLane\("place-maps", deadlineMs\)\),\n  votingSitesLane\(deadlineMs => runRoutineLane\("voting-sites", deadlineMs\)\),\n  doorProbesLane\(runDoorProbes\),\n$/);
+  assert.match(lanes.slice(0, lanes.indexOf("], (outcome) =>")), /\{ id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, budgetMs: ROUTINE_PASS_BUDGET_MS, run: runRoutineCivicData \},[\s\S]*publishNowLane\(runPublishNow\),\n  placeMapsLane\(deadlineMs => runRoutineLane\("place-maps", deadlineMs\)\),\n  votingSitesLane\(deadlineMs => runRoutineLane\("voting-sites", deadlineMs\)\),\n  doorProbesLane\(runDoorProbes\),\n  \{ id: RELEASE_INSTALL_JOB[^\n]*\},\n$/);
   const run = pilot.slice(pilot.indexOf("async function runPublishNow("), pilot.indexOf("async function runRoutineLane("));
   assert.match(run, /if \(provider !== "postgres" \|\| canary\) return;/, "only the standing production runner publishes");
   assert.match(run, /args: \[\.\.\.TS_CHILD, "scripts\/publish-now-runner\.mts"\]/);

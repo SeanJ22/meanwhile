@@ -124,7 +124,7 @@ test("a board marked again with its calendar as it was reads none of its rows an
     const rowReads = () => reads.filter(sql => sql.includes("AS value") && sql.includes("civic_data_rows")).length;
     await publish("cv-1", "First"); assert.equal((await turn()).claimed, 3); assert.equal(rowReads(), 2, "the rows are read the first time");
     assert.ok(purged.length > 0, "a board's new cards purge the places it is filed on");
-    purged.length = 0; await turn(); assert.deepEqual([rowReads(), purged], [0, []], "nothing moved: no row is read and nothing is purged");
-    await publish("cv-2", "Second"); await turn(); assert.equal(rowReads(), 2, "a new version is read");
+    purged.length = 0; await db.query("UPDATE work SET status='waiting', due_at=now()"); reads.length = 0; await sliceTurn({ list, facts, now, purge: async tags => { purged.push(...tags); return { purged: true }; } }); assert.deepEqual([rowReads(), purged], [0, []], "marked again with nothing moved: no row is read and nothing is purged");
+    await publish("cv-2", "Second"); await turn(); assert.equal(rowReads(), 1, "a new version reads its rows, and not the papers it left as they were");
   } finally { await db.pg.close(); }
 });

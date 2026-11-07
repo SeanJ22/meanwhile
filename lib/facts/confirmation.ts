@@ -67,7 +67,7 @@ async function saveConfirmations(db: FactDb, confirmations: readonly FactConfirm
     const states = entities.size ? await query("SELECT DISTINCT state FROM entity WHERE id=ANY($1::text[]) AND state IS NOT NULL",[[...entities]]) : [];
     return {entities:[...entities],states:states.map(row=>String(row.state)),marks:entities.size ? await slicesOf(query,[...entities]) : []};
   });
-  await markSlices(affected.marks);
+  await markSlices(affected.marks, true);
   if (affected.entities.length) await invalidateReaderCache({states:affected.states.filter(state=>state!=="US"),
     nationalPeople:affected.states.includes("US")},purge,null);
 }

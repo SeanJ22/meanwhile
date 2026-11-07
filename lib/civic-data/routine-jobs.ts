@@ -29,6 +29,7 @@ export const ROUTINE_JOBS = {
   factEntities: { id: "fact-entities", label: "Places and bodies for facts", databaseBytesPerRun: 6_000_000 },
   censusGoverningBodies: { id: "census-governing-bodies", label: "Census governing boards", databaseBytesPerRun: 1_000_000 },
   factCartons: { id: "fact-cartons", label: "Rosters, offices and comment rules onto facts", databaseBytesPerRun: 15_000_000 },
+  electionResults: { id: "election-results", label: "Election results", databaseBytesPerRun: 1_000_000 },
   pageRefresh: { id: "page-refresh", label: "Pages past their refresh date", databaseBytesPerRun: 1_000_000 },
   boxFactAudit: { id: "box-fact-audit", label: "Published Box facts re-check", databaseBytesPerRun: 5_000_000 },
   statePointerRetirement: { id: "state-pointer-retirement", label: "Old state data cleanup", databaseBytesPerRun: 10_000_000 },

@@ -5,7 +5,7 @@ import type { AzCandidateIdentity, AzContestIdentity, LineupReconciliation } fro
 import type { MeasureRecord } from "./measure-records.ts";
 import type { OcdId, Provenance } from "../sources/types.ts";
 import type { RetrievalEvidence } from "../civic-data/types.ts";
-import type { CandidateResult, ContestResult, MeasureResult, Scorecard } from "./results.ts";
+import type { BallotElectionSummary, CandidateResult, ContestResult, MeasureResult } from "./election-results.ts";
 
 export interface Election {
   id: string;
@@ -17,6 +17,7 @@ export interface Election {
 export type ContestType = "CANDIDACY" | "MEASURE" | "RETENTION";
 
 export interface Contest {
+  result?: ContestResult;
   /** Earlier source keys for this same election, office and division. */
   aliases?: readonly string[];
   sources?: readonly Provenance[];
@@ -37,10 +38,10 @@ export interface Contest {
   termYears: number | null;
   scopeNote: string | null;
   provenance: Provenance;
-  result?: ContestResult;
 }
 
 export interface Candidacy {
+  result?: CandidateResult;
   /** Every previously published candidacy and card key for this person in this race. */
   aliases?: readonly string[];
   sources?: readonly Provenance[];
@@ -74,10 +75,10 @@ export interface Candidacy {
   /** The candidate's own site, only as stated in the filing. Never found. */
   websiteUrl: string | null;
   provenance: Provenance;
-  result?: CandidateResult;
 }
 
 export interface Measure {
+  result?: MeasureResult;
   id: string;
   contestId: string;
   /** The publisher's designation, when held; never generated from list order. */
@@ -87,7 +88,6 @@ export interface Measure {
   /** The official interpretive statement or analysis, verbatim, if any. */
   officialStatement: string | null;
   provenance: Provenance;
-  result?: MeasureResult;
 }
 
 export interface BallotAbsence {
@@ -114,6 +114,7 @@ export interface CandidacyRemoval {
 }
 
 export interface BallotSet {
+  results?: { readonly state?: BallotElectionSummary; readonly nation?: BallotElectionSummary };
   /** Pairings stated by the election authority, never inferred from party. */
   candidateTickets?: readonly { id: string; leadCandidacyId: string;
     runningMate: Candidacy & { office?: string }; provenance: Provenance }[];
@@ -141,8 +142,6 @@ export interface BallotSet {
   /** Source notes with explicit applicability; never widened from a county
    * or one measured ZIP to every reader of a statewide source. */
   scopedCoverageNotes?: readonly ScopedBallotCoverageNote[];
-  /** Chamber seats and flips by scope: the state's code and "US". */
-  scorecards?: Readonly<Record<string, Scorecard>>;
 }
 
 export interface HeldBallotContest extends Pick<Contest, "id" | "electionId" | "ocdId" | "title" | "provenance"> {

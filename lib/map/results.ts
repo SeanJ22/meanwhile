@@ -1,3 +1,6 @@
+import { officeIdentity } from "../officials/office-identity.ts";
+import type { BallotSet, Contest } from "../ballot/types.ts";
+
 /**
  * The results map's whole view of a contest result. This file is the only place
  * that reads the ballot's result fields; everything else on the map works on
@@ -89,6 +92,8 @@ export function parseDistrictOcd(ocdId: string): { state: string; kind: string; 
   return match ? { state: match[1], kind: match[2], number: match[3] } : null;
 }
 
+export const STATE_DIVISION = /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}$/;
+
 export const stateOcd = (state: string) => `ocd-division/country:us/${state.toLowerCase() === "dc" ? "district" : "state"}:${state.toLowerCase()}`;
 
 /** House seats flipped so far, by state: the phone's first national House view. */
@@ -113,36 +118,32 @@ export function districtTitle(ocdId: string): string {
 
 /* ------------------------------------------------- the ballot's fields --- */
 
-/** What a ballot contest and its candidacies carry once results are filed. */
-interface ContestResultFields {
-  id: string;
-  ocdId: string;
-  voteFor: number | null;
-  result?: { status: ContestStatus; flip?: { to: ResultParty; seats: number } | null };
-}
-interface CandidacyResultFields {
-  contestId: string;
-  givenName: string;
-  familyName: string;
-  partyLabel: string | null;
-  incumbent: boolean | null;
-  result?: { outcome: "won" | "runoff" | null; votes: number | null };
-}
-
-export const partyOf = (label: string | null): ResultParty =>
+export const partyOf = (label: string | null | undefined): ResultParty =>
   /^d/i.test(label ?? "") ? "D" : /^r/i.test(label ?? "") ? "R" : "O";
 
-/** Contests that carry a filed result. A contest without one is simply absent, so its district reads as "no results yet". */
-export function resultContests(ballot: { contests: readonly ContestResultFields[]; candidacies: readonly CandidacyResultFields[] }): ResultContest[] {
+/** A contest the map draws: a legislative or U.S. House district, or a state's U.S. Senate seat. Governor and other statewide offices share the state's division and are not drawn. */
+const drawn = (contest: Contest) => parseDistrictOcd(contest.ocdId) !== null
+  || (STATE_DIVISION.test(contest.ocdId) && officeIdentity(contest.title, contest.ocdId) === "us_senator");
+
+/**
+ * Contests that carry a filed result, read from the ballot's `result` fields. A contest without one is simply absent,
+ * so its district reads as "no results yet". The source files how many seats flipped only as a yes or no, so the seats
+ * counted as flipped are the gaining party's winners who were not already holding a seat there.
+ */
+export function resultContests(ballot: Pick<BallotSet, "contests" | "candidacies">): ResultContest[] {
   return ballot.contests.flatMap(contest => {
-    if (!contest.result) return [];
+    const filed = contest.result;
+    if (!filed || !drawn(contest)) return [];
     const candidates = ballot.candidacies.filter(row => row.contestId === contest.id).map((row): ResultCandidate => ({
       name: `${row.givenName} ${row.familyName}`.trim(),
       party: partyOf(row.partyLabel),
       incumbent: row.incumbent === true,
-      result: row.result?.outcome ?? null,
+      result: row.result?.won ? "won" : row.result?.runoff ? "runoff" : null,
       votes: row.result?.votes ?? null,
     }));
-    return [{ ocdId: contest.ocdId, status: contest.result.status, seats: Math.max(1, contest.voteFor ?? 1), flip: contest.result.flip ?? null, candidates }];
+    const gained = filed.flipped && filed.gainedByParty ? partyOf(filed.gainedByParty) : null;
+    const newSeats = candidates.filter(candidate => candidate.result === "won" && candidate.party === gained && !candidate.incumbent).length;
+    return [{ ocdId: contest.ocdId, status: filed.status, seats: Math.max(1, filed.seatsToFill ?? contest.voteFor ?? 1),
+      flip: gained ? { to: gained, seats: Math.max(1, newSeats) } : null, candidates }];
   });
 }

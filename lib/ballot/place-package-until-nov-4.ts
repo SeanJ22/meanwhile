@@ -10,6 +10,7 @@ import { currentPlaceRow, type BodyHeaders } from "../reader/place-identity.ts";
 import { unpackPlaceContextRow } from "../reader/place-ready.ts";
 import { PLACE_SELECTION, identityHeaders } from "../reader/place.ts";
 import type { PlaceInput, PlacePackage } from "../reader/place-types.ts";
+import { restoreAgendaText } from "../reader/place-compose.ts";
 
 /*
  * The ballot's place read, exactly as it ran before ZIPs were combined from saved pages: every selected place's saved page is
@@ -29,18 +30,6 @@ const latest = (pages: readonly Page[]): Page | undefined => [...pages].sort((a,
 /** An identity is kept once across overlapping ready pages; distinct records keep their own identity. */
 function unique(rows: readonly Row[], key: (row: Row) => string): Row[] {
   return [...new Map(rows.map(row => [key(row), row])).values()];
-}
-
-function restoreAgendaText(value: unknown, texts: readonly string[]): unknown {
-  if (Array.isArray(value)) return value.map(child => restoreAgendaText(child, texts));
-  if (!value || typeof value !== "object") return value;
-  const row = value as Row;
-  if (Object.hasOwn(row, "$readerAgendaText")) {
-    const index = row.$readerAgendaText;
-    if (typeof index !== "number" || !Number.isSafeInteger(index) || typeof texts[index] !== "string") throw Error("READER_AGENDA_TEXT_MISSING");
-    return texts[index];
-  }
-  return Object.fromEntries(Object.entries(row).map(([key, child]) => [key, restoreAgendaText(child, texts)]));
 }
 
 function pageTime(row: Row): number {

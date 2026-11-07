@@ -12,7 +12,7 @@ function unique(rows: readonly Row[], key: (row: Row) => string): Row[] {
   return [...new Map(rows.map(row => [key(row), row])).values()];
 }
 
-function restoreAgendaText(value: unknown, texts: readonly string[]): unknown {
+export function restoreAgendaText(value: unknown, texts: readonly string[]): unknown {
   if (Array.isArray(value)) return value.map(child => restoreAgendaText(child, texts));
   if (!value || typeof value !== "object") return value;
   const row = value as Row;

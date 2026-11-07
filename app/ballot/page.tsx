@@ -1108,7 +1108,7 @@ export default readerRoute("/ballot", async function BallotPage({
         </Card>
       )}
 
-      {set && <p className="rc-subline" data-election-day="">Election day {set.election.date < new Date().toISOString().slice(0, 10) ? "was" : "is"} {shortDate(set.election.date)}</p>}
+      {set && <p className="rc-subline" data-election-day="">Election day {set.election.date < phoenixToday() ? "was" : "is"} {shortDate(set.election.date)}</p>}
       <ResultAccordion>
       {set?.scorecards && <ScorecardCard scorecards={set.scorecards} homeScope={set.election.state} />}
       {set && matched && (

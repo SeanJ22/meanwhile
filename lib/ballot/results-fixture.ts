@@ -1,5 +1,4 @@
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import type { BallotSet, Candidacy, Contest } from "./types.ts";
 import type { CandidateResult, ContestResult, ChamberScore, PartyKey, Scorecard, SeatCounts } from "./results.ts";
 
@@ -91,8 +90,9 @@ function scorecard(file: MsFile): Scorecard {
 }
 
 export function withFixtureResults(set: BallotSet): BallotSet {
-  if (process.env.WTP_RESULTS_FIXTURE !== "1" || set.election.state !== "AZ") return set;
-  const file = JSON.parse(readFileSync(join(process.cwd(), "tests/fixtures/results/az-multistate.json"), "utf8")) as MsFile;
+  const path = process.env.WTP_RESULTS_FIXTURE;
+  if (!path || set.election.state !== "AZ") return set;
+  const file = JSON.parse(readFileSync(path, "utf8")) as MsFile;
   FIXTURE_SOURCE.checkedAt = file.generated_at;
   const byContest = new Map<string, Candidacy[]>();
   for (const candidate of set.candidacies) byContest.set(candidate.contestId, [...byContest.get(candidate.contestId) ?? [], candidate]);

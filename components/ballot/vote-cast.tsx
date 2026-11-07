@@ -34,7 +34,6 @@ function readDraft(contestId: string): string {
   try { return window.localStorage.getItem(draftKey(contestId)) ?? ""; } catch { return ""; }
 }
 
-const noSubscription = () => () => {};
 
 function writeDraft(contestId: string, text: string): void {
   try {
@@ -71,7 +70,7 @@ export function VoteCastBox({ contestId, options, context }: {
   );
 
   /* The held draft reads through the same hydration-safe path; `typed` takes over from the first keystroke. */
-  const held = useSyncExternalStore(noSubscription, () => readDraft(contestId), () => "");
+  const held = useSyncExternalStore(subscribeReactions, () => readDraft(contestId), () => "");
   const [typed, setTyped] = useState<string | null>(null);
   const text = typed ?? held;
   const [sent, setSent] = useState(false);

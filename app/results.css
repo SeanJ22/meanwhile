@@ -1,5 +1,5 @@
 /* Election results on the ballot cards: the accordion shell (rc-) and the result pieces (rr-). */
-.rc-accordion { --result-d: #2457b8; --result-r: #b3362a; --result-on: #fdfaf4; display: grid; gap: 14px; margin-top: var(--space-4); }
+.rc-accordion { display: grid; gap: 14px; margin-top: var(--space-4); }
 .rc-accordion[data-open="true"] { padding-bottom: 40vh; }
 @media (min-width: 1024px) { .rc-accordion { gap: 20px; } }
 .rc-accordion > section { margin: 0; }

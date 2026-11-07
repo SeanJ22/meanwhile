@@ -5424,3 +5424,6 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   --cat-credit: #b0457e;
   --cat-bipartisan: #2f8a66;
 }
+
+/* Result fills: the party colours that win a seat or flip it, the same in light and dark. */
+:root { --result-d: #2457b8; --result-r: #b3362a; --result-on: #fdfaf4; }

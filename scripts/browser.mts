@@ -20,6 +20,9 @@ import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
  * declaration also rides in the request body to cover that path.
  */
 
+import { rmSync } from "node:fs";
+import { join } from "node:path";
+
 import { chromium } from "playwright";
 import type {
   Browser,
@@ -37,6 +40,7 @@ import { isLiveWriteRequest } from "../lib/ops/live-write-guard.ts";
 import {
   decideProviderRequest,
   describeLedger,
+  MAPTILER_HOSTS,
   newProviderLedger,
   providerHostOf,
   resolveProviderPolicy,
@@ -88,6 +92,20 @@ export interface GuardedOptions extends LaunchOptions {
    * `GuardedBrowser.writesBlocked`.
    */
   blockWrites?: boolean;
+  /**
+   * For the runner's own copy of the site only (scripts/site.mts). Keep the
+   * browser's HTTP cache in this folder between visits and between runs, so a
+   * page's unchanged scripts and styles are not fetched again. It cannot be
+   * used against the live site: Chromium turns its cache off for any context
+   * that routes requests, and the live site's map-provider and write blocks
+   * are routes, so a cached browser routes nothing.
+   * Everything else a visit leaves (cookies, local storage, IndexedDB,
+   * service workers) is wiped before the next one, so every visit still
+   * starts as a first-time reader with a warm cache. One context at a time.
+   */
+  cacheDir?: string;
+  /** Use this run id instead of minting one, when the caller must share it with the site it visits. */
+  runId?: string;
 }
 
 /**
@@ -132,9 +150,9 @@ export function runIdFor(label: string, now: () => Date = () => new Date()): str
  * ```
  */
 export async function launchGuarded(options: GuardedOptions): Promise<GuardedBrowser> {
-  const { label, now, spendsProviderQuota, blockWrites, ...launchOptions } = options;
+  const { label, now, spendsProviderQuota, blockWrites, cacheDir, runId: declaredRunId, ...launchOptions } = options;
   const writesBlocked = { count: 0, paths: new Set<string>() };
-  const runId = runIdFor(label, now);
+  const runId = declaredRunId ?? runIdFor(label, now);
 
   /*
    * The quota gate is decided once, here, for the whole run: by default no
@@ -168,18 +186,44 @@ export async function launchGuarded(options: GuardedOptions): Promise<GuardedBro
   if (resolved.kind === "ABSENT") throw new Error(describeChromium(resolved));
   if (resolved.kind === "SUBSTITUTED") console.warn(`  ${describeChromium(resolved)}`);
 
-  const browser: Browser = await chromium.launch({
+  if (cacheDir && spendsProviderQuota) {
+    throw new Error(`launchGuarded(${label}): a cached browser cannot spend provider quota; it blocks the provider hosts outright.`);
+  }
+  /*
+   * Playwright turns the browser's HTTP cache off for any context that routes
+   * requests, so a cached browser routes nothing. It is for the runner's own
+   * copy of the site only (scripts/site.mts), whose guard proxy does what the
+   * routes do: refuses the map relay and the write routes, and adds the run
+   * marker. The provider hosts do not resolve in it, the same fail-closed block.
+   */
+  const launchWith = {
     ...launchOptions,
+    ...(cacheDir ? { args: [...(launchOptions.args ?? []), `--host-resolver-rules=${MAPTILER_HOSTS.map((host) => `MAP ${host} ~NOTFOUND`).join(", ")}`] } : {}),
     ...(resolved.kind === "SUBSTITUTED" ? { executablePath: resolved.executablePath } : {}),
-  });
+  };
+  // With a cache folder there is no shared browser: each context is its own persistent profile.
+  const browser = (cacheDir ? null : await chromium.launch(launchWith)) as Browser;
+  let open: BrowserContext | null = null;
+
+  /** Profile folders a visit leaves behind; the HTTP cache ("Cache", "Code Cache") is the one thing kept. */
+  const PROFILE_STATE = ["Local Storage", "Session Storage", "IndexedDB", "Service Worker", "File System", "Cookies", "Cookies-journal", "Network"];
+  async function persistentContext(cacheDir: string, contextOptions: BrowserContextOptions): Promise<BrowserContext> {
+    if (open) throw new Error(`launchGuarded(${label}): a cached browser opens one context at a time; close the last before the next.`);
+    for (const name of PROFILE_STATE) rmSync(join(cacheDir, "Default", name), { recursive: true, force: true });
+    const context = await chromium.launchPersistentContext(cacheDir, { ...launchWith, ...contextOptions });
+    open = context;
+    context.on("close", () => { if (open === context) open = null; });
+    return context;
+  }
 
   async function guardedContext(contextOptions: BrowserContextOptions = {}): Promise<BrowserContext> {
-    const context = await browser.newContext({
+    const wanted: BrowserContextOptions = {
       ...contextOptions,
       // The caller's headers are kept, and the marker is not one a caller may
       // overwrite: it goes on last.
-      extraHTTPHeaders: { ...contextOptions.extraHTTPHeaders, ...headers },
-    });
+      ...(cacheDir ? {} : { extraHTTPHeaders: { ...contextOptions.extraHTTPHeaders, ...headers } }),
+    };
+    const context = cacheDir ? await persistentContext(cacheDir, wanted) : await browser.newContext(wanted);
     /*
      * The marker goes to OUR origin and nowhere else: `extraHTTPHeaders`
      * applies to every request, and third parties (MapTiler's CORS preflight)
@@ -227,31 +271,33 @@ export async function launchGuarded(options: GuardedOptions): Promise<GuardedBro
       return true;
     };
 
-    await context.route("**/*", async (route) => {
-      const request = route.request();
-      // The provider barrier first: a request that is not going to leave needs no headers.
-      if (await refusedByBarrier(route)) return;
-      const decision = confine(request.url(), frameUrlOf(request), request.headers(), headers);
-      if (decision.verdict === "SAME_ORIGIN_KEPT") {
-        await route.continue();
-        return;
-      }
-      await route.continue({ headers: decision.headers });
-    });
-
-    /* Registered after the route above, so it runs first (Playwright runs the
-     * latest route first); `fallback` hands everything else on. */
-    if (blockWrites) {
+    if (!cacheDir) {
       await context.route("**/*", async (route) => {
         const request = route.request();
-        if (!isLiveWriteRequest(request.url(), request.method())) {
-          await route.fallback();
+        // The provider barrier first: a request that is not going to leave needs no headers.
+        if (await refusedByBarrier(route)) return;
+        const decision = confine(request.url(), frameUrlOf(request), request.headers(), headers);
+        if (decision.verdict === "SAME_ORIGIN_KEPT") {
+          await route.continue();
           return;
         }
-        writesBlocked.count += 1;
-        writesBlocked.paths.add(new URL(request.url()).pathname);
-        await route.abort("blockedbyclient");
+        await route.continue({ headers: decision.headers });
       });
+
+      /* Registered after the route above, so it runs first (Playwright runs the
+       * latest route first); `fallback` hands everything else on. */
+      if (blockWrites) {
+        await context.route("**/*", async (route) => {
+          const request = route.request();
+          if (!isLiveWriteRequest(request.url(), request.method())) {
+            await route.fallback();
+            return;
+          }
+          writesBlocked.count += 1;
+          writesBlocked.paths.add(new URL(request.url()).pathname);
+          await route.abort("blockedbyclient");
+        });
+      }
     }
 
     await context.addInitScript(KILL_BEACON);
@@ -278,7 +324,7 @@ export async function launchGuarded(options: GuardedOptions): Promise<GuardedBro
      * so no Chromium process leaks.
      */
     async close(): Promise<void> {
-      await browser.close();
+      await (cacheDir ? (open as BrowserContext | null)?.close() : browser.close());
       if (provider.exceeded) {
         throw new Error(
           `launchGuarded(${label}): ${describeLedger(provider)}. The run asked for more ` +

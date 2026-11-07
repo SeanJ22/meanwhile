@@ -35,9 +35,11 @@ import {
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import { publishedPlaces } from "../lib/ops/post-deploy-warm.ts";
 import { storeRunScreenshot } from "../lib/photos/store.ts";
-import { launchGuarded, seedZip, type GuardedBrowser } from "./browser.mts";
+import { seedZip } from "./browser.mts";
+import { liveVisitsPerDay, openSite, visitBrowsers } from "./site.mts";
 
 
+/** The live site: asked for the published places. Tasks run on the runner's own copy of this release, except the few live visits a day. */
 const BASE = (process.env.SHOOT_BASE_URL ?? PUBLIC_SITE_ORIGIN).replace(/\/$/, "");
 const ZIP_COUNT = Number(process.env.WTP_TASK_ZIPS ?? 2);
 const ASK_ZIPS = Number(process.env.WTP_TASK_ASK_ZIPS ?? 1);
@@ -187,7 +189,10 @@ async function keep(key: string, bytes: Uint8Array): Promise<string | null> {
   }
 }
 
-async function runTask(browser: GuardedBrowser, task: ResidentTask, zip: string, profile: TaskProfile): Promise<TaskRun> {
+async function runTask(task: ResidentTask, zip: string, profile: TaskProfile): Promise<TaskRun> {
+  const browsers = task.start === "ask" ? asker : reader;
+  const visit = await site.next({ runId: browsers.runId, writes: task.start === "ask" });
+  const browser = await browsers.forVisit(visit);
   const script = TASK_SCRIPTS[task.id];
   const context = await browser.context({ viewport: TASK_PROFILES[profile], deviceScaleFactor: 1, reducedMotion: "reduce" });
   const page = await context.newPage();
@@ -196,7 +201,7 @@ async function runTask(browser: GuardedBrowser, task: ResidentTask, zip: string,
   let deadEnd: string | null = null;
   let missing: string[] = [];
   const record = async (says: string, ms: number | null) => {
-    const shot = await keep(shotKey(now, browser.runId, task.id, zip, profile, steps.length), await page.screenshot({ type: "png" }));
+    const shot = await keep(shotKey(now, browsers.runId, task.id, zip, profile, steps.length), await page.screenshot({ type: "png" }));
     const issues: Record<string, number> = {};
     try {
       for (const issue of measurePage(await page.evaluate(collectPageObservation)).issues) issues[issue.kind] = (issues[issue.kind] ?? 0) + 1;
@@ -206,7 +211,7 @@ async function runTask(browser: GuardedBrowser, task: ResidentTask, zip: string,
   try {
     await seedZip(page, zip);
     await page.addInitScript(LAYOUT_SHIFT_INIT_SCRIPT);
-    await page.goto(`${BASE}${startPath(task.start, zip)}`, { waitUntil: "commit", timeout: 60_000 });
+    await page.goto(`${visit.origin}${startPath(task.start, zip)}`, { waitUntil: "commit", timeout: 60_000 });
     await page.waitForSelector(readySelector(task.start, zip), { state: "visible", timeout: WAIT_MS });
     await record(`Opened the ${task.start === "home" || task.start === "ask" ? "home" : task.start} page`, await settled(page));
     for (const step of script.steps) {
@@ -263,14 +268,16 @@ async function runTask(browser: GuardedBrowser, task: ResidentTask, zip: string,
 
 /* ------------------------------------------------------------------ pass */
 
-const reader = await launchGuarded({ label: "resident-tasks", headless: true, blockWrites: true, args: BROWSER_ARGS });
-const asker = targets.some((t) => t.task.start === "ask") ? await launchGuarded({ label: "resident-tasks-ask", headless: true, args: BROWSER_ARGS }) : null;
+const site = openSite({ label: "resident-tasks", now, perDay: await liveVisitsPerDay(repos), ...(process.env.SHOOT_BASE_URL ? { fixedOrigin: BASE } : {}) });
+const reader = visitBrowsers({ label: "resident-tasks", now, blockWrites: true, args: BROWSER_ARGS });
+const asker = visitBrowsers({ label: "resident-tasks-ask", now, blockWrites: false, args: BROWSER_ARGS });
 const runs: TaskRun[] = [];
 try {
-  for (const t of targets) runs.push(await runTask(t.task.start === "ask" ? asker! : reader, t.task, t.zip, t.profile));
+  for (const t of targets) runs.push(await runTask(t.task, t.zip, t.profile));
 } finally {
   await reader.close();
-  await asker?.close();
+  await asker.close();
+  await site.stop();
 }
 
 const pass = taskPass(runs, now, reader.runId, queued);

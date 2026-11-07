@@ -45,10 +45,12 @@ import { sampleZips } from "../lib/health/worst-case-speed.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import { publishedPlaces } from "../lib/ops/post-deploy-warm.ts";
 import { storeRunScreenshot } from "../lib/photos/store.ts";
-import { launchGuarded, seedZip, type GuardedBrowser } from "./browser.mts";
+import { seedZip } from "./browser.mts";
+import { liveVisitsPerDay, openSite, visitBrowsers } from "./site.mts";
 import { fetchServedCommit } from "./post-deploy-observer.mts";
 
 
+/** The live site: asked which commit it serves and which places it publishes. Screens open on the runner's own copy of that release, except the few live visits a day. */
 const BASE = (process.env.SHOOT_BASE_URL ?? PUBLIC_SITE_ORIGIN).replace(/\/$/, "");
 const ZIP_COUNT = Number(process.env.WTP_LOOK_ZIPS ?? 1);
 const WAIT_MS = 20_000;
@@ -75,6 +77,8 @@ if (!FORCE && !DRY && !lookOwed(served.sha, looked)) {
   process.exit(0);
 }
 const sha = served.sha ?? "unknown";
+const site = openSite({ label: "look-pass", now, perDay: await liveVisitsPerDay(repos), ...(process.env.SHOOT_BASE_URL ? { fixedOrigin: BASE } : {}) });
+const browsers = visitBrowsers({ label: "look-pass", now, blockWrites: true, args: BROWSER_ARGS });
 const places = ONLY_ZIP ? [{ zip: ONLY_ZIP }] : await publishedPlaces(BASE, fetch, 15_000).catch(() => []);
 if (places.length === 0) {
   console.error("look pass: no published place could be read from the live site");
@@ -121,7 +125,9 @@ async function openDoor(page: Page, word: string): Promise<boolean> {
   }, word, { timeout: WAIT_MS, polling: 100 }).then(() => true, () => false);
 }
 
-async function shoot(browser: GuardedBrowser, target: LookTarget): Promise<{ screen: ShotScreen; image: LookScreenshot | null }> {
+async function shoot(target: LookTarget): Promise<{ screen: ShotScreen; image: LookScreenshot | null }> {
+  const visit = await site.next({ runId: browsers.runId, writes: false });
+  const browser = await browsers.forVisit(visit);
   const context = await browser.context({ viewport: { ...LOOK_PROFILES[target.profile] }, deviceScaleFactor: 1, reducedMotion: "reduce" });
   await context.addInitScript(() => { try { localStorage.setItem("wtp.tutorial_seen", "1"); } catch { /* defaults are fine */ } });
   const page = await context.newPage();
@@ -129,7 +135,7 @@ async function shoot(browser: GuardedBrowser, target: LookTarget): Promise<{ scr
   try {
     await seedZip(page, target.zip);
     await page.addInitScript(LAYOUT_SHIFT_INIT_SCRIPT);
-    await page.goto(`${BASE}${target.surface === "ballot" ? `/ballot?zip=${target.zip}` : `/?zip=${target.zip}`}`, { waitUntil: "commit", timeout: 60_000 });
+    await page.goto(`${visit.origin}${target.surface === "ballot" ? `/ballot?zip=${target.zip}` : `/?zip=${target.zip}`}`, { waitUntil: "commit", timeout: 60_000 });
     if ((target.surface === "meetings" || target.surface === "officials") && !(await openDoor(page, target.surface))) return fail(`the ${target.surface} door never appeared`);
     try { await page.waitForSelector(READY[target.surface], { state: "visible", timeout: WAIT_MS }); } catch { return fail("it never became usable within 20 seconds"); }
     await page.waitForTimeout(1_500);
@@ -156,12 +162,12 @@ async function shoot(browser: GuardedBrowser, target: LookTarget): Promise<{ scr
 
 /* ------------------------------------------------------------------ pass */
 
-const browser = await launchGuarded({ label: "look-pass", headless: true, blockWrites: true, args: BROWSER_ARGS });
 const shots: { screen: ShotScreen; image: LookScreenshot | null }[] = [];
 try {
-  for (const t of targets) shots.push(await shoot(browser, t));
+  for (const t of targets) shots.push(await shoot(t));
 } finally {
-  await browser.close();
+  await browsers.close();
+  await site.stop();
 }
 
 const sent = shots.filter((s) => s.image !== null);
@@ -179,7 +185,7 @@ const outcome = await reviewLook({ screenshots: sent.map((s) => s.image!), task,
     return room.ok;
   },
 });
-let pass = lookPass({ sha, at: now, runId: browser.runId, shots: shots.map((s) => s.screen), reviewed: sent.map((s) => s.screen), outcome });
+let pass = lookPass({ sha, at: now, runId: browsers.runId, shots: shots.map((s) => s.screen), reviewed: sent.map((s) => s.screen), outcome });
 
 if (DRY) {
   for (const s of pass.screens) console.log(`  ${s.verdict.padEnd(12)} ${s.label} · ${s.shot ?? s.failed ?? "no screenshot"}${s.issueLines.length ? ` · ${s.issueLines.length} measured` : ""}`);

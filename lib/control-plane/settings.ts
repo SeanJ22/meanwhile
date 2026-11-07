@@ -1,4 +1,5 @@
 import type { AdminConfig } from "./gateway/admin-config.ts";
+import { LIVE_VISITS_DEFAULT, LIVE_VISITS_SETTING } from "../ops/live-visits.ts";
 
 export type SettingValue = null | boolean | number | string | readonly SettingValue[] | { readonly [key: string]: SettingValue };
 
@@ -63,6 +64,8 @@ export const ALERTS_ON_SETTING = "alerts.on";
 export const BRIEF_TIME_SETTING = "brief.time";
 registerSetting({key:ALERTS_ON_SETTING,label:"Show alerts",defaultValue:false,readerFacing:false,control:"boolean",validate:(v):v is boolean=>typeof v==="boolean"});
 registerSetting({key:BRIEF_TIME_SETTING,label:"Daily brief time (Eastern, HH:mm; blank for off)",defaultValue:"",readerFacing:false,control:"text",validate:(v):v is string=>typeof v==="string"&&(v===""||/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(v))});
+
+registerSetting({key:LIVE_VISITS_SETTING,label:"Live-site browser visits per check per day (the rest run on the runner's own copy)",defaultValue:LIVE_VISITS_DEFAULT,readerFacing:false,control:"number",unit:"visits",validate:(v):v is number=>typeof v==="number"&&Number.isInteger(v)&&v>=0&&v<=50});
 
 export function settingDefinition(key: string): SettingDefinition | null { return definitions.get(key) ?? null; }
 export function settingDefinitions(): readonly SettingDefinition[] { return [...definitions.values()]; }

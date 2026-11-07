@@ -1,7 +1,7 @@
 /**
  * New code loads without stopping the runner. The parent restarts only when its own code changed; otherwise new
  * children start from the staged checkout. Host state lives in Git-ignored paths, linked from the staged checkout back
- * to the running one and carried back before the staged checkout is removed. Enabled by WTP_RELEASE_QUICK_SWITCH=1.
+ * to the running one and carried back before the staged checkout is removed.
  */
 
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, renameSync, symlinkSync, appendFileSync } from "node:fs";

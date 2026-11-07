@@ -13,6 +13,7 @@ import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node
 import { dirname, join, win32 } from "node:path";
 
 import { REQUIRED_CONTEXTS } from "./required-contexts.ts";
+import { RUNTIME_RELEASE_HOLD_RELATIVE_PATH, clearStaleGitLocks, recordRuntimeSwitch, restartSwitchClock } from "./runtime-release-guard.ts";
 import type { ServedCommit } from "../../scripts/post-deploy-observer.mts";
 
 const FULL_SHA = /^[0-9a-f]{40}$/i;
@@ -20,7 +21,7 @@ const COMMAND_TIMEOUT_MS = 2 * 60_000;
 const INSTALL_TIMEOUT_MS = 15 * 60_000;
 // Nine bounded Git commands plus the frozen install can block the parent loop.
 export const RUNTIME_RELEASE_MAX_BLOCKING_MS = 9 * COMMAND_TIMEOUT_MS + INSTALL_TIMEOUT_MS;
-export const RUNTIME_RELEASE_HOLD_RELATIVE_PATH = join(".runtime", "ops", "runtime-release-hold.json");
+export { RUNTIME_RELEASE_HOLD_RELATIVE_PATH };
 
 export interface GithubCheckRun {
   readonly name?: unknown;
@@ -400,6 +401,7 @@ function finishRuntimeReleaseInstall(input: {
   }
   const hold = join(input.root, RUNTIME_RELEASE_HOLD_RELATIVE_PATH);
   if (existsSync(hold)) rmSync(hold, { force: true });
+  restartSwitchClock(input.root, targetSha);
   return { state: "UPDATED", code: "RUNTIME_RELEASE_UPDATED",
     detail: `dedicated runtime checkout is detached, clean, installed, and exact at ${targetSha}`,
     targetSha, switched: true };
@@ -436,6 +438,8 @@ export function applyRuntimeRelease(input: {
     return { state: "REFUSED", code, detail, targetSha, switched };
   };
 
+  // A lock left by a cut-off git command would otherwise fail every git step below, and every restart after.
+  clearStaleGitLocks(input.root);
   const status = run("git", ["status", "--porcelain=v1", "--untracked-files=all"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
   if (status.status !== 0) return refuse("RUNTIME_CHECKOUT_UNREADABLE", conciseFailure(status));
   if (status.stdout.trim() !== "") return refuse("RUNTIME_CHECKOUT_DIRTY", "dedicated runtime checkout contains changed or untracked paths");
@@ -451,9 +455,11 @@ export function applyRuntimeRelease(input: {
   const ancestor = run("git", ["merge-base", "--is-ancestor", targetSha, "origin/main"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
   if (ancestor.status !== 0) return refuse("DEPLOYED_COMMIT_NOT_ON_MAIN", `${targetSha} is not proven to be an ancestor of origin/main`);
 
+  const previous = lowerFullSha(run("git", ["rev-parse", "HEAD"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS }).stdout.trim());
   const switchedResult = run("git", ["switch", "--detach", targetSha], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
   if (switchedResult.status !== 0) return refuse("RUNTIME_CHECKOUT_SWITCH_FAILED", conciseFailure(switchedResult));
   switched = true;
+  if (previous !== null) recordRuntimeSwitch(input.root, previous, targetSha);
   // Persist before the blocking install so a watchdog kill retains recovery state.
   writeRuntimeReleaseHold(input.root, { formatVersion: 1, state: "HELD", code: "FROZEN_INSTALL_PENDING",
     targetSha, switched, observedAt: new Date().toISOString() });

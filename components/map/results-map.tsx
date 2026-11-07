@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import type { FilterSpecification, Map as MapLibreMap, MapMouseEvent } from "maplibre-gl";
+import { useRouter } from "next/navigation";
+import type { FilterSpecification, MapMouseEvent } from "maplibre-gl";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { NATIONAL_BOUNDARIES_SOURCE } from "@/lib/map/districts";
 import { CONUS_BOUNDS } from "@/lib/map/style";
@@ -11,8 +12,9 @@ import { districtCard, houseStateMeta, senateCard } from "@/lib/map/results-card
 import { countyChoices, outlineBounds, type CountyChoice } from "@/lib/map/results-counties";
 import { canDrawResults, clearResultLayers, drawResultLayers } from "@/lib/map/results-apply";
 import { countyOutlineLayers, resultLayers, resultsLayerId, stateBadgeLayers, stateBadgePoints, type ResultsSurface, type ResultsTheme } from "@/lib/map/results-style";
-import { setResultsDistricts, setResultsScope, showResultsState, useResultsScope, type ResultsState } from "@/lib/map/results-scope";
+import { closeResults, setResultsDistricts, setResultsScope, showResultsState, useResultsScope, type ResultsState } from "@/lib/map/results-scope";
 import { Banner, CountyChip, GettingBanner, Legend, MapCard, PillButton, Segmented, Sheet, WinnerRow, type LegendKey } from "./results-chrome";
+import { useMapInstance } from "./map-instance";
 import styles from "./results-map.module.css";
 
 type StateLayer = "sen" | "house" | "cd";
@@ -60,7 +62,6 @@ function useOutlines(): StateOutlines | null {
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 export interface ResultsMapProps {
-  map: MapLibreMap;
   theme: ResultsTheme;
   phone: boolean;
   /** The reader's districts from their ZIP. */
@@ -68,10 +69,12 @@ export interface ResultsMapProps {
   zip: string | null;
   /** The scorecard when one is mounted: a right panel on desktop, a bottom sheet on phone. */
   scorecard?: ReactNode;
-  onBack: () => void;
 }
 
-export default function ResultsMap({ map, theme, phone, yours, zip, scorecard, onBack }: ResultsMapProps) {
+export default function ResultsMap({ theme, phone, yours, zip, scorecard }: ResultsMapProps) {
+  const map = useMapInstance();
+  const router = useRouter();
+  const onBack = () => { closeResults(); if (zip) router.push(`/ballot?zip=${zip}`); };
   const { scope, state, home } = useResultsScope();
   const outlines = useOutlines();
   const [layer, setLayer] = useState<StateLayer>("sen");

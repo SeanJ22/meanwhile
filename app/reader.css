@@ -2011,3 +2011,4 @@ details.mw-sources > summary {
 
 /* While the election results are up, the map is the whole screen; the results bring their own controls. */
 .mw-reader[data-results="open"] > :not(.mw-map-layer) { display: none; }
+.mw-reader[data-results="open"] .maplibregl-marker { display: none; }

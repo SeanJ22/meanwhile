@@ -101,6 +101,7 @@ interface CameraProbe {
 }
 
 import { OfficePinsLayer, isOfficePress } from "./office-pins-layer";
+import { MapInstance } from "./map-instance";
 import type { MapBounds, OfficeSite } from "@/lib/map/office-pins";
 
 const NO_OFFICE_SITES: readonly OfficeSite[] = [];
@@ -165,8 +166,8 @@ interface MapCanvasProps {
   focusStateOcdId?: string | null;
 
   votingSites?: VotingSitePin[];
-  /** The election-results overlay, drawn on this map once it has loaded. While it is up, taps belong to it. */
-  results?: (map: MapLibreMap) => ReactNode;
+  /** The election-results overlay, drawn on this map once it has loaded (it reads the map with `useMapInstance`). While it is up, taps belong to it. */
+  results?: ReactNode;
   /** The point the reader's typed address resolved to; the address never reaches the map. */
   votingAddressPoint?: { lat: number; lng: number } | null;
   onSelectVotingSite?: (id: string) => void;
@@ -1097,7 +1098,7 @@ export function MapCanvas({
           onSelect={id => onSelectOffice?.(id)}
         />
       )}
-      {officeMap && results?.(officeMap)}
+      {officeMap && results && <MapInstance.Provider value={officeMap}>{results}</MapInstance.Provider>}
       {graphicsUnavailable && (
         <p role="status" className="absolute inset-x-0 bottom-0 p-4 t-body text-voice bg-panel">
           The map can’t show on this device. You can still browse the meeting list.

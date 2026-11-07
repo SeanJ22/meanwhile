@@ -13,7 +13,6 @@ import { flushSync } from "react-dom";
 import { forgetCamera } from "@/lib/map/camera-memory";
 
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
 
 import { CountBadge } from "@/components/map/count-badge";
 import { Legend } from "@/components/map/legend";
@@ -54,7 +53,7 @@ import { PostalZipNotice } from "./postal-zip-notice";
 import { TutorialReplayButton, useTutorialRequested } from "./tutorial-overlay";
 import { useSidebarVisible } from "@/hooks/use-sidebar-visible";
 import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
-import { closeResults, useResultsScope } from "@/lib/map/results-scope";
+import { useResultsScope } from "@/lib/map/results-scope";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
 import { logEvent } from "@/lib/log/client";
@@ -147,7 +146,6 @@ interface ViewTarget {
 }
 
 const EMPTY_MEETINGS: Meeting[] = [];
-const NO_VENUES: Venue[] = [];
 const NO_VOTING_PINS: VotingSitePin[] = [];
 const NO_INSETS = { top: 0, right: 0, bottom: 0, left: 0 };
 const RESULT_DISTRICT = /\/(?:cd|sldu|sldl):/;
@@ -878,7 +876,6 @@ function MapEntryInner() {
   // (lib/state/district-intent.ts).
   const resultsScope = useResultsScope();
   const resultsOpen = resultsScope.open;
-  const router = useRouter();
   const activeDistrictTypes = useMemo(
     () =>
       resultsOpen
@@ -1645,7 +1642,7 @@ function MapEntryInner() {
       >
         <div className="mw-map-layer absolute inset-0">
           {districtsRestored && (view !== null || failure !== null || (restored && !location)) && <MapCanvas
-            venues={resultsOpen ? NO_VENUES : allVenues}
+            venues={allVenues}
             visibleVenueKeys={visibleVenueKeys}
             camera={camera}
             here={!resultsOpen && location && contains(location.lat, location.lng) ? location : null}
@@ -1682,17 +1679,12 @@ function MapEntryInner() {
             }}
             onBoundsChange={resultsOpen ? undefined : onMapBounds}
             votingSites={resultsOpen ? NO_VOTING_PINS : votingPins}
-            results={resultsOpen ? map => (
+            results={resultsOpen ? (
               <ResultsMap
-                map={map}
                 theme={theme}
                 phone={layoutBp === "phone"}
                 yours={resultsYours}
                 zip={clusterZip}
-                onBack={() => {
-                  closeResults();
-                  if (clusterZip) router.push(`/ballot?zip=${clusterZip}`);
-                }}
               />
             ) : undefined}
             votingAddressPoint={votingAddressPoint}

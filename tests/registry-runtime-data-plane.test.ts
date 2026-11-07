@@ -53,47 +53,11 @@ import { slotsFor } from "../lib/registry/derive.ts";
 import type { Registry } from "../lib/registry/types.ts";
 import { registryTransferImport, syntheticFederalDirectory, syntheticStateLegislators } from "./helpers/promoted-fixtures.ts";
 import type { OfficialStateLegislatorReadModel } from "../lib/civic-data/candidate-builders.ts";
-import { registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
-import { stateRegistryRuntimeContractId } from "../lib/civic-data/state-scopes.ts";
-import { rowKeyedCivicRecordsFor } from "../lib/civic-data/changes.ts";
-import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
-import { trustedLkgImportUrl } from "../lib/civic-data/trusted-lkg-import.ts";
-import { withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
-import { ROW_KEYED_CIVIC_CHANGE_CONTRACT } from "../lib/civic-data/changes.ts";
-import { trustedLkgCandidateEnvelopeSha256 } from "../lib/civic-data/trusted-lkg-import.ts";
-import { trustedLkgValidatorIds } from "../lib/civic-data/trusted-lkg-import.ts";
 import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
-import { trustedLkgCandidateId } from "../lib/civic-data/trusted-lkg-import.ts";
 import type { CandidateVersionRecord } from "../lib/civic-data/types.ts";
 import type { PromotedProjection } from "../lib/civic-data/types.ts";
 
-function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataStore()): MemoryRoutineDataStore {
-  const original = registryTransferImport();
-  const payload = registryFixtureForState(state), scope = stateRegistryRuntimeScope(state), contractId = stateRegistryRuntimeContractId(state);
-  const civicRecords = rowKeyedCivicRecordsFor("REGISTRY_RUNTIME_BINDING", payload), digest = canonicalCivicDataHash(payload);
-  const candidate = { ...original.record.candidate, scope,
-    retrieval: { ...original.record.candidate.retrieval, requestedUrl: trustedLkgImportUrl(contractId) },
-    normalization: { ...original.record.candidate.normalization, normalizedHash: digest, normalizedPayloadHash: digest,
-      inputRecords: civicRecords.length, outputRecords: civicRecords.length, droppedRecords: 0 },
-    normalizedPayload: payload, readModel: payload, civicRecords, identities: [],
-    horizon: { ...original.record.candidate.horizon, returnedRecords: civicRecords.length },
-    sourceProjectionEvidence: { kind: "SOURCE_PROJECTION_CONTRACT" as const, sourceId: original.record.candidate.sourceId, recordClass: original.record.candidate.recordClass, scope },
-  };
-  Object.assign(candidate, { normalization: withStateRecordHashes(candidate).normalization });
-  candidate.changeSet = candidateChangeSet(candidate, null, ROW_KEYED_CIVIC_CHANGE_CONTRACT);
-  candidate.bootstrapImport = { ...original.record.candidate.bootstrapImport!, contractId, scope,
-    normalizedPayloadSha256: digest, readModelSha256: digest, candidateEnvelopeSha256: trustedLkgCandidateEnvelopeSha256(candidate), validatorIds: trustedLkgValidatorIds(candidate) };
-  candidate.id = trustedLkgCandidateId(candidate.bootstrapImport);
-  const receipt = { ...original.record.receipt!, candidateId: candidate.id, scope };
-  const record = { ...original.record, candidate, receipt, promotedVersion: candidate.id, lastKnownGoodVersion: candidate.id };
-  const projection = { ...original.projection, key: `REGISTRY_RUNTIME_BINDING:${scope}`, scope, versionId: candidate.id,
-    lastKnownGoodVersionId: candidate.id, payload, receipt };
-  const held = store as unknown as { candidates: Map<string, CandidateVersionRecord>; promotions: Map<string, PromotedProjection> };
-  held.candidates.set(candidate.id, record);
-  held.promotions.set(projection.key, projection);
-  return store;
-}
-
+import { registryFixtureForState, stateRegistryRuntimeStore } from "./helpers/promoted-fixtures.ts";
 function registryPriorCache(memory: MemoryRoutineDataStore) {
   // The store's database client is replaced below; it only needs a well-formed address to construct.
   process.env.DATABASE_URL ??= "postgresql://fixture:fixture@registry-prior.invalid/fixture";
@@ -188,24 +152,6 @@ test("registry prior cache corruption and a version racing the read reload the a
   assert.deepEqual(await read(), expected);
   assert.equal(cache.reads(), 4, "a racing read is returned but never saved with an incorrect version");
 });
-
-function registryFixtureForState(state: string, value: RegistryRuntimeReadModel = registryTransferImport().projection.payload): RegistryRuntimeReadModel {
-  const own = (id: string | null) => registryJurisdictions(id).includes(state.toUpperCase());
-  const bodies = value.registry.bodies.filter(row => own(row.id) || own(row.ocdId) || row.alsoServesOcdIds?.some(own));
-  const bodyIds = new Set(bodies.map(row => row.id));
-  const bodyRosters = value.bodyRosters.filter(row => bodyIds.has(row.bodyId));
-  const statewideExecutives = value.statewideExecutives.filter(row => own(row.stateOcdId));
-  const bridge = value.officialCandidacies.rows.filter(row => row.holder.divisions.some(own));
-  const holders = new Set([...bodyRosters.flatMap(row => row.members.map(member => member.id)),
-    ...statewideExecutives.map(row => row.holder.id), ...bridge.map(row => row.holder.id)]);
-  return { ...value, registry: { ...value.registry, bodies,
-    divisions: value.registry.divisions.filter(row => row.ocdId === "ocd-division/country:us" || own(row.ocdId)) },
-    bodyRosters, statewideExecutives, officialCandidacies: { ...value.officialCandidacies, rows: bridge },
-    officialPhotos: { photos: value.officialPhotos.photos.filter(row => holders.has(row.officeholderId)) },
-    rosterPhotos: Object.fromEntries(Object.entries(value.rosterPhotos).filter(([id]) => holders.has(id) || own(id))),
-    rosterReaderDispositions: value.rosterReaderDispositions.filter(row => own(row.sourceId) || holders.has(row.sourceId) || (row.canonicalId !== null && holders.has(row.canonicalId)) ||
-      [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
-}
 
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-08T12:01:00.000Z";

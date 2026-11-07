@@ -1645,9 +1645,12 @@ export async function readCoordinatorWorkItems(repos: ControlPlaneRepositories, 
 }
 
 /**
- * The work a planner owes, decided once from the few work items that carry a plan (13,163 of 619,189 on 2026-10-24).
+ * The work a planner owes, decided once from the few work items that carry a plan (16,915 of 1,050,000 on 2026-11-07).
  * Release 95 re-decided the whole candidate set for every page of 100 and joined it from all 219,512 pending route
  * tasks: the system planner's read took 37 pages of 7 to 11 s each, five minutes, and timed out under load.
+ * The planned ids come from the planned-items indexes without reading a work item's value; a value is read only for a
+ * hunt packet's active-obligation check and, after this read, for the ids it names. The read used to copy every planned
+ * item's whole value out of a scan of the 840,000-row archive: 17 s, and past its 25 s bound on a busy compute.
  */
 export async function pgCoordinatorWorkItems(sql: Sql, exaAgentLane = false, state?: string): Promise<WorkItem[]> {
   const run = boundedRunner(sql, "cp_work_items", CONTROL_PLANE_REQUEST_BOUNDS_MS);
@@ -1666,22 +1669,24 @@ export async function pgCoordinatorWorkItems(sql: Sql, exaAgentLane = false, sta
           value->>'createdAt' DESC, id DESC LIMIT 1
       ) latest
     ), planned AS MATERIALIZED (
-      SELECT id, value FROM cp_work_items_history WHERE value->'autonomousPlan' IS NOT NULL
-    ) SELECT DISTINCT w.id FROM planned w
-    WHERE ${state ? "cp_control_state(w.value)=$1 AND" : ""} (
-      (w.value #>> '{autonomousPlan,capability}' IS DISTINCT FROM 'hunt-packet'
-        AND (jsonb_array_length(coalesce(w.value #> '{autonomousPlan,acquisition}', '[]'::jsonb)) > 0
-          OR jsonb_array_length(coalesce(w.value #> '{autonomousPlan,sources}', '[]'::jsonb)) > 0))
-      OR EXISTS (SELECT 1 FROM cp_route_tasks t WHERE t.value #>> '{workItemId}'=w.id
-        AND t.value->>'state' IN ('PENDING','CLAIMED','RECLAIMABLE','POLICY_DENIED'))
-      OR w.id IN (SELECT id FROM adapter)
-      ${exaAgentLane ? `OR (w.value #>> '{autonomousPlan,capability}' = 'hunt-packet'
-        AND EXISTS (SELECT 1 FROM cp_route_tasks_history t WHERE t.value #>> '{workItemId}'=w.id AND t.value->>'routeId'='hunter:packet')
-        AND NOT EXISTS (SELECT 1 FROM cp_route_tasks_history t WHERE t.value #>> '{workItemId}'=w.id AND t.value->>'routeId'='hunter:exa-agent'))` : ""})
-    ${state ? `AND CASE WHEN w.value #>> '{autonomousPlan,capability}' IS DISTINCT FROM 'hunt-packet' THEN true ELSE EXISTS(
+      SELECT id FROM cp_work_items_history WHERE value->'autonomousPlan' IS NOT NULL${state ? " AND cp_control_state(value)=$1" : ""}
+    ), due AS MATERIALIZED (
+      SELECT p.id FROM planned p WHERE p.id IN (SELECT id FROM cp_work_items_history
+          WHERE value->'autonomousPlan' IS NOT NULL AND value #>> '{autonomousPlan,capability}' IS DISTINCT FROM 'hunt-packet'
+            AND (jsonb_array_length(coalesce(value #> '{autonomousPlan,acquisition}', '[]'::jsonb)) > 0
+              OR jsonb_array_length(coalesce(value #> '{autonomousPlan,sources}', '[]'::jsonb)) > 0))
+        OR EXISTS (SELECT 1 FROM cp_route_tasks t WHERE t.value #>> '{workItemId}'=p.id
+          AND t.value->>'state' IN ('PENDING','CLAIMED','RECLAIMABLE','POLICY_DENIED'))
+        OR p.id IN (SELECT id FROM adapter)
+      ${exaAgentLane ? `UNION SELECT p.id FROM planned p
+        WHERE EXISTS (SELECT 1 FROM cp_route_tasks_history t WHERE t.value #>> '{workItemId}'=p.id AND t.value->>'routeId'='hunter:packet')
+          AND NOT EXISTS (SELECT 1 FROM cp_route_tasks_history t WHERE t.value #>> '{workItemId}'=p.id AND t.value->>'routeId'='hunter:exa-agent')
+          AND EXISTS (SELECT 1 FROM cp_work_items_history h WHERE h.id=p.id AND h.value #>> '{autonomousPlan,capability}' = 'hunt-packet')` : ""}
+    ) SELECT DISTINCT d.id FROM due d${state ? `
+    WHERE CASE WHEN (SELECT h.value #>> '{autonomousPlan,capability}' FROM cp_work_items_history h WHERE h.id=d.id LIMIT 1) IS DISTINCT FROM 'hunt-packet' THEN true ELSE EXISTS(
       SELECT 1 FROM cp_occurrences_history own JOIN cp_obligations o ON o.id=own.value->>'obligationId'
-      WHERE own.value #>> '{workItemId}'=w.id AND o.value->>'active'='true' OFFSET 0) END` : ""}
-    ORDER BY w.id`, state ? [state] : []) as Record<string, unknown>[]).map(row => String(row.id));
+      WHERE own.value #>> '{workItemId}'=d.id AND o.value->>'active'='true' OFFSET 0) END` : ""}
+    ORDER BY 1`, state ? [state] : []) as Record<string, unknown>[]).map(row => String(row.id));
   const values: WorkItem[] = [];
   for (let at = 0; at < ids.length; at += AGGREGATE_LIST_READ_PAGE) {
     const rows = await versionedRowsFor(sql).rows((text, params) => run("coordinatorItemValues", "PAGE", text, params),

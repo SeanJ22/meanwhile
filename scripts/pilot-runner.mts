@@ -29,6 +29,7 @@ import {
 } from "../lib/control-plane/repository/types.ts";
 import { DIGEST_LOG_KEY, RUNNER_ID } from "../lib/control-plane/admin-data.ts";
 import { unacknowledgedResearchResume } from "../lib/control-plane/scheduler/launch-wake.ts";
+import { failedRuntimeReleases, recordRunnerBeat, takeRuntimeGuardNotes } from "../lib/ops/runtime-release-guard.ts";
 import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type OwnerDigestRecord, type RunnerHeartbeat, type RoutineSupervisorLane } from "../lib/control-plane/owner-surface.ts";
 import {
   parseIntakeRuntimeObservation,
@@ -220,6 +221,7 @@ if (provider === "postgres" && !STAGING) storedKeyEnvironment()[JOB_BREAKER_PATH
 /** When each job this runner schedules last started, finished or failed; it rides on the heartbeat for the line keeper. */
 const jobRuns = new JobRunBook();
 const RESEARCH_JOB = "research-cycle";
+const RELEASE_GUARD_JOB = "runtime-release-guard";
 const BREAKER_SLOWED = `Slowed by the job transfer breaker: it ${JOB_SLOWED_WORDS}.`;
 let jobBreaker: JobTransferBreaker | null = null;
 let jobBreakerWork: Promise<void> | null = null;
@@ -268,6 +270,9 @@ const CYCLES = cyclesArg ? Number(cyclesArg.slice("--cycles=".length)) : Infinit
 const intervalArg = argv.find((a) => a.startsWith("--interval="));
 const INTERVAL_MIN = intervalArg ? Number(intervalArg.slice("--interval=".length)) : 60;
 jobRuns.register(RESEARCH_JOB, INTERVAL_MIN * 60_000);
+// What the launcher did before this runner started (removed git locks, a switch undone) rides on the job record.
+jobRuns.register(RELEASE_GUARD_JOB, 24 * 3_600_000);
+for (const { text } of takeRuntimeGuardNotes(ROOT)) { console.log(`  runtime release guard: ${text}`); jobRuns.failed(RELEASE_GUARD_JOB, text); jobRuns.finished(RELEASE_GUARD_JOB); }
 
 const maxArg = argv.find((a) => a.startsWith("--max="));
 const onlyArg = argv.find((a) => a.startsWith("--only="));
@@ -1201,6 +1206,7 @@ const lateBeat = () => console.error("  live cycle heartbeat did not answer in t
 const STANDING_BEAT_MS = 60_000;
 let standingBeatAt = 0;
 const standingBeat = boundedBeat(async () => {
+  try { recordRunnerBeat(ROOT, RUNNING_CODE_SHA); } catch { /* the launcher then sees no beat; that is the safe reading */ }
   if (Date.now() - standingBeatAt < STANDING_BEAT_MS) return;
   standingBeatAt = Date.now();
   await writeLiveCycleBeat(null);
@@ -1569,13 +1575,17 @@ async function inspectRuntimeRelease(): Promise<RuntimeReleaseInspection> {
   const checkRuns = typeof served.sha === "string" && /^[0-9a-f]{40}$/i.test(served.sha)
     ? await fetchGithubCheckRuns({ repository, sha: served.sha, token: runtimeGithubCredential(storedKeyEnvironment()) })
     : null;
-  return inspectNewestDeployedRuntimeRelease({ runningSha: RUNNING_CODE_SHA, served, checkRuns,
+  const found = await inspectNewestDeployedRuntimeRelease({ runningSha: RUNNING_CODE_SHA, served, checkRuns,
     readDeploys: () => fetchRuntimeProductionDeploys({
       siteId: process.env.NETLIFY_SITE_ID ?? process.env.WTP_BLOBS_SITE_ID,
       token: storedKeyValue("NETLIFY_AUTH_TOKEN") ?? storedKeyValue("NETLIFY_TOKEN") ?? storedKeyValue("WTP_BLOBS_TOKEN") ?? storedKeyValue("NETLIFY_BLOBS_TOKEN"),
     }),
     readChecks: sha => fetchGithubCheckRuns({ repository, sha, token: runtimeGithubCredential(storedKeyEnvironment()) }),
   });
+  // A release this server switched to and had to leave stays unstaged until a newer one is deployed.
+  return found.targetSha !== null && failedRuntimeReleases(ROOT).includes(found.targetSha)
+    ? { ...found, state: "CURRENT", code: "RUNTIME_RELEASE_TARGET_FAILED", detail: `${found.targetSha} sent no heartbeat after a switch and was rolled back; not staged again` }
+    : found;
 }
 
 async function persistRuntimeBoundaryFailure(

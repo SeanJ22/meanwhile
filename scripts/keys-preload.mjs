@@ -2,7 +2,12 @@
 import { loadEnvLocal } from "../scripts/load-env-local.mjs";
 loadEnvLocal();
 if (process.env.NODE_TEST_CONTEXT || process.execArgv.includes("--test")) {
-  for (const name of ["DATABASE_URL", "WTP_CONTROL_PLANE_DATABASE_URL", "WTP_SAVED_KEYS_DATABASE_SOURCE"]) delete process.env[name];
+  // The first test process drops inherited addresses and marks the environment clean; children a test starts
+  // inherit the mark, so the explicit fixture addresses the test hands them survive.
+  if (!process.env.WTP_TEST_ENV_CLEAN) {
+    for (const name of ["DATABASE_URL", "WTP_CONTROL_PLANE_DATABASE_URL", "WTP_SAVED_KEYS_DATABASE_SOURCE"]) delete process.env[name];
+    process.env.WTP_TEST_ENV_CLEAN = "1";
+  }
   await import("../tests/helpers/install-fixture-keys.ts");
 } else if (process.env.WTP_RUNTIME_MODE === "staging") {
   const { installLocalDatabaseFixture } = await import("../lib/core/keys-local-fixture.ts");

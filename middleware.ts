@@ -154,11 +154,19 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 }
 
 /**
- * Run on everything except Next's own static output and the favicon. Admin
- * paths must be matched on EVERY host for rule 1, so this matcher cannot be
- * narrowed to `/admin/*`.
+ * Plain files never reach the middleware: Next's static output, the image
+ * optimizer, and any non-API path ending in a static-file extension (public/**
+ * and the app icons). Every admin route is still matched on EVERY host for
+ * rule 1 (even one ending in an extension), and the admin host still matches
+ * every path so it 404s anything that is not admin. The extension list and the
+ * admin host are mirrored in tests/middleware-matcher.test.ts.
  */
 export const config = {
   runtime: "nodejs",
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|robots.txt).*)"],
+  matcher: [
+    "/((?!_next/static|_next/image|(?!api/)[^?]*\\.(?:avif|css|gif|geojson|ico|jpe?g|js|json|map|mjs|otf|pbf|png|pmtiles|svg|ttf|txt|wasm|webmanifest|webp|woff2?|xml)$).*)",
+    "/admin/:path*",
+    "/api/admin/:path*",
+    { source: "/:path*", has: [{ type: "host", value: "admin.meanwhileusa.com" }] },
+  ],
 };

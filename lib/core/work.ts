@@ -291,10 +291,10 @@ const UPSERT_SQL = `ON CONFLICT (id) DO UPDATE SET
     refusal = CASE WHEN ${VALUE_CHANGED_SQL} THEN NULL ELSE work.refusal END,
     url = EXCLUDED.url,
     value = EXCLUDED.value, quote = EXCLUDED.quote`;
-/** A row asked for again: one that is finished or refused waits again, due now; one being worked is done once more after; one already waiting is left as it is. */
+/** A row asked for again: one that is finished or refused waits again, due now; one being worked is done once more after; one already waiting is left as it is, unless the new ask is due sooner and it is not held back by a refusal. */
 const TOUCH_SQL = `ON CONFLICT (id) DO UPDATE SET content_version = work.content_version + 1,
     status = CASE WHEN work.status = 'taken' THEN 'taken' ELSE 'waiting' END,
-    due_at = EXCLUDED.due_at, refusal = NULL, dead_since = NULL WHERE work.status <> 'waiting'`;
+    due_at = EXCLUDED.due_at, refusal = NULL, dead_since = NULL WHERE work.status <> 'waiting' OR EXCLUDED.due_at < work.due_at AND work.refusal IS NULL`;
 const ADD_WORK_SQL = `INSERT INTO work (${COLUMNS})
   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,jsonb_build_array($10::jsonb),$11::jsonb,$12::jsonb,$13,$14::timestamptz,$15::timestamptz,$16::jsonb,
     ${RECEIVED_STEP("$3::text", "$15::timestamptz")},NULL)
@@ -396,6 +396,7 @@ export function workList(query: Query, options: { readonly owner: string; readon
   const leaseMs = options.leaseMs ?? 30_000, timestamp = () => options.now?.().toISOString() ?? "now";
   if (!options.owner.trim() || !Number.isInteger(leaseMs) || leaseMs < 1 || leaseMs > 300_000) throw new Error("WORK_INVALID_LEASE");
   const recover = async (limit = 1_000): Promise<number> => (await query(EXPIRE_WORK_SQL, [timestamp(), limit])).length;
+  let recovery: Promise<number> | undefined;
   const fenced = (claim: WorkRow) => {
     if (claim.status !== "taken" || !claim.leaseOwner) throw new Error("WORK_CLAIM_REQUIRED");
     return [claim.id, claim.leaseOwner, timestamp()];
@@ -482,7 +483,7 @@ export function workList(query: Query, options: { readonly owner: string; readon
     async claim(kinds: WorkKind | readonly WorkKind[], n: number, narrowed: string | ClaimWhere = {}): Promise<readonly WorkRow[]> {
       if (!Number.isSafeInteger(n) || n < 1 || n > 1_000) throw new Error("WORK_INVALID_BATCH");
       const where: ClaimWhere = typeof narrowed === "string" ? { subjectPrefix: narrowed } : narrowed;
-      await recover();
+      if (await (recovery ??= recover().finally(() => { recovery = undefined; })) === 1_000) await recover();
       const owner = `${options.owner}:${randomUUID()}`, at = timestamp();
       const taken: WorkRow[] = [];
       for (const kind of typeof kinds === "string" ? [kinds] : kinds) {

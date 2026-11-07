@@ -9,7 +9,10 @@ import { objectKey, putArtifact, type EvidenceStore } from "../control-plane/evi
 import { passDeadlineFromEnv } from "../ops/independent-runtime-pass.ts";
 import type { MeetingPartitionContract } from "./meeting-partitions.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
-import { sourceContentHash, confirmSourceHashUnchanged } from "./source-hash.ts";
+import { sourceContentHash } from "./source-hash.ts";
+import type { Meeting } from "../sources/types.ts";
+import type { AgendaDocument } from "../meetings/agenda-documents.ts";
+import { agendaReadableText } from "../meetings/agenda-content.ts";
 import type { RoutineDataStore } from "./store.ts";
 import type { RoutineCandidate } from "./types.ts";
 import type { RetainedSourceResponse } from "./retained-meeting-bytes.ts";
@@ -21,28 +24,36 @@ import { recordAcquiredResponse } from "../sources/acquisition-trace.ts";
 import { outsideSourceAcquisition } from "../sources/acquisition-scope.ts";
 
 type Request = NonNullable<RetainedSourceResponse["request"]>;
-export interface MeetingSourcePage {
-  readonly requestedUrl: string;
-  readonly finalUrl: string;
-  readonly rawHash: string;
-  readonly request?: Request;
-}
 export interface MeetingSourceProbe {
-  readonly formatVersion: 1;
+  readonly formatVersion: 2;
   readonly complete: boolean;
-  /** A complete public adapter session may use ephemeral cookies that are never persisted for replay. */
-  readonly acquisitionComplete?: boolean;
   readonly normalizationInputHash: string;
-  readonly sourceRawHash: string;
-  readonly sourceHashKind: "REQUESTS" | "DERIVED_INPUTS";
-  readonly requests: readonly MeetingSourcePage[];
+  readonly contentHash: string | null;
   readonly meetingIds: readonly string[];
   readonly bodyIds: readonly string[];
+}
+
+/** Compare the parsed source before loading history, geocoding or assembling a new payload. */
+export function meetingSourceContentHash(meetings: readonly Meeting[], documents: readonly AgendaDocument[], context: unknown = null): string {
+  const facts = (value: unknown): unknown => {
+    if (Array.isArray(value)) return value.map(facts);
+    if (!value || typeof value !== "object") return value;
+    const row = value as Record<string, unknown>;
+    const provenance = "sourceUrl" in row && "sourceOrg" in row;
+    return Object.fromEntries(Object.entries(row).filter(([key]) => !provenance ||
+      !["collectedAt", "verifiedAt", "checkedAt", "rawHash"].includes(key)).map(([key, child]) => [key, facts(child)]));
+  };
+  return canonicalCivicDataHash({ context, meetings: meetings.map(meeting => canonicalCivicDataHash(facts(meeting))).sort(),
+    documents: documents.map(document => {
+      const { id: _id, contentHash, retrievedAt: _at, collectedAt: _collected, verifiedAt: _verified, text: _text, ...fields } = document;
+      const text = agendaReadableText(document);
+      return canonicalCivicDataHash({ ...fields, text, ...(text === null ? { contentHash } : {}) });
+    }).sort() });
 }
 const sourceIO = new AsyncLocalStorage<boolean>();
 const internalIO = <T>(operation:()=>T):T => sourceIO.run(true,()=>outsideSourceAcquisition(operation));
 const requestedInOperation = new AsyncLocalStorage<Set<string>>();
-const requestKey = (page: Pick<MeetingSourcePage, "requestedUrl" | "request">) => canonicalCivicDataHash([page.requestedUrl,
+const requestKey = (page: Pick<RetainedSourceResponse, "requestedUrl" | "request">) => canonicalCivicDataHash([page.requestedUrl,
   page.request?.method ?? "GET", page.request?.body ?? null, Object.keys(page.request?.headers ?? {}).length ? page.request!.headers : null]);
 
 /** Door content, dependencies and the rolling day are inputs; observations of the same source are not. */
@@ -71,7 +82,6 @@ export function meetingSourceImplementationHash(partition: MeetingPartitionContr
   const hash = canonicalCivicDataHash([...seen].sort(([a], [b]) => a.localeCompare(b)));
   implementationHashes.set(key, hash); return hash;
 }
-
 export function meetingSourceInputHash(partition: MeetingPartitionContract, now: string, dependencies: unknown = null): string {
   const wiring = partition.wiring;
   return canonicalCivicDataHash(["MEETING_SOURCE_PLAN_V1", partition.sourceId, partition.scope, partition.meetingSource, partition.bodyId, partition.ocdId,
@@ -105,7 +115,7 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
   const original = dependencies.fetchImpl ?? globalThis.fetch;
   let networkTransport = original;
   const transport = meetingFetchPass({ fetchImpl: (input, init) => networkTransport(input, init) });
-  let complete = true, replayable = true;
+  let complete = true;
   const fetchSource = (async (input, init) => {
     if (sourceIO.getStore()) return original(input, init);
     const requestedUrl = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
@@ -124,7 +134,6 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
     const publicHeaders = ["accept", "accept-language", "content-type", "referer", "origin", "user-agent", "x-requested-with", "prefer", "odata-version"];
     const probeable = (!init?.body || body !== undefined) && [...headers.keys()].every(key => publicHeaders.includes(key)) &&
       (body === undefined || body.length <= 1024 * 1024 && !/["']?(?:password|secret|access[_-]?token|api[_-]?key)["']?\s*[:=]/i.test(body));
-    if (!probeable) replayable = false;
     const request: Request = { method, ...(body === undefined ? {} : { body }),
       headers: Object.fromEntries(publicHeaders.flatMap(key => headers.has(key) ? [[key, headers.get(key)!]] : [])) };
     const key = requestKey({ requestedUrl, request }), prior = pages[key];
@@ -163,7 +172,6 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
       ? initial.retrievedAt : new Date().toISOString();
     const contentType = response.headers.get("content-type") ?? "application/octet-stream";
     const saveRequest = probeable && !response.headers.has("set-cookie");
-    if (!saveRequest) replayable = false;
     const retained: RetainedSourceResponse = { source: partition.meetingSource, requestedUrl, finalUrl, httpStatus: response.status,
       rawHash, byteCount: bytes.length, bytes, retrievedAt, contentType, ...(saveRequest ? { request } : {}) };
     const contentHash = `sha256-${rawHash}`, tier = classifyAcquisition(new TextDecoder().decode(bytes)).tier;
@@ -185,26 +193,13 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
     await internalIO(async () => onSource?.(retained));
     return response;
   }) as typeof fetch;
-  return { head, responses, fetch: fetchSource, get complete() { return complete && replayable; }, get acquisitionComplete() { return complete; },
+  return { head, responses, fetch: fetchSource, get complete() { return complete; }, get acquisitionComplete() { return complete; },
     forgetGet: transport.forgetGet,
     inputs<T>(operation: () => Promise<T>): Promise<T> { return internalIO(operation); },
     async collect<T>(operation: () => Promise<T>) {
       const keys = new Set<string>();
       const value = await requestedInOperation.run(keys, operation);
       return { value, responses: [...keys].flatMap(key => responses.has(key) ? [responses.get(key)!] : []) };
-    },
-    async probe(plan: MeetingSourceProbe) {
-      const retainForPublication=await sourceIO.run(true,publicationPending);
-      for (const page of plan.requests) {
-        const response = await fetchSource(page.requestedUrl, { method: page.request?.method ?? "GET", body: page.request?.body, headers: page.request?.headers });
-        if (!response.ok) return false;
-        transport.forgetGet([page.requestedUrl]);
-        // A hash-only pass does not accumulate a state's agenda bytes after their exact source checks.
-        const captured = responses.get(requestKey(page));
-        if (onSource && captured && !retainForPublication) responses.set(requestKey(page), { ...captured, bytes: new Uint8Array() });
-      }
-      return plan.requests.every(page => responses.get(requestKey(page))?.rawHash === page.rawHash &&
-        responses.get(requestKey(page))?.finalUrl === page.finalUrl);
     },
     async run<T>(operation: () => Promise<T>): Promise<T> {
       const prior = globalThis.fetch, priorTransport = networkTransport;
@@ -231,79 +226,49 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
   };
 }
 
-export async function probeMeetingSource(input: {
+export async function confirmMeetingSource(input: {
   readonly store: RoutineDataStore;
   readonly partition: MeetingPartitionContract;
   readonly normalizationInputHash: string;
+  readonly contentHash: string;
+  readonly complete: boolean;
   readonly now: string;
   readonly session: Awaited<ReturnType<typeof meetingSourceSession>>;
   readonly continueFacts: (plan: MeetingSourceProbe) => Promise<unknown>;
 }) {
   const head = input.session.head;
-  const plan = head ? await input.store.readCandidatePath<MeetingSourceProbe>(head.versionId, ["normalizedPayload", "sourceProbe"]) : null;
-  if (!head || head.rawHashBasis !== "SOURCE_CONTENT_V1" || !plan || plan.formatVersion !== 1 || !plan.complete || !plan.requests.length ||
-    !["REQUESTS", "DERIVED_INPUTS"].includes(plan.sourceHashKind) ||
-    plan.normalizationInputHash !== input.normalizationInputHash || plan.sourceRawHash !== head.rawHash) return null;
-  try {
-    if (!await input.session.probe(plan)) { input.session.responses.clear(); return null; } else await input.continueFacts(plan);
-  } catch (error) { if (!meetingSourceBudgetAvailable()) throw error; input.session.responses.clear(); return null; }
-  const pages = [...input.session.responses.values()], first = pages[0]!;
-  const rawHash = plan.sourceHashKind === "REQUESTS" ? sourceContentHash(pages.map(page => ({ ...page, capture: { rawHash: page.rawHash } })),
-    { normalizationInputHash: input.normalizationInputHash }) : plan.sourceRawHash;
-  const confirmed = await confirmSourceHashUnchanged({ store: input.store, sourceId: input.partition.sourceId, recordClass: "MEETING", scope: input.partition.scope,
-    parserVersion: "meetings-composite/2", rawHash, now: input.now, complete: true,
-    retrieval: { requestedUrl: first.requestedUrl, finalUrl: first.finalUrl, httpStatus: first.httpStatus,
-      retrievedAt: pages.map(page => page.retrievedAt).sort()[0]!, rawHash } });
-  if (!confirmed) input.session.responses.clear();
-  return confirmed;
+  if (!head || !input.complete || !input.session.acquisitionComplete || !input.store.confirmUnchanged ||
+    head.sourceId !== input.partition.sourceId || head.recordClass !== "MEETING" || head.scope !== input.partition.scope || head.candidateState !== "PROMOTED" || !head.acquisitionSucceeded ||
+    head.acquisitionComplete === false || head.imported || head.versionId !== head.lastKnownGoodVersionId ||
+    head.parserVersion !== "meetings-composite/2" || !head.normalizedHash) return null;
+  const plan = await input.store.readCandidatePath<MeetingSourceProbe>(head.versionId, ["normalizedPayload", "sourceProbe"]);
+  if (!plan || plan.formatVersion !== 2 || !plan.complete || plan.contentHash !== input.contentHash ||
+    plan.normalizationInputHash !== input.normalizationInputHash) return null;
+  const pages = [...input.session.responses.values()], first = pages[0];
+  if (!first) return null;
+  const at = input.store.eventObservedAt ? await input.store.eventObservedAt("MEETING", input.partition.scope, input.now) : input.now;
+  const result = await input.store.confirmUnchanged({ sourceId: input.partition.sourceId, recordClass: "MEETING", scope: input.partition.scope,
+    parserVersion: head.parserVersion, pointerVersionId: head.versionId, readModelHash: head.normalizedHash,
+    basis: "READ_MODEL_RECOMPUTED", inputDigest: input.contentHash, retrieval: { requestedUrl: first.requestedUrl, finalUrl: first.finalUrl,
+      httpStatus: first.httpStatus, retrievedAt: pages.map(page => page.retrievedAt).sort()[0]!,
+      rawHash: sourceContentHash(pages.map(page => ({ ...page, capture: { rawHash: page.rawHash } }))) } }, at);
+  if (result.kind !== "CONFIRMED") return null;
+  await input.continueFacts(plan);
+  return { head, at: result.at };
 }
 
 export function withMeetingSourceProbe(candidate: RoutineCandidate, partition: MeetingPartitionContract, normalizationInputHash: string,
-  responses: readonly RetainedSourceResponse[], complete: boolean, acquisitionComplete = complete): RoutineCandidate {
+  responses: readonly RetainedSourceResponse[], complete: boolean, acquisitionComplete = complete, contentHash?: string, meetingIds?: readonly string[]): RoutineCandidate {
   const unique = [...new Map(responses.map(response => [requestKey(response), response])).values()];
   if (!unique.length || !candidate.retrieval.succeeded) return candidate;
   const sourceRawHash = candidate.retrieval.derived ? candidate.retrieval.rawHash!
     : sourceContentHash(unique.map(page => ({ ...page, capture: { rawHash: page.rawHash } })), { normalizationInputHash });
-  const sourceProbe: MeetingSourceProbe = { formatVersion: 1, complete, acquisitionComplete, normalizationInputHash, sourceRawHash,
-    sourceHashKind: candidate.retrieval.derived ? "DERIVED_INPUTS" : "REQUESTS",
-    requests: unique.map(({ requestedUrl, finalUrl, rawHash, request }) => ({ requestedUrl, finalUrl, rawHash, ...(request === undefined ? {} : {request}) })),
-    meetingIds: (candidate.readModel as { meetings: { id: string }[] }).meetings.map(meeting => meeting.id),
-    bodyIds: [...new Set([...(partition.derivedFamily ? [] : [partition.bodyId]),
-      ...(candidate.readModel as { meetings: { bodyId: string }[] }).meetings.map(meeting => meeting.bodyId)])] };
+  const sourceProbe: MeetingSourceProbe = { formatVersion: 2, complete: acquisitionComplete, normalizationInputHash, contentHash: contentHash ?? null,
+    meetingIds: meetingIds ?? (candidate.readModel as { meetings: { id: string }[] }).meetings.map(meeting => meeting.id),
+    bodyIds: [partition.bodyId] };
   const normalizedPayload = JSON.parse(JSON.stringify({ ...(candidate.normalizedPayload as Record<string, unknown>), sourceProbe }));
   const normalizedPayloadHash = canonicalCivicDataHash(normalizedPayload);
   return { ...candidate, id: `cv-${canonicalCivicDataHash([candidate.id, sourceRawHash, normalizedPayloadHash]).slice(0, 32)}`,
     retrieval: { ...candidate.retrieval, rawHash: sourceRawHash, rawHashBasis: "SOURCE_CONTENT_V1", complete: acquisitionComplete }, normalizedPayload,
     normalization: { ...candidate.normalization, normalizedPayloadHash } };
 }
-
-/** Session adapters re-acquire their own ephemeral request sequence, then compare every page before any held output. */
-export async function confirmAcquiredMeetingSource(input: Parameters<typeof probeMeetingSource>[0]) {
-  const head = input.session.head;
-  if (!head || head.rawHashBasis !== "SOURCE_CONTENT_V1" || !input.session.acquisitionComplete) return null;
-  const plan = await input.store.readCandidatePath<MeetingSourceProbe>(head.versionId, ["normalizedPayload", "sourceProbe"]);
-  if (!plan || !(plan.acquisitionComplete ?? plan.complete) || plan.normalizationInputHash !== input.normalizationInputHash ||
-    plan.sourceRawHash !== head.rawHash || !plan.requests.length || !["REQUESTS", "DERIVED_INPUTS"].includes(plan.sourceHashKind)) return null;
-  const identity = (page: MeetingSourcePage) => canonicalCivicDataHash([page.requestedUrl, page.finalUrl, page.rawHash, page.request ?? null]);
-  const expected = new Set(plan.requests.map(identity));
-  // A new or changed calendar/detail page already proves change; never re-walk removed old agenda URLs.
-  if ([...input.session.responses.values()].some(page => !expected.has(identity(page)))) return null;
-  try {
-    for (const page of plan.requests) {
-      if ([...input.session.responses.values()].some(acquired => identity(acquired) === identity(page))) continue;
-      if (!page.request) return null; // An adapter must perform its own credentialled step.
-      await input.session.fetch(page.requestedUrl, { method: page.request.method, body: page.request.body, headers: page.request.headers });
-    }
-    if (!input.session.acquisitionComplete || [...input.session.responses.values()].some(page => !expected.has(identity(page))) ||
-      expected.size !== new Set([...input.session.responses.values()].map(identity)).size) return null;
-    await input.continueFacts(plan); // Owed facts finish on this same version; a new one would restart their progress.
-  } catch (error) { if (!meetingSourceBudgetAvailable()) throw error; return null; }
-  const pages = [...input.session.responses.values()], first = pages[0]!;
-  const rawHash = plan.sourceHashKind === "REQUESTS" ? sourceContentHash(pages.map(page => ({ ...page, capture: { rawHash: page.rawHash } })),
-    { normalizationInputHash: input.normalizationInputHash }) : plan.sourceRawHash;
-  return confirmSourceHashUnchanged({ store: input.store, sourceId: input.partition.sourceId, recordClass: "MEETING", scope: input.partition.scope,
-    parserVersion: "meetings-composite/2", rawHash, now: input.now, complete: true, retrieval: { requestedUrl: first.requestedUrl, finalUrl: first.finalUrl,
-      httpStatus: first.httpStatus, retrievedAt: pages.map(page => page.retrievedAt).sort()[0]!, rawHash } });
-}
-
-/** A cut-off acquisition remains the same owed job, with its already captured pages held in the ordinary vault. */

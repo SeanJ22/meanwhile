@@ -145,7 +145,7 @@ export async function publishMeetingPinFact(db: MeetingFactDb, input: {
       next_try_at=CASE WHEN $5 THEN EXCLUDED.next_try_at ELSE least(blank.next_try_at,EXCLUDED.next_try_at) END,
       attempts=blank.attempts+CASE WHEN $5 THEN 1 ELSE 0 END,updated_at=now()
     WHERE blank.reason IS DISTINCT FROM EXCLUDED.reason OR blank.stage<>'ACQUIRE'
-      OR blank.detail::jsonb IS DISTINCT FROM CASE WHEN $5 THEN EXCLUDED.detail::jsonb
+      OR CASE WHEN left(blank.detail,1)='{' THEN blank.detail::jsonb END IS DISTINCT FROM CASE WHEN $5 THEN EXCLUDED.detail::jsonb
         ELSE coalesce(CASE WHEN left(blank.detail,1)='{' THEN blank.detail::jsonb END,'{}'::jsonb)||EXCLUDED.detail::jsonb END
       OR $5 AND blank.next_try_at<=now()`,
     [entityId,reason,JSON.stringify({publishedText:input.meeting.venueGap?.publishedText??null,

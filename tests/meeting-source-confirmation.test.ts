@@ -5,6 +5,8 @@ import { factDb } from "./helpers/fact-db.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { confirmMeetingFactsFromSources, meetingFactWorkRemains } from "../lib/civic-data/meeting-source-confirmation.ts";
 import { meetingEntityId } from "../lib/facts/meeting-read.ts";
+import { meetingFactsAfterSourceCheck } from "../lib/civic-data/meeting-fact-progress.ts";
+import { factClocks } from "../lib/facts/clocks.ts";
 import { derivedSourceContentHash } from "../lib/civic-data/derived-source-hash.ts";
 
 test("an identical source refresh updates only its body's existing facts without reading values or replacing owner facts", async () => {
@@ -31,6 +33,14 @@ test("an identical source refresh updates only its body's existing facts without
     assert.ok(rows.filter(row => row.entity_id === other || row.field === "location").every(row => Date.parse(String(row.checked_at)) === Date.parse(old)));
     assert.equal(await meetingFactWorkRemains(db.query, ["first"], ["body:first"], current), false);
     assert.equal(await meetingFactWorkRemains(db.query, ["missing"], ["body:first"], current), true);
+    const location = { name: "Old Hall", address: "1 Old Street", lat: 33, lng: -112 };
+    await db.query("INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key) VALUES(2,$1,$1,$2,$3,'old-source')", [url, old, "0".repeat(64)]);
+    await db.query("UPDATE fact SET provenance_kind='OFFICIAL',source_copy_id=2,value=$2 WHERE entity_id=$1 AND field='location'", [first, JSON.stringify(location)]);
+    const changed = new TextEncoder().encode(`${body}\nexport nonce changed`), later = "2026-10-01T02:00:00.000Z";
+    await meetingFactsAfterSourceCheck({ facts, vault: new MemoryEvidenceStore(), head: null, clocks: factClocks(null), at: later, meetingIds: ["first"], bodyIds: ["body:first"],
+      observations: [{ source: "ical", requestedUrl: url, finalUrl: url, rawHash: createHash("sha256").update(changed).digest("hex"), byteCount: changed.length, bytes: changed, httpStatus: 200, retrievedAt: later, contentType: "text/plain" }] });
+    const [retained] = await db.query("SELECT value,checked_at FROM fact WHERE entity_id=$1 AND field='location'", [first]);
+    assert.deepEqual(retained!.value, location); assert.equal(Date.parse(String(retained!.checked_at)), Date.parse(old), "semantic equality cannot reverify an older differing fact by URL and meeting ID");
     await db.query("INSERT INTO blank(entity_id,field,stage,reason,next_try_at) VALUES($1,'agenda_url','ACQUIRE','missing',$2)", [first, current]);
     assert.equal(await meetingFactWorkRemains(db.query, ["first"], ["body:first"], current), true, "a due publication blank cannot disappear behind a successful hash confirmation");
   } finally { await db.pg.close(); }

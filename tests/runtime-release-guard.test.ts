@@ -6,10 +6,14 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { applyRuntimeRelease } from "../lib/ops/runtime-release-handoff.ts";
+import { defaultAsyncRunCommand, stageRuntimeRelease, type AsyncRunCommand } from "../lib/ops/runtime-release-stage.ts";
 import {
   clearStaleGitLocks, failedRuntimeReleases, recordRunnerBeat, recordRuntimeSwitch, settleSwitch, takeRuntimeGuardNotes,
 } from "../lib/ops/runtime-release-guard.ts";
 
+/** Real git; the dependency link-up is a no-op because the fixture has no lockfile. */
+const gitOnly: AsyncRunCommand = (executable, args, options) =>
+  executable === "git" ? defaultAsyncRunCommand(executable, args, options) : Promise.resolve({ status: 0, stdout: "", stderr: "" });
 const git = (cwd: string, ...args: string[]) => {
   const r = spawnSync("git", args, { cwd, encoding: "utf8" });
   assert.equal(r.status, 0, r.stderr);
@@ -41,15 +45,30 @@ const staleLock = (root: string, minutes: number, name = "index.lock") => {
   return path;
 };
 
-test("a stale index.lock with no git process is cleared and the switch succeeds", () => {
+test("a stale index.lock with no git process is cleared and the switch succeeds", async () => {
   const { root, a, b } = fixture();
   const lock = staleLock(root, 9 * 60);
-  const result = applyRuntimeRelease({ root, targetSha: b, install: false });
+  const result = await applyRuntimeRelease({ root, targetSha: b, runCommand: gitOnly });
   assert.equal(result.state, "UPDATED", result.detail);
   assert.equal(existsSync(lock), false);
   assert.equal(git(root, "rev-parse", "HEAD"), b);
   assert.match(takeRuntimeGuardNotes(root)[0]?.text ?? "", /removed stale git lock \.git\/index\.lock \(540 min old/);
   assert.equal(a === b, false);
+});
+
+test("a switch after the release-install job stages it still clears a stale lock first and records the switch", async () => {
+  const { root, a, b } = fixture();
+  const lock = staleLock(root, 9 * 60);
+  const staged = await stageRuntimeRelease({ root, targetSha: b, run: gitOnly });
+  assert.equal(staged.state, "READY", staged.detail);
+  assert.equal(existsSync(lock), false, "the staging's own git steps cleared the stale lock");
+  const lock2 = staleLock(root, 9 * 60, "HEAD.lock");
+  const result = await applyRuntimeRelease({ root, targetSha: b, runCommand: gitOnly });
+  assert.equal(result.state, "UPDATED", result.detail);
+  assert.equal(existsSync(lock2), false);
+  const record = JSON.parse(readFileSync(join(root, ".runtime", "ops", "runtime-release-guard.json"), "utf8")).switch;
+  assert.equal(record.previousSha, a);
+  assert.equal(record.targetSha, b);
 });
 
 test("a young lock, and a lock while a live git process works in the checkout, are never touched", { skip: process.platform !== "linux" }, async () => {

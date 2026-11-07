@@ -18,7 +18,7 @@ const sha = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "u
 if (!staging) validateRuntimeConfig({ repoPath: root, envFile, expectedSha: sha });
 // Only an admitted checkout may recover installation state.
 const { resumeRuntimeReleaseInstall } = await import("../lib/ops/runtime-release-handoff.ts");
-const recoveredInstall = resumeRuntimeReleaseInstall({ root });
+const recoveredInstall = await resumeRuntimeReleaseInstall({ root });
 if (recoveredInstall?.state === "REFUSED") {
   process.stderr.write(`Runtime install recovery failed: ${recoveredInstall.code}\n`);
   process.exit(2);

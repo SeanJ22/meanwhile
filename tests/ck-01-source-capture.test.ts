@@ -18,13 +18,16 @@ test('an office source redirect retains the page actually read as its citation',
  assert.equal(result.capture.observedAt,at);
 });
 
-test('a real saved PDF retains exact binary bytes and a replayable complete text extraction',async()=>{
+test('a repeated PDF reuses immutable extraction proof while preserving its fresh observation',async()=>{
  const vault=new MemoryEvidenceStore();const bytes=await readFile('tests/fixtures/pima-edu/agenda-2026-08-10.pdf');
- const out=await vaultCapture({vault,url:'https://www.pima.edu/agenda.pdf',bytes,contentType:'application/pdf',httpStatus:200,retrievedAt:at});
+ const input={vault,url:'https://www.pima.edu/agenda.pdf',bytes,contentType:'application/pdf',httpStatus:200,retrievedAt:at},out=await vaultCapture(input);
  assert.ok(!('error' in out),JSON.stringify(out));if('error' in out)return;
  assert.equal(out.record.tier,'EXTRACTED_DERIVED');assert.equal(out.capture.evidence.sourceDocument?.kind,'PDF_TEXT');
  const parent=(await vault.get((await vault.list('project/freshness/')).find(key=>key.endsWith('.pdf'))!))!;
  assert.deepEqual(Buffer.from(parent.bytes),bytes);assert.match(out.capture.evidence.text,/2026/);
+ const later='2026-10-20T07:45:00Z',again=await vaultCapture({...input,retrievedAt:later});assert.ok('capture' in again);assert.equal(again.capture.observedAt,later);assert.deepEqual(again.capture.evidence.sourceDocument,out.capture.evidence.sourceDocument);
+ assert.equal((await vault.list('project/freshness/')).filter(key=>/\.(pdf|txt)$/.test(key)).length,2);await assert.rejects(vaultCapture({...input,bytes:Buffer.concat([bytes,Buffer.from('\n% new binary identity\n')]),retrievedAt:later}),/EvidenceStoreRefusal/);
+ const changed=await vaultCapture({...input,bytes:await readFile('tests/fixtures/voting-sources/vt-arlington-closure-original.pdf'),retrievedAt:later});assert.ok('capture' in changed);assert.notEqual(changed.record.contentHash,out.record.contentHash);
 });
 
 test('a public page carrying a scanner finding uses its sanitized text without losing its civic words',async()=>{

@@ -551,12 +551,13 @@ export async function readRoutineTaskClocks(
   tasks: readonly RoutineSourceTask[],
   readClock: (task: RoutineSourceTask) => Promise<RoutineTaskClock | undefined>,
   concurrency: number = ROUTINE_CLOCK_READ_CONCURRENCY,
+  publicationPending?: ReadonlySet<string>,
 ): Promise<readonly RoutineTaskClockRead[]> {
   const reads = await runBoundedWorkPool(tasks, concurrency,async task=>{
     const worked=task.obligation?.lastWorkedAt;
     if(task.obligation)return worked?{lastAttemptedAt:worked,lastSucceededAt:worked,lastSucceededObservedAt:worked}:undefined;
     const clock=await readClock(task);
-    return task.recordClass==="MEETING"&&await meetingSourceContinuationPending(task.scope)?{...clock,continuationPending:true}:clock;
+    return task.recordClass==="MEETING"&&(publicationPending?.has(task.scope)||await meetingSourceContinuationPending(task.scope,undefined,publicationPending?null:undefined))?{...clock,continuationPending:true}:clock;
   });
   return reads.map((read) => read.ok
     ? { task: tasks[read.index]!, ok: true as const, clock: read.value, error: null }

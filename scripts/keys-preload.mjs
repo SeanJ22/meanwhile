@@ -1,8 +1,8 @@
 /** Shared Node entry loader. Credential bytes come only from the Keys box. */
 import { loadEnvLocal } from "../scripts/load-env-local.mjs";
 loadEnvLocal();
-if (process.env.NODE_TEST_CONTEXT) {
-  // Tests install their explicit fixture adapter; production never imports it.
+if (process.env.NODE_TEST_CONTEXT || process.execArgv.includes("--test")) {
+  for (const name of ["DATABASE_URL", "WTP_CONTROL_PLANE_DATABASE_URL", "WTP_SAVED_KEYS_DATABASE_SOURCE"]) delete process.env[name];
   await import("../tests/helpers/install-fixture-keys.ts");
 } else if (process.env.WTP_RUNTIME_MODE === "staging") {
   const { installLocalDatabaseFixture } = await import("../lib/core/keys-local-fixture.ts");

@@ -396,6 +396,7 @@ export function workList(query: Query, options: { readonly owner: string; readon
   const leaseMs = options.leaseMs ?? 30_000, timestamp = () => options.now?.().toISOString() ?? "now";
   if (!options.owner.trim() || !Number.isInteger(leaseMs) || leaseMs < 1 || leaseMs > 300_000) throw new Error("WORK_INVALID_LEASE");
   const recover = async (limit = 1_000): Promise<number> => (await query(EXPIRE_WORK_SQL, [timestamp(), limit])).length;
+  let recovery: Promise<number> | undefined;
   const fenced = (claim: WorkRow) => {
     if (claim.status !== "taken" || !claim.leaseOwner) throw new Error("WORK_CLAIM_REQUIRED");
     return [claim.id, claim.leaseOwner, timestamp()];
@@ -482,7 +483,7 @@ export function workList(query: Query, options: { readonly owner: string; readon
     async claim(kinds: WorkKind | readonly WorkKind[], n: number, narrowed: string | ClaimWhere = {}): Promise<readonly WorkRow[]> {
       if (!Number.isSafeInteger(n) || n < 1 || n > 1_000) throw new Error("WORK_INVALID_BATCH");
       const where: ClaimWhere = typeof narrowed === "string" ? { subjectPrefix: narrowed } : narrowed;
-      await recover();
+      if (await (recovery ??= recover().finally(() => { recovery = undefined; })) === 1_000) await recover();
       const owner = `${options.owner}:${randomUUID()}`, at = timestamp();
       const taken: WorkRow[] = [];
       for (const kind of typeof kinds === "string" ? [kinds] : kinds) {

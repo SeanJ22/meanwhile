@@ -130,7 +130,7 @@ import { installConnectAttemptWindow } from "../lib/ops/connect-attempt-window.t
 import { releaseWindowLeaseOfExitedLocalHolder } from "../lib/control-plane/promotion/window.ts";
 import { ADMIN_COPY_POLL_MS, runAuthorizedAdminCopyTick } from "../lib/control-plane/evidence/admin-copy-runner.ts";
 import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
-import { fireDueOrders } from "../lib/control-plane/gateway/scheduled-fire.ts";
+import { fireDueOrders, scheduledWorkDue } from "../lib/control-plane/gateway/scheduled-fire.ts";
 import { runtimeContractRetry, runtimeContractContinues, RUNTIME_CONTRACT_ATTEMPT_MS } from "./apply-migrations.mts";
 import { wakeHintWriterFromEnv } from "../lib/control-plane/gateway/wake-hint.ts";
 import { JOB_BREAKER_INTERVAL_MS, JOB_BREAKER_JOB } from "../lib/control-plane/job-transfer-breaker.ts";
@@ -1487,17 +1487,22 @@ async function readRunnerControls(repos: ControlPlaneRepositories, force = false
 
 const SCHEDULED_ORDER_POLL_MS = 60_000;
 const SCHEDULED_ORDERS_JOB = "scheduled-orders";
+let scheduledControls: Awaited<ReturnType<typeof readRunnerControls>> | null = null;
 function runScheduledOrderTick(): void {
   if (runtimeAdmissionsHeld || scheduledOrderWork || provider !== "postgres" || canary) return;
   jobRuns.started(SCHEDULED_ORDERS_JOB);
   scheduledOrderWork = (async () => {
     const repos = await ownerRepositories();
     if (!repos) return;
+    const controls = await readRunnerControls(repos), at = new Date().toISOString();
+    if (controls.config === scheduledControls?.config && controls.research === scheduledControls?.research &&
+        !controls.fixesPending && !scheduledWorkDue(controls.config?.value ?? null, at)) { jobRuns.finished(SCHEDULED_ORDERS_JOB); return; }
     const fired = await fireDueOrders({ repos, now: () => new Date().toISOString(), currentStateVersion: null,
       codeSha: RUNNING_CODE_SHA, wake: wakeHintWriterFromEnv() }, new Date().toISOString());
     for (const order of fired) {
       console.log(`  scheduled order ${order.id} (${order.orderType}) due ${order.occurrence}: ${order.ok ? "sent" : "refused by the gateway"}`);
     }
+    scheduledControls = await readRunnerControls(repos, true);
     jobRuns.finished(SCHEDULED_ORDERS_JOB);
   })().catch(error => {
     jobRuns.failed(SCHEDULED_ORDERS_JOB, error instanceof Error ? error.message : String(error));

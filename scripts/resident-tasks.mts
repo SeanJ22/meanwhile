@@ -15,8 +15,8 @@
  *
  * Screenshots go to the portrait blob store under `resident-tasks/`; the pass
  * goes to the live-audit log. Writes are blocked in every visit except Ask's,
- * which must reach /api/ask; Ask tasks run at one ZIP on a phone
- * (WTP_TASK_ASK_ZIPS, default 1; 0 leaves Ask out), with the run's synthetic
+ * which must reach /api/ask; Ask tasks run at one ZIP on a phone in the daily pass
+ * only (WTP_TASK_ASK_ZIPS, default 1; 0 leaves Ask out), with the run's synthetic
  * marker. Exit 1 when the control plane is not configured or no published
  * place could be read.
  */
@@ -73,7 +73,7 @@ if (IF_QUEUED && queued.length === 0) {
   console.log("resident tasks: no newly published ZIP is waiting for its first run");
   process.exit(0);
 }
-const targets = taskTargets(file.tasks, IF_QUEUED ? queued : zips, ASK_ZIPS);
+const targets = taskTargets(file.tasks, IF_QUEUED ? queued : zips, IF_QUEUED ? 0 : ASK_ZIPS);
 
 /* ------------------------------------------------------- inside the page */
 

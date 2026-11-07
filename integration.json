@@ -4999,5 +4999,17 @@
     "release": 184,
     "ci": "pass",
     "at": "2026-11-07T20:33:39Z"
+  },
+  {
+    "lane": "install-job",
+    "steps": [
+      "IJ-02"
+    ],
+    "ready_sha": "ebd51d097ddcff3127f12cf8f67391002679ccf4",
+    "merge_sha": "ca7b316026156bef2ad52c801b31512479bdf51c",
+    "river_sha": "f2469df86d2b2234e2cf9f91ee2aede5f31fbb74",
+    "release": 185,
+    "ci": "pass",
+    "at": "2026-11-07T22:27:16Z"
   }
 ]

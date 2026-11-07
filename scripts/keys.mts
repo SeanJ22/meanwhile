@@ -1,5 +1,6 @@
 /** Lists and tests saved keys; never prints a key value and never prompts for one. */
 import { productionKeysStore } from "../lib/core/keys-store.ts";
+import { keysUnreachable } from "../lib/core/keys-runtime.ts";
 import { testDueKeys } from "../lib/core/keys-test.ts";
 
 try {
@@ -14,7 +15,7 @@ try {
   const rows = await store.list();
   for (const row of rows) console.log(`${row.name}: ${row.working ? "Working" : "Not working"}; ${row.purpose}; last tested ${row.testedAt ?? "—"}`);
   if (rows.some(row => !row.working)) process.exitCode = 1;
-} catch {
-  console.error("The saved keys could not be reached. Check the Keys box in Admin Settings. No key value was printed.");
+} catch (error) {
+  console.error(`${keysUnreachable(error).message} Check the Keys box in Admin Settings. No key value was printed.`);
   process.exitCode = 1;
 }

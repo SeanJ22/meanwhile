@@ -8,15 +8,18 @@ import { SAVED_DATABASE_SOURCE, storedKeyEnvironment, storedKeyValue } from "../
  * observation that produced a hold; it is not civic-data source freshness.
  */
 
+import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, win32 } from "node:path";
 
 import { REQUIRED_CONTEXTS } from "./required-contexts.ts";
-import { defaultAsyncRunCommand, INSTALL_TIMEOUT_MS, runtimePackageManagerCommand, type AsyncCommandResult, type AsyncRunCommand } from "./runtime-release-stage.ts";
 import type { ServedCommit } from "../../scripts/post-deploy-observer.mts";
 
 const FULL_SHA = /^[0-9a-f]{40}$/i;
 const COMMAND_TIMEOUT_MS = 2 * 60_000;
+const INSTALL_TIMEOUT_MS = 15 * 60_000;
+// Nine bounded Git commands plus the frozen install can block the parent loop.
+export const RUNTIME_RELEASE_MAX_BLOCKING_MS = 9 * COMMAND_TIMEOUT_MS + INSTALL_TIMEOUT_MS;
 export const RUNTIME_RELEASE_HOLD_RELATIVE_PATH = join(".runtime", "ops", "runtime-release-hold.json");
 
 export interface GithubCheckRun {
@@ -43,6 +46,18 @@ export interface RuntimeReleaseApplyResult {
   readonly targetSha: string;
   readonly switched: boolean;
 }
+
+export interface CommandResult {
+  readonly status: number | null;
+  readonly stdout: string;
+  readonly stderr: string;
+}
+
+type RunCommand = (
+  executable: string,
+  args: readonly string[],
+  options: { readonly cwd: string; readonly timeoutMs: number; readonly env?: NodeJS.ProcessEnv },
+) => CommandResult;
 
 function lowerFullSha(value: unknown): string | null {
   return typeof value === "string" && FULL_SHA.test(value) ? value.toLowerCase() : null;
@@ -256,9 +271,44 @@ export async function inspectNewestDeployedRuntimeRelease(input: {
   return head;
 }
 
+function defaultRunCommand(
+  executable: string,
+  args: readonly string[],
+  options: Parameters<RunCommand>[2],
+): CommandResult {
+  const result = spawnSync(executable, [...args], {
+    cwd: options.cwd,
+    env: storedKeyEnvironment(options.env),
+    encoding: "utf8",
+    maxBuffer: 16 * 1024 * 1024,
+    stdio: ["ignore", "pipe", "pipe"],
+    timeout: options.timeoutMs,
+    windowsHide: true,
+  });
+  return {
+    status: result.status,
+    stdout: result.stdout ?? "",
+    stderr: result.stderr ?? result.error?.message ?? "",
+  };
+}
+
+/** Windows cannot spawn a .cmd shim without a shell. Invoke its same-Node JS entry directly. */
+export function runtimePackageManagerCommand(input: {
+  readonly platform?: NodeJS.Platform;
+  readonly nodeExecutable?: string;
+  readonly exists?: (path: string) => boolean;
+} = {}): { readonly executable: string; readonly args: readonly string[] } | null {
+  const args = ["pnpm", "install", "--frozen-lockfile"];
+  if ((input.platform ?? process.platform) !== "win32") return { executable: "corepack", args };
+  const node = input.nodeExecutable ?? process.execPath;
+  const entry = win32.join(win32.dirname(node), "node_modules", "corepack", "dist", "corepack.js");
+  if (!(input.exists ?? existsSync)(entry)) return null;
+  return { executable: node, args: [entry, ...args] };
+}
+
 /** Resolve the API repository from the checkout's configured origin. */
-export async function runtimeGithubRepository(root: string, run: AsyncRunCommand = defaultAsyncRunCommand): Promise<string | null> {
-  const result = await run("git", ["remote", "get-url", "origin"], { cwd: root, timeoutMs: COMMAND_TIMEOUT_MS });
+export function runtimeGithubRepository(root: string, run: RunCommand = defaultRunCommand): string | null {
+  const result = run("git", ["remote", "get-url", "origin"], { cwd: root, timeoutMs: COMMAND_TIMEOUT_MS });
   return result.status === 0 ? githubRepositoryFromOrigin(result.stdout) : null;
 }
 
@@ -281,7 +331,7 @@ export function runtimeGithubCredential(env: Readonly<Record<string, string | un
   return storedKeyValue("GH_TOKEN", env) ?? storedKeyValue("GITHUB_TOKEN", env) ?? null;
 }
 
-function conciseFailure(result: AsyncCommandResult): string {
+function conciseFailure(result: CommandResult): string {
   const first = `${result.stderr}\n${result.stdout}`.split(/\r?\n/).map((line) => line.trim()).find(Boolean);
   return first?.slice(0, 300) ?? `exit ${result.status ?? "unresolved"}`;
 }
@@ -302,11 +352,11 @@ function readRuntimeReleaseHold(root: string): { readonly switched?: unknown; re
   return value !== null && typeof value === "object" ? value : null;
 }
 
-/** A switched checkout is not ready until its dependencies are linked, even when CI says CURRENT. */
-export async function resumeRuntimeReleaseInstall(input: {
+/** A switched checkout is not ready until its frozen install finishes, even when CI says CURRENT. */
+export function resumeRuntimeReleaseInstall(input: {
   readonly root: string;
-  readonly runCommand?: AsyncRunCommand;
-}): Promise<RuntimeReleaseApplyResult | null> {
+  readonly runCommand?: RunCommand;
+}): RuntimeReleaseApplyResult | null {
   const hold = readRuntimeReleaseHold(input.root);
   if (hold?.switched !== true) return null;
   const targetSha = lowerFullSha(hold.targetSha);
@@ -314,38 +364,37 @@ export async function resumeRuntimeReleaseInstall(input: {
   return finishRuntimeReleaseInstall({ ...input, targetSha });
 }
 
-/**
- * Link the switched checkout's dependencies. The release-install job already filled the package store, so this is
- * an offline link-only install, run asynchronously; the long download never happens in the parent.
- */
-async function finishRuntimeReleaseInstall(input: {
+function finishRuntimeReleaseInstall(input: {
   readonly root: string;
   readonly targetSha: string;
-  readonly runCommand?: AsyncRunCommand;
-}): Promise<RuntimeReleaseApplyResult> {
+  readonly runCommand?: RunCommand;
+  readonly install?: boolean;
+}): RuntimeReleaseApplyResult {
   const { targetSha } = input;
-  const run = input.runCommand ?? defaultAsyncRunCommand;
+  const run = input.runCommand ?? defaultRunCommand;
   const refuse = (code: string, detail: string): RuntimeReleaseApplyResult => {
     writeRuntimeReleaseHold(input.root, { formatVersion: 1, state: "HELD", code, detail,
       targetSha, switched: true, observedAt: new Date().toISOString() });
     return { state: "REFUSED", code, detail, targetSha, switched: true };
   };
-  const head = await run("git", ["rev-parse", "HEAD"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
+  const head = run("git", ["rev-parse", "HEAD"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
   if (head.status !== 0 || lowerFullSha(head.stdout.trim()) !== targetSha) {
     return refuse("RUNTIME_CHECKOUT_EXACT_HEAD_FAILED", "checkout did not read back at the exact deployed target");
   }
-  const command = runtimePackageManagerCommand();
-  if (command === null) return refuse("COREPACK_ENTRY_UNAVAILABLE", "the running Node installation has no Corepack JavaScript entry; no shell fallback was attempted");
-  const installed = await run(command.executable, [...command.args, "--offline"], {
-    cwd: input.root, timeoutMs: INSTALL_TIMEOUT_MS,
-    env: { ...storedKeyEnvironment(), CI: "true" },
-  });
-  if (installed.status !== 0) return refuse("FROZEN_INSTALL_FAILED", conciseFailure(installed));
-  const dirtyAfter = await run("git", ["status", "--porcelain=v1", "--untracked-files=all"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
+  if (input.install !== false) {
+    const command = runtimePackageManagerCommand();
+    if (command === null) return refuse("COREPACK_ENTRY_UNAVAILABLE", "the running Node installation has no Corepack JavaScript entry; no shell fallback was attempted");
+    const installed = run(command.executable, command.args, {
+      cwd: input.root, timeoutMs: INSTALL_TIMEOUT_MS,
+      env: { ...storedKeyEnvironment(), CI: "true" },
+    });
+    if (installed.status !== 0) return refuse("FROZEN_INSTALL_FAILED", conciseFailure(installed));
+  }
+  const dirtyAfter = run("git", ["status", "--porcelain=v1", "--untracked-files=all"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
   if (dirtyAfter.status !== 0 || dirtyAfter.stdout.trim() !== "") {
     return refuse("RUNTIME_CHECKOUT_DIRTY_AFTER_INSTALL", "frozen installation did not leave the dedicated checkout clean");
   }
-  const installedHead = await run("git", ["rev-parse", "HEAD"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
+  const installedHead = run("git", ["rev-parse", "HEAD"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
   if (installedHead.status !== 0 || lowerFullSha(installedHead.stdout.trim()) !== targetSha) {
     return refuse("RUNTIME_CHECKOUT_EXACT_HEAD_FAILED", "installation did not retain the exact deployed target");
   }
@@ -362,16 +411,17 @@ async function finishRuntimeReleaseInstall(input: {
  * host diagnostic for the stable launcher and returns to the caller, which
  * persists the canonical Admin outcome and terminates without reopening work.
  */
-export async function applyRuntimeRelease(input: {
+export function applyRuntimeRelease(input: {
   readonly root: string;
   readonly targetSha: string;
-  readonly runCommand?: AsyncRunCommand;
-}): Promise<RuntimeReleaseApplyResult> {
+  readonly runCommand?: RunCommand;
+  readonly install?: boolean;
+}): RuntimeReleaseApplyResult {
   const targetSha = lowerFullSha(input.targetSha);
   if (targetSha === null) {
     return { state: "REFUSED", code: "TARGET_SHA_INVALID", detail: "handoff target is not a full Git commit", targetSha: input.targetSha, switched: false };
   }
-  const run = input.runCommand ?? defaultAsyncRunCommand;
+  const run = input.runCommand ?? defaultRunCommand;
   let switched = false;
   const refuse = (code: string, detail: string): RuntimeReleaseApplyResult => {
     writeRuntimeReleaseHold(input.root, {
@@ -386,25 +436,25 @@ export async function applyRuntimeRelease(input: {
     return { state: "REFUSED", code, detail, targetSha, switched };
   };
 
-  const status = await run("git", ["status", "--porcelain=v1", "--untracked-files=all"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
+  const status = run("git", ["status", "--porcelain=v1", "--untracked-files=all"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
   if (status.status !== 0) return refuse("RUNTIME_CHECKOUT_UNREADABLE", conciseFailure(status));
   if (status.stdout.trim() !== "") return refuse("RUNTIME_CHECKOUT_DIRTY", "dedicated runtime checkout contains changed or untracked paths");
 
-  const detached = await run("git", ["symbolic-ref", "--quiet", "--short", "HEAD"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
+  const detached = run("git", ["symbolic-ref", "--quiet", "--short", "HEAD"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
   if (detached.status === 0) return refuse("RUNTIME_CHECKOUT_ATTACHED", `runtime checkout is attached to ${detached.stdout.trim() || "a branch"}`);
   if (detached.status !== 1) return refuse("RUNTIME_CHECKOUT_UNREADABLE", conciseFailure(detached));
 
-  const fetched = await run("git", ["fetch", "--quiet", "--no-tags", "origin", "main"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
+  const fetched = run("git", ["fetch", "--quiet", "--no-tags", "origin", "main"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
   if (fetched.status !== 0) return refuse("ORIGIN_MAIN_FETCH_FAILED", conciseFailure(fetched));
-  const object = await run("git", ["cat-file", "-e", `${targetSha}^{commit}`], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
+  const object = run("git", ["cat-file", "-e", `${targetSha}^{commit}`], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
   if (object.status !== 0) return refuse("DEPLOYED_COMMIT_MISSING", `origin fetch did not provide deployed commit ${targetSha}`);
-  const ancestor = await run("git", ["merge-base", "--is-ancestor", targetSha, "origin/main"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
+  const ancestor = run("git", ["merge-base", "--is-ancestor", targetSha, "origin/main"], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
   if (ancestor.status !== 0) return refuse("DEPLOYED_COMMIT_NOT_ON_MAIN", `${targetSha} is not proven to be an ancestor of origin/main`);
 
-  const switchedResult = await run("git", ["switch", "--detach", targetSha], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
+  const switchedResult = run("git", ["switch", "--detach", targetSha], { cwd: input.root, timeoutMs: COMMAND_TIMEOUT_MS });
   if (switchedResult.status !== 0) return refuse("RUNTIME_CHECKOUT_SWITCH_FAILED", conciseFailure(switchedResult));
   switched = true;
-  // Persist before linking dependencies so a crash here retains recovery state.
+  // Persist before the blocking install so a watchdog kill retains recovery state.
   writeRuntimeReleaseHold(input.root, { formatVersion: 1, state: "HELD", code: "FROZEN_INSTALL_PENDING",
     targetSha, switched, observedAt: new Date().toISOString() });
   return finishRuntimeReleaseInstall({ ...input, targetSha });

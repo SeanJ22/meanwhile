@@ -49,7 +49,7 @@ export function runnerControlReader(url: string, repos: ControlPlaneRepositories
   const researchRows = new Map<string, Delta<typeof research[number]>>();
   const windowRows = new Map<string, Delta<typeof windows[number]>>();
   let researchPositions = "{}", windowPositions = "{}";
-  let planningPending=false, fixesPending=false;
+  let planningPending=false;
   let config: Awaited<ReturnType<typeof repos.adminConfig.read>> = null;
   let pending: Promise<void> | null = null;
   let forceRequested = false;
@@ -62,7 +62,6 @@ export function runnerControlReader(url: string, repos: ControlPlaneRepositories
     const [row] = await query(`SELECT
       (EXISTS(SELECT 1 FROM cp_planning_controls WHERE revision>applied_revision) OR NOT EXISTS(
         SELECT 1 FROM cp_control_backfill_jobs WHERE state='system' AND kind='complete' AND completed)) AS planning_pending,
-      EXISTS(SELECT 1 FROM cp_admin_fix_list WHERE config_id=$3 AND value->'dispatch' IS NOT NULL AND value #>> '{dispatch,honoredAt}' IS NULL) AS fixes_pending,
       (SELECT COALESCE(jsonb_agg(jsonb_build_object('id', record_id, 'position', position::text, 'record', record)), '[]'::jsonb)
        FROM cp_log_research_intents WHERE log_key = $1 AND NOT (position <@ $4::int8multirange)) AS research,
       (SELECT COALESCE(jsonb_agg(jsonb_build_object('id', record_id, 'position', position::text, 'record', record)), '[]'::jsonb)
@@ -80,7 +79,6 @@ export function runnerControlReader(url: string, repos: ControlPlaneRepositories
     if (row.windows.length) windowPositions = committedPositions(windowRows);
     config=updated;
     planningPending=row.planning_pending===true;
-    fixesPending=row.fixes_pending===true;
     signature=next;
     refreshedAt = now();
   }
@@ -110,7 +108,7 @@ export function runnerControlReader(url: string, repos: ControlPlaneRepositories
         while (forceRequested) { forceRequested = false; await refresh(); }
       })().finally(() => { pending = null; });
       await pending;
-      return { research, windows, config,planningPending,fixesPending };
+      return { research, windows, config,planningPending };
     },
   };
 }

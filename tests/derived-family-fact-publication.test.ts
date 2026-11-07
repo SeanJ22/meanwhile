@@ -30,7 +30,7 @@ import { withDerivedSourceContent, derivedSourceContentHash } from "../lib/civic
 import { confirmMeetingFactsFromSources, meetingFactWorkRemains } from "../lib/civic-data/meeting-source-confirmation.ts";
 import { sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
-import { meetingSourceSession, meetingSourceInputHash, confirmMeetingSource, meetingSourceContentHash, withMeetingSourceProbe, meetingSourceBudgetAvailable } from "../lib/civic-data/meeting-source-probe.ts";
+import { meetingSourceSession, meetingSourceInputHash, probeMeetingSource, confirmAcquiredMeetingSource, withMeetingSourceProbe, meetingSourceBudgetAvailable } from "../lib/civic-data/meeting-source-probe.ts";
 import { readSourceProbeDependencies } from "../lib/civic-data/source-probe.ts";
 import { statesForRegistryDivisions, stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
@@ -66,6 +66,7 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
   const savedCheckpoints=new Map<string,string>();
   const checkpoint=new CivicReadCache({read:async key=>savedCheckpoints.get(key)??null,write:async(key,value)=>{savedCheckpoints.set(key,value);}}).jobState();
   const loadWiring=async()=>{
+    assert.equal(hashPass,false,"an equal source does not reread the wiring payload");
     return {value:wiringValue,input:{kind:"PROMOTED_VERSION" as const,
       recordClass:DERIVED_WIRING_RECORD_CLASS,scope:DERIVED_WIRING_SCOPE,versionId:"wiring",
       readModelSha256:sha256(canonicalCivicDataJson(wiringValue)),promotedAt:anchor}};
@@ -101,12 +102,12 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
     withDerivedSourceContent, confirmMeetingFactsFromSources, meetingFactWorkRemains,
     DERIVED_FAMILY_SOURCE_ID, familyMemberReadIssue, sourceHashReceiptFields, ZERO_RELEASE_EVENTS,
     statesForRegistryDivisions, stateRegistryRuntimeScope, requiredManualProductionContract, readSourceProbeDependencies,
-    meetingSourceInputHash, confirmMeetingSource, meetingSourceContentHash, withMeetingSourceProbe, meetingSourceBudgetAvailable, meetingVenueChoiceHash,
+    meetingSourceInputHash, probeMeetingSource, confirmAcquiredMeetingSource, withMeetingSourceProbe, meetingSourceBudgetAvailable, meetingVenueChoiceHash,
     AgendaDocumentStore,retrieveHeldAgendas,seedHeldAgendaDocuments,bindAgendaSourceObservations,linkedMeetingSourceInputs,
     meetingSourceSession:(...args:Parameters<typeof meetingSourceSession>)=>meetingSourceSession(args[0],args[1],args[2],args[3],args[4],args[5],args[6],{
       checkpoint,publicationPending:async()=>false,fetchImpl:async input=>{
         assert.equal(String(input),route);fetched++;t.mock.timers.setTime(Date.now()+30_000);
-        return new Response(hashPass ? feed.replace("END:VCALENDAR", `X-EXPORT-NONCE:${fetched}\r\nEND:VCALENDAR`) : feed,{headers:{"content-type":"text/calendar"}});
+        return new Response(feed,{headers:{"content-type":"text/calendar"}});
       },
     }),
   });
@@ -143,15 +144,11 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
       ? (lastCandidate!.normalizedPayload as {sourceProbe:{bodyIds:string[]}}).sourceProbe.bodyIds
       : (lastCandidate!.normalizedPayload as {sourceProbe:unknown}).sourceProbe,
     confirmUnchanged: async () => ({ kind: "CONFIRMED", versionId: acceptedCandidateId, at: new Date().toISOString() }) });
-  t.mock.timers.setTime(Date.now()+3_600_000);
-  const confirmed=await run(store,bodyPartition,async()=>{},{db,vault},loadWiring);
-  assert.ok(confirmed.head,"the next run returns the confirmed source header, with no fabricated candidate body");assert.equal(confirmed.at,new Date().toISOString(),"the source observation advances");
+  const confirmed=await run(store,bodyPartition,async()=>{assert.fail("an equal source does not preload registry and venue records");},{db,vault},loadWiring);
+  assert.ok(confirmed.head,"the next run returns the confirmed source header, with no fabricated candidate body");
   assert.equal(bodyReads,1);
   assert.equal(fetched, 2, "time-sensitive source acquisition still runs on the next scheduled pass");
   assert.equal(snapshots.length, 1, "the unchanged pass does not rebuild or re-read its held snapshot");
-  assert.deepEqual((await db.query("SELECT checked_at FROM fact WHERE status='live' ORDER BY field")).map(row=>String(row.checked_at)),live.map(row=>String(row.checked_at)),
-    "changing bytes need fresh field checks before older fact values are reverified");
-  t.mock.timers.setTime(Date.now()+3_600_000);
-  assert.ok((await run(store,bodyPartition,async()=>{},{db,vault},loadWiring)).head);
-  assert.equal(fetched,3); assert.equal(bodyReads,1); assert.equal(snapshots.length,1);
+  assert.ok((await db.query("SELECT checked_at FROM fact WHERE status='live'")).every(row => Date.parse(String(row.checked_at)) === Date.now()),
+    "unchanged source bytes still keep every existing fact current");
 });

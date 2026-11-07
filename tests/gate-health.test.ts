@@ -54,7 +54,7 @@ test("a failed release staging is attention on the release gate and names the re
     detail: "still unsettled after 15 minutes", startedAt: "2026-10-04T11:00:00Z", at: "2026-10-04T11:15:00Z" };
   const failed = byId({ ...base, heartbeat: beat({ releaseStaging }) }, "GATE-02");
   assert.equal(failed.state, "attention");
-  assert.match(failed.sentence, /e673c514.*STAGING_TIMED_OUT: still unsettled after 15 minutes.*keeps serving the current code and tries again/);
+  assert.match(failed.sentence, /e673c514.*STAGING_TIMED_OUT: still unsettled after 15 minutes.*draining and restarting/);
   assert.equal(byId({ ...base, heartbeat: beat({ releaseStaging: { ...releaseStaging, state: "INSTALLING", code: null } }) }, "GATE-02").state, "pass");
 });
 

@@ -66,7 +66,7 @@ test("startup and the standing clock write the running code, at most once a minu
     RUNNING_CODE_SHA: running, nativeAbortLine: () => null, neonReadFailureLine: () => null, ownerRepositories: async () => repos,
     hostMemoryReading: async () => null, neonBytesReading: () => null, hostname: () => "meanwhile-runner",
     readCodeIdentity: (input: { runnerTestedSha: string }) => { identityReads += 1; return { verdict: "CONSISTENT", runnerTestedSha: input.runnerTestedSha }; },
-    stagingStatus: () => staging, standingHeartbeat, liveCycleHeartbeat, jobRuns: new JobRunBook(), boundedBeat, BEAT_BOUND_MS: 45_000, lateBeat: () => {},
+    releaseStaging: { status: () => staging }, standingHeartbeat, liveCycleHeartbeat, jobRuns: new JobRunBook(), boundedBeat, BEAT_BOUND_MS: 45_000, lateBeat: () => {},
     console: { error: (line: string) => { throw new Error(line); } }, Date });
   runInContext(stripTypeScriptTypes(`${write}\n${clock}`), context);
   await runInContext("standingBeat()", context);

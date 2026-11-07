@@ -9,7 +9,7 @@ import {
 import { FEDERAL_PEOPLE_SPLIT_LOG_KEY, federalPeopleSplitRecord, federalPeopleSplitRecorded } from "../lib/civic-data/federal-people-split.ts";
 import { readMeetingDiscoveryInputs, meetingDiscoveryInputsDue, runMeetingDiscoveryChain, type MeetingDiscoveryInputs } from "../lib/civic-data/meeting-discovery-due.ts";
 import { readerFactDb, readPassCursor, writePassCursor } from "../lib/facts/db.ts";
-import { routineClockPresence } from "../lib/civic-data/clock-presence.ts";
+import { routineTasksWithoutClocks } from "../lib/civic-data/clock-presence.ts";
 import { writeContractHandoff } from "../lib/civic-data/contract-handoff-parent.ts";
 import { savePublishNowFailure } from "../lib/civic-data/publish-now-failure.ts";
 import { ensureFactEntities, loadChangedStates, registeredStates } from "../lib/facts/entities.ts";
@@ -959,15 +959,14 @@ if (PUBLISH_NOW && selectedTasks.length === 0) {
   await endPassEarly(supervisorFailures.length === 0 ? 0 : 2);
 }
 step = "reading the routine task clocks";
-const clockPresence = FORCE ? { absent: new Set<string>(), pending: new Set<string>() } : await routineClockPresence(
+const emptyClockIds = FORCE ? new Set<string>() : await routineTasksWithoutClocks(
   selectedTasks, readerFactDb().query,
-).catch(error => { console.log(`RCD_CLOCK_PRESENCE ${safeFailure(sanitizedErrorDiagnostic(error))}; full clock proofs retained`); return { absent: new Set<string>(), pending: undefined }; });
+).catch(error => { console.log(`RCD_CLOCK_PRESENCE ${safeFailure(sanitizedErrorDiagnostic(error))}; full clock proofs retained`); return new Set<string>(); });
 const clockReads = FORCE
   ? selectedTasks.map((task) => ({ task, ok: true as const, clock: undefined, error: null }))
   : await readRoutineTaskClocks(
       selectedTasks,
-      (task) => clockPresence.absent.has(task.id) ? Promise.resolve(undefined) : store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion),
-      undefined, clockPresence.pending,
+      (task) => emptyClockIds.has(task.id) ? Promise.resolve(undefined) : store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion),
     );
 
 let statedEndsByTask: ReadonlyMap<string, ReadonlyMap<string, number>> = new Map();

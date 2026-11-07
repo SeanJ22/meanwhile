@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
-import { EXPIRE_WORK_SQL, WORK_DDL, workId, workList, type WorkInput } from "../lib/core/work.ts";
+import { WORK_DDL, workId, workList, type WorkInput } from "../lib/core/work.ts";
 import { workCounts } from "../lib/core/work-counts.ts";
 
 const input: WorkInput = { kind: "check", placeId: "ocd-division/country:us/state:az/county:pima", subjectId: "body:pima", origin: { from: "planner" },
@@ -17,8 +17,7 @@ test("work list retains reports without reopening, fences changed work, backs of
   const { pg, query } = await open();
   t.after(() => pg.close());
   let at = new Date("2026-10-24T12:00:00Z");
-  let sweeps=0;
-  const list = workList(async(text,params)=>{if(text===EXPIRE_WORK_SQL)sweeps++;return query(text,params);}, { owner: "test", leaseMs: 5_000, now: () => at });
+  const list = workList(query, { owner: "test", leaseMs: 5_000, now: () => at });
   const added = await list.add(input);
   const [first] = await list.claim("check", 1);
   assert.equal(first!.id, added.id);
@@ -78,7 +77,7 @@ test("work list retains reports without reopening, fences changed work, backs of
   assert.equal((await query("select count(*)::int n from work where kind='detect'"))[0]!.n, 1);
   await list.add({ ...input, field: "member", claimKey: "seat-a", value: "Person A", source: { report: "seat-a" } });
   await list.add({ ...input, field: "member", claimKey: "seat-b", value: "Person B", source: { report: "seat-b" } });
-  const beforeSweeps=sweeps,members=(await Promise.all(Array.from({length:6},()=>list.claim("check",1)))).flat();assert.equal(sweeps-beforeSweeps,1,"simultaneous slots share lease recovery and claim their own rows");
+  const members = await list.claim("check", 2);
   assert.deepEqual(members.map(row => row.value).sort(), ["Person A", "Person B"], "a multivalued field retains both claims");
   assert.ok(await list.finish(members[0]!));
   assert.ok(await list.finish(members[1]!));

@@ -126,20 +126,21 @@ export async function readBrief(repos:ControlPlaneRepositories,at:string):Promis
   return {fresh,latest:config.latestBrief?compactBrief(config.latestBrief):null,alertsOn:readSetting(config,ALERTS_ON_SETTING,false)};
 }
 export const compactBrief=(brief:BriefSnapshot):BriefSnapshot=>({...brief,problems:compactKeeperProblems(brief.problems)});
-export function dailyBriefDue(config:AdminConfig,at:string):boolean {
-  const clock=easternBriefClock(at),time=readSetting<string>(config,BRIEF_TIME_SETTING,""),saved=config.latestBrief;
-  return !!time&&clock.time>=time&&!(saved&&(saved.day>clock.day||saved.day===clock.day&&saved.lineKeeperOnly!==true));
+function dailySnapshotSaved(config:AdminConfig,day:string):boolean{
+ const saved=config.latestBrief;return !!saved&&(saved.day>day||saved.day===day&&saved.lineKeeperOnly!==true);
 }
 /** Runs in BR-37's existing parent timer, even with the owner's PC off. Restart and competing ticks cannot save twice. */
 export async function writeDailyBrief(repos:ControlPlaneRepositories,at:string,read:(repos:ControlPlaneRepositories,at:string)=>Promise<BriefReading>=readBrief):Promise<boolean> {
-  const held=await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const clock=easternBriefClock(at);const held=await repos.adminConfig.read(ADMIN_CONFIG_ID);
   if(!held||!isAdminConfig(held.value))return false;
-  if(!dailyBriefDue(held.value,at))return false;
+  const time=readSetting<string>(held.value,BRIEF_TIME_SETTING,"");
+  if(!time||clock.time<time||dailySnapshotSaved(held.value,clock.day))return false;
   const snapshot=(await read(repos,at)).fresh;
  if(read===readBrief){const held=await population().catch(()=>null);if(held)await recordUndescribedCauses(repos,
    held.summary?held.summary.groups.map(group=>group.sample):held.rows,at).catch(()=>undefined);}
   for(let n=0;n<4;n++){
-    const latest=await repos.adminConfig.read(ADMIN_CONFIG_ID);if(!latest||!isAdminConfig(latest.value)||!dailyBriefDue(latest.value,at))return false;
+    const latest=await repos.adminConfig.read(ADMIN_CONFIG_ID);if(!latest||!isAdminConfig(latest.value)||dailySnapshotSaved(latest.value,clock.day))return false;
+    const currentTime=readSetting<string>(latest.value,BRIEF_TIME_SETTING,"");if(!currentTime||clock.time<currentTime)return false;
     try{await repos.adminConfig.save(latest,{...latest.value,latestBrief:snapshot},at);return true;}catch(e){if(n===3)throw e;}
   }
   return false;

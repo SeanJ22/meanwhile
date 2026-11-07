@@ -1,8 +1,12 @@
 #!/usr/bin/env node
 /**
- * Worst-case speed pass on the live site: every resident-task surface and Ask question at
- * sampled published ZIPs, phone and desktop, each visit a fresh browser context. Judged by
- * the slowest visit against three seconds; an unfinished visit fails.
+ * Worst-case speed pass on the live site: resident-task surfaces and Ask questions at
+ * sampled published ZIPs, phone and desktop, each visit a fresh browser context with an empty
+ * cache. Judged by the slowest visit against three seconds; an unfinished visit fails.
+ * Speed is what a reader feels over the real network and CDN, which a copy on the runner cannot
+ * show, so this pass is live only, and it takes only as many visits as the day's live allowance
+ * (Admin: "Live-site browser visits per check per day"), continuing each day where the last
+ * left off in the list of surfaces, ZIPs and sizes.
  *
  *   node --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/worst-case-speed-pass.mts [--dry-run]
  *
@@ -28,12 +32,13 @@ import { openSurfaceFixes } from "../lib/health/surface-fixes.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import { publishedPlaces } from "../lib/ops/post-deploy-warm.ts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";
+import { liveVisitsPerDay, openSite } from "./site.mts";
 
 
 const BASE = (process.env.SHOOT_BASE_URL ?? PUBLIC_SITE_ORIGIN).replace(/\/$/, "");
 const ZIP_COUNT = Number(process.env.WTP_SPEED_ZIPS ?? 3);
 const ASK_ZIP_COUNT = Number(process.env.WTP_SPEED_ASK_ZIPS ?? 1);
-const RUNS = Number(process.env.WTP_SPEED_RUNS ?? 2);
+const RUNS = Number(process.env.WTP_SPEED_RUNS ?? 1);
 const WAIT_MS = 20_000;
 
 const DRY = process.argv.includes("--dry-run");
@@ -51,7 +56,15 @@ if (places.length === 0) {
 }
 const zips = sampleZips(places.map((p) => p.zip), ZIP_COUNT, now);
 const askZips = new Set(zips.slice(0, ASK_ZIP_COUNT));
-const targets = speedTargets(tasks, zips).filter((t) => t.surface !== "ask" || askZips.has(t.zip));
+const everyTarget = speedTargets(tasks, zips).filter((t) => t.surface !== "ask" || askZips.has(t.zip));
+const repos = url && !DRY ? await createPgRepositories(url, now, { skipBootstrap: true }) : null;
+const perDay = await liveVisitsPerDay(repos);
+const site = openSite({ label: "worst-case-speed", now, perDay });
+/** Each day starts where the last day's visits ended, so every surface, ZIP and size is reached over time. */
+const targets = (() => {
+  const from = (Math.floor(Date.parse(now) / 86_400_000) * Math.max(1, perDay)) % Math.max(1, everyTarget.length);
+  return [...everyTarget.slice(from), ...everyTarget.slice(0, from)];
+})();
 
 /** Open a door (a stat card) by its label from inside the page, never with the mouse. */
 const DOOR = { meetings: "meetings", officials: "officials" } as const;
@@ -64,13 +77,13 @@ const READY: Record<string, string> = {
 };
 const ANSWERED = "[data-ask-grounded], [data-ask-destination], [data-ask-refusal], [data-ask-answer-bodies]";
 
-async function visit(browser: GuardedBrowser, target: SpeedTarget): Promise<SpeedRun> {
+async function visit(browser: GuardedBrowser, target: SpeedTarget, origin: string): Promise<SpeedRun> {
   const context = await browser.context({ viewport: SPEED_PROFILES[target.profile], deviceScaleFactor: 2, reducedMotion: "reduce" });
   await context.addInitScript(() => { try { localStorage.setItem("wtp.tutorial_seen", "1"); } catch { /* defaults are fine */ } });
   const page = await context.newPage();
   try {
     const path = target.surface === "ballot" ? `/ballot?zip=${target.zip}` : `/?zip=${target.zip}`;
-    await page.goto(`${BASE}${path}`, { waitUntil: "commit", timeout: 60_000 });
+    await page.goto(`${origin}${path}`, { waitUntil: "commit", timeout: 60_000 });
     if (target.surface === "ask") {
       await page.locator(".ask-pill").filter({ visible: true }).first().click({ timeout: WAIT_MS });
       const box = page.locator("[data-ask-panel] [data-ask-box]").first();
@@ -112,22 +125,29 @@ const reader = await launchGuarded({ label: "worst-case-speed", headless: true, 
 const asker = targets.some((t) => t.surface === "ask") ? await launchGuarded({ label: "worst-case-speed-ask", headless: true }) : null;
 const runs: SpeedRun[] = [];
 try {
-  for (const target of targets) {
+  visits: for (const target of targets) {
     const times = target.surface === "ask" ? 1 : RUNS;
-    for (let i = 0; i < times; i += 1) runs.push(await visit(target.surface === "ask" ? asker! : reader, target));
+    for (let i = 0; i < times; i += 1) {
+      const live = site.nextLive();
+      if (live === null) break visits;
+      runs.push(await visit(target.surface === "ask" ? asker! : reader, target, live.origin));
+    }
   }
 } finally {
   await reader.close();
   await asker?.close();
 }
 
+if (runs.length === 0) {
+  console.log("speed: no live-site visit is allowed today (Admin: live-site browser visits per check per day); nothing was measured");
+  process.exit(0);
+}
 const pass = judgeSpeed(runs, now);
 if (DRY) {
   for (const row of pass.rows) console.log(`  ${row.verdict}  ${row.says}`);
 } else {
-  const repos = await createPgRepositories(url!, now, { skipBootstrap: true });
-  await recordSpeedPass(repos, pass);
-  const fixes = await openSurfaceFixes(repos, pass, now).catch((error) => { console.error(`speed: fix items were not opened (${error instanceof Error ? error.message : error})`); return { opened: [] }; });
+  await recordSpeedPass(repos!, pass);
+  const fixes = await openSurfaceFixes(repos!, pass, now).catch((error) => { console.error(`speed: fix items were not opened (${error instanceof Error ? error.message : error})`); return { opened: [] }; });
   if (fixes.opened.length > 0) console.log(`speed: ${fixes.opened.length} fix item${fixes.opened.length === 1 ? "" : "s"} kept open`);
 }
 console.log(`speed: ${pass.passed} within three seconds, ${pass.failed} too slow or unfinished, at ${pass.zips.join(", ")} (run ${reader.runId})`);

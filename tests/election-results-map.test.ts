@@ -375,3 +375,21 @@ test("redrawing the results keeps the large state-shapes source and closing them
   assert.equal(layers.length, 0);
   delete (globalThis as { window?: unknown }).window;
 });
+
+test("the next run of the results job shows up on the map's next read: nothing is held between requests", async context => {
+  const copy = electionFeedFixture(context);
+  const query = async () => [rowsFor(ballot)];
+  await copy.store.writeState("AZ", feedOf("AZ", facts));
+  await copy.store.writeNation({ checkedAt: AT, sources: [], states: summary.states });
+  const first = await mapResults({ scope: "state", state: "AZ" }, { store: copy.store, query });
+  assert.equal(fillClass(first[azId("sldl", 6)]), "counting");
+  // The next scheduled run counts the rest of District 6 and files a new state feed and a new national summary.
+  const later = races.map(race => race.id === "h6" ? { ...race, status: "called" as const, people: [["D2", "Democrat", false, true, 10], ["R3", "Republican", false, true, 9]] as Person[] } : race);
+  await copy.store.writeState("AZ", feedOf("AZ", factsOf(later)));
+  await copy.store.writeNation({ checkedAt: "2026-11-08T08:00:00.000Z", sources: [], states: { ...summary.states, PA: { ...summary.states.PA, us_house: row({ D: 9, R: 9 }, 0, 0, 18) } } });
+  const second = await mapResults({ scope: "state", state: "AZ" }, { store: copy.store, query });
+  assert.equal(fillClass(second[azId("sldl", 6)]), "split", "the newly called seats are on the map");
+  const house = await mapResults({ scope: "us-house" }, { store: copy.store, query });
+  assert.equal(fillClass(house["ocd-division/country:us/state:pa"]), "split", "the new national summary is read, not the old one");
+  assert.equal(copy.databaseReads(), 0);
+});

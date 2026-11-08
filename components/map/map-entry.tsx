@@ -1714,7 +1714,7 @@ function MapEntryInner() {
             onSelectVotingSite={setSelectedVotingSiteId}
             selectedVotingSiteId={selectedVotingSiteId}
           />}
-          {roaming.zoomIn && <div className="state-crossing" role="status">Zoom in or enter a zip to see meetings.</div>}
+          {roaming.zoomIn && <div className="state-crossing" role="status">Zoom in or enter a ZIP to see meetings here.</div>}
           {focusState.failed && <div className="state-crossing" role="status">We couldn&apos;t load state boundaries. Reload to try again.</div>}
           {focusState.crossing && (
             <StateCrossingPrompt

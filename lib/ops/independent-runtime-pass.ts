@@ -41,6 +41,8 @@ export interface IndependentRuntimeLane {
   readonly everyMs: number;
   /** A run ends by its start plus this; whatever it has not finished stays owed to the next tick. */
   readonly budgetMs: number;
+  /** A run that is mostly a quick check reports its launch interval as its cadence, not its budget. */
+  readonly cadenceIsLaunch?: true;
   readonly run: (deadlineMs: number) => Promise<void>;
 }
 

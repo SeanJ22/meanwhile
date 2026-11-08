@@ -35,7 +35,7 @@
       "file": "lib/civic-data/manual-projections.ts",
       "kind": "readCandidate",
       "fingerprint": "494a7673110ecc70f37b0d9296396ca62bd9c5669b8d369e9733c6c674a9a757",
-      "line": 623
+      "line": 620
     },
     {
       "file": "lib/civic-data/navigation-successor.ts",
@@ -215,7 +215,7 @@
       "file": "lib/outcomes/data-plane.ts",
       "kind": "readCandidate",
       "fingerprint": "6323427df9747762ba194b0a32cea814fc12af457ed6c50eef985004df86a393",
-      "line": 201
+      "line": 197
     },
     {
       "file": "lib/place-map/read.ts",

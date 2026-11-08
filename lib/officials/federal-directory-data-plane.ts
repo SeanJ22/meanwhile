@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 
 import { canonicalCivicDataJson, civicRecordsFor } from "../civic-data/changes.ts";
 import { authorityFor } from "../civic-data/source-authority.ts";
@@ -13,6 +12,7 @@ import type { RosterChange } from "./roster-changes.ts";
 import { publishFederalDirectoryOfficePoints, type OfficePointResolver } from "./office-points-publication.ts";
 
 import { FEDERAL_DIRECTORY_SOURCE_ID, FEDERAL_DIRECTORY_PARSER_VERSION, federalDirectoryScope } from "./federal-directory-scope.ts";
+import { sha256 } from "../sha256.ts";
 export { FEDERAL_DIRECTORY_SOURCE_ID, FEDERAL_DIRECTORY_STATES, FEDERAL_DIRECTORY_PARSER_VERSION,
   federalDirectoryScope, federalDirectoryContractId, federalDirectoryStateOf } from "./federal-directory-scope.ts";
 export type { FederalDirectoryState, FederalDirectoryContractId } from "./federal-directory-scope.ts";
@@ -60,10 +60,6 @@ export interface FederalDirectoryReadModel {
   readonly sourceSha: string;
   readonly roster: OfficeholderSet;
   readonly directory: DirectoryFile;
-}
-
-function sha256(value: string): string {
-  return createHash("sha256").update(value).digest("hex");
 }
 
 function rawSetHash(captures: readonly FederalDirectoryCapture[]): string {

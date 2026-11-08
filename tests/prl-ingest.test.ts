@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
-import { parseCsv } from "../lib/sources/prl/index.ts";
+import { parseCsv } from "../lib/reference/csv.ts";
 import {
   streamCsvRecords,
   streamJsonArrayObjects,

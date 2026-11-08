@@ -15,12 +15,12 @@ import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 // The read model memoises proven versions and these tests reuse one fixture versionId.
 beforeEach(() => clearPromotedReadModelCache());
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
-import { VALIDATION_CHECKS, sourceProjectionEvidence, type ValidationReceipt } from "../lib/civic-data/types.ts";
+import { sourceProjectionEvidence, type ValidationReceipt } from "../lib/civic-data/types.ts";
 import { readFundingSnapshot } from "../lib/funding/snapshot.ts";
 import { readPopulationProjection } from "../lib/reference/acs-population.ts";
 import { nhLegislativeHolders, refreshNhSeatHolders } from "../lib/ballot/seat-holders.ts";
 import { meetingPartitionFreshnessMs } from "../lib/civic-data/contracts.ts";
-import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+import { routineVersionFixture } from "./helpers/routine-candidate-fixture.ts";
 
 const noPointer: CivicDataReadStore = {
   readPromotion: async () => null,
@@ -50,77 +50,7 @@ test("canonical scalar and batch reads use the request's edge copies without a d
 });
 
 function promotedStore<T>(payload: T): CivicDataReadStore {
-  const payloadHash = normalizedHash(payload);
-  const receipt: ValidationReceipt = {
-    contractVersion: 2,
-    decision: "GOOD",
-    candidateId: "candidate-1",
-    sourceId: "fec-open-api",
-    recordClass: "FEC_FUNDING",
-    scope: "federal-supported",
-    validatedAt: "2026-09-01T00:01:00.000Z",
-    checks: VALIDATION_CHECKS.map((check) => ({
-      check,
-      verdict: "PASS",
-      code: `${check}_PASS`,
-      detail: `${check} was proven for candidate-1.`,
-    })),
-    excludedFacts: [],
-  };
-  const projection = {
-    key: "FEC_FUNDING:federal-supported",
-    sourceId: "fec-open-api",
-    recordClass: "FEC_FUNDING",
-    scope: "federal-supported",
-    versionId: "candidate-1",
-    lastKnownGoodVersionId: "candidate-1",
-    promotedAt: "2026-09-02T00:00:00.000Z",
-    payload,
-    receipt,
-  } satisfies PromotedProjection<T>;
-  const candidate = {
-    candidate: {
-      id: "candidate-1",
-      sourceId: "fec-open-api",
-      recordClass: "FEC_FUNDING",
-      scope: "federal-supported",
-      sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
-      retrieval: {
-        succeeded: true,
-        requestedUrl: "https://api.open.fec.gov/v1/candidates/search/",
-        finalUrl: "https://api.open.fec.gov/v1/candidates/search/",
-        httpStatus: 200,
-        retrievedAt: "2026-09-01T00:00:00.000Z",
-        rawHash: "a".repeat(64),
-      },
-      normalization: {
-        succeeded: true,
-        parserVersion: "fec-funding/4",
-        schemaVersion: "2",
-        normalizedHash: payloadHash,
-        normalizedPayloadHash: payloadHash,
-        inputRecords: 1,
-        outputRecords: 1,
-        droppedRecords: 0,
-        missingRequiredFields: [],
-      },
-      identities: [],
-      temporal: { version: "2026", expectedVersion: "2026", sourceThrough: "2026-08-31", staleAtRetrieval: false },
-      semantics: { factKind: "test", violations: [] },
-      horizon: { kind: "OPEN_FACT_SET", query: "test", returnedRecords: 1, declaredTotal: null, paginationComplete: true, claimsComplete: false },
-      absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
-      dependentChecks: [{ consumer: "test", passed: true, detail: "accepted" }],
-      normalizedPayload: payload,
-      readModel: payload,
-    },
-    state: "PROMOTED",
-    acquisitionSucceeded: true,
-    receipt,
-    promotedVersion: "candidate-1",
-    lastKnownGoodVersion: "candidate-1",
-    failureCode: null,
-    failureDetail: null,
-  } satisfies CandidateVersionRecord;
+  const { projection, candidate } = routineVersionFixture("federal-supported", "candidate-1", payload);
   return {
     readPromotion: async <R>() => projection as unknown as PromotedProjection<R>,
     readCandidate: async () => candidate,

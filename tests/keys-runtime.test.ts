@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { KEYS_DDL, keysStore } from "../lib/core/keys-store.ts";
-import { savedKeysRuntime } from "../lib/core/keys-runtime.ts";
+import { keysUnreachable, savedKeysRuntime } from "../lib/core/keys-runtime.ts";
 import { installSavedValues, storedKeyValue, storedKeyEnvironment } from "../lib/core/keys-values.ts";
 
 test("direct runtime reads honor their role, record real openings, refresh changes and retain the last complete snapshot", async () => {
@@ -55,6 +55,42 @@ test("direct runtime reads honor their role, record real openings, refresh chang
     assert.equal(storedKeyValue("ANTHROPIC_API_KEY"), undefined);
     fail = true;
     const cold = savedKeysRuntime(query, master, "runner", () => now, message => warnings.push(message));
-    await assert.rejects(cold.refresh(), { message: "The saved keys could not be reached." });
+    await assert.rejects(cold.refresh(), { message: /^The saved keys could not be reached: the control-plane database refused the read\. Technical details: Error\.$/ });
   } finally { installSavedValues(previous); await db.close(); }
+});
+
+test("a cold database that answers on its third try still loads the keys, and the next pass stays short", async () => {
+  const db = new PGlite(), master = "42".repeat(32), at = new Date().toISOString(), previous = installSavedValues(undefined);
+  const warned: string[] = [];
+  let cold = 2, calls = 0, now = Date.now();
+  const query = async (text: string, params?: readonly unknown[]) => {
+    calls++;
+    if (cold > 0) { cold--; throw Object.assign(new Error("aborted"), { name: "TimeoutError" }); }
+    return (await db.query<Record<string, unknown>>(text, params ? [...params] : [])).rows;
+  };
+  try {
+    await db.exec(KEYS_DDL);
+    await keysStore(async (text, params) => (await db.query<Record<string, unknown>>(text, params ? [...params] : [])).rows, master).save("ANTHROPIC_API_KEY", "saved-ai", "anthropic", at);
+    const runtime = savedKeysRuntime(query, master, "runner", () => now, message => warned.push(message));
+    await runtime.refresh(true);
+    assert.deepEqual(warned, [], "a recovered cold start warns nobody");
+    assert.equal(storedKeyValue("ANTHROPIC_API_KEY"), "saved-ai", "the first load survives two slow answers");
+    calls = 0; now += 60_000;
+    await runtime.refresh(true);
+    assert.ok(calls > 0 && calls <= 2, "the next scheduled pass is one short read");
+    cold = 99;
+    await assert.doesNotReject(runtime.refresh(true), "a later failure keeps the last snapshot and gives one attempt");
+    assert.equal(storedKeyValue("ANTHROPIC_API_KEY"), "saved-ai");
+    const never = savedKeysRuntime(async () => { throw Object.assign(new Error("secret-host.example"), { name: "TimeoutError" }); }, master, "runner", () => now, () => undefined);
+    await assert.rejects(never.refresh(true), { message: "The saved keys could not be reached: the control-plane database did not answer within 2 seconds. Technical details: TimeoutError." });
+  } finally { installSavedValues(previous); await db.close(); }
+});
+
+test("each cause of an unreachable read is named in plain words without a connection string or key", () => {
+  const says = (error: unknown) => keysUnreachable(error).message;
+  assert.match(says(new Error("The control-plane database address is not set.")), /^The saved keys could not be reached: the control-plane database address is not set on this machine\./);
+  assert.match(says(new Error("The Keys box needs its encryption setting.")), /the encryption setting is missing or malformed/);
+  assert.match(says(new Error("The saved key could not be opened.")), /a saved key would not open/);
+  assert.match(says(Object.assign(new Error("fetch failed postgres://u:pw@host/db"), { cause: { name: "AbortError" } })), /did not answer within 2 seconds/);
+  assert.ok(!says(new Error("postgres://user:pw@host/db")).includes("pw@host"));
 });

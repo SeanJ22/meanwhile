@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { rawBallot, type TestRace } from "./helpers/raw-ballot.ts";
 import { createHash } from "node:crypto";
 import { installReaderDatabaseQuery, readerDatabaseQuery } from "../lib/reader/database.ts";
 import { readFileSync } from "node:fs";
@@ -29,17 +30,12 @@ import type { AskAnswerPayload } from "../lib/ask/answer.ts";
 import { resolveSubjectRef } from "../lib/ask/subject.ts";
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
-import type { GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import type { Contest } from "../lib/ballot/types.ts";
-import type { LineupOutcome } from "../lib/identity/types.ts";
-import { requireBallotState } from "../lib/civic-data/state-scopes.ts";
 import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
-import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
 import { installManualValue } from "./helpers/promoted-fixtures.ts";
 import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
-import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 
 import type { CandidateCorpus } from "../lib/candidates/corpus.ts";
 import { readStateAuthorityProjection } from "../lib/civic-data/state-reader.ts";
@@ -64,37 +60,6 @@ function njMorrisFiling(races: readonly TestRace[], extra: {
     ...rawBallot("NJ", races), removals: [...(extra.removals ?? [])],
     contacts: extra.contacts ?? [],
   };
-}
-
-const TEST_BALLOT_PROVENANCE = { sourceUrl: "https://example.test/ballot", sourceOrg: "Synthetic test ballot", collectedAt: "2026-09-25", verifiedAt: null };
-
-function rawBallot(state: string, races: readonly TestRace[]): BallotSet {
-  const electionId = `${state.toLowerCase()}-2026-general-test`;
-  return {
-    election: { id: electionId, date: "2026-11-03", name: "2026 General Election (test)", state },
-    contests: races.map((race) => ({
-      id: race.id, electionId, ocdId: race.ocdId, divisionVintage: "2026", title: race.title, type: race.type ?? (race.measure ? "MEASURE" : "CANDIDACY"),
-      voteFor: 1, termYears: race.measure ? null : 4, scopeNote: null, provenance: TEST_BALLOT_PROVENANCE,
-    })),
-    candidacies: races.flatMap((race) => (race.candidacies ?? []).map((row) => ({
-      id: row.id, contestId: race.id, givenName: row.givenName, familyName: row.familyName, partyLabel: row.partyLabel ?? null,
-      slogan: null, incumbent: null, websiteUrl: null, provenance: TEST_BALLOT_PROVENANCE,
-    }))),
-    measures: races.flatMap((race) => race.measure ? [{
-      id: `${race.id}#measure`, contestId: race.id, ...(race.measure.officialNumber ? { officialNumber: race.measure.officialNumber } : {}),
-      questionText: race.measure.questionText, officialStatement: null, provenance: TEST_BALLOT_PROVENANCE,
-    }] : []),
-    absences: [],
-  };
-}
-
-interface TestRace {
-  readonly id: string;
-  readonly title: string;
-  readonly ocdId: string;
-  readonly type?: Contest["type"];
-  readonly candidacies?: readonly { readonly id: string; readonly givenName: string; readonly familyName: string; readonly partyLabel?: string | null }[];
-  readonly measure?: { readonly questionText: string; readonly officialNumber?: string };
 }
 
 function nhBallot(races: readonly TestRace[]): BallotSet {
@@ -125,46 +90,7 @@ function served<T>(read: CivicDataReadResult<T>, what: string): T {
 
 
 
-interface SyntheticLineupNominee {
-  readonly name: string;
-  readonly partyLabel: string;
-  readonly outcome: LineupOutcome;
-  readonly candidacyId?: string;
-  readonly filingParty?: string;
-}
-
-interface SyntheticContest {
-  readonly id: string;
-  readonly title: string;
-  readonly ocdId?: string;
-  readonly type?: Contest["type"];
-  readonly candidacies?: readonly { readonly id: string; readonly givenName: string; readonly familyName: string; readonly partyLabel?: string | null }[];
-  readonly lineup?: readonly SyntheticLineupNominee[];
-}
-
-function syntheticAzBallot(contests?: readonly SyntheticContest[]): BallotSet {
-  const fixtures = JSON.parse(readFileSync(new URL("./fixtures/synthetic-az-ballots.json", import.meta.url), "utf8")) as Record<string, BallotSet>;
-  const ballot = fixtures[JSON.stringify(contests ?? null)];
-  if (!ballot) throw new Error("The synthetic Arizona ballot input has no recorded fixture");
-  return ballot;
-}
-
-async function installBallots(...ballots: BallotSet[]): Promise<GenericBallotProjection> {
-  const installed: GenericBallotProjection = { kind: "ballot-contests", ballots: {} };
-  for (const ballot of ballots.length ? ballots : [syntheticAzBallot()]) {
-    const state = requireBallotState(ballot.election.state);
-    const previous = currentReaderAuthorityEdge()?.promoted?.get(`BALLOT_CANDIDACY:${stateBallotScope("ballot-contests", state)}`);
-    const current = previous?.kind === "PROMOTED" ? previous.projection.payload as GenericBallotProjection : null;
-    const value: GenericBallotProjection = { kind: "ballot-contests", ballots: {
-      ...(current?.ballots ?? {}), [ballotElectionKey(ballot)]: ballot,
-    } };
-    installManualValue(stateBallotContractId("ballot-contests", state), value, `test:ballot-contests:${state}`);
-    served(await readGenericBallotProjection(state), `${state} ballot`);
-    Object.assign(installed.ballots, value.ballots);
-  }
-  return installed;
-}
-
+import { installBallots, syntheticAzBallot } from "./helpers/synthetic-ballots.ts";
 
 const FINANCE = {
   AZ: { key: "ballot-az-pima:governor:hobbs-katie", receipts: 2_000_000, expenditures: 1_000_000 },

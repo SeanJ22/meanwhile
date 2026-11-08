@@ -588,24 +588,7 @@ function served<T>(read: CivicDataReadResult<T>, what: string): T {
   return read.value as T;
 }
 
-function registryFixtureForState(state: string, value: RegistryRuntimeReadModel = registryTransferImport().projection.payload): RegistryRuntimeReadModel {
-  const own = (id: string | null) => registryJurisdictions(id).includes(state.toUpperCase());
-  const bodies = value.registry.bodies.filter(row => own(row.id) || own(row.ocdId) || row.alsoServesOcdIds?.some(own));
-  const bodyIds = new Set(bodies.map(row => row.id));
-  const bodyRosters = value.bodyRosters.filter(row => bodyIds.has(row.bodyId));
-  const statewideExecutives = value.statewideExecutives.filter(row => own(row.stateOcdId));
-  const bridge = value.officialCandidacies.rows.filter(row => row.holder.divisions.some(own));
-  const holders = new Set([...bodyRosters.flatMap(row => row.members.map(member => member.id)),
-    ...statewideExecutives.map(row => row.holder.id), ...bridge.map(row => row.holder.id)]);
-  return { ...value, registry: { ...value.registry, bodies,
-    divisions: value.registry.divisions.filter(row => row.ocdId === "ocd-division/country:us" || own(row.ocdId)) },
-    bodyRosters, statewideExecutives, officialCandidacies: { ...value.officialCandidacies, rows: bridge },
-    officialPhotos: { photos: value.officialPhotos.photos.filter(row => holders.has(row.officeholderId)) },
-    rosterPhotos: Object.fromEntries(Object.entries(value.rosterPhotos).filter(([id]) => holders.has(id) || own(id))),
-    rosterReaderDispositions: value.rosterReaderDispositions.filter(row => own(row.sourceId) || holders.has(row.sourceId) || (row.canonicalId !== null && holders.has(row.canonicalId)) ||
-      [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
-}
-
+import { registryFixtureForState } from "./helpers/promoted-fixtures.ts";
 async function installRegistryRuntime(states?: readonly string[]): Promise<{ readonly value: RegistryRuntimeReadModel; readonly versionId: string }> {
   const { projection } = registryTransferImport();
   const selected = states ?? [...new Set(projection.payload.registry.divisions.flatMap(row => registryJurisdictions(row.ocdId)))];

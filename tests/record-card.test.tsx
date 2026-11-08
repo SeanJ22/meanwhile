@@ -3,12 +3,20 @@ import assert from "node:assert/strict";
 import { renderToStaticMarkup } from "react-dom/server";
 import { RecordCard } from "../components/ui/record-card.tsx";
 import { PublicRecords } from "../components/map/public-records.tsx";
+import { renderWithOpenSources } from "./helpers/render-card.ts";
 import type { PublicRecord } from "../lib/civic-data/types.ts";
 
 const division = "ocd-division/country:us/state:az/place:example";
 const record: PublicRecord = { id: "fixture:record", kind: "PUBLIC_RECORD", bodyId: null, ocdId: division, title: "Public notice", kindLabel: "Notice", sourceSentence: "The public may comment on this proposal.", sourceUrl: "https://records.example.gov/notice", capturedAt: "2026-10-05T01:00:00Z" };
-test("plain records use the shared Card; read dates and URLs only occur in Sources", () => {
-  const html = renderToStaticMarkup(<RecordCard record={record} />);
+test("plain records use the shared Card; read dates and URLs only occur in Sources", async () => {
+  const initial = renderToStaticMarkup(<RecordCard record={record} />);
+  assert.ok(!initial.includes(record.sourceUrl), "the closed Sources panel defers its citation");
+  assert.doesNotMatch(initial, /October 5, 2026|2026-10-05T/);
+  const [html] = await renderWithOpenSources(`
+    import React from "react"; import {createRoot} from "react-dom/client";
+    import {RecordCard} from "./components/ui/record-card.tsx";
+    createRoot(document.getElementById("root")).render(<RecordCard record={${JSON.stringify(record)}} />);
+  `, [record.sourceUrl]);
   const [face, sources] = html.split('data-card-sources=""');
   assert.match(face, /Public notice/);
   assert.match(face, /The public may comment/);
@@ -16,8 +24,8 @@ test("plain records use the shared Card; read dates and URLs only occur in Sourc
   assert.ok(!face.includes(record.sourceUrl));
   assert.ok(!face.includes("2026-10-05"));
   assert.ok(sources.includes(record.sourceUrl));
-  // Timed source dates render after the reader's time zone is known in the browser.
-  assert.doesNotMatch(sources, /October 5, 2026/);
+  // The browser now knows its clock; the opened Sources panel shows the read date.
+  assert.match(sources, /October 5, 2026/);
   assert.doesNotMatch(sources, /2026-10-05T/);
 });
 test("a place never shows another jurisdiction's record or claims another body's record", () => {

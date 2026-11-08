@@ -1,6 +1,5 @@
 import { storedKeyEnvironment, storedKeyValue } from "../lib/core/keys-values.ts";
 import { LEGISTAR_MEMBER_DATABASE_BYTES } from "../lib/sources/legistar/members-queue.ts";
-import { SLICE_JOB, slicesLane } from "../lib/reader/slice-lane.ts";
 import { keysRunnerPass, savedKeysLane } from "../lib/core/keys-runner.ts";
 import { readPlanningContinuation } from "../lib/control-plane/scheduler/state-planning.ts";
 import { CENSUS_LANE_BUDGET_MS, CENSUS_LANE_INTERVAL_MS } from "../lib/control-plane/discovery/census-lane.ts";
@@ -29,6 +28,7 @@ import {
 } from "../lib/control-plane/repository/types.ts";
 import { DIGEST_LOG_KEY, RUNNER_ID } from "../lib/control-plane/admin-data.ts";
 import { unacknowledgedResearchResume } from "../lib/control-plane/scheduler/launch-wake.ts";
+import { failedRuntimeReleases, recordRunnerBeat, takeRuntimeGuardNotes } from "../lib/ops/runtime-release-guard.ts";
 import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type OwnerDigestRecord, type RunnerHeartbeat, type RoutineSupervisorLane } from "../lib/control-plane/owner-surface.ts";
 import {
   parseIntakeRuntimeObservation,
@@ -104,6 +104,7 @@ import {
 import {
   applyRuntimeRelease,
   resumeRuntimeReleaseInstall,
+  fetchDeployedCommit,
   fetchGithubCheckRuns,
   fetchRuntimeProductionDeploys,
   inspectNewestDeployedRuntimeRelease,
@@ -113,9 +114,8 @@ import {
   writeRuntimeReleaseHold,
   type RuntimeReleaseInspection,
 } from "../lib/ops/runtime-release-handoff.ts";
-import { discardStagedReleases, defaultAsyncRunCommand, ReleaseStaging, stagedReleaseDirectory } from "../lib/ops/runtime-release-stage.ts";
+import { discardStagedReleases, defaultAsyncRunCommand, INSTALL_TIMEOUT_MS, readStagedRelease, stageRuntimeRelease, stagedReleaseDirectory, stagedReleaseIsReady } from "../lib/ops/runtime-release-stage.ts";
 import { parentCodeChanged } from "../lib/ops/runtime-release-switch.ts";
-import { fetchServedCommit, PRODUCTION_BASE_URL } from "./post-deploy-observer.mts";
 import {
   acquireProcessSingleton,
   PILOT_RUNNER_SINGLETON_PORT,
@@ -129,7 +129,7 @@ import { installConnectAttemptWindow } from "../lib/ops/connect-attempt-window.t
 import { releaseWindowLeaseOfExitedLocalHolder } from "../lib/control-plane/promotion/window.ts";
 import { ADMIN_COPY_POLL_MS, runAuthorizedAdminCopyTick } from "../lib/control-plane/evidence/admin-copy-runner.ts";
 import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
-import { fireDueOrders } from "../lib/control-plane/gateway/scheduled-fire.ts";
+import { fireDueOrders, scheduledWorkDue } from "../lib/control-plane/gateway/scheduled-fire.ts";
 import { runtimeContractRetry, runtimeContractContinues, RUNTIME_CONTRACT_ATTEMPT_MS } from "./apply-migrations.mts";
 import { wakeHintWriterFromEnv } from "../lib/control-plane/gateway/wake-hint.ts";
 import { JOB_BREAKER_INTERVAL_MS, JOB_BREAKER_JOB } from "../lib/control-plane/job-transfer-breaker.ts";
@@ -220,6 +220,7 @@ if (provider === "postgres" && !STAGING) storedKeyEnvironment()[JOB_BREAKER_PATH
 /** When each job this runner schedules last started, finished or failed; it rides on the heartbeat for the line keeper. */
 const jobRuns = new JobRunBook();
 const RESEARCH_JOB = "research-cycle";
+const RELEASE_GUARD_JOB = "runtime-release-guard";
 const BREAKER_SLOWED = `Slowed by the job transfer breaker: it ${JOB_SLOWED_WORDS}.`;
 let jobBreaker: JobTransferBreaker | null = null;
 let jobBreakerWork: Promise<void> | null = null;
@@ -268,6 +269,12 @@ const CYCLES = cyclesArg ? Number(cyclesArg.slice("--cycles=".length)) : Infinit
 const intervalArg = argv.find((a) => a.startsWith("--interval="));
 const INTERVAL_MIN = intervalArg ? Number(intervalArg.slice("--interval=".length)) : 60;
 jobRuns.register(RESEARCH_JOB, INTERVAL_MIN * 60_000);
+// What the launcher did before this runner started (removed git locks, a switch undone) rides on the job record.
+jobRuns.register(RELEASE_GUARD_JOB, 24 * 3_600_000);
+const guardNotes = takeRuntimeGuardNotes(ROOT).map(note => note.text);
+for (const text of guardNotes) console.log(`  runtime release guard: ${text}`);
+if (!guardNotes.length) console.log("  runtime release guard: nothing to clean");
+jobRuns.settled(RELEASE_GUARD_JOB, guardNotes);
 
 const maxArg = argv.find((a) => a.startsWith("--max="));
 const onlyArg = argv.find((a) => a.startsWith("--only="));
@@ -1040,19 +1047,32 @@ let currentCycleErrors = "";
 let currentCycleOutput = "";
 let researchCycleChild: ChildProcess | null = null;
 
-const RELEASE_QUICK_SWITCH = process.env.WTP_RELEASE_QUICK_SWITCH === "1";
-/** One bounded staging at a time, for the newest target only; its state rides on the standing heartbeat. */
-const releaseStaging = new ReleaseStaging({ root: ROOT, log: line => console.log(`  ${line}`), error: line => console.error(`  ${line}`) });
+/** The deployed target the minute check last saw ahead of the running code; the install job stages it. */
+let wantedRelease: string | null = null;
+const RELEASE_INSTALL_JOB = "release-install";
+/**
+ * Installing a release is a scheduled job: it stages the checkout and runs the frozen install off the main loop, under its
+ * own budget. A failed install is thrown, so the job run records it for Admin and the runner keeps serving the old code;
+ * the next scheduled pass tries again.
+ */
+async function runReleaseInstall(deadlineMs: number): Promise<void> {
+  const targetSha = wantedRelease;
+  if (!AUTO_RELEASE_HANDOFF || targetSha === null || stagedReleaseIsReady(ROOT, targetSha)) return;
+  const staged = await stageRuntimeRelease({ root: ROOT, targetSha, keep: CODE_ROOT === ROOT ? [] : [CODE_ROOT],
+    signal: AbortSignal.timeout(Math.max(1, deadlineMs - Date.now())) });
+  if (staged.state !== "READY") {
+    throw new Error(`release ${targetSha.slice(0, 8)} was not installed (${staged.code ?? "unknown"}: ${staged.detail}); the runner keeps serving ${RUNNING_CODE_SHA?.slice(0, 8) ?? "its current code"} and tries again`);
+  }
+  console.log(`  release ${targetSha.slice(0, 8)} is installed beside the running one; the switch follows on the next release check`);
+}
 
-type StagedReleaseStep = "STAGING" | "SWITCHED" | "DRAIN";
+type StagedReleaseStep = "SWITCHED" | "DRAIN";
 const parentChangeReported = new Set<string>();
+/** Called only once the release-install job has the target READY: switch children over, or ask for a drain when the runner's own code changed. */
 async function advanceStagedRelease(targetSha: string): Promise<StagedReleaseStep> {
-  const staged = releaseStaging.advance(targetSha, CODE_ROOT === ROOT ? [] : [CODE_ROOT]);
-  if (staged === "STAGING") return "STAGING";
-  if (staged === "FAILED" || !RELEASE_QUICK_SWITCH || PARENT_CODE_SHA === null) return "DRAIN";
-  const parent = await parentCodeChanged({ root: ROOT, parentSha: PARENT_CODE_SHA, targetSha, run: defaultAsyncRunCommand });
-  if (parent.changed) {
-    if (!parentChangeReported.has(targetSha)) {
+  const parent = PARENT_CODE_SHA === null ? null : await parentCodeChanged({ root: ROOT, parentSha: PARENT_CODE_SHA, targetSha, run: defaultAsyncRunCommand });
+  if (parent === null || parent.changed) {
+    if (parent !== null && !parentChangeReported.has(targetSha)) {
       parentChangeReported.add(targetSha);
       console.log(`  release ${targetSha.slice(0, 8)} changes the runner's own code (${parent.why.slice(0, 3).join(", ")}${parent.why.length > 3 ? ", …" : ""}); it loads by the drain-and-restart path`);
     }
@@ -1070,16 +1090,20 @@ async function advanceStagedRelease(targetSha: string): Promise<StagedReleaseSte
 
 const pendingRestart = new PendingRestart();
 let releaseCheck: Promise<void> | null = null;
-/** The standing clock looks for a new release every minute, whether or not a research cycle is running. */
+let releaseLookedAt = 0;
+/** The standing clock looks for a new release every five minutes, whether or not a research cycle is running. */
+const RELEASE_LOOK_MS = 300_000;
 function checkReleaseForRestart(): void {
-  if (!AUTO_RELEASE_HANDOFF || pendingRestart.target !== null || releaseCheck !== null) return;
+  if (!AUTO_RELEASE_HANDOFF || pendingRestart.target !== null || releaseCheck !== null || Date.now() - releaseLookedAt < RELEASE_LOOK_MS) return;
+  releaseLookedAt = Date.now();
   releaseCheck = (async () => {
     const release = await inspectRuntimeRelease();
-    if (release.state !== "UPDATE_REQUIRED" || release.targetSha === null) return;
-    if (await advanceStagedRelease(release.targetSha) !== "DRAIN") return;
-    holdForRestart(release.targetSha);
+    wantedRelease = release.state === "UPDATE_REQUIRED" ? release.targetSha : null;
+    if (wantedRelease === null || !stagedReleaseIsReady(ROOT, wantedRelease)) return;
+    if (await advanceStagedRelease(wantedRelease) !== "DRAIN") return;
+    holdForRestart(wantedRelease);
   })().catch(error => {
-    console.error(`  runtime release inspection failed (${error instanceof Error ? error.name : "error"}); standing work continues and the next minute looks again`);
+    console.error(`  runtime release inspection failed (${error instanceof Error ? error.name : "error"}); standing work continues and the next look is in five minutes`);
   }).finally(() => { releaseCheck = null; });
 }
 
@@ -1095,6 +1119,12 @@ function holdForRestart(targetSha: string): void {
   if (researchCycleActive && researchCycleChild?.connected) researchCycleChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => {
     if (error) console.error("  runtime release drain message could not be delivered; the research cycle ends on its own");
   });
+}
+
+/** The newest release staging as Admin's release gate reads it. */
+function stagingStatus(): RunnerHeartbeat["releaseStaging"] {
+  const record = readStagedRelease(ROOT);
+  return record === null ? null : { state: record.state, targetSha: record.targetSha, code: record.code, detail: record.detail, at: record.at };
 }
 
 function neonBytesReading(nowMs = Date.now()): NonNullable<RunnerHeartbeat["neonBytes"]> {
@@ -1179,7 +1209,7 @@ async function writeLiveCycleBeat(startedAt: string | null, exit?: { code: numbe
       if (!exit && startedAt !== null && Date.parse(current?.value.lastCycleFinishedAt ?? "") >= Date.parse(startedAt)) return;
       const next = { ...(startedAt === null
         ? standingHeartbeat(current?.value ?? null, { at, testedSha: RUNNING_CODE_SHA, host: hostname(), codeIdentity,
-          releaseStaging: releaseStaging.status(), memory, neonBytes })
+          releaseStaging: stagingStatus(), memory, neonBytes })
         : liveCycleHeartbeat(current?.value ?? null, { at, startedAt,
           testedSha: RUNNING_CODE_SHA, host: hostname(), lastError, memory, neonBytes,
           ...(exit ? { finishedAt: at, exitCode: exit.code, signal: exit.signal,
@@ -1201,6 +1231,7 @@ const lateBeat = () => console.error("  live cycle heartbeat did not answer in t
 const STANDING_BEAT_MS = 60_000;
 let standingBeatAt = 0;
 const standingBeat = boundedBeat(async () => {
+  try { recordRunnerBeat(ROOT, RUNNING_CODE_SHA); } catch { /* the launcher then sees no beat; that is the safe reading */ }
   if (Date.now() - standingBeatAt < STANDING_BEAT_MS) return;
   standingBeatAt = Date.now();
   await writeLiveCycleBeat(null);
@@ -1308,9 +1339,6 @@ function drainLaneChildren(): void {
 async function runMemberLane(deadlineMs: number): Promise<void> {
   await runLaneChild("legistar-members", LEGISTAR_MEMBER_DATABASE_BYTES, "scripts/legistar-members-worker.mts", deadlineMs, "Legistar members stopped; queued records remain due");
 }
-async function runSliceLane(deadlineMs: number): Promise<void> {
-  await runLaneChild(SLICE_JOB.id, SLICE_JOB.databaseBytesPerRun, "scripts/slice-lane.mts", deadlineMs, "Slices stopped; marked slices stay waiting");
-}
 /** Reads the links on the work list with the reader of each kind of website. */
 async function runParserLane(deadlineMs: number): Promise<void> {
   await runLaneChild("parser-lane", PARSER_LANE_DATABASE_BYTES, "scripts/parser-worker.mts", deadlineMs, "The page readers stopped; the links they had remain on the work list");
@@ -1392,11 +1420,11 @@ const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   { id: "hunter-lane", everyMs: 60_000, budgetMs: HUNTER_LANE_LIFE_MS + HUNTER_WORKER_WALL_MS, run: runHunterLane },
   { id: "parser-lane", everyMs: 60_000, budgetMs: 55 * 60_000, run: runParserLane },
   placePagesLane(runPlacePages),
-  slicesLane(runSliceLane),
   publishNowLane(runPublishNow),
   placeMapsLane(deadlineMs => runRoutineLane("place-maps", deadlineMs)),
   votingSitesLane(deadlineMs => runRoutineLane("voting-sites", deadlineMs)),
   doorProbesLane(runDoorProbes),
+  { id: RELEASE_INSTALL_JOB, everyMs: 60_000, budgetMs: INSTALL_TIMEOUT_MS + 5 * 60_000, cadenceIsLaunch: true, run: runReleaseInstall },
 ], (outcome) => {
   if (outcome.state === "FAILED") {
     jobRuns.failed(outcome.id, outcome.error);
@@ -1404,7 +1432,7 @@ const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   } else jobRuns.completed(outcome.id);
 }, id => jobRuns.started(id));
 // A lane whose run may outlast its launch interval finishes at most once per run budget.
-for (const lane of standingRuntimeScheduler.lanes) jobRuns.register(lane.id, Math.max(lane.everyMs, lane.budgetMs));
+for (const lane of standingRuntimeScheduler.lanes) jobRuns.registerLane(lane);
 
 async function ownerRepositories(): Promise<ControlPlaneRepositories | null> {
   if (provider !== "postgres") return null;
@@ -1460,17 +1488,22 @@ async function readRunnerControls(repos: ControlPlaneRepositories, force = false
 
 const SCHEDULED_ORDER_POLL_MS = 60_000;
 const SCHEDULED_ORDERS_JOB = "scheduled-orders";
+let scheduledControls: Awaited<ReturnType<typeof readRunnerControls>> | null = null;
 function runScheduledOrderTick(): void {
   if (runtimeAdmissionsHeld || scheduledOrderWork || provider !== "postgres" || canary) return;
   jobRuns.started(SCHEDULED_ORDERS_JOB);
   scheduledOrderWork = (async () => {
     const repos = await ownerRepositories();
     if (!repos) return;
+    const controls = await readRunnerControls(repos), at = new Date().toISOString();
+    if (controls.config === scheduledControls?.config && controls.research === scheduledControls?.research &&
+        !controls.fixesPending && !scheduledWorkDue(controls.config?.value ?? null, at)) { jobRuns.finished(SCHEDULED_ORDERS_JOB); return; }
     const fired = await fireDueOrders({ repos, now: () => new Date().toISOString(), currentStateVersion: null,
       codeSha: RUNNING_CODE_SHA, wake: wakeHintWriterFromEnv() }, new Date().toISOString());
     for (const order of fired) {
       console.log(`  scheduled order ${order.id} (${order.orderType}) due ${order.occurrence}: ${order.ok ? "sent" : "refused by the gateway"}`);
     }
+    scheduledControls = await readRunnerControls(repos, true);
     jobRuns.finished(SCHEDULED_ORDERS_JOB);
   })().catch(error => {
     jobRuns.failed(SCHEDULED_ORDERS_JOB, error instanceof Error ? error.message : String(error));
@@ -1561,21 +1594,24 @@ function releaseInspectionRefusal(code: string, detail: string, targetSha: strin
 }
 
 async function inspectRuntimeRelease(): Promise<RuntimeReleaseInspection> {
-  const served = await fetchServedCommit(process.env.WTP_RUNTIME_BASE_URL ?? PRODUCTION_BASE_URL, {
-    runId: `pilot-runtime-release:${process.pid}`, timeoutMs: 15_000,
-  });
-  const repository = runtimeGithubRepository(ROOT);
-  if (repository === null) return releaseInspectionRefusal("GITHUB_ORIGIN_UNRESOLVED", "runtime origin is not a GitHub repository", served.sha);
+  const repository = await runtimeGithubRepository(ROOT);
+  if (repository === null) return releaseInspectionRefusal("GITHUB_ORIGIN_UNRESOLVED", "runtime origin is not a GitHub repository");
+  const token = runtimeGithubCredential(storedKeyEnvironment());
+  const served = await fetchDeployedCommit({ repository, token });
   const checkRuns = typeof served.sha === "string" && /^[0-9a-f]{40}$/i.test(served.sha)
-    ? await fetchGithubCheckRuns({ repository, sha: served.sha, token: runtimeGithubCredential(storedKeyEnvironment()) })
+    ? await fetchGithubCheckRuns({ repository, sha: served.sha, token })
     : null;
-  return inspectNewestDeployedRuntimeRelease({ runningSha: RUNNING_CODE_SHA, served, checkRuns,
+  const found = await inspectNewestDeployedRuntimeRelease({ runningSha: RUNNING_CODE_SHA, served, checkRuns,
     readDeploys: () => fetchRuntimeProductionDeploys({
       siteId: process.env.NETLIFY_SITE_ID ?? process.env.WTP_BLOBS_SITE_ID,
       token: storedKeyValue("NETLIFY_AUTH_TOKEN") ?? storedKeyValue("NETLIFY_TOKEN") ?? storedKeyValue("WTP_BLOBS_TOKEN") ?? storedKeyValue("NETLIFY_BLOBS_TOKEN"),
     }),
-    readChecks: sha => fetchGithubCheckRuns({ repository, sha, token: runtimeGithubCredential(storedKeyEnvironment()) }),
+    readChecks: sha => fetchGithubCheckRuns({ repository, sha, token }),
   });
+  // A release this server switched to and had to leave stays unstaged until a newer one is deployed.
+  return found.targetSha !== null && failedRuntimeReleases(ROOT).includes(found.targetSha)
+    ? { ...found, state: "CURRENT", code: "RUNTIME_RELEASE_TARGET_FAILED", detail: `${found.targetSha} sent no heartbeat after a switch and was rolled back; not staged again` }
+    : found;
 }
 
 async function persistRuntimeBoundaryFailure(
@@ -1637,7 +1673,7 @@ async function persistRuntimeBoundaryFailure(
 async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
   if (!AUTO_RELEASE_HANDOFF) return null;
   const startedAt = new Date().toISOString();
-  const recovered = resumeRuntimeReleaseInstall({ root: ROOT });
+  const recovered = await resumeRuntimeReleaseInstall({ root: ROOT });
   if (recovered?.state === "REFUSED") {
     await persistRuntimeBoundaryFailure(recovered, startedAt);
     return 2;
@@ -1647,7 +1683,8 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
     return 0;
   }
   const first = await inspectRuntimeRelease();
-  if (first.state === "CURRENT") {
+  // A release whose install job has not finished is not applied here: the runner keeps serving and the job keeps trying.
+  if (first.state === "CURRENT" || (first.state === "UPDATE_REQUIRED" && first.targetSha !== null && !stagedReleaseIsReady(ROOT, first.targetSha))) {
     pendingRestart.clear();
     runtimeAdmissionsHeld = false;
     startStandingRuntimeClock();
@@ -1659,10 +1696,6 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
   const reopenStandingClock = standingRuntimeTimer !== null;
   const reopenAdminCopyClock = adminCopyTimer !== null;
 
-  if (RELEASE_QUICK_SWITCH && first.state === "UPDATE_REQUIRED" && first.targetSha !== null && reopenStandingClock && !runtimeAdmissionsHeld) {
-    const step = await advanceStagedRelease(first.targetSha);
-    if (step !== "DRAIN") return null;
-  }
   try { await holdStandingRuntimeAtQuiescence(); }
   catch (error) {
     await persistRuntimeBoundaryFailure(releaseInspectionRefusal("RUNTIME_DRAIN_NO_PROGRESS",
@@ -1696,7 +1729,7 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
     return 2;
   }
 
-  const applied = applyRuntimeRelease({ root: ROOT, targetSha: final.targetSha });
+  const applied = await applyRuntimeRelease({ root: ROOT, targetSha: final.targetSha });
   if (applied.state === "REFUSED") {
     await persistRuntimeBoundaryFailure(applied, startedAt);
     return 2;

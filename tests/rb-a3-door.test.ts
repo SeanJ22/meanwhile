@@ -34,7 +34,7 @@ async function seeded(withHourlyCounts = false) {
   return db;
 }
 
-test("a newer source for an unchanged value rebuilds its pages and an exact replay queues nothing", async () => {
+test("a newer source for an unchanged display advances its check without queuing pages", async () => {
   const db = await seeded();
   try {
     await door(db, input(), clocks, now, { purge });
@@ -44,15 +44,16 @@ test("a newer source for an unchanged value rebuilds its pages and an exact repl
       VALUES(3,'https://example.gov/council','https://example.gov/council',$1,$2,'confirmation')`, [next.toISOString(), "b".repeat(64)]);
     const claim = input({ copy: { ...input().copy, id: 3, fetchedAt: next } });
     assert.equal((await door(db, claim, clocks, next, { purge }) as { decision: string }).decision, "CONFIRM");
-    assert.deepEqual((await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL ORDER BY place_id")).map(row => row.place_id), [input().entity.id, "place-one", "place-two"]);
+    assert.deepEqual(await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL"), []);
     assert.equal(Number((await db.query("SELECT source_copy_id FROM checked_fact WHERE status='live'"))[0]!.source_copy_id), 3);
+    assert.equal((await readBodyFacts(db.query, [input().entity.id], true))[0]!.fields.fieldSources!.officePhone!.verifiedAt, next.toISOString());
     await db.query("UPDATE place_page SET stale_at=NULL");
     await door(db, claim, clocks, next, { purge });
     assert.deepEqual(await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL"), []);
   } finally { await db.pg.close(); }
 });
 
-test("scheduled source restamps queue the body and served places without queuing an unchanged repeat", async () => {
+test("scheduled source restamps advance reader dates without queuing the body or served places", async () => {
   const db = await seeded();
   try {
     const result = await door(db, input(), clocks, now, { purge });
@@ -62,7 +63,8 @@ test("scheduled source restamps queue the body and served places without queuing
     const facts = [{ id: result.factId, entityId: input().entity.id, field: "office_phone", quote: "520-555-0100" }];
     const copy = { id: 1, text: "Call 520-555-0100", fetchedAt: next };
     assert.equal(await restampFacts(db, facts, copy), 1);
-    assert.deepEqual((await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL ORDER BY place_id")).map(row => row.place_id), [input().entity.id, "place-one", "place-two"]);
+    assert.deepEqual(await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL"), []);
+    assert.equal((await readBodyFacts(db.query, [input().entity.id], true))[0]!.fields.fieldSources!.officePhone!.verifiedAt, next.toISOString());
     await db.query("UPDATE place_page SET stale_at=NULL");
     assert.equal(await restampFacts(db, facts, copy), 0);
     assert.deepEqual(await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL"), []);

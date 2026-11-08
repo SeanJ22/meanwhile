@@ -119,6 +119,27 @@ test("the measure number remains readable when No. has no following space", () =
   assert.equal(found.kind, "matched");
 });
 
+for (const number of [141, 320]) test(`Arizona Proposition ${number} matches its served contest before a Measure record exists`, () => {
+  const statewide = { ...contest("statewide", "AZ", `Proposition ${number}: Published question title`, ""), type: "MEASURE" as const };
+  const local = { ...contest("local", "AZ", `Proposition ${number}`, "county:maricopa"), type: "MEASURE" as const };
+  const other = { ...contest("other", "AZ", `Question ${number}`, ""), type: "MEASURE" as const };
+  const found = matchElectionResult(result("AZ", [], { office: "measure", officeName: "Measure",
+    measure: { name: "Published question title", number: `Proposition ${number}`, outcome: "counting" } }), ballot([statewide, local, other], []));
+  assert.equal(found.kind, "matched");
+  if (found.kind === "matched") { assert.equal(found.contest.id, statewide.id); assert.equal(found.measure, undefined); }
+});
+
+test("missing Measure rows do not permit a designation guess or resolve two matching contests", () => {
+  const one = { ...contest("one", "AZ", "Proposition 141", ""), type: "MEASURE" as const };
+  const other = { ...one, id: "other", title: "Proposition 142" };
+  const source = result("AZ", [], { office: "measure", officeName: "Measure",
+    measure: { name: "Published question title", number: "Proposition 141", outcome: "counting" } });
+  assert.equal(matchElectionResult(source, ballot([other], [])).kind, "unmatched");
+  const tied = matchElectionResult(source, ballot([one, { ...one, id: "duplicate" }], []));
+  assert.equal(tied.kind, "ambiguous");
+  if (tied.kind === "ambiguous") assert.deepEqual(tied.contestIds, ["one", "duplicate"]);
+});
+
 for (const [state, sourceOffice, title, district] of [
   ["AL", "Agriculture Commissioner", "Commissioner of Agriculture and Industries", ""],
   ["AL", "Public Service Commissioner Place 1", "Public Service Commission Place 1", ""],

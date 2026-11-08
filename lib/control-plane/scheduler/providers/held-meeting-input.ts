@@ -10,7 +10,7 @@ import { statesForRegistryDivisions } from "../../../civic-data/state-scopes.ts"
 const VENUE_CONTRACT = requiredManualProductionContract("venue-resolutions");
 
 /** The pointer selects materialized body rows; source payload arrays never cross this read. */
-export const HELD_MEETING_INPUT_SQL = `WITH registry_pointer AS MATERIALIZED (
+const heldMeetingInputSql = (previous: boolean) => `WITH registry_pointer AS MATERIALIZED (
   SELECT key,current_version_id,reader_payload_node(payload) AS root FROM civic_data_promotions
     WHERE key='REGISTRY_RUNTIME_BINDING:US-'||$1||':reader-registry-runtime'
       AND record_class='REGISTRY_RUNTIME_BINDING'
@@ -21,7 +21,7 @@ export const HELD_MEETING_INPUT_SQL = `WITH registry_pointer AS MATERIALIZED (
     WHERE b.collection='registry.bodies' AND b.row_id=$2
 ), previous_pointer AS MATERIALIZED (
   SELECT key,source_id,record_class,scope,current_version_id,reader_payload_node(payload) AS value
-    FROM civic_data_promotions WHERE key='MEETING:'||$3 AND record_class='MEETING'
+    FROM civic_data_promotions WHERE ${previous ? "" : "false AND "}key='MEETING:'||$3 AND record_class='MEETING'
 ), previous_meetings AS MATERIALIZED (
   SELECT m.ordinal AS ordinal_index,m.value AS item,m.row_id AS id,m.body_id
     FROM previous_pointer p JOIN civic_data_rows m ON m.promotion_key=p.key AND m.version_id=p.current_version_id WHERE m.collection='meetings'
@@ -43,6 +43,7 @@ SELECT (SELECT current_version_id FROM registry) AS registry_version_id,
   (SELECT count(*)::int FROM previous_meetings WHERE body_id IS DISTINCT FROM $2) AS foreign_meetings,
   (SELECT count(*)::int FROM previous_documents d WHERE NOT EXISTS
     (SELECT 1 FROM previous_meetings m WHERE m.body_id=$2 AND m.id=d.meeting_id)) AS foreign_documents`;
+export const HELD_MEETING_INPUT_SQL = heldMeetingInputSql(true);
 
 /** Optional placement is read separately: unreadable venues never suppress a verified calendar. */
 export const HELD_MEETING_VENUES_SQL = `WITH venue_pointer AS MATERIALIZED (
@@ -126,9 +127,9 @@ function savedVenues(value: unknown, partition: MeetingPartitionContract): Venue
 }
 
 /** The caller supplies one installed partition; a missing projection is never mistaken for a verified empty slice. */
-export async function readHeldMeetingInput(query: Query, partition: MeetingPartitionContract): Promise<HeldMeetingInput> {
+export async function readHeldMeetingInput(query: Query, partition: MeetingPartitionContract, includePrevious = true): Promise<HeldMeetingInput> {
   const state = scopeOf(partition), config = partition.wiring!.config;
-  const rows = await query(HELD_MEETING_INPUT_SQL, [state, partition.bodyId, partition.scope]);
+  const rows = await query(includePrevious ? HELD_MEETING_INPUT_SQL : heldMeetingInputSql(false), [state, partition.bodyId, partition.scope]);
   if (rows.length !== 1) throw new Error("HELD_MEETING_INPUT_READ_FAILED");
   const row = rows[0]!, bodies = row.bodies;
   if (typeof row.registry_version_id !== "string" || !instant(row.registry_generated_at) || !Array.isArray(bodies) || bodies.length > 1) {

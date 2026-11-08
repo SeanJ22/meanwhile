@@ -9,6 +9,7 @@ import {
   applyRuntimeRelease,
   resumeRuntimeReleaseInstall,
   writeRuntimeReleaseHold,
+  fetchDeployedCommit,
   fetchGithubCheckRuns,
   fetchRuntimeProductionDeploys,
   githubRepositoryFromOrigin,
@@ -17,11 +18,10 @@ import {
   requiredContextEvidence,
   runtimeGithubCredential,
   runtimeProductionReadEnvironment,
-  runtimePackageManagerCommand,
-  type CommandResult,
   type GithubCheckRun,
   type RuntimeProductionDeploy,
 } from "../lib/ops/runtime-release-handoff.ts";
+import { runtimePackageManagerCommand, type AsyncCommandResult } from "../lib/ops/runtime-release-stage.ts";
 import { REQUIRED_CONTEXTS } from "../lib/ops/required-contexts.ts";
 
 const RUNNING = "1".repeat(40);
@@ -61,7 +61,7 @@ test("standing runtime resolves saved GitHub credentials in order", () => {
 test("missing saved credentials preserve the release refusal", () => {
   assert.equal(runtimeGithubCredential({}), null);
   const runner = readFileSync("scripts/pilot-runner.mts", "utf8");
-  assert.match(runner, /token: runtimeGithubCredential\(storedKeyEnvironment\(\)\)/);
+  assert.match(runner, /const token = runtimeGithubCredential\(storedKeyEnvironment\(\)\)/);
   assert.equal(inspectRuntimeReleaseEvidence({ runningSha: TARGET, served: { sha: TARGET, how: "fixture", httpStatus: 200 }, checkRuns: null }).code, "SOFTWARE_CI_UNREADABLE");
 });
 
@@ -240,11 +240,11 @@ test("GitHub check reader refuses truncation and does not expose its token", asy
   assert.equal(truncated, null);
 });
 
-test("quiescent apply fetches only origin/main, detaches exact target, frozen-installs, and verifies clean readback", () => {
+test("quiescent apply fetches only origin/main, detaches exact target, links dependencies offline, and verifies clean readback", async () => {
   const root = mkdtempSync(join(tmpdir(), "wtp-runtime-release-success-"));
   const calls: string[] = [];
   let statusReads = 0;
-  const run = (executable: string, args: readonly string[], options: { readonly env?: NodeJS.ProcessEnv }): CommandResult => {
+  const run = async (executable: string, args: readonly string[], options: { readonly env?: NodeJS.ProcessEnv }): Promise<AsyncCommandResult> => {
     calls.push(`${executable} ${args.join(" ")}`);
     if (args.includes("install")) {
       assert.equal(options.env?.CI, "true");
@@ -260,23 +260,23 @@ test("quiescent apply fetches only origin/main, detaches exact target, frozen-in
     if (executable === "git" && args[0] === "rev-parse") return { status: 0, stdout: `${TARGET}\n`, stderr: "" };
     return { status: 0, stdout: "", stderr: "" };
   };
-  const result = applyRuntimeRelease({ root, targetSha: TARGET, runCommand: run });
+  const result = await applyRuntimeRelease({ root, targetSha: TARGET, runCommand: run });
   assert.equal(result.state, "UPDATED");
   assert.equal(statusReads, 2);
   assert.ok(calls.includes("git fetch --quiet --no-tags origin main"));
   assert.ok(calls.includes(`git merge-base --is-ancestor ${TARGET} origin/main`));
   assert.ok(calls.includes(`git switch --detach ${TARGET}`));
-  assert.ok(calls.some((line) => /pnpm install --frozen-lockfile$/.test(line)));
+  assert.ok(calls.some((line) => /pnpm install --frozen-lockfile --offline$/.test(line)));
   assert.equal(calls.some((line) => /^git (?:commit|push|merge)(?: |$)/.test(line)), false);
 });
 
-test("a dirty runtime refuses before fetch/switch and leaves ignored host evidence", () => {
+test("a dirty runtime refuses before fetch/switch and leaves ignored host evidence", async () => {
   const root = mkdtempSync(join(tmpdir(), "wtp-runtime-release-held-"));
   const calls: string[] = [];
-  const result = applyRuntimeRelease({
+  const result = await applyRuntimeRelease({
     root,
     targetSha: TARGET,
-    runCommand: (executable, args) => {
+    runCommand: async (executable, args) => {
       calls.push(`${executable} ${args.join(" ")}`);
       return args[0] === "status"
         ? { status: 0, stdout: " M tracked.ts\n", stderr: "" }
@@ -291,10 +291,10 @@ test("a dirty runtime refuses before fetch/switch and leaves ignored host eviden
   assert.equal(hold.targetSha, TARGET);
 });
 
-test("failed or interrupted frozen installs resume on the switched checkout before admitting work", () => {
+test("failed or interrupted frozen installs resume on the switched checkout before admitting work", async () => {
   for (const interrupted of [false, true]) {
     const root = mkdtempSync(join(tmpdir(), "wtp-runtime-install-recovery-"));
-    const run = (_executable: string, args: readonly string[]): CommandResult => {
+    const run = async (_executable: string, args: readonly string[]): Promise<AsyncCommandResult> => {
       if (args.includes("install")) {
         const hold = JSON.parse(readFileSync(join(root, RUNTIME_RELEASE_HOLD_RELATIVE_PATH), "utf8"));
         assert.equal(hold.switched, true, "recovery marker must exist before a watchdog kill");
@@ -304,41 +304,57 @@ test("failed or interrupted frozen installs resume on the switched checkout befo
       return { status: args[0] === "symbolic-ref" ? 1 : 0,
         stdout: args[0] === "rev-parse" ? TARGET : "", stderr: "" };
     };
-    if (interrupted) assert.throws(() => applyRuntimeRelease({ root, targetSha: TARGET, runCommand: run }), /fixture watchdog/);
-    else assert.equal(applyRuntimeRelease({ root, targetSha: TARGET, runCommand: run }).code, "FROZEN_INSTALL_FAILED");
+    if (interrupted) await assert.rejects(() => applyRuntimeRelease({ root, targetSha: TARGET, runCommand: run }), /fixture watchdog/);
+    else assert.equal((await applyRuntimeRelease({ root, targetSha: TARGET, runCommand: run })).code, "FROZEN_INSTALL_FAILED");
     writeRuntimeReleaseHold(root, { state: "HELD", code: "ADMIN_REPORT", targetSha: null });
     const calls: string[] = [];
-    const recovered = resumeRuntimeReleaseInstall({ root, runCommand: (executable, args, options) => {
+    const recovered = await resumeRuntimeReleaseInstall({ root, runCommand: async (executable, args, options) => {
       calls.push(`${executable} ${args.join(" ")}`);
       if (args.includes("install")) assert.equal(options.env?.CI, "true");
       return { status: 0, stdout: args[0] === "rev-parse" ? TARGET : "", stderr: "" };
     } });
     assert.equal(recovered?.state, "UPDATED");
-    assert.equal(calls.filter(line => line.includes("install --frozen-lockfile")).length, 1);
+    assert.equal(calls.filter(line => line.includes("install --frozen-lockfile --offline")).length, 1);
     assert.equal(calls.some(line => /git (fetch|switch)/.test(line)), false);
     assert.equal(existsSync(join(root, RUNTIME_RELEASE_HOLD_RELATIVE_PATH)), false);
-    assert.equal(resumeRuntimeReleaseInstall({ root, runCommand: () => { throw new Error("must not reinstall twice"); } }), null);
+    assert.equal(await resumeRuntimeReleaseInstall({ root, runCommand: async () => { throw new Error("must not reinstall twice"); } }), null);
   }
 });
 
-test("install recovery retains its marker on another failure and never installs a different checkout", () => {
+test("install recovery retains its marker on another failure and never installs a different checkout", async () => {
   const root = mkdtempSync(join(tmpdir(), "wtp-runtime-install-held-"));
   writeRuntimeReleaseHold(root, { switched: true, targetSha: TARGET });
   let installs = 0;
-  const run = (_exe: string, args: readonly string[]): CommandResult => {
+  const run = async (_exe: string, args: readonly string[]): Promise<AsyncCommandResult> => {
     if (args.includes("install")) installs++;
     return { status: 1, stdout: "", stderr: "fixture" };
   };
-  assert.equal(resumeRuntimeReleaseInstall({ root, runCommand: run })?.code, "RUNTIME_CHECKOUT_EXACT_HEAD_FAILED");
+  assert.equal((await resumeRuntimeReleaseInstall({ root, runCommand: run }))?.code, "RUNTIME_CHECKOUT_EXACT_HEAD_FAILED");
   assert.equal(installs, 0);
   assert.equal(JSON.parse(readFileSync(join(root, RUNTIME_RELEASE_HOLD_RELATIVE_PATH), "utf8")).switched, true);
 });
 
 test("the server launcher recovers installation before importing runner dependencies", () => {
   const launch = readFileSync(new URL("../scripts/pilot-runtime-launch.mjs", import.meta.url), "utf8");
-  const recover = launch.indexOf("const recoveredInstall = resumeRuntimeReleaseInstall({ root });");
+  const recover = launch.indexOf("const recoveredInstall = await resumeRuntimeReleaseInstall({ root });");
   const refuse = launch.indexOf('process.exit(2);', recover);
   const spawn = launch.indexOf("const child = spawn(");
   assert.ok(recover >= 0 && recover < refuse && refuse < spawn);
   assert.equal(launch.slice(0, recover).includes("pilot-runner.mts"), false);
+});
+
+test("the live commit is the newest GitHub production deployment marked successful, and the site is never asked", async () => {
+  const asked: string[] = [];
+  const answer = (statuses: Record<string, string>) => (async (url: string) => {
+    asked.push(url);
+    const body = url.includes("/statuses") ? [{ state: statuses[/deployments\/(\d+)\//.exec(url)![1]] }] : [{ id: 9, sha: RUNNING }, { id: 8, sha: TARGET }];
+    return new Response(JSON.stringify(body), { status: 200 });
+  }) as unknown as typeof fetch;
+  assert.equal((await fetchDeployedCommit({ repository: "o/r", fetchImpl: answer({ 9: "success" }) })).sha, RUNNING);
+  assert.equal((await fetchDeployedCommit({ repository: "o/r", fetchImpl: answer({ 9: "failure", 8: "success" }) })).sha, TARGET, "a deployment that never succeeded is skipped");
+  assert.equal((await fetchDeployedCommit({ repository: "o/r", fetchImpl: answer({}) })).sha, null);
+  assert.ok(asked.every(url => url.startsWith("https://api.github.com/repos/o/r/deployments")));
+  assert.equal((await fetchDeployedCommit({ repository: "o/r", fetchImpl: (async () => new Response("", { status: 403 })) as unknown as typeof fetch })).sha, null);
+  const runner = readFileSync(join(import.meta.dirname, "..", "scripts", "pilot-runner.mts"), "utf8");
+  assert.doesNotMatch(runner.slice(runner.indexOf("async function inspectRuntimeRelease")).split("\nasync function ")[0]!, /fetchServedCommit|PRODUCTION_BASE_URL/);
 });

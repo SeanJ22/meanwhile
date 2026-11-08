@@ -224,6 +224,21 @@ jobs:
           # Same heap as the deploy build in netlify.toml.
           NODE_OPTIONS: --max-old-space-size=4096
         run: corepack pnpm run build
+      - name: Pack the standalone site for the runner's own copy
+        if: matrix.mode == 'standalone' && needs.admission.outputs.tier == 'main' && needs.admission.outputs.deploy_build != 'no'
+        run: |
+          cp -r .next/static .next/standalone/.next/static
+          cp -r public .next/standalone/public
+          tar -C .next/standalone -czf local-site.tgz .
+      - name: Keep the standalone site for the runner (scripts/site.mts fetches it by commit)
+        if: matrix.mode == 'standalone' && needs.admission.outputs.tier == 'main' && needs.admission.outputs.deploy_build != 'no'
+        uses: actions/upload-artifact@v5
+        with:
+          name: local-site-${{ github.sha }}
+          path: local-site.tgz
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 0
       - name: Bundle-scanning checks (need the build above)
         if: matrix.mode == 'standalone' && needs.admission.outputs.tier == 'yes' && needs.admission.outputs.deploy_build != 'no'
         timeout-minutes: 10

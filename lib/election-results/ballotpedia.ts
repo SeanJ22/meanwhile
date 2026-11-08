@@ -7,6 +7,20 @@ const text = (html: string) => decodeHTML(html.replace(/<script\b[^>]*>[\s\S]*?<
 const number = (value: string): number | undefined => /^\d[\d,]*(?:\.\d+)?%?$/.test(value.trim()) ? Number(value.replace(/[,%]/g, "")) : undefined;
 const attr = (html: string, key: string) => decodeHTML(new RegExp(`\\b${key}\\s*=\\s*(?:"([^"]*)"|'([^']*)')`, "i").exec(html)?.slice(1).find(value => value !== undefined) ?? "");
 
+function countWords(value: string): number | undefined {
+  if (/^\d+$/.test(value)) return Number(value);
+  const words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve",
+    "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
+  const tens: Record<string, number> = { twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90 };
+  const parts = value.toLowerCase().split("-"), first = words.indexOf(parts[0]);
+  if (parts.length === 1 && first >= 0) return first;
+  if (tens[parts[0]] !== undefined && parts.length <= 2) {
+    const ones = parts.length === 1 ? 0 : words.indexOf(parts[1]);
+    if (ones >= 0 && ones < 10) return tens[parts[0]] + ones;
+  }
+  return undefined;
+}
+
 export interface BallotpediaRace {
   state: string;
   office: "us_house" | "us_senate";
@@ -73,7 +87,7 @@ export function parseBallotpediaResults(html: string, race: BallotpediaRace, che
   const table = /<table\b[^>]*class=["'][^"']*\bresults_table\b[^"']*["'][^>]*>[\s\S]*?<\/table>/i.exec(section)?.[0];
   if (!table) throw new Error(`Ballotpedia results table is missing: ${race.url}`);
   const candidates: ResultCandidate[] = [];
-  let incumbentLost = false;
+  let incumbentsLost = 0;
   for (const row of table.matchAll(/<tr\b[^>]*class=["'][^"']*\bresults_row\b[^"']*["'][^>]*>([\s\S]*?)<\/tr>/gi)) {
     const cellMatches = [...row[1].matchAll(/<td\b([^>]*)>([\s\S]*?)<\/td>/gi)];
     const cells = cellMatches.map(cell => cell[2]);
@@ -89,14 +103,15 @@ export function parseBallotpediaResults(html: string, race: BallotpediaRace, che
     const party = /\(([^)]+)\)/.exec(text(nameCell.slice((nameLink?.index ?? 0) + (nameLink?.[0].length ?? 0))))?.[1];
     const selected = /[✔✓]/.test(text(cells[0]));
     const won = selected && (!primary || /won election outright|\bdefeated\b/i.test(text(narrative)));
-    if (/<(?:strong|b)\b[^>]*>[\s\S]*?<u\b/i.test(nameCell) && !selected) incumbentLost = true;
+    const incumbent = /<(?:strong|b)\b[^>]*>[\s\S]*?<u\b/i.test(nameCell);
+    if (incumbent && !selected) incumbentsLost++;
     candidates.push({ name, ...(party ? { party } : {}), ...(votes === undefined ? {} : { votes }),
-      ...(percent === undefined ? {} : { percent }), won, runoff: primary && selected && !won, quote: row[0] });
+      ...(percent === undefined ? {} : { percent }), won, runoff: primary && selected && !won, incumbent, quote: row[0] });
   }
   if (!candidates.length) throw new Error(`Ballotpedia general-election candidates are missing: ${race.url}`);
   const creditedSources: ResultSource[] = [];
   for (const link of section.matchAll(/<a\b[^>]*>[\s\S]*?<\/a>/gi)) {
-    if (text(link[0]).toLowerCase() !== "source") continue;
+    if (!/^source(?:\s*\d+)?$/i.test(text(link[0]))) continue;
     const url = attr(link[0], "href");
     if (!/^https?:\/\//.test(url)) continue;
     if (!creditedSources.some(source => source.url === url)) creditedSources.push({ name: sourceName(url), url });
@@ -107,12 +122,18 @@ export function parseBallotpediaResults(html: string, race: BallotpediaRace, che
     && winnerNames.some(name => statement.toLocaleLowerCase().includes(name.toLocaleLowerCase())));
   const certified = /results have been certified/i.test(text(section));
   const percentCounted = /(\d+(?:\.\d+)?)%\s+(?:of\s+)?(?:the\s+)?(?:votes|precincts)\s+(?:counted|reporting)/i.exec(text(section));
+  const incumbentParties = [...new Set(candidates.filter(candidate => candidate.incumbent).flatMap(candidate => candidate.party ?? []))];
+  const winningParties = [...new Set(candidates.filter(candidate => candidate.won).flatMap(candidate => candidate.party ?? []))];
+  const seatsFlipped = (called || certified) && incumbentParties.length === 1 && winningParties.length === 1
+    ? Number(incumbentParties[0] !== winningParties[0]) : undefined;
   const result: ElectionResult = { sourceId: "ballotpedia", sourceName: source.name, sourceUrl: race.url,
     creditedSources, sourceRaceId: ballotpediaRaceId(race.url), state: race.state.toUpperCase(),
     office: race.office, officeName: label, ...(race.districtHint === undefined ? {} : { districtHint: race.districtHint }),
     electionDate, status: certified ? "certified" : called ? "called" : candidates.some(candidate => candidate.votes !== undefined) ? "counting" : "pending",
     ...(percentCounted ? { percentCounted: Number(percentCounted[1]) } : {}), seatsToFill: 1,
-    ...(called || certified ? { incumbentLost } : {}), candidates, checkedAt, quote: section };
+    ...(called || certified ? { incumbentLost: incumbentsLost > 0, incumbentsLost } : {}),
+    ...(seatsFlipped === undefined ? {} : { seatsFlipped, flipped: seatsFlipped > 0,
+      ...(seatsFlipped ? { gainedByParty: winningParties[0] } : {}) }), candidates, checkedAt, quote: section };
   return { source, races: [result], summaries: [], evidence: { text: html, contentType: "text/html", contentHash: createHash("sha256").update(html).digest("hex") } };
 }
 
@@ -208,9 +229,18 @@ export function parseBallotpediaCongressSummary(html: string, office: "us_house"
   }
   const quoteStart = Math.min(start, tableMatch.index!), quoteEnd = Math.max(sectionEnd, tableMatch.index! + tableMatch[0].length);
   const catalog = racePages(html, office);
+  const flipText = /\b(\d+|[a-z]+(?:-[a-z]+)?)\s+(?:seats\s+)?changed party control\b/i.exec(content)?.[1];
+  const seatsFlipped = flipText ? countWords(flipText) : undefined;
+  const incumbentParagraph = [...html.matchAll(/<p\b[^>]*>[\s\S]*?<\/p>/gi)].find(paragraph =>
+    /\b(\d+|[a-z]+(?:-[a-z]+)?)\s+(?:U\.S\.\s+(?:House|Senate)\s+)?incumbents\b.*\blost re-election in the general elections?\b/i.test(text(paragraph[0])));
+  const incumbentText = incumbentParagraph && /\b(\d+|[a-z]+(?:-[a-z]+)?)\s+(?:U\.S\.\s+(?:House|Senate)\s+)?incumbents\b/i.exec(text(incumbentParagraph[0]))?.[1];
+  const incumbentsLost = incumbentText ? countWords(incumbentText) : undefined;
+  const quote = html.slice(quoteStart, quoteEnd);
   return { source, races: [], summaries: [{ state: "US", chambers: [{ name: office, seatsBefore, seatsNow, stillCounting, controlBefore,
-    controlNow: projected ? projected[1].toLowerCase() === "democrats" ? "D" : "R" : null }], governor: { before: null, now: null },
-    statewideOfficesFlipped: [], source, creditedSources, checkedAt, quote: html.slice(quoteStart, quoteEnd) }],
+    controlNow: projected ? projected[1].toLowerCase() === "democrats" ? "D" : "R" : null,
+    ...(seatsFlipped === undefined ? {} : { seatsFlipped }) }], governor: { before: null, now: null },
+    ...(incumbentsLost === undefined ? {} : { incumbentsLost }), statewideOfficesFlipped: [], source, creditedSources, checkedAt, quote,
+    ...(incumbentParagraph && incumbentsLost !== undefined && !quote.includes(incumbentParagraph[0]) ? { quotes: [quote, incumbentParagraph[0]] } : {}) }],
     ...(catalog.length ? { racePages: catalog } : {}),
     evidence: { text: html, contentType: "text/html", contentHash: createHash("sha256").update(html).digest("hex") } };
 }

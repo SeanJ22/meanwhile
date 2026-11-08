@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { renderWithOpenSources } from "./helpers/render-card.ts";
 import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { MeetingCard } from "../components/ui/meeting-card.tsx";
@@ -34,8 +35,12 @@ test("only a fresh first-party empty-slot observation contributes a not-posted a
 });
 
 
-test("a second-hand meeting retains its source link and publisher", () => {
-  const html = renderToStaticMarkup(<MeetingCard meeting={{ ...base, provenance: { ...base.provenance, secondHand: true } }} />);
+test("a second-hand meeting retains its source link and publisher", async () => {
+  const [html] = await renderWithOpenSources(`
+    import React from "react"; import {createRoot} from "react-dom/client";
+    import {MeetingCard} from "./components/ui/meeting-card.tsx";
+    createRoot(document.getElementById("root")).render(<MeetingCard meeting={${JSON.stringify({ ...base, provenance: { ...base.provenance, secondHand: true } })}} />);
+  `, [base.provenance.sourceUrl!]);
   const sourcesAt = html.indexOf('data-card-sources');
   assert.ok(sourcesAt > 0);
   assert.doesNotMatch(html.slice(0, sourcesAt), /Second-hand listing/);

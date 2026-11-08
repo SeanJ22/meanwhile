@@ -10,7 +10,6 @@ import { readerDatabaseQuery } from "../reader/database.ts";
 import { currentRegistrationsEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
 import type { Division } from "../registry/types.ts";
 import { withPeopleSourceChecks } from "../civic-data/people-source-checks.ts";
-import { federalGovernmentNameSql } from "../federal-money/recipient.ts";
 
 export type DivisionMetadata = Pick<Division, "ocdId" | "label" | "divisionType" | "tier">;
 
@@ -54,33 +53,3 @@ export async function readRegistrationProjection(
   return read.kind==="PROMOTED"&&options.edge===undefined?
     {...read,value:await withPeopleSourceChecks(read.value,REGISTRATION_RECORD_CLASS,target.scope,options.store)}:read;
 }
-
-/** A government's name as one form, so "City of X", "X, City of" and "X city" are one. */
-const normalizedGovernment = (value: string) => {
-  const flat = `btrim(regexp_replace(regexp_replace(replace(upper(${value}),'&',' AND '),'[^A-Z0-9, ]',' ','g'),'\\s+',' ','g'))`;
-  return `btrim(regexp_replace(replace(regexp_replace(${flat},'^(.+?),\\s*(CITY|TOWN|TOWNSHIP|VILLAGE|BOROUGH|COUNTY)\\s+OF$','\\2 OF \\1'),',',''),'\\s+',' ','g'))`;
-};
-
-/** The state's registered governments that name any of these divisions, each with its .gov domains and whether its name is its own alone, and those divisions' registration rows. */
-export const PLACE_REGISTRATION_SQL = `WITH registration AS MATERIALIZED (
-  SELECT reader_payload_node(payload) AS payload FROM civic_data_promotions WHERE key='REGISTRATION:US-'||$1||':registration:v1' AND record_class='REGISTRATION'
-), identities AS MATERIALIZED (
-  SELECT g,identity,count(*) OVER (PARTITION BY upper(g->>'state'),identity) AS identities,
-    count(*) OVER (PARTITION BY upper(g->>'state'),recipient_identity) AS recipient_names
-  FROM (SELECT named.g,${normalizedGovernment("named.g->>'name'")} AS identity,${federalGovernmentNameSql("named.g->>'name'")} AS recipient_identity
-    FROM registration,LATERAL reader_payload_members(payload->'governments') member,
-      LATERAL (SELECT reader_payload_node(member.item) AS original) header,
-      LATERAL (SELECT original || jsonb_build_object('name',reader_payload_value(original->'name')) AS g) named) inventory
-), domains AS MATERIALIZED (
-  SELECT d,${normalizedGovernment("d->>'organization'")} AS identity,dotgov.source FROM (
-    SELECT payload->'domains' AS domains,payload->'source' AS source FROM civic_data_promotions WHERE key='DOTGOV_REFERENCE:US:current-full:domains' AND record_class='DOTGOV_REFERENCE') dotgov,
-    LATERAL jsonb_array_elements(coalesce(domains,'[]'::jsonb)) d WHERE upper(d->>'state')=$1
-)
-SELECT 'government' AS kind,reader_payload_value(g.g) || jsonb_build_object('recipientNameUnique',g.recipient_names=1,'govDomains',coalesce((SELECT jsonb_agg(jsonb_build_object(
-    'domain',d.d->>'domain','website','https://'||(d.d->>'domain'),'sourceUrl',d.source->>'url','checkedAt',d.source->>'readAt'))
-    FROM domains d WHERE d.identity=g.identity AND g.identities=1 AND g.identity<>''),'[]'::jsonb)) AS value
-  FROM identities g WHERE EXISTS (SELECT 1 FROM reader_payload_members(g.g->'associations') member,LATERAL (SELECT reader_payload_node(member.item) AS a) association
-    WHERE a->>'divisionId'=ANY($2::text[]))
-UNION ALL
-SELECT 'division',reader_payload_value(member.item) FROM registration,LATERAL reader_payload_members(payload->'divisions') member,
-  LATERAL (SELECT reader_payload_node(member.item) AS d) division WHERE d->>'ocdId'=ANY($2::text[])`;

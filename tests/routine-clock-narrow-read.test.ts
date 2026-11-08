@@ -42,12 +42,13 @@ import {
   promotedPayloadSha256,
 } from "../lib/civic-data/attested-promotion.ts";
 import {
-  VALIDATION_CHECKS,
   sourceProjectionEvidence,
   type CandidateVersionRecord,
   type RoutineCandidate,
   type ValidationReceipt,
 } from "../lib/civic-data/types.ts";
+
+import { routineCandidateFixture, routineReceiptFixture, routineRecordFixture } from "./helpers/routine-candidate-fixture.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const HASH = "a".repeat(64);
@@ -59,86 +60,11 @@ function selectList(query: { toSQL(): { sql: string } }): string {
   return text.slice(0, text.indexOf(" from "));
 }
 
-function candidate(id: string, overrides: Partial<RoutineCandidate> = {}): RoutineCandidate {
-  const normalizedPayload = { rows: Array.from({ length: 50 }, (_, index) => ({ id: `${id}-${index}` })) };
-  const readModel = { candidates: normalizedPayload.rows.map((row) => ({ ...row, amount: 1 })) };
-  return {
-    id,
-    sourceId: "fec-open-api",
-    recordClass: "FEC_FUNDING",
-    scope: "federal-supported",
-    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
-    retrieval: {
-      succeeded: true,
-      requestedUrl: "https://api.open.fec.gov/v1/",
-      finalUrl: "https://api.open.fec.gov/v1/",
-      httpStatus: 200,
-      retrievedAt: "2026-09-08T12:00:00.000Z",
-      rawHash: HASH,
-    },
-    normalization: {
-      succeeded: true,
-      parserVersion: "fec-funding/4",
-      schemaVersion: "2",
-      normalizedHash: normalizedHash(readModel),
-      normalizedPayloadHash: normalizedHash(normalizedPayload),
-      inputRecords: 50,
-      outputRecords: 50,
-      droppedRecords: 0,
-      missingRequiredFields: [],
-    },
-    identities: [{
-      subjectId: "H6AZ01001",
-      jurisdiction: "US",
-      identifiers: { candidate_id: "H6AZ01001" },
-      matchBasis: "OFFICIAL_ID",
-      ambiguous: false,
-    }],
-    temporal: { version: "2026", expectedVersion: "2026", sourceThrough: "2026-09-08T12:00:00.000Z", staleAtRetrieval: false },
-    semantics: { factKind: "filed total", violations: [] },
-    horizon: {
-      kind: "OPEN_FACT_SET",
-      query: "supported candidates",
-      returnedRecords: 50,
-      declaredTotal: null,
-      paginationComplete: true,
-      claimsComplete: false,
-    },
-    absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
-    dependentChecks: [{ consumer: "funding reader", passed: true, detail: "accepted" }],
-    normalizedPayload,
-    readModel,
-    ...overrides,
-  };
-}
-
-function receiptFor(value: RoutineCandidate, decision: ValidationReceipt["decision"] = "GOOD"): ValidationReceipt {
-  return {
-    contractVersion: 2,
-    decision,
-    candidateId: value.id,
-    sourceId: value.sourceId,
-    recordClass: value.recordClass,
-    scope: value.scope,
-    validatedAt: value.retrieval.retrievedAt,
-    checks: VALIDATION_CHECKS.map((check) => ({ check, verdict: "PASS", code: `${check}_PASS`, detail: "persisted proof" })),
-    excludedFacts: [],
-  };
-}
-
-function promoted(value: RoutineCandidate, overrides: Partial<CandidateVersionRecord> = {}): CandidateVersionRecord {
-  return {
-    candidate: value,
-    state: "PROMOTED",
-    acquisitionSucceeded: true,
-    receipt: receiptFor(value),
-    promotedVersion: value.id,
-    lastKnownGoodVersion: value.id,
-    failureCode: null,
-    failureDetail: null,
-    ...overrides,
-  };
-}
+const candidate = (id: string, overrides: Partial<RoutineCandidate> = {}) =>
+  routineCandidateFixture({ id, records: 50 }, overrides);
+const receiptFor = (value: RoutineCandidate, decision: ValidationReceipt["decision"] = "GOOD") =>
+  routineReceiptFixture(value, { decision });
+const promoted = routineRecordFixture;
 
 function pointerFor(value: RoutineCandidate, overrides: Record<string, unknown> = {}) {
   return {

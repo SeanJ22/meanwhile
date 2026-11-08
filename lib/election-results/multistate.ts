@@ -122,6 +122,8 @@ export function parseMultiStateResults(sourceText: string, checkedAt: string, el
   const summaryQuotes = sourceObjects(state ? scoreText ?? "{}" : sourceText);
   const source = { name: "MultiState", url: MULTISTATE_RESULTS_URL };
   const races: ElectionResult[] = [], summaries: ElectionSummary[] = [];
+  const incumbentLosses = new Map<string, Map<string, string>>();
+  const unknownIncumbentCounts = new Set<string>();
   const scoreStates = [...list(object(document.scorecard).states), ...list(object(document.scorecard).special_only)];
   for (const [eventIndex, event] of list(document.general_events).entries()) {
     const state = text(event.state).toUpperCase();
@@ -139,6 +141,14 @@ export function parseMultiStateResults(sourceText: string, checkedAt: string, el
       if (!quote) throw new Error(`MultiState source evidence missing: ${sourceRaceId}`);
       const raceQuotes = sourceObjects(quote);
       const candidateQuotes = sourceObjects(raceQuotes.get(`contest:${result.election_id}`) ?? quote);
+      const incumbentCandidatesKnown = candidates.every(candidate => typeof candidate.is_incumbent === "boolean");
+      const defeated = race.incumbent_defeated === false ? [] : candidates.filter(candidate => candidate.is_incumbent && candidate.result === "Lost");
+      const defeatId = (candidate: ObjectValue) => candidate.candidate_id != null ? String(candidate.candidate_id) : `${sourceRaceId}:${text(candidate.name)}`;
+      const incumbentsLost = race.incumbent_defeated === false ? 0 : incumbentCandidatesKnown ? new Set(defeated.map(defeatId)).size : undefined;
+      if (incumbentsLost === undefined) unknownIncumbentCounts.add(state);
+      const stateLosses = incumbentLosses.get(state) ?? new Map<string, string>();
+      for (const candidate of defeated) stateLosses.set(defeatId(candidate), candidateQuotes.get(`candidate:${candidate.candidate_id}`) ?? quote);
+      incumbentLosses.set(state, stateLosses);
       races.push({ sourceId: "multistate", sourceName: source.name, sourceUrl: source.url, creditedSources: credits(result.vote_source ?? race.vote_source),
         sourceRaceId, state, office: office(text(race.office)), officeName: text(race.office),
         ...(race.district !== undefined ? { districtHint: String(race.district) } : {}), electionDate,
@@ -148,9 +158,11 @@ export function parseMultiStateResults(sourceText: string, checkedAt: string, el
         ...optionalNumber("seatsToFill", race.num_seats ?? race.seats_up),
         ...(race.flipped_seat === undefined ? {} : { flipped: Boolean(race.flipped_seat) }), ...(text(flipped.to) ? { gainedByParty: text(flipped.to) } : {}),
         ...(typeof race.incumbent_defeated === "boolean" ? { incumbentLost: race.incumbent_defeated } : {}),
+        ...(incumbentsLost === undefined ? {} : { incumbentsLost }),
         candidates: candidates.map(candidate => ({ name: text(candidate.name), ...(text(candidate.party) ? { party: text(candidate.party) } : {}),
           ...optionalNumber("votes", candidate.votes), ...optionalNumber("percent", candidate.pct),
           won: candidate.result === "Won", runoff: candidate.result === "Runoff",
+          ...(typeof candidate.is_incumbent === "boolean" ? { incumbent: candidate.is_incumbent } : {}),
           ...(candidateQuotes.has(`candidate:${candidate.candidate_id}`) ? { quote: candidateQuotes.get(`candidate:${candidate.candidate_id}`) } : {}) })), checkedAt, quote });
     }
     for (const measure of list(event.ballot_measures)) {
@@ -175,7 +187,10 @@ export function parseMultiStateResults(sourceText: string, checkedAt: string, el
       const chambers = list(score.chambers).map(chamber => ({ name: text(chamber.name),
         seatsBefore: seats(object(chamber.before).composition), seatsNow: seats(object(chamber.after).composition),
         stillCounting: number(chamber.counting) ?? 0, controlBefore: text(object(chamber.before).control) || null,
-        controlNow: text(object(chamber.after).control) || null }));
+        controlNow: text(object(chamber.after).control) || null,
+        ...(Object.keys(object(chamber.flips_from)).length ? {
+          seatsFlipped: Object.values(seats(chamber.flips_from)).reduce((sum, count) => sum + count, 0),
+        } : {}) }));
       for (const [name, value] of Object.entries(object(event.legislature))) {
         const held = object(value);
         if (!chambers.some(chamber => chamber.name === name) && held.seats_up_2026 === 0) chambers.push({ name,
@@ -184,13 +199,22 @@ export function parseMultiStateResults(sourceText: string, checkedAt: string, el
       }
       summaries.push({ state, chambers,
         governor: { before: text(governor?.prev) || heldGovernorParty || null,
-          now: governorElection ? text(governor?.win) || null : heldGovernorParty || null },
+          now: governorElection ? text(governor?.win) || null : heldGovernorParty || null,
+          ...(text(governor?.wN) ? { name: text(governor?.wN) } : {}) },
         statewideOfficesFlipped: statewide.filter(row => row.cls === "flip").map(row => ({ office: text(row.office), from: text(row.prev), to: text(row.win) })),
         source, creditedSources: [], checkedAt, quote: summaryQuotes.get(`summary:${state}`) ?? "",
         ...(governorQuote && (!governor || !text(governor.prev)) ? { quotes: [summaryQuotes.get(`summary:${state}`) ?? "", governorQuote] } : {}) });
     }
   }
-  return { source, races, summaries, evidence: { text: sourceText, contentType: "application/json", contentHash: createHash("sha256").update(sourceText).digest("hex") } };
+  const completeSummaries = [...new Map(summaries.map(summary => [summary.state, summary])).values()].map(summary => {
+    const stateRaces = races.filter(race => race.state === summary.state && !race.measure);
+    if (!stateRaces.length || unknownIncumbentCounts.has(summary.state)) return summary;
+    const losses = incumbentLosses.get(summary.state)!;
+    const quotes = [...new Set([...(summary.quotes ?? [summary.quote]), ...losses.values()])];
+    return { ...summary, incumbentsLost: losses.size,
+      ...(quotes.length > 1 ? { quotes } : {}) };
+  });
+  return { source, races, summaries: completeSummaries, evidence: { text: sourceText, contentType: "application/json", contentHash: createHash("sha256").update(sourceText).digest("hex") } };
 }
 
 export async function readMultiStateResults(checkedAt: string, fetcher: typeof fetch = fetch, state?: string): Promise<ElectionResultBatch> {

@@ -67,7 +67,7 @@ test("committed runner acknowledgments are visible during unchanged hint polls",
       positions = params[3] as string;
       const research = rows.filter(row => !contains(row.position));
       if (finishQuery !== null) await new Promise<void>(resolve => { finishQuery = resolve; });
-      return [{ research, windows: [], config: "same", state: "same" }];
+      return [{ research, windows: [], config: "same", state: "same", fixes_pending:true }];
     },
   });
   for (const [i, action] of (["PAUSE_RUNNER", "RESUME_RUNNER"] as const).entries()) {
@@ -87,6 +87,7 @@ test("committed runner acknowledgments are visible during unchanged hint polls",
     for (let poll = 0; poll < 100; poll++) {
       now += 1_000;
       const controls = await reader.read();
+      assert.equal(controls.fixesPending,true,"pending fix acknowledgments keep their bounded rotation running");
       assert.ok(controls.research.some(row => row.kind === "HONORED" && row.honors === intent.intentId));
       const pause = readIntents(controls.research).runnerPause;
       assert.equal(pause.paused, action === "PAUSE_RUNNER");

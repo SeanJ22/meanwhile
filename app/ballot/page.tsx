@@ -1500,12 +1500,11 @@ export default readerRoute("/ballot", async function BallotPage({
 
       <div className="ballot-top-pills items-start">
         <WhereToVote />
-        <Suspense fallback={null}>{pills}</Suspense>
+        <Suspense fallback={<p role="status" className="my-6 w-full text-paper-dim">Loading your ballot…</p>}>
+          {pills}
+          <div data-ballot-contents className="flow-root w-full basis-full -mt-2.5">{contents}</div>
+        </Suspense>
       </div>
-
-      <Suspense fallback={<p role="status" className="my-6 text-paper-dim">Loading your ballot…</p>}>
-        {contents}
-      </Suspense>
     </main>
   );
 });

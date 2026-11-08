@@ -52,6 +52,7 @@ import { readAskGapObservations } from "../lib/control-plane/ask-gap-observation
 import { OWNER_SNAPSHOT_TOTALS_ID, OwnerSnapshotFold, OwnerSnapshotFoldPending, readingWindows, type OwnerSnapshotTotals } from "../lib/control-plane/owner-snapshot-totals.ts";
 import { RESEARCH_STATE_ID, type ResearchState } from "../lib/control-plane/scheduler/research-policy.ts";
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
+import { liveVisitsPerDay, openSite } from "./site.mts";
 
 const NOW = new Date();
 const HEAD = headSha();
@@ -372,13 +373,15 @@ async function main(): Promise<void> {
   const billingAttribution = reads && providerBilling ? billingAttributionOf({ now: NOW_ISO, scopes: reads.billingScopes, holds: reads.billingHolds,
     readings: providerBilling.readings, hunts: reads.fold.costs.hunts, windowOf: readingWindows(reads.fold.costs, providerBilling.readings, NOW_ISO) }) : null;
   let servedReader = existing?.value.servedReaderReadback ?? null;
+  // Readback visits go to the runner's copy of this release; the live site only within the day's allowance.
+  const site = openSite({ label: "publication-readback", now: NOW_ISO, perDay: await liveVisitsPerDay(repos) });
   if (!DRY_RUN) {
     const combined = { checkedAt: NOW_ISO, witnesses: [] as NonNullable<typeof servedReader>["witnesses"][number][], errors: [] as string[] };
     const campaignPlan = await planCampaignReadbacks(REGISTRY_STATES,NOW_ISO,existing?.value.servedReaderReadback ?? null).catch(()=>null);
     if (campaignPlan === null) combined.errors.push("Campaign source fingerprints could not be read; prior public observations retain their original time and expiry.");
     for (const state of campaignPlan ? REGISTRY_STATES : []) {
       try {
-        const read = campaignPlan!.carried(state) ?? await collectPublishedCampaignReadback(state, NOW_ISO);
+        const read = campaignPlan!.carried(state) ?? await collectPublishedCampaignReadback(state, NOW_ISO, site);
         campaignPlan!.record(state,read);
         combined.witnesses.push(...read.witnesses);
         combined.errors.push(...read.errors);
@@ -396,9 +399,9 @@ async function main(): Promise<void> {
   if (!DRY_RUN && fold) {
     const publications = await repos!.ownerAssignmentRows.publications();
     const [workerReadback, manualReadback] = await Promise.all([
-      collectPublishedWorkerReadback(publications, NOW_ISO, existing?.value.servedReaderReadback ?? null)
+      collectPublishedWorkerReadback(publications, NOW_ISO, existing?.value.servedReaderReadback ?? null, site)
         .catch(() => ({ checkedAt: NOW_ISO, witnesses: [], errors: ["Worker public readback collection failed; prior observations retain their original time and expiry."] })),
-      collectPublishedManualReaderReadback(publications, NOW_ISO, existing?.value.servedReaderReadback ?? null)
+      collectPublishedManualReaderReadback(publications, NOW_ISO, existing?.value.servedReaderReadback ?? null, site)
         .catch(() => ({ checkedAt: NOW_ISO, witnesses: [], errors: ["Public help readback collection failed; prior observations retain their original time and expiry."] })),
     ]);
     const joined = new Map([...(existing?.value.servedReaderReadback?.witnesses ?? []), ...(servedReader?.witnesses ?? []), ...workerReadback.witnesses, ...manualReadback.witnesses]
@@ -406,6 +409,7 @@ async function main(): Promise<void> {
     servedReader = { checkedAt: NOW_ISO, witnesses: [...joined.values()], errors: [...(servedReader?.errors ?? []), ...workerReadback.errors, ...manualReadback.errors] };
     stepDone("worker and help page readbacks collected");
   }
+  await site.stop();
   const placeHistory = DRY_RUN ? existing?.value.placeHistory
     : await collectPlaceHistory({ scopes: reads?.billingScopes ?? null, previous: existing?.value.placeHistory, now: NOW_ISO, read: key => readPlaceOwed(key).finally(() => stepDone(`place history read for ${key}`)) })
       .catch(() => existing?.value.placeHistory);

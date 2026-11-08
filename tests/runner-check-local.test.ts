@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import http from "node:http";
 import type net from "node:net";
-import { mkdtempSync } from "node:fs";
+import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
@@ -9,7 +9,7 @@ import { describe, it } from "node:test";
 import { readSetting, settingDefinition } from "../lib/control-plane/settings.ts";
 import { LIVE_VISITS_DEFAULT, LIVE_VISITS_SETTING, takeLiveVisit, type LiveVisitLedger } from "../lib/ops/live-visits.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
-import { guardProxy, openSite, type LocalSite } from "../scripts/site.mts";
+import { guardProxy, liveVisitsPerDay, openSite, type LocalSite } from "../scripts/site.mts";
 
 const MORNING = "2026-11-07T09:00:00.000Z";
 const NEXT_MORNING = "2026-11-08T09:00:00.000Z";
@@ -30,6 +30,11 @@ describe("the daily live-site allowance", () => {
 
   it("keeps every visit on the runner's copy when the allowance is zero", () => {
     assert.equal(takeLiveVisit(null, "resident-tasks", MORNING, 0).live, false);
+  });
+
+  it("gives no live visits to a machine with no control plane, so only the runner touches the live site", async () => {
+    assert.equal(await liveVisitsPerDay(null), 0);
+    assert.equal(await liveVisitsPerDay({ adminConfig: { read: async () => null } } as never), LIVE_VISITS_DEFAULT);
   });
 
   it("is an Admin setting that reads its default and refuses nonsense", () => {
@@ -134,5 +139,16 @@ describe("the guard in front of the runner's copy", () => {
       await assert.rejects(fetch(`${f.base}/api/maptiler/tiles/v3/1/1/1.pbf`));
       assert.equal(f.seen.length, 1);
     } finally { f.close(); }
+  });
+});
+
+describe("publication readbacks", () => {
+  it("open their pages on the origin the site gives them, never straight on the live site", () => {
+    const readback = readFileSync("lib/control-plane/worker-reader-readback.ts", "utf8");
+    const production = readFileSync("lib/control-plane/served-reader-production.ts", "utf8");
+    assert.doesNotMatch(readback, /page\.goto\(`?\$?\{?PUBLIC_SITE_ORIGIN/);
+    assert.equal(readback.match(/page\.goto\(`?\$?\{?origin/g)?.length, 4);
+    assert.match(production, /site\.next\(/);
+    assert.match(production, /url\.replace\(PUBLIC_SITE_ORIGIN, await visitOrigin\(site/);
   });
 });

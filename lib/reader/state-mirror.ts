@@ -5,10 +5,10 @@ import { memberOfficeStateScope } from "../officials/member-office-scope.ts";
 import { zipStateSources } from "./state.ts";
 import type { StateSeam } from "./state-seam.ts";
 
-/** What a state's ZIP answers read, as the published entries are named by the same function the reader uses. */
+/** What a state's answers read, whole or for a ZIP, as the published entries are named by the same function the reader uses. */
 export function mirrorScopes(state: string) {
-  const { keys, translations } = zipStateSources(state);
-  return { keys, translations, memberOffices: [memberOfficeStateScope(state), MEMBER_OFFICE_NATIONAL_SCOPE] };
+  const { keys, candidates, translations } = zipStateSources(state);
+  return { keys: [...keys, ...candidates].sort(), translations, memberOffices: [memberOfficeStateScope(state), MEMBER_OFFICE_NATIONAL_SCOPE] };
 }
 
 /** The published entries one state's statements read (and the member offices and owner choices beside them), as the rows and columns those statements use. */

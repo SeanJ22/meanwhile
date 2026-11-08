@@ -41,7 +41,11 @@ const BALLOT_LISTS = ["contests", "absences", "candidateTickets", ...BALLOT_BY_C
  * Cuts a state's whole package, with the divisions of its registration, into the statewide part and a share for each division. `probe` is the state read
  * for one ZIP: the entries read for a ZIP carry their own dates and versions, which are not those of the whole state's read.
  */
-export function cutState(pkg: ReaderStatePackage, registration: readonly Row[], probe: ReaderStatePackage): { readonly wide: StateWide; readonly shares: ReadonlyMap<string, StateShare> } {
+export function cutState(pkg: ReaderStatePackage, registration: readonly Row[], probe: ReaderStatePackage): {
+  readonly wide: StateWide; readonly shares: ReadonlyMap<string, StateShare>;
+  /** The Census districts that reach into each ZIP: its answer is made from them beside the places of its map. */
+  readonly zipDistricts: ReadonlyMap<string, readonly string[]>;
+} {
   const own = stateDivisionId(pkg.state), parts = new Map<string, Map<string, Map<number, unknown>>>();
   const give = (division: string | null | undefined, part: string, at: number, item: unknown) => {
     const shares = parts.get(division || own) ?? new Map<string, Map<number, unknown>>();
@@ -61,42 +65,60 @@ export function cutState(pkg: ReaderStatePackage, registration: readonly Row[], 
       for (const id of served) if (position.has(id)) give(place, "divisions", position.get(id)!, byId.get(id));
     }
   }
-  // Who sits in which division, under every name they are held by.
+  // Who sits in which division: the people linked to it and, with them, every record held for the same person under another id or spelling of the name.
   const people = new Map<string, Set<string>>();
   const keys = (holder: Row) => [...personIdentityKeys(holder as never)];
   const sets: [string, Row | null][] = [...ROSTERS.map(([name, field]): [string, Row | null] => [name, pkg[field] as unknown as Row | null]), ["federal", (pkg.federal as unknown as Row | null)?.roster ?? null]];
-  for (const [, set] of sets) {
-    const holders = new Map(rows(set?.officeholders).map(holder => [holder.id as string, holder]));
-    for (const link of rows(set?.divisions)) for (const id of keys(holders.get(link.officeholderId) ?? { id: link.officeholderId })) people.set(id, (people.get(id) ?? new Set()).add(link.ocdId));
+  const nodes = sets.flatMap(([, set], s) => rows(set?.officeholders).map((holder, at) => ({ s, at, holder })));
+  const root = nodes.map((_, n) => n), find = (n: number): number => (root[n] === n ? n : (root[n] = find(root[n]!)));
+  const labelled = new Map<string, number>(), nodeAt = new Map(nodes.map((node, n) => [`${node.s}:${node.at}`, n]));
+  for (const [n, { holder }] of nodes.entries()) for (const label of [...keys(holder).map(key => `i:${key}`), `n:${String(holder.name ?? "").normalize("NFKD").toLowerCase().replace(/[^a-z0-9]/g, "")}`]) {
+    if (label === "n:") continue;
+    const first = labelled.get(label);
+    if (first === undefined) labelled.set(label, n); else root[find(n)] = find(first);
+  }
+  const members = new Map<number, number[]>();
+  for (const n of nodes.keys()) members.set(find(n), [...members.get(find(n)) ?? [], n]);
+  const reach = new Map<string, Set<number>>(), linksOf = sets.map(([, set]) => new Map<string, number[]>());
+  for (const [s, [, set]] of sets.entries()) {
+    const index = new Map(rows(set?.officeholders).map((holder, at) => [holder.id as string, at]));
+    for (const [n, link] of rows(set?.divisions).entries()) {
+      const at = index.get(link.officeholderId);
+      linksOf[s]!.set(link.officeholderId, [...linksOf[s]!.get(link.officeholderId) ?? [], n]);
+      if (at !== undefined) reach.set(link.ocdId, (reach.get(link.ocdId) ?? new Set()).add(find(nodeAt.get(`${s}:${at}`)!)));
+    }
+  }
+  for (const [division, roots] of reach) for (const r of roots) for (const n of members.get(r)!) {
+    const { s, at, holder } = nodes[n]!, name = sets[s]![0], set = sets[s]![1]!;
+    give(division, `${name}.holders`, at, holder);
+    for (const link of linksOf[s]!.get(holder.id) ?? []) give(division, `${name}.links`, link, rows(set.divisions)[link]);
+    for (const id of keys(holder)) people.set(id, (people.get(id) ?? new Set()).add(division));
   }
   for (const executive of rows(registry.statewideExecutives)) for (const id of keys(executive.holder)) people.set(id, (people.get(id) ?? new Set()).add(own));
   const where = (id: string | undefined | null) => (id ? [...people.get(id) ?? []] : []);
   for (const [name, set] of sets) {
     if (!set) continue;
-    const holders = rows(set.officeholders), index = new Map(holders.map((holder, n) => [holder.id as string, n]));
-    for (const [n, link] of rows(set.divisions).entries()) {
-      give(link.ocdId, `${name}.links`, n, link);
-      const at = index.get(link.officeholderId);
-      if (at !== undefined) give(link.ocdId, `${name}.holders`, at, holders[at]);
-    }
     for (const [n, row] of rows(set.vacancies).entries()) give(row.ocdId, `${name}.vacancies`, n, row);
     for (const [n, row] of rows(set.endedMemberships).entries()) giveAll([...(row.divisionId ? [row.divisionId] : []), ...where(row.personId)], `${name}.ended`, n, row);
     for (const [n, row] of rows(set.disagreements).entries()) for (const place of where(row.personId)) give(place, `${name}.disagreements`, n, row);
     for (const [n, row] of rows(set.unmatched).entries()) for (const place of where(row.officeholderId)) give(place, `${name}.unmatched`, n, row);
   }
   const federal = pkg.federal as unknown as Row | null, byMember = Object.entries((federal?.directory?.byMember ?? {}) as Row);
-  for (const link of rows(federal?.roster.divisions)) {
-    const entry = byMember.findIndex(([id]) => `congress:${id}` === link.officeholderId);
-    if (entry >= 0) give(link.ocdId, "federal.members", entry, byMember[entry]);
+  for (const [division, roots] of reach) for (const r of roots) for (const n of members.get(r)!) {
+    const { s, holder } = nodes[n]!, entry = s === 2 ? byMember.findIndex(([id]) => `congress:${id}` === holder.id) : -1;
+    if (entry >= 0) give(division, "federal.members", entry, byMember[entry]);
   }
   for (const [n, vacancy] of rows(federal?.vacancies).entries()) give(vacancy.ocdId, "federal.vacancies", n, vacancy);
   for (const [n, row] of rows(registry.officialCandidacies.rows).entries()) giveAll([...rows(row.holder.divisions) as unknown as string[], ...where(row.holder.id)], "candidacies", n, row);
   for (const [n, photo] of rows(registry.officialPhotos.photos).entries()) giveAll(where(photo.officeholderId), "photos", n, photo);
   for (const [n, record] of (pkg.memberOffices as unknown as Row[]).entries()) giveAll(where(record.officeholderId), "offices", n, record);
   const held = pkg.districts.kind === "HELD" ? pkg.districts : null;
+  const zipDistricts = new Map<string, string[]>();
   for (const [n, container] of (held?.value.containers ?? []).entries()) {
     const id = censusWorkDivision(container.ref);
-    if (id) give(id, "containers", n, { ref: container.ref });
+    if (!id) continue;
+    give(id, "containers", n, { ref: container.ref });
+    for (const overlap of container.overlaps ?? []) zipDistricts.set(overlap.zcta5, [...zipDistricts.get(overlap.zcta5) ?? [], id]);
   }
   for (const [n, row] of registration.entries()) give(row.ocdId, "local", n, row);
   // A ballot goes by contest to the division of the contest.
@@ -129,7 +151,7 @@ export function cutState(pkg: ReaderStatePackage, registration: readonly Row[], 
   };
   const shares = new Map([...parts].map(([division, byPart]) => [division,
     Object.fromEntries([...byPart].map(([part, items]) => [part, [...items].sort(([a], [b]) => a - b)])) as StateShare]));
-  return { wide, shares };
+  return { wide, shares, zipDistricts };
 }
 
 /** The package a ZIP's answer is made from: the statewide part and the shares of the ZIP's divisions. */

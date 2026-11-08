@@ -28,5 +28,5 @@ export async function buildPlaceFile(query: Query, page: Record<string, unknown>
     const found = checks && (checks.facts || checks.calendars) ? { facts: checks.facts ?? undefined, calendars: checks.calendars ?? undefined } as PlaceChecks : undefined;
     variants[name] = { row: brief, ...(agenda ? { agenda } : {}), ...(found ? { checks: found } : {}) };
   }
-  return { v: 1, id, kind: page.kind as "place" | "body", state: (page.state as string | null)?.trim() || null, version: Number(page.version), builtAt: Number(page.built) * 1000, variants };
+  return { v: 1, id, kind: page.kind as "place" | "body", state: (page.state as string | null)?.trim() || null, version: Number(page.version), builtAt: Number(page.built) * 1000, readAt: Date.now(), variants };
 }

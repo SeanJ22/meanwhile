@@ -290,8 +290,8 @@ export function statePackageStatement(state: string, divisions: readonly string[
       (SELECT to_jsonb(b) FROM zip_ballot b) AS zip_ballot FROM state_geography g`,params};
 }
 
-/** Every published entry a state's ZIP answers read, and the pattern of the plain-English translations kept for its districts. */
-export function zipStateSources(state: string): { readonly keys: readonly string[]; readonly translations: string } {
+/** Every published entry a state's ZIP answers read, the candidate entries the whole state reads beside them, and the pattern of the plain-English translations kept for its districts. */
+export function zipStateSources(state: string): { readonly keys: readonly string[]; readonly translations: string; readonly candidates: readonly string[] } {
   const jurisdiction = `US-${state}`, geography = stateContainersStatement(state);
   const place = Object.values(FIPS_TO_STATE).find(row => row.postal === state)!;
   const sources = [EVERYDAY_ROUTING_POINTER, ...zipSourcePointers(state), ...memberContextPointers, ...stateAuthorityPointers("ballot-contests", state),
@@ -301,6 +301,7 @@ export function zipStateSources(state: string): { readonly keys: readonly string
     { recordClass: geography.params[0], scope: geography.params[1] },
     { recordClass: "REGISTRATION", scope: `${jurisdiction}:registration:v1` }];
   return { keys: [...new Set(sources.map(row => `${row.recordClass}:${row.scope}`))].sort(),
+    candidates: [...stateAuthorityPointers("candidate-profiles", state), ...stateAuthorityPointers("candidate-campaign-sites-derived", state)].map(row => `${row.recordClass}:${row.scope}`),
     translations: `US:plain-english-translations:ocd-division/country:us/${place.prefix}:${state.toLowerCase()}%` };
 }
 

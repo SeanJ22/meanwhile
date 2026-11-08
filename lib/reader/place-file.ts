@@ -26,9 +26,13 @@ export interface PlaceFile {
   readonly version: number;
   /** When the page was built, in milliseconds. */
   readonly builtAt: number;
+  /** When the dates its facts were checked were read, in milliseconds. */
+  readonly readAt: number;
   readonly variants: Readonly<Partial<Record<PlaceFileVariant, { readonly row: Row; readonly agenda?: PlaceAgenda; readonly checks?: PlaceChecks }>>>;
-  /** The place's share of the state's answer, or the statewide part on the state's own file; see state-share.ts. */
+  /** The place's share of its state's answer. */
   readonly share?: unknown;
+  /** The statewide part of the state's answer, on the state's own file. */
+  readonly wide?: unknown;
 }
 
 const records = (value: unknown): Row[] => Array.isArray(value) ? value as Row[] : [];
@@ -37,8 +41,8 @@ const records = (value: unknown): Row[] => Array.isArray(value) ? value as Row[]
 export function splitAgenda(full: Row): { readonly brief: Row; readonly agenda?: PlaceAgenda } {
   const brief = briefPlaceRow(full);
   const meetingAgenda = records(full.meeting_rows).map(part => [(part.payload as Row).agendaDocuments ?? null, (part.payload as Row).agendaDocumentLinks ?? null] as const);
-  const bare = !records(full.agenda_texts).length && !(full.agenda_texts as unknown[] | undefined)?.length && !records(full.archived_documents).length && !records(full.archived_document_links).length
-    && meetingAgenda.every(([docs, links]) => !(docs as unknown[] | null)?.length && !(links as unknown[] | null)?.length);
+  const none = (value: unknown) => !(value as unknown[] | null | undefined)?.length;
+  const bare = none(full.agenda_texts) && none(full.archived_documents) && none(full.archived_document_links) && meetingAgenda.every(([docs, links]) => none(docs) && none(links));
   return bare ? { brief } : { brief, agenda: { agenda_texts: full.agenda_texts, archived_documents: full.archived_documents, archived_document_links: full.archived_document_links, meetingAgenda } };
 }
 
@@ -104,6 +108,6 @@ const digest = (text: string): string => createHash("sha256").update(text).diges
 /** The file's version stamp, which is its name: the hash of everything it says. */
 export const fileHash = (value: unknown): string => digest(JSON.stringify(value));
 /** What the file says apart from the dates its facts were checked, so a check alone is not a change. */
-export const contentHash = (file: PlaceFile): string => fileHash({ ...file, variants: Object.fromEntries(Object.entries(file.variants).map(([name, held]) => [name, { ...held, checks: undefined }])) });
+export const contentHash = (file: PlaceFile): string => fileHash({ ...file, readAt: 0, variants: Object.fromEntries(Object.entries(file.variants).map(([name, held]) => [name, { ...held, checks: undefined }])) });
 export const FILE_PREFIX = "reader/files/";
 export const fileKey = (hash: string): string => `${FILE_PREFIX}${hash}.json`;

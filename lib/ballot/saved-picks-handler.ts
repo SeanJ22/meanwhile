@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../core/keys-entry.ts";
 import { MAX_PICKS_BYTES, PRIVATE_PICK_SECRET, parsePicksFile } from "./picks-file.ts";
 import { privatePicksDigest, savedPicksStore } from "../db/saved-picks.ts";
 import { isSameOriginSubmission } from "../signal/intake-limits.ts";
@@ -10,6 +11,7 @@ const json = (body: unknown, status = 200) => Response.json(body, { status, head
 
 /** The capability is only accepted in a header, never a logged query or pathname. */
 export async function handleSavedPicks(request: Request, store = savedPicksStore()) {
+  await loadWebsiteSavedKeys();
   const secret = request.headers.get("authorization")?.replace(/^Bearer /, "") ?? "";
   if (!PRIVATE_PICK_SECRET.test(secret)) return json({ error: "A private picks code is required." }, 401);
   if (!limiter.allow(privatePicksDigest(secret)) || (request.method === "PUT" && !createLimiter.allow(request.headers.get("x-forwarded-for")?.split(",")[0] ?? "unknown"))) return json({ error: "Try again shortly." }, 429);

@@ -70,9 +70,6 @@ function notFound(): NextResponse {
 }
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
-  // A published place file is served from the store alone: it reads no saved key, so it never waits on the control-plane database.
-  if (/^\/api\/reader\/(?:files|index)\//.test(request.nextUrl.pathname) && !isAdminHostRequest(request.headers, ADMIN_ORIGIN)) return NextResponse.next();
-  await loadWebsiteSavedKeys();
   // One implementation of "is this the admin host", shared with both admin
   // route handlers.
   const onAdminHost = isAdminHostRequest(request.headers, ADMIN_ORIGIN);
@@ -85,7 +82,9 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
    * ---------------------------------------------------------------- */
   if (!onAdminHost) {
     if (isAdminPath(pathname)) return notFound();
+    // A reader's page or answer reads no saved key here, so it never waits on the control-plane database.
     if (pathname !== "/ballot") return NextResponse.next();
+    await loadWebsiteSavedKeys();
     // Only middleware may decide a ballot copy is storable; a reader-sent verdict is dropped.
     const headers = new Headers(request.headers), verdict = await ballotCacheValue(request);
     headers.delete(BALLOT_CACHE_HEADER);
@@ -105,6 +104,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
    * THE ADMIN HOST.
    * ---------------------------------------------------------------- */
 
+  await loadWebsiteSavedKeys();
   // The admin host serves the admin surface and nothing else. `/` is the
   // control centre; every other non-admin path is not here.
   if (pathname === "/") {

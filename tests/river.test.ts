@@ -18,9 +18,12 @@ import { dirname, join } from "node:path";
 import test from "node:test";
 
 import {
+  DEVICE_VISITS,
   FULL_CI_LABEL,
+  OLD_PHONE_VISIT,
   STALE_LOCK_MS,
   FIFTY_STATES,
+  applyConditions,
   blameLanes,
   countsAsCode,
   decideCi,
@@ -30,6 +33,7 @@ import {
   failingTests,
   foldOrder,
   linesOfCode,
+  measureNotes,
   measureSql,
   migrationProblems,
   missingProofs,
@@ -681,4 +685,20 @@ test("a ZIP is usable only once its district lines are drawn on the map", () => 
     g.document = saved.document;
     g.window = saved.window;
   }
+});
+
+test("the phone check runs at a real phone's speed: processor slowed 4 times, and the notes say so", async () => {
+  const sent: [string, Record<string, unknown>][] = [];
+  const cdp = { send: async (method: string, params: Record<string, unknown>) => void sent.push([method, params]) };
+  await applyConditions(cdp, DEVICE_VISITS.phone);
+  assert.deepEqual(sent.find(([m]) => m === "Emulation.setCPUThrottlingRate")?.[1], { rate: 4 });
+  assert.deepEqual(sent.find(([m]) => m === "Network.emulateNetworkConditions")?.[1], { offline: false, latency: 70, downloadThroughput: 1_500_000, uploadThroughput: 375_000 });
+  assert.equal(DEVICE_VISITS.tablet.cpu, 1, "tablet unchanged");
+  assert.equal(DEVICE_VISITS.desktop.cpu, 1, "desktop unchanged");
+  assert.equal(OLD_PHONE_VISIT.cpu, 1, "the transitional old phone line has no slowdown");
+  assert.deepEqual(OLD_PHONE_VISIT.net, DEVICE_VISITS.phone.net);
+  const side = { at: "t", live: "abc1234", zips: { phone: [2000, 5000], phoneOld: [2000, 2500], tablet: [1000, 1000], desktop: [1000, 1000] } };
+  const notes = measureNotes({ zips: [{ zip: "00501", state: "NY" }, { zip: "01001", state: "MA" }], before: side, after: side }).join("\n");
+  assert.match(notes, /phone \(390×844, touch, 12 Mbps down, 3 up, 70 ms, processor slowed 4 times/);
+  assert.match(notes, /Phone \(old, no processor slowdown[^)]*\): ZIPs usable in under 3 seconds 2→2, against phone \(processor slowed 4 times\) 1→1/);
 });

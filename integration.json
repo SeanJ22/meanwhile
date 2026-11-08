@@ -5095,5 +5095,29 @@
     "release": 190,
     "ci": "pass",
     "at": "2026-11-08T08:29:41Z"
+  },
+  {
+    "lane": "map-fetch",
+    "steps": [
+      "MP-02"
+    ],
+    "ready_sha": "584b6563c8ee3b8885711051fb4f0e462855514d",
+    "merge_sha": "dc87a318a86f26bdfcee6197a35bbade0adefd8c",
+    "river_sha": "f1d8caf71de2e92b051040abce2b9b7a2752569d",
+    "release": 191,
+    "ci": "pass",
+    "at": "2026-11-08T10:29:34Z"
+  },
+  {
+    "lane": "river-phone",
+    "steps": [
+      "RP-01"
+    ],
+    "ready_sha": "7cd905f80c7fad77a161a15488667beac5a377ef",
+    "merge_sha": "906a0a79689d20414f03580e6b597f78fc4d39dc",
+    "river_sha": "f1d8caf71de2e92b051040abce2b9b7a2752569d",
+    "release": 191,
+    "ci": "pass",
+    "at": "2026-11-08T10:29:34Z"
   }
 ]

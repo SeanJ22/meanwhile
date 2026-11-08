@@ -117,14 +117,20 @@ export function detailUrlOfBody(result: Pick<MeetingSearchResult, "coverage" | "
 
 const merge = <T extends object>(base: T, extra: Partial<T>): T => ({ ...base, ...Object.fromEntries(Object.entries(extra).filter(([, value]) => value !== undefined && value !== null)) });
 
-/** The answer with one board's detail filled in; the same object when there is nothing to add. */
+/** The answer with one board's detail filled in. The reference and the address that said "not yet" are dropped as it is, so a second fill finds nothing to do and returns the same object. */
 export function withBoardDetail<T extends Pick<MeetingSearchResult, "coverage" | "meetings">>(result: T, bodyId: string, detail: BoardDetail): T {
-  const body = result.coverage?.bodies.find(row => row.bodyId === bodyId);
+  const body = result.coverage?.bodies.find(row => row.bodyId === bodyId && row.readerRosterRef);
   const meetings = detail.meetings ?? {};
-  const wanted = result.meetings.some(meeting => meeting.bodyId === bodyId && meetings[meeting.id] && !meeting.provenance);
-  if (!body && !wanted) return result;
+  if (!body && !result.meetings.some(meeting => meeting.bodyId === bodyId && meeting.detail)) return result;
   return { ...result,
-    coverage: result.coverage && body ? { ...result.coverage, bodies: result.coverage.bodies.map(row => row.bodyId === bodyId
-      ? merge(row, { readerRoster: detail.readerRoster, fieldSources: detail.fieldSources }) : row) } : result.coverage,
-    meetings: result.meetings.map(meeting => meeting.bodyId === bodyId && meetings[meeting.id] ? merge(meeting, meetings[meeting.id]!) : meeting) };
+    coverage: result.coverage && body ? { ...result.coverage, bodies: result.coverage.bodies.map(row => {
+      if (row.bodyId !== bodyId || !row.readerRosterRef) return row;
+      const { readerRosterRef: _ref, ...rest } = row;
+      return merge(rest, { readerRoster: detail.readerRoster, fieldSources: detail.fieldSources });
+    }) } : result.coverage,
+    meetings: result.meetings.map(meeting => {
+      if (meeting.bodyId !== bodyId || !meeting.detail) return meeting;
+      const { detail: _address, ...rest } = meeting;
+      return merge(rest, meetings[meeting.id] ?? {});
+    }) };
 }

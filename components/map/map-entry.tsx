@@ -543,8 +543,11 @@ function MapEntryInner() {
     let live = true;
     for (const bodyId of wantedBodies) {
       const url = result ? detailUrlOfBody(result, bodyId) : null;
-      // A pin from the map's own places: that place's file holds the meeting whole.
-      if (!url) { openRoamingPlace(bodyId, view?.state ? [view.state] : []); continue; }
+      if (!url) {
+        // A pin from the map's own places: that place's file holds the meeting whole. A board of the answer already filled in needs nothing.
+        if (!result?.coverage?.bodies.some(body => body.bodyId === bodyId) && !result?.meetings.some(meeting => meeting.bodyId === bodyId)) openRoamingPlace(bodyId, view?.state ? [view.state] : []);
+        continue;
+      }
       loadBoardDetail(url).then(detail => { if (live) setResult(previous => previous ? withBoardDetail(previous, bodyId, detail) : previous); }, () => {});
     }
     return () => { live = false; };

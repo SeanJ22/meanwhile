@@ -7,7 +7,7 @@ check: GitHub CI
 ready: CX-WRITES 413cb58eaf75072b3c033c9b3eeae734a2ddeb6f
 river: 97a693b6948a504d07eb53ea1818d4a17ee7447f
 at: 2026-11-08T04:24:03Z
-state: returned
+state: cleared: integrated ready ef7b0ab35472e6e0621ab93c41b0bc017718d048 on river 4639e9a619fb687d31690587cc20568e3bb4f508
 fix_subject: fix:ba7a166d
 fix: River · stream/cx-writes — GitHub CI failed for cx-writes: 2026-11-08T04:14:31.3672825Z   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
 

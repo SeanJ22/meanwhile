@@ -10,7 +10,10 @@ import { readHour, readRunnerReadProblems, readJobBreakerEvents, query } from ".
 import { jobLabel } from "../job-names.ts";
 import { formatEastern } from "../eastern-time.ts";
 import { LINE_KEEPER_BY, type LineHour } from "./model.ts";
-import { readRunnerJobs, stalledJobProblems, stalledJobs } from "./jobs.ts";
+import { readRunnerJobs, runnerHealthProblems } from "./jobs.ts";
+import { keeperSilentProblem, readKeeperLastRun } from "./watch.ts";
+import { isLineHealthKey } from "./health.ts";
+import { countWindow } from "../../counts/hour.ts";
 import { versionedRowsFor } from "../../db/versioned-rows.ts";
 
 function ownBytes() { return processNeonBytes().reduce((n,h)=>n+Object.values(h.byCaller).reduce((a,b)=>a+b,0),0); }
@@ -31,7 +34,10 @@ export function withKeeperFixes(config: AdminConfig, hour: LineHour): AdminConfi
   const observations=hour.problems.filter(problem=>!("kind" in problem)).map(problem=>({
     key:`line-keeper:${problem.key}`,what:problem.says,owner:problem.owner,next:problem.next,
   }));
-  const problems=[...latest.problems.filter(p=>!p.key.startsWith("line-keeper:")),...groupCountProblems(counted),...observations];
+  // A silent runner or keeper makes every count below it untrustworthy, so those lead the brief instead of sitting behind the piles.
+  const health=observations.filter(problem=>isLineHealthKey(problem.key));
+  const problems=[...latest.problems.filter(p=>!p.key.startsWith("line-keeper:")),...health,...groupCountProblems(counted),
+    ...observations.filter(problem=>!isLineHealthKey(problem.key))];
   const breakerUpdates=(hour.breakerEvents??[]).map(event=>({id:`job-breaker:${event.id}:${event.kind}`,
     what:event.kind === "SLOW" ? `${jobLabel(event.job)} read ${(event.bytes/1e9).toFixed(3)} GB in one hour against its normal ${(event.normal/1e9).toFixed(3)} GB. It keeps running with launches ${event.times} times further apart until it reads at its normal again; its fix is first on the builders' list.`
       : `${jobLabel(event.job)} reads at its normal again and is back to its usual pace.`,
@@ -67,23 +73,34 @@ async function writeFixes(sql:Sql,hour:LineHour) {
   }
   throw Error("Admin settings changed during every hourly repair save");
 }
+const reason=(error:unknown)=>(error instanceof Error?error.message:String(error)).slice(0,240);
+type Observation=Omit<CountProblem,"kind"|"state"|"items">;
 export async function runLineKeeper(control:Sql,reader:Sql,at:string,options:{readonly readOnly?:boolean}={}) {
   const baseline=ownBytes();
-  const input=await readHour(control,reader,at);
-  const readProblems=await readRunnerReadProblems(reader,input.window.from,input.window.through).catch(()=>[{
+  const readProblems:Observation[]=[];
+  // The runner and the keeper's own history come first. They are cheap, and a slow count read below must never keep them from being checked.
+  readProblems.push(...await readRunnerJobs(control).then(read=>runnerHealthProblems(read,at)).catch((error):Observation[]=>[{key:"runner-jobs:unread",
+    where:"Runner jobs",says:`The runner’s heartbeat and job finish times could not be read: ${reason(error)}`,owner:"the runner workers",next:"Restore the runner heartbeat read."}]));
+  readProblems.push(...await readKeeperLastRun(control).then(last=>{const missed=keeperSilentProblem(last,at);return missed?[missed]:[];}).catch((error):Observation[]=>[{key:"line-keeper-run:unread",
+    where:"The line keeper",says:`The line keeper’s previous run time could not be read: ${reason(error)}`,owner:"the runner workers",next:"Restore the read of the line keeper’s saved runs."}]));
+  // One slow or failed count read is a problem on this hour, not the end of the hour: the checks above and below still post.
+  const input=await readHour(control,reader,at).catch((error)=>{
+    readProblems.push({key:"counts:unread",where:"Hourly counts",says:`The hourly counts could not be read, so piles and flow were not checked this hour: ${reason(error)}`,
+      owner:"the database workers",next:"Find the slow count read, speed it up, and check that the next hourly run reads them."});
+    return {window:countWindow(at),counts:null,previous:[],waiting:null};
+  });
+  readProblems.push(...await readRunnerReadProblems(reader,input.window.from,input.window.through).catch(()=>[{
     key:"runner-reads:unread",where:"Runner database reads",says:"The runner’s hourly database reads could not be compared with the previous 24 hours.",
     owner:"the database workers",next:"Restore the hourly read comparison and check the affected job families.",
-  }]);
-  readProblems.push(...await readRunnerJobs(control).then(read=>stalledJobProblems(stalledJobs(read.jobs,read.beatAt,at))).catch(()=>[{key:"runner-jobs:unread",
-    where:"Runner jobs",says:"The runner’s job finish times could not be read.",owner:"the runner workers",next:"Restore the runner heartbeat read."}]));
+  }]));
   let breakerEvents: Awaited<ReturnType<typeof readJobBreakerEvents>> = [];
   try { breakerEvents=await readJobBreakerEvents(control,input.window.from,input.window.through); }
   catch { readProblems.push({key:"job-breaker:unread",where:"Job transfer protection",
     says:"The hourly slowed-jobs report could not be read.",owner:"the runner workers",next:"Restore the job transfer control log."}); }
   const hour:LineHour={...input.window,measuredAt:at,counts:input.counts,waiting:input.waiting,
-    breakerEvents,problems:[...countProblems(input.counts,input.previous,input.waiting,at),...readProblems],own:{bytesRead:Math.max(0,ownBytes()-baseline)}};
+    breakerEvents,problems:[...countProblems(input.counts??[],input.previous,input.waiting??[],at),...readProblems],own:{bytesRead:Math.max(0,ownBytes()-baseline)}};
   const oldest:Record<string,{n:number;at:string|null}>={};
-  for(const waiting of input.waiting) {
+  for(const waiting of input.waiting??[]) {
     const code=REGISTRY_STATES.some(state=>state===waiting.state)?waiting.state:"US";
     const held=oldest[code];
     oldest[code]={n:(held?.n??0)+waiting.count,at:!waiting.oldestAt||held?.at===null?null:

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
-  districtTitle, fillClass, flipCount, flipParty, nationalResults, parseDistrictOcd, resultContests, resultsByDistrict,
+  districtTitle, fillClass, flipParty, nationalResults, parseDistrictOcd, resultContests, resultsByDistrict,
   type ContestStatus, type ResultContest,
 } from "../lib/map/results.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
@@ -69,9 +69,8 @@ test("a seat with one member of each party draws as split", () => {
 
 test("a flip carries the gaining party and the source's own seat count, and none where the source gives none", () => {
   assert.equal(flipParty(results[az("sldl", 4)]), "D");
-  assert.equal(flipCount(results[az("sldl", 4)]), 2);
+  assert.equal(results[az("sldl", 4)].flipSeats, 2);
   assert.equal(results[az("sldu", 2)].flipSeats, null);
-  assert.equal(flipCount(results[az("sldu", 2)]), 1, "a single-seat contest that flipped is one seat");
   assert.equal(flipParty(results[az("sldu", 2)]), "D");
   assert.equal(flipParty(results[az("sldu", 1)]), null);
   assert.equal(flipParty(results[az("sldl", 1)]), null);
@@ -96,7 +95,7 @@ const summary = { states: {
 test("the national summary becomes one result per state: seats held, seats still counting, and flips so far", () => {
   const house = nationalResults(summary, "us_house"), ohio = house["ocd-division/country:us/state:oh"];
   assert.equal(fillClass(ohio), "split");
-  assert.equal(flipCount(ohio), 2);
+  assert.equal(ohio.flipSeats, 2, "the summary's own count of seats flipped");
   assert.equal(ohio.seats.length, 15);
   assert.equal(fillClass(house["ocd-division/country:us/state:pa"]), "counting");
   assert.equal(house["ocd-division/country:us/state:tx"], undefined, "a state that reported no races in the chamber is absent");
@@ -263,7 +262,7 @@ test("a state's districts join its sliced ballot to its results feed; a state wi
   const az = await mapResults({ scope: "state", state: "AZ" }, { store: copy.store, query });
   assert.equal(queries, 1);
   assert.equal(fillClass(az[azId("sldl", 1)]), "R");
-  assert.equal(flipCount(az[azId("sldl", 4)]), 2);
+  assert.equal(az[azId("sldl", 4)].flipSeats, 2);
   assert.ok(az["ocd-division/country:us/state:az"], "the U.S. Senate seat is carried");
   assert.equal(Object.values(az).some(result => result.candidates.some(person => person.name === "G Test")), false, "the governor's race is not drawn");
 });

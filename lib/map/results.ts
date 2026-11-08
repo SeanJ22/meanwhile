@@ -83,9 +83,6 @@ export function fillClass(result: DistrictResult): FillClass {
 /** The party that gained a seat in this district, when the source says a seat changed hands. */
 export const flipParty = (result: DistrictResult): ResultParty | null => result.flipTo;
 
-/** Seats that changed hands here: the source's count, or the one seat of a single-seat contest that flipped. */
-export const flipCount = (result: DistrictResult): number => result.flipSeats ?? (result.flipTo ? 1 : 0);
-
 /** `ocd-division/country:us/state:az/sldu:17` → `{ state: "az", kind: "sldu", number: "17" }`. */
 export function parseDistrictOcd(ocdId: string): { state: string; kind: string; number: string } | null {
   const match = /^ocd-division\/country:us\/(?:state|district|territory):([a-z]{2})\/(sldu|sldl|cd):([^/]+)$/.exec(ocdId);

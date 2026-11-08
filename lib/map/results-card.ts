@@ -1,4 +1,5 @@
-import { districtTitle, flipCount, flipParty, type DistrictResult, type ResultParty, type SeatParty } from "./results.ts";
+import { formatPercent } from "../ballot/results.ts";
+import { districtTitle, flipParty, type DistrictResult, type ResultParty, type SeatParty } from "./results.ts";
 
 export interface CardRow { name: string; party: SeatParty; note: string }
 export interface CardModel {
@@ -10,7 +11,7 @@ export interface CardModel {
   hasResult: boolean;
 }
 
-const percent = (votes: number | null, total: number) => votes !== null && total > 0 ? `${(votes / total * 100).toFixed(votes / total < 0.1 ? 2 : 1)}%` : "";
+const percent = (votes: number | null, total: number) => votes !== null && total > 0 ? formatPercent(votes / total * 100) : "";
 
 function rowsFor(result: DistrictResult): CardRow[] {
   // The national summary names no candidates: a seat shows the party that holds it.
@@ -27,7 +28,7 @@ function rowsFor(result: DistrictResult): CardRow[] {
 }
 
 function flipPill(result: DistrictResult) {
-  const party = flipParty(result), count = flipCount(result);
+  const party = flipParty(result), count = result.flipSeats ?? 0;
   if (!party) return null;
   return { party, label: count > 1 ? `${count} seats flipped` : result.seats.length > 1 ? "1 seat flipped" : "Flipped" };
 }

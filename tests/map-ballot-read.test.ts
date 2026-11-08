@@ -7,7 +7,7 @@ import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import { mapBallotStatement } from "../lib/reader/map-ballot.ts";
 import { mapResults } from "../lib/map/results-read.ts";
-import { fillClass, flipCount } from "../lib/map/results.ts";
+import { fillClass } from "../lib/map/results.ts";
 import { electionFeedFixture } from "./helpers/election-feed-fixture.ts";
 import { migratedFactDb } from "./helpers/migrated-reader-db.ts";
 
@@ -57,7 +57,7 @@ test("the map statement returns one state's drawn contests and their candidates,
     const districts = await mapResults({ scope: "state", state: "AZ" }, { store: copy.store, query: async statements => [await query(statements[0].text, statements[0].params)] });
     const cd = districts["ocd-division/country:us/state:az/cd:1"];
     assert.equal(fillClass(cd), "D");
-    assert.equal(flipCount(cd), 1);
+    assert.equal(cd.flipSeats, 1);
     assert.equal(cd.candidates.find(row => row.name === "Ann Test")?.votes, 531);
     assert.ok(districts["ocd-division/country:us/state:az"], "the U.S. Senate seat is carried");
     assert.equal(fillClass(districts["ocd-division/country:us/state:az/sldl:2"]), "counting");

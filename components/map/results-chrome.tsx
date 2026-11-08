@@ -106,11 +106,3 @@ export function WinnerRow({ name, party, note }: { name: string; party: ResultPa
     <span style={{ fontWeight: 600 }}>{note}</span>
   </div>;
 }
-
-/** The phone's bottom sheet: collapsed it leaves the map two thirds of the screen. */
-export function Sheet({ open, onToggle, children }: { open: boolean; onToggle: () => void; children: ReactNode }) {
-  return <div className={styles.sheet} style={{ height: open ? 620 : 216, maxHeight: "86%" }}>
-    <button type="button" className={styles.sheetHandle} aria-expanded={open} aria-label={open ? "Show more map" : "Show more results"} onClick={onToggle}><span /></button>
-    <div className={styles.sheetBody}>{children}</div>
-  </div>;
-}

@@ -3,17 +3,17 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { FilterSpecification, MapMouseEvent } from "maplibre-gl";
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { NATIONAL_BOUNDARIES_SOURCE } from "@/lib/map/districts";
 import { CONUS_BOUNDS } from "@/lib/map/style";
 import { loadStateOutlines, stateAbbrFromOcdId, stateFilter, type StateOutlines } from "@/lib/map/state-focus";
-import { flipCount, stateOcd, type DistrictResult } from "@/lib/map/results";
+import { stateOcd, type DistrictResult } from "@/lib/map/results";
 import { districtCard, houseStateMeta, seatSummary, senateCard } from "@/lib/map/results-card";
 import { countyChoices, outlineBounds, type CountyChoice } from "@/lib/map/results-counties";
 import { canDrawResults, clearResultLayers, drawResultLayers } from "@/lib/map/results-apply";
 import { countyOutlineLayers, resultLayers, resultsLayerId, stateBadgeLayers, stateBadgePoints, type ResultsSurface, type ResultsTheme } from "@/lib/map/results-style";
 import { closeResults, setResultsDistricts, setResultsScope, showResultsState, useResultsScope, type ResultsState } from "@/lib/map/results-scope";
-import { Banner, CountyChip, GettingBanner, Legend, MapCard, PillButton, Segmented, Sheet, WinnerRow, type LegendKey } from "./results-chrome";
+import { Banner, CountyChip, GettingBanner, Legend, MapCard, PillButton, Segmented, WinnerRow, type LegendKey } from "./results-chrome";
 import { useMapInstance } from "./map-instance";
 import styles from "./results-map.module.css";
 
@@ -67,11 +67,9 @@ export interface ResultsMapProps {
   /** The reader's districts from their ZIP. */
   yours: readonly string[];
   zip: string | null;
-  /** The scorecard when one is mounted: a right panel on desktop, a bottom sheet on phone. */
-  scorecard?: ReactNode;
 }
 
-export default function ResultsMap({ theme, phone, yours, zip, scorecard }: ResultsMapProps) {
+export default function ResultsMap({ theme, phone, yours, zip }: ResultsMapProps) {
   const map = useMapInstance();
   const router = useRouter();
   const onBack = () => { closeResults(); if (zip) router.push(`/ballot?zip=${zip}`); };
@@ -84,7 +82,6 @@ export default function ResultsMap({ theme, phone, yours, zip, scorecard }: Resu
   const [countyHeld, setCountyHeld] = useState<{ scene: string; county: CountyChoice | null } | null>(null);
   const [counties, setCounties] = useState<CountyChoice[]>([]);
   const [pickedHeld, setPickedHeld] = useState<{ scene: string; ocdId: string; name: string } | null>(null);
-  const [sheetOpen, setSheetOpen] = useState(false);
   const topRef = useRef<HTMLDivElement>(null);
   const [topBottom, setTopBottom] = useState(0);
 
@@ -118,7 +115,7 @@ export default function ResultsMap({ theme, phone, yours, zip, scorecard }: Resu
     const base = resultLayers(surface, drawn, { theme, yours: yoursOnSurface });
     const badges = surface.kind === "states" && outlines
       ? stateBadgePoints(outlines.features, Object.fromEntries(Object.values(drawn).flatMap(result => {
-        const count = flipCount(result);
+        const count = result.flipSeats ?? 0;
         return statesFirst ? count > 0 ? [[result.ocdId, { party: result.flipTo ?? "O" as const, count }]] : [] : result.flipTo ? [[result.ocdId, { party: result.flipTo }]] : [];
       })))
       : null;
@@ -146,9 +143,8 @@ export default function ResultsMap({ theme, phone, yours, zip, scorecard }: Resu
 
   /* ------------------------------------------------------------- the camera --- */
   const fit = useCallback((bounds: [[number, number], [number, number]], maxZoom = 14) => {
-    const panel = !phone && scorecard ? 460 : 16;
-    map.fitBounds(bounds, { padding: phone ? { top: 130, bottom: scorecard ? 236 : 70, left: 20, right: 20 } : { top: 130, bottom: 40, left: 240, right: panel + 24 }, maxZoom, duration: reducedMotion() ? 0 : 600 });
-  }, [map, phone, scorecard]);
+    map.fitBounds(bounds, { padding: phone ? { top: 130, bottom: 70, left: 20, right: 20 } : { top: 130, bottom: 40, left: 240, right: 40 }, maxZoom, duration: reducedMotion() ? 0 : 600 });
+  }, [map, phone]);
   const fitState = useCallback(() => {
     const feature = outlines?.features.find(f => stateAbbrFromOcdId(f.properties.ocdId) === state.abbr) ?? null;
     const bounds = outlineBounds(feature);
@@ -237,7 +233,7 @@ export default function ResultsMap({ theme, phone, yours, zip, scorecard }: Resu
     }
     const abbr = stateAbbrFromOcdId(picked.ocdId) ?? "", name = picked.name || stateName(abbr), mine = abbr === home.abbr;
     if (statesFirst) {
-      const result = results?.[picked.ocdId], model = houseStateMeta(name, result ? flipCount(result) : 0, mine);
+      const result = results?.[picked.ocdId], model = houseStateMeta(name, result?.flipSeats ?? 0, mine);
       return <MapCard title={model.title} meta={model.meta} onClose={close}>
         {result && <p className={styles.dim} style={{ margin: 0, lineHeight: 1.45 }}>{seatSummary(result)}</p>}
         <PillButton arrow="right" onClick={() => { setHouseState({ abbr, name }); setPicked(null); }}>See {name}&rsquo;s districts</PillButton>
@@ -277,14 +273,12 @@ export default function ResultsMap({ theme, phone, yours, zip, scorecard }: Resu
 
       {banner && <Banner phone={phone} below={topBottom}>{banner}</Banner>}
 
-      {!phone && scorecard && <aside className={styles.rightPanel} aria-label="Results scorecard">{scorecard}</aside>}
 
-      <div className={styles.bottom} style={phone ? { left: 10, right: 10, bottom: scorecard ? (sheetOpen ? 630 : 226) : 10, maxWidth: "none", alignItems: "stretch" } : { bottom: 16 }}>
+      <div className={styles.bottom} style={phone ? { left: 10, right: 10, bottom: 10, maxWidth: "none", alignItems: "stretch" } : { bottom: 16 }}>
         {card}
         <Legend rows={legend} theme={theme} phone={phone} />
       </div>
 
-      {phone && scorecard && <Sheet open={sheetOpen} onToggle={() => setSheetOpen(open => !open)}>{scorecard}</Sheet>}
     </div>
   );
 }

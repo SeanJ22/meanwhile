@@ -17,9 +17,11 @@ export async function readCampaignPublicationInputs(state: string, query: (sql: 
   const rows = await query(`SELECT
     (SELECT count(*) FROM cp_log_promotion_pipeline WHERE record->>'stage' = 'APPROVED_FOR_PROMOTION'
       AND upper(record#>>'{campaignSite,identity,stateCode}')=$2)::text AS approvals,
-    (SELECT coalesce(max((record->'runtimeOutcome'->'campaignPublicationApprovalsByState'->>$2)::bigint), 0)
-      FROM cp_log_owner_digests WHERE record->'runtimeOutcome'->>'kind' = 'ROUTINE_CIVIC_DATA_SUPERVISOR'
-      AND ($1::text IS NULL OR record->'runtimeOutcome'->>'testedSha' = $1))::text AS attempted`, [testedSha, selected]);
+    (SELECT coalesce(max((record#>'{runtimeOutcome,campaignPublicationApprovalsByState}'->>$2)::bigint), 0)
+      FROM cp_log_owner_digests WHERE record#>>'{runtimeOutcome,kind}' = 'ROUTINE_CIVIC_DATA_SUPERVISOR'
+      AND record#>'{runtimeOutcome,campaignPublicationApprovalsByState}' IS NOT NULL
+      AND record#>'{runtimeOutcome,campaignPublicationApprovalsByState}' ? $2
+      AND ($1::text IS NULL OR record#>>'{runtimeOutcome,testedSha}' = $1))::text AS attempted`, [testedSha, selected]);
   if (!Array.isArray(rows) || rows.length !== 1) throw new Error("CAMPAIGN_PUBLICATION_INPUTS_INVALID");
   const approvals = Number(rows[0]?.approvals), attemptedApprovals = Number(rows[0]?.attempted);
   if (![approvals, attemptedApprovals].every(value => Number.isSafeInteger(value) && value >= 0) || attemptedApprovals > approvals) throw new Error("CAMPAIGN_PUBLICATION_INPUTS_INVALID");

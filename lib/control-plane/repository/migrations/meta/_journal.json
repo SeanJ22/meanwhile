@@ -119,6 +119,11 @@
       "id": "RC-01_expand",
       "phase": "expand",
       "hash": "b1f3285d3502610e5b3dc2699925ef0974735dbac3ff8c76ffc1e1573bdbe415"
+    },
+    {
+      "id": "CX-WRITES-02_expand",
+      "phase": "expand",
+      "hash": "b00cab868166ddc82ef07add08202f4e96134bb7a258f2837d466ec9eb7601f0"
     }
   ]
 }

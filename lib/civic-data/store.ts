@@ -23,6 +23,7 @@ import { federalDirectoryStateOf } from "../officials/federal-directory-data-pla
 import { decodeStateCandidate, durableStateHash, encodeStateCandidate, statePublicationScope } from "./state-publication.ts";
 
 import { and, desc, eq, getTableColumns, inArray, like, or, sql, type SQL } from "drizzle-orm";
+import { unionAll } from "drizzle-orm/pg-core";
 import { meetingSittingsSql } from "../doors/hot-partitions.ts";
 
 import { getDb } from "../db/index.ts";
@@ -3462,29 +3463,26 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   private async readClock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
     // Successful retained-byte replay records processing, but no newer provider attempt.
     // These fields occur only on validated promotions; failures keep their local retry clock.
-    const attemptAt = sql`CASE WHEN ${civicDataCandidates.state} = 'PROMOTED'
-      AND ${civicDataCandidates.acquisitionSucceeded} = true
-      AND ${civicDataCandidates.candidate}#>>'{retrieval,sourceCheck,checkedAt}' IS NOT NULL
-      THEN LEAST((${civicDataCandidates.candidate}#>>'{retrieval,sourceCheck,checkedAt}')::timestamptz, ${civicDataCandidateEvents.at})
-      ELSE ${civicDataCandidateEvents.at} END`;
-    const attemptQuery = this.db
-      .select({ attemptedAt: attemptAt, failureCode: civicDataCandidates.failureCode, failureDetail: civicDataCandidates.failureDetail })
-      .from(civicDataCandidates)
-      .innerJoin(civicDataCandidateEvents, and(
-        eq(civicDataCandidateEvents.candidateId, civicDataCandidates.id),
-        or(eq(civicDataCandidateEvents.sequence, 1), sql`left(${civicDataCandidateEvents.detail}, 20) = 'RECHECKED_UNCHANGED:'`),
-      ))
-      .where(and(
-        eq(civicDataCandidates.sourceId, sourceId),
-        eq(civicDataCandidates.recordClass, recordClass),
-        eq(civicDataCandidates.scope, scope),
-        parserVersion === undefined ? undefined : eq(civicDataCandidates.parserVersion, parserVersion),
-                // Transfers retain the reader record without advancing the source clock.
-        sql`coalesce(${civicDataCandidates.candidate}#>>'{bootstrapImport,kind}', '') not in ('TRUSTED_LKG_IMPORT', 'TRUSTED_LKG_REATTESTATION')
-          AND coalesce(${civicDataCandidates.candidate}#>>'{stateRetirement,kind}', '') <> 'STATE_AUTHORITY_RETIREMENT'`,
-      ))
-      .orderBy(desc(attemptAt), desc(civicDataCandidates.id))
-      .limit(16);
+    const attempts = (retained: boolean) => this.db.select({
+      attemptedAt: retained
+        ? sql`CASE WHEN ${civicDataCandidates.state} = 'PROMOTED' AND ${civicDataCandidates.acquisitionSucceeded} = true
+          THEN LEAST((${civicDataCandidates.candidate}#>>'{retrieval,sourceCheck,checkedAt}')::timestamptz,${civicDataCandidateEvents.at})
+          ELSE ${civicDataCandidateEvents.at} END`.as("attempted_at")
+        : sql`${civicDataCandidateEvents.at}`.as("attempted_at"),
+      id:civicDataCandidates.id,failureCode:civicDataCandidates.failureCode,failureDetail:civicDataCandidates.failureDetail,
+    }).from(civicDataCandidates).innerJoin(civicDataCandidateEvents,and(
+      eq(civicDataCandidateEvents.candidateId,civicDataCandidates.id),
+      or(eq(civicDataCandidateEvents.sequence,1),sql`left(${civicDataCandidateEvents.detail},20)='RECHECKED_UNCHANGED:'`),
+    )).where(and(
+      eq(civicDataCandidates.sourceId,sourceId),eq(civicDataCandidates.recordClass,recordClass),eq(civicDataCandidates.scope,scope),
+      parserVersion===undefined?undefined:eq(civicDataCandidates.parserVersion,parserVersion),
+      sql`civic_source_clock_class(${civicDataCandidates.candidate})=${retained?1:0}`,
+    ));
+    // The index classifies ordinary attempts without reopening their source bodies.
+    // Only retained-byte replays need their original provider timestamp.
+    const recent=unionAll(attempts(false),attempts(true)).as("recent_attempts");
+    const attemptQuery=this.db.select({attemptedAt:recent.attemptedAt,failureCode:recent.failureCode,failureDetail:recent.failureDetail})
+      .from(recent).orderBy(desc(recent.attemptedAt),desc(recent.id)).limit(16);
     const pointerQuery = routineClockPointerRead(this.db, recordClass, scope);
     const observedQuery = routineClockPointedObservedRead(this.db, recordClass, scope);
     const confirmationQuery = routineClockConfirmationRead(this.db, recordClass, scope);

@@ -8,6 +8,7 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { CivicPayloadParts } from "../lib/civic-data/payload-parts.ts";
 import { sourceWorkClock } from "../lib/civic-data/source-work-clock.ts";
+import { holdRawCapture } from "../lib/civic-data/raw-capture-vault.ts";
 
 const hash=(value:unknown)=>canonicalCivicDataHash(value,{durable:true});
 function candidate():RoutineCandidate{
@@ -43,6 +44,8 @@ test("candidate format stores small pointers, restores exact evidence, and deriv
 
 test("repeated source captures add no database parts while exact fetched bytes remain readable",async()=>{
   const vault=new MemoryEvidenceStore(),input=candidate(),saved=new Map<string,unknown>();
+  const put=vault.put.bind(vault),rawWrites:string[]=[];
+  vault.put=async(key,bytes,meta)=>{if(key.startsWith("project/freshness/raw/sha256/"))rawWrites.push(key);await put(key,bytes,meta);};
   const parts=new CivicPayloadParts({existing:async hashes=>hashes.filter(hash=>saved.has(hash)),
     write:async rows=>{for(const row of rows)saved.set(row.hash,row.payload);},
     read:async hashes=>hashes.map(hash=>({hash,payload:saved.get(hash)}))});
@@ -52,9 +55,11 @@ test("repeated source captures add no database parts while exact fetched bytes r
     const body=`<input name="session" value="${pass}">${"Same meeting listing. ".repeat(8000)}`;
     const fetched=[{requestedUrl:"https://example.gov/calendar",finalUrl:"https://example.gov/calendar",
       retrievedAt:`2026-11-08T06:0${pass}:00Z`,base64:Buffer.from(body).toString("base64")}];
+    const capture=await holdRawCapture(vault,"calendar",body,"text/html"),{base64:_bytes,...metadata}=fetched[0];
     const next={...input,id:`version/${pass}`,retainedSourceResponses:fetched,
-      normalizedPayload:{...input.normalizedPayload as object,captures:fetched}};
+      normalizedPayload:{...input.normalizedPayload as object,captures:[{...metadata,capture}]}};
     const held=await holdCandidateFacts(vault,next,null,{retainReadModel:true});
+    assert.equal(rawWrites.length,pass+1,"the existing captured bytes are reused, rather than stored again as base64 parts");
     assert.equal(Object.hasOwn(held,"retainedSourceResponses"),false);
     const stored=await parts.store(held,["id","retrieval","normalization"],["readModel","normalizedPayload"]);
     if(pass)assert.equal(saved.size,count,"a recheck must not add source bodies or duplicate unchanged reader facts to Postgres");

@@ -5,6 +5,7 @@ import { candidateChangeSet, civicRecordsFor } from "./changes.ts";
 import { civicVersionRef, civicVersionVault, holdCivicVersion, readCivicVersionPath, type CivicVersionVaultRef } from "./version-vault.ts";
 import type { RoutineCandidate, RoutineChangeSet } from "./types.ts";
 import { sourceWorkClockFacts } from "./source-work-clock.ts";
+import { holdRawCapture, readRawCapture, type RawCaptureRef } from "./raw-capture-vault.ts";
 
 interface VaultPath { readonly version: CivicVersionVaultRef; readonly path: readonly string[] }
 export interface CandidateVaultFormat {
@@ -28,6 +29,39 @@ export type VaultCandidate = Omit<RoutineCandidate,"readModel"|"normalizedPayloa
 
 const object=(value:unknown):Record<string,unknown>|null=>value!==null&&typeof value==="object"&&!Array.isArray(value)?value as Record<string,unknown>:null;
 const hash=(value:unknown)=>canonicalCivicDataHash(value,{durable:true});
+
+interface RetainedSource { readonly value:unknown; readonly capture:RawCaptureRef|null }
+/** Source responses already have a byte-addressed vault; do not partition a second base64 copy. */
+async function holdRetainedSources(vault:EvidenceStore,value:unknown):Promise<CivicVersionVaultRef>{
+  if(!Array.isArray(value))return holdCivicVersion(vault,value,hash(value));
+  const rows:RetainedSource[]=[];
+  for(const item of value){
+    const row=object(item),encoded=row?.base64;
+    const bytes=typeof encoded==="string"?Buffer.from(encoded,"base64"):null;
+    if(!row||!bytes||bytes.toString("base64")!==encoded){rows.push({value:item,capture:null});continue;}
+    const {base64:_body,...metadata}=row;
+    rows.push({value:metadata,capture:await holdRawCapture(vault,String(row.source??""),bytes,String(row.contentType??""))});
+  }
+  const saved={kind:"retained-source-refs/1",rows};
+  return holdCivicVersion(vault,saved,hash(saved));
+}
+
+async function retainedSourcePath(vault:EvidenceStore,ref:CivicVersionVaultRef,path:readonly string[]):Promise<unknown>{
+  const reader=civicVersionVault(vault),saved=await reader.read(ref) as {kind?:string;rows?:RetainedSource[]}|null;
+  if(saved?.kind!=="retained-source-refs/1"||!Array.isArray(saved.rows))return reader.path(ref,path);
+  const restore=async(row:RetainedSource)=>row.capture
+    ?{...object(row.value),base64:Buffer.from(await readRawCapture(vault,row.capture)).toString("base64")}:row.value;
+  if(!path.length){
+    const rows:unknown[]=[];
+    for(let start=0;start<saved.rows!.length;start+=8)rows.push(...await Promise.all(saved.rows!.slice(start,start+8).map(restore)));
+    return rows;
+  }
+  if(!/^\d+$/.test(path[0]))return null;
+  const row=saved.rows![Number(path[0])];if(!row)return null;
+  if(path.length===1)return restore(row);
+  if(path[1]==="base64"&&row.capture)return path.length===2?Buffer.from(await readRawCapture(vault,row.capture)).toString("base64"):null;
+  return reader.path(ref,["rows",path[0],"value",...path.slice(1)]);
+}
 
 /** Keep source pointers and work boundaries in the database, rather than another roster/report/agenda copy. */
 function sourceMetadata(value:unknown):Record<string,unknown>{
@@ -57,7 +91,7 @@ export async function holdCandidateFacts(vault:EvidenceStore,candidate:RoutineCa
   const {readModel:_model,normalizedPayload:_normalized,excludedFacts:_facts,changeSet:_changes,civicRecords:_members,
     retainedSourceResponses,...metadata}=candidate as RoutineCandidate & {readonly retainedSourceResponses?:unknown};
   const retained=retainedSourceResponses===undefined?undefined:
-    await holdCivicVersion(vault,retainedSourceResponses,hash(retainedSourceResponses));
+    await holdRetainedSources(vault,retainedSourceResponses);
   const workFacts=sourceWorkClockFacts(candidate);
   return {...metadata,normalizedPayload:options.retainEvidence?candidate.normalizedPayload as Record<string,unknown>:sourceMetadata(candidate.normalizedPayload),
     ...(options.retainEvidence&&candidate.excludedFacts?{excludedFacts:candidate.excludedFacts}:workFacts.length?{excludedFacts:workFacts}:{}),
@@ -84,7 +118,7 @@ export async function hydrateCandidateFacts(vault:EvidenceStore,stored:unknown):
     await reader.read(format.normalizedPayload):null;
   const excludedFacts=format.inlineEvidence?(stored as RoutineCandidate).excludedFacts??[]:format.excludedFacts?await reader.path(format.excludedFacts.version,format.excludedFacts.path):[];
   return {...candidate,readModel,normalizedPayload,...(format.excludedFacts||format.excludedFactsPresent?{excludedFacts}:{}),
-    ...(format.retainedSourceResponses?{retainedSourceResponses:await reader.read(format.retainedSourceResponses)}:{}),
+    ...(format.retainedSourceResponses?{retainedSourceResponses:await retainedSourcePath(vault,format.retainedSourceResponses,[])}:{}),
     ...(format.civicRecords?{civicRecords:format.civicRecords==="DERIVED"?civicRecordsFor(candidate.recordClass,readModel):await reader.read(format.civicRecords)}:{})};
 }
 
@@ -113,7 +147,7 @@ export async function readCivicCandidatePath(query:Query,vault:EvidenceStore|(()
   if(format){
     const reader=civicVersionVault(typeof vault==="function"?vault():vault);
     if(path[0]==="normalizedPayload")return format.normalizedPayload?reader.path(format.normalizedPayload,path.slice(1)):null;
-    if(path[0]==="retainedSourceResponses"&&format.retainedSourceResponses)return reader.path(format.retainedSourceResponses,path.slice(1));
+    if(path[0]==="retainedSourceResponses"&&format.retainedSourceResponses)return retainedSourcePath(typeof vault==="function"?vault():vault,format.retainedSourceResponses,path.slice(1));
     if(path[0]==="excludedFacts")return format.excludedFacts?reader.path(format.excludedFacts.version,[...format.excludedFacts.path,...path.slice(1)]):[];
     if(path[0]==="civicRecords"&&format.civicRecords){
       if(format.civicRecords&&format.civicRecords!=="DERIVED")return reader.path(format.civicRecords,path.slice(1));

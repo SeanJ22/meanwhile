@@ -9,12 +9,14 @@ import { readPlannerRoutineClock } from "../lib/civic-data/planner-clock-state-r
 import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
 import { VALIDATION_CHECKS } from "../lib/civic-data/types.ts";
 import { serializeUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
+import { SOURCE_CLOCK_CLASS_DDL } from "../lib/control-plane/repository/migrations/CX-WRITES-02.ts";
 
 test("planner source clocks match the original clock on real migrations without sorting candidate payloads", async t => {
   const pg = new PGlite();
   t.after(() => pg.close());
   for (const name of ["0025_typical_fixer","0030_database_transfer_daily","0031_civic_payload_parts","0036_ne01","DB-05_keyed_rows"])
     await pg.exec(readFileSync(`lib/db/migrations/${name}.sql`, "utf8"));
+  await pg.exec(SOURCE_CLOCK_CLASS_DDL);
   const db = Object.assign(drizzle(pg,{schema}),{batch: (queries: PromiseLike<unknown>[]) => Promise.all(queries)});
   const oldRead = (PostgresRoutineDataStore.prototype as unknown as {
     readClock(source: string, recordClass: string, scope: string, parser?: string): Promise<unknown>;

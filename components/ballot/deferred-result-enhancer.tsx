@@ -52,7 +52,7 @@ function cardPortals(card: HTMLElement, feed: ResultFeedResponse, register: Card
 /** Fetch and render the checked feed only after the original ballot accepts input. */
 export async function enhanceBallotResults(signal: AbortSignal, render: (nodes: ReactNode) => void): Promise<() => void> {
   const cards = [...document.querySelectorAll<HTMLElement>("article[data-contest-id]")];
-  const main = cards[0]?.closest("main");
+  const main = cards[0]?.closest("[data-ballot-contents], main");
   const state = (cards.flatMap(node =>
     /\/(?:state|district|territory):([a-z]{2})(?:\/|$)/.exec(node.dataset.ocdId ?? "")?.[1] ?? [])[0]
     ?? main?.querySelector<HTMLElement>("[data-office-state]")?.dataset.officeState)?.toUpperCase();

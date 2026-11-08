@@ -316,12 +316,15 @@ test("3.3: the who-governs card carries the pill, per body", () => {
 });
 
 test("3.3: couldGovern is only set on a TYPED zip, never on a panned viewport", () => {
-  const route = codeOf("app", "api", "meetings", "route.ts");
+  // Both the database route and the published answer end in composeMeetingsAnswer, which reads the ZIP from the location it is given.
   assert.match(
-    route,
-    /if\s*\(zipRead\.value\)\s*coverage\.bodies\s*=/,
+    codeOf("lib", "reader", "meetings-answer.ts"),
+    /if\s*\(zip\)\s*coverage\.bodies\s*=[^;]*couldGovern/,
     "a reader who panned has named no place, so there is no zip for a body to be partial about",
   );
+  assert.match(codeOf("app", "api", "meetings", "route.ts"), /readerLocation\(lat, lng, zipRead\.value\)/,
+    "the route's location carries a ZIP only when one was typed");
+  assert.match(codeOf("lib", "reader", "answer.ts"), /locationFromEntry\(entry, zip\)/, "a published answer is always for a typed ZIP");
 });
 
 test("3.1: both zip-resolving surfaces use the whole ZIP area", async () => {

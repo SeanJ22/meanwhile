@@ -1,5 +1,10 @@
-/** Fill a new production deploy's CDN with the same meeting answers readers request. */
+/**
+ * Fill a new production deploy's CDN with the same files readers request. A published ZIP's answer carries a Netlify-Cache-ID and survives a deploy, so
+ * for it the fill is a hit that costs one read, and what a deploy actually empties is the ZIP3 file, which this reads first. The old meetings URL is
+ * filled only for a ZIP with no ZIP3 row.
+ */
 import { PUBLIC_SITE_ORIGIN } from "./origins.ts";
+import { answerUrl, zip3Url, type Zip3File } from "../reader/answer-client.ts";
 import type { WarmPlace } from "./warm-places.ts";
 
 /** The marker every request here carries, so no log can count it as a reader. */
@@ -12,7 +17,7 @@ export const MAX_WARM_PLACES = 300;
 /** How many place requests are in flight at once. */
 export const WARM_CONCURRENCY = 24;
 
-/** The arriving page starts this ZIP request before hydration; fill that exact CDN key. */
+/** The old ZIP request, which the arriving page still makes for a ZIP whose state is not published yet; filled only for such a ZIP. */
 export function readerMeetingsPath(point: WarmPlace): string {
   return `/api/meetings?zip=${point.zip}`;
 }
@@ -85,10 +90,23 @@ async function servedCommit(origin: string, fetchImpl: typeof fetch, timeoutMs: 
   }
 }
 
-async function readPilot(origin: string, point: WarmPlace, fetchImpl: typeof fetch, now: () => number, timeoutMs: number): Promise<PilotRead> {
+/** One prefix's file, read once per pass. A deploy empties the file's copies, so reading it is itself a fill. */
+type Zip3Reads = Map<string, Promise<Zip3File | null>>;
+
+/** The URL the arriving page requests for a ZIP: its answer under the key its ZIP3 row names, or the old URL when the ZIP has no row. */
+async function pathFor(origin: string, point: WarmPlace, zip3: Zip3Reads, fetchImpl: typeof fetch, timeoutMs: number): Promise<string> {
+  const prefix = point.zip.slice(0, 3);
+  let file = zip3.get(prefix);
+  if (!file) zip3.set(prefix, file = fetchImpl(`${origin}${zip3Url(point.zip)}`, { headers: HEADERS, signal: AbortSignal.timeout(timeoutMs) })
+    .then(async response => response.ok ? await response.json() as Zip3File : null).catch(() => null));
+  const row = (await file)?.zips?.[point.zip];
+  return row?.key ? answerUrl(point.zip, row.key) : readerMeetingsPath(point);
+}
+
+async function readPilot(origin: string, point: WarmPlace, zip3: Zip3Reads, fetchImpl: typeof fetch, now: () => number, timeoutMs: number): Promise<PilotRead> {
   const started = now();
   try {
-    const response = await fetchImpl(`${origin}${readerMeetingsPath(point)}`, { headers: HEADERS, signal: AbortSignal.timeout(timeoutMs) });
+    const response = await fetchImpl(`${origin}${await pathFor(origin, point, zip3, fetchImpl, timeoutMs)}`, { headers: HEADERS, signal: AbortSignal.timeout(timeoutMs) });
     await response.arrayBuffer();
     return { zip: point.zip, status: response.status, ms: Math.round(now() - started), cacheStatus: response.headers.get("cache-status") };
   } catch {
@@ -141,7 +159,7 @@ export async function publishedPlaces(origin: string, fetchImpl: typeof fetch, t
 
 /** Read every place with bounded concurrency; a place not started by the deadline is marked SKIPPED, never read. */
 async function readAll(origin: string, places: readonly WarmPlace[], fetchImpl: typeof fetch, now: () => number, timeoutMs: number, deadline: number): Promise<PilotRead[]> {
-  const out: PilotRead[] = new Array(places.length);
+  const out: PilotRead[] = new Array(places.length), zip3: Zip3Reads = new Map();
   let next = 0;
   const worker = async () => {
     for (;;) {
@@ -150,7 +168,7 @@ async function readAll(origin: string, places: readonly WarmPlace[], fetchImpl: 
       const remainingMs = Math.floor(deadline - now());
       out[i] = remainingMs <= 0
         ? { zip: places[i].zip, status: "SKIPPED", ms: 0, cacheStatus: null }
-        : await readPilot(origin, places[i], fetchImpl, now, Math.min(timeoutMs, remainingMs));
+        : await readPilot(origin, places[i], zip3, fetchImpl, now, Math.min(timeoutMs, remainingMs));
     }
   };
   await Promise.all(Array.from({ length: Math.min(WARM_CONCURRENCY, places.length) }, worker));

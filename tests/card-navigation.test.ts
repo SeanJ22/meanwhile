@@ -16,7 +16,8 @@ test("the large surface is a stack, and closing pops one frame", () => {
   );
   assert.match(
     ENTRY,
-    /const large = largeStack\.length > 0 \? largeStack\[largeStack\.length - 1\] : null/,
+    /const openCard = largeStack\.length > 0 \? largeStack\[largeStack\.length - 1\] : null/,
+    "the open card is the top frame of the stack",
   );
   assert.match(ENTRY, /setBackStack\(\(stack\) => stack\.slice\(0, -1\)\)/);
 });

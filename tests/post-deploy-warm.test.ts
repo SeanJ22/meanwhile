@@ -50,17 +50,26 @@ const PLACES: readonly WarmPlace[] = [
   { zip: "59701", lat: 46.0, lng: -112.5 },
 ];
 
-test("POST-DEPLOY · the fill and arriving page request the same CDN object", async () => {
-  const point=PLACES[0],calls:string[]=[];
-  const runtime={URL,URLSearchParams,Response,
-    location:{pathname:"/",search:`?zip=${point.zip}`,href:`${PUBLIC_SITE_ORIGIN}/?zip=${point.zip}`},
-    document:{documentElement:{dataset:{}}},window:{}as{__readerStart?:{location:Promise<unknown>}},
-    fetch:async(input:string)=>{calls.push(input);return Response.json({location:point});},
+test("POST-DEPLOY · the fill and arriving page request the same CDN objects", async () => {
+  const point = PLACES[0], pages: string[] = [], file = { v: 1, zips: { [point.zip]: { key: "0123456789abcdef", point: [point.lng, point.lat], states: ["AZ"], ids: [], partial: [], fringe: [] } } };
+  const runtime = { URL, URLSearchParams, Response,
+    location: { pathname: "/", search: `?zip=${point.zip}`, href: `${PUBLIC_SITE_ORIGIN}/?zip=${point.zip}` },
+    document: { documentElement: { dataset: {} } }, window: {} as { __readerStart?: { location: Promise<unknown> } },
+    fetch: async (input: string) => { pages.push(input); return Response.json(input.includes("/zip3/") ? file : {}); },
   };
-  runInNewContext(readerStartScript(""),runtime);
+  runInNewContext(readerStartScript(""), runtime);
   assert.ok(runtime.window.__readerStart);
   await runtime.window.__readerStart.location;
-  assert.deepEqual(calls.filter(path=>path.startsWith("/api/meetings?")),[readerMeetingsPath(point)]);
+  const sameAsPage = (urls: string[]) => urls.filter(url => /\/api\/(reader\/zip3|answer)\//.test(url));
+  const warm: string[] = [];
+  await warmAfterDeploy({ commit: COMMIT, deployId: "d" }, { places: async () => [point], now: () => 0, sleep: async () => {}, fillBudgetMs: 1_000,
+    fetchImpl: (async (input: string | URL | Request) => {
+      const url = String(input).replace(PUBLIC_SITE_ORIGIN, ""); warm.push(url);
+      return url === "/api/build" ? Response.json({ commit: COMMIT }) : Response.json(url.includes("/zip3/") ? file : {});
+    }) as typeof fetch });
+  assert.deepEqual([...new Set(sameAsPage(warm))].sort(), [...new Set(sameAsPage(pages))].sort(), "the warm requests the files the page requests");
+  assert.ok(warm.includes(`/api/answer/${point.zip}/0123456789abcdef`), "a published ZIP is filled under its row's key");
+  assert.ok(!warm.some(url => url.startsWith("/api/meetings")), "the old URL is not filled for a published ZIP");
 });
 
 /** A fake production: `/api/build` serves `served()`, every other request answers 200 and is recorded. */

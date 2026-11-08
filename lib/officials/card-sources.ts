@@ -168,9 +168,11 @@ export function meetingCardSources(
     if(meeting.mapPin.coordinateSourceUrl)entries.push({what:"Where the meeting is on the map",provenance:{sourceUrl:meeting.mapPin.coordinateSourceUrl,
       sourceOrg:"U.S. Census Bureau",collectedAt:meeting.mapPin.coordinateCheckedAt??meeting.fieldSources?.mapPin?.collectedAt??meeting.mapPin.provenance.collectedAt,verifiedAt:null}});
   }
-  if (meeting.carried && meeting.provenance) {
+  if (meeting.carried) {
     const clause = carriedRowClause(meeting.carried);
-    entries.push({ what: `Last reached ${relativeAge(meeting.carried.lastFreshAt)}${clause ? ` — ${clause}` : ""}`, dataAttrs: { "data-meeting-carried-source": meeting.id }, status: true, provenance: { ...meeting.provenance, collectedAt: meeting.carried.lastFreshAt } });
+    // A carried row always states its own stamp; before its board's detail arrives, the meeting's own page stands for its provenance.
+    const own = meeting.provenance ?? { sourceUrl: meeting.sourceUrl ?? null, sourceOrg: meeting.jurisdiction, collectedAt: "", verifiedAt: null };
+    entries.push({ what: `Last reached ${relativeAge(meeting.carried.lastFreshAt)}${clause ? ` — ${clause}` : ""}`, dataAttrs: { "data-meeting-carried-source": meeting.id }, status: true, provenance: { ...own, collectedAt: meeting.carried.lastFreshAt } });
   }
   if (meeting.agendaUrl && meeting.provenance) entries.push({ what: "The published agenda link", provenance: { ...meeting.provenance, sourceUrl: meeting.agendaUrl } });
   for (const [kind, label] of Object.entries(MEETING_SOURCE_LABELS)) {

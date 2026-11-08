@@ -47,8 +47,8 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "people-portraits-refresh.mts": 448,
   // ZP-01: the cold ZIP turn on a production copy peaked at 835,284,992 bytes; add 5%, round up to MiB.
   "rebuild-place-pages.mts": 837,
-  // SPN-01PF: the largest state pass measured on a production copy (New Hampshire: its package, cut and index, 747 MiB maxRSS; California 623), plus 5%, rounded up to MiB.
-  "place-files-lane.mts": 785,
+  // SPN-01PZ: the largest state pass measured on a production copy was Texas at 791 MiB maxRSS (California 615, New Hampshire 676, Florida 616); 791 plus 5%, rounded up to MiB.
+  "place-files-lane.mts": 831,
   "campaign-finance-az-pima-transactions.mts": 368,
   "assemble-ballot-package.mts": STATE_PUBLICATION_PEAK_MIB,
   "ballot-navigation-refresh.mts": NAVIGATION_PUBLICATION_PEAK_MIB,

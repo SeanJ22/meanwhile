@@ -85,8 +85,13 @@ test("the map's pins are wired through the rule, not around it", () => {
 
   assert.match(
     entry,
-    /const pinned = carryPins\(/,
+    /const carried = carryPins\(/,
     "map-entry.tsx no longer derives its pins through carryPins",
+  );
+  assert.match(
+    entry,
+    /const pinned = useMemo\(\(\) => carried && roaming\.pins\.length/,
+    "the roaming pins from place files must join the carried answer, never replace or bypass it",
   );
   assert.match(
     entry,

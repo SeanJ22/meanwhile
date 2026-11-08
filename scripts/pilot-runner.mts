@@ -1,7 +1,7 @@
 import { storedKeyEnvironment, storedKeyValue } from "../lib/core/keys-values.ts";
 import { LEGISTAR_MEMBER_DATABASE_BYTES } from "../lib/sources/legistar/members-queue.ts";
 import { keysRunnerPass, savedKeysLane } from "../lib/core/keys-runner.ts";
-import { readPlanningContinuation } from "../lib/control-plane/scheduler/state-planning.ts";
+import { RESEARCH_CYCLE_BUDGET_MS, readPlanningContinuation } from "../lib/control-plane/scheduler/state-planning.ts";
 import { CENSUS_LANE_BUDGET_MS, CENSUS_LANE_INTERVAL_MS } from "../lib/control-plane/discovery/census-lane.ts";
 
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -440,6 +440,7 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     env: storedKeyEnvironment(),
     maxBufferBytes: 64 * 1024 * 1024,
     noProgressMs: RUNTIME_NO_PROGRESS_MS,
+    deadlineMs: Date.now() + RESEARCH_CYCLE_BUDGET_MS,
     onStdout: (_id, output) => { process.stdout.write(output); currentCycleOutput = `${currentCycleOutput}${output}`.slice(-8000); },
     onStderr: (_id, output) => {
       process.stderr.write(output);

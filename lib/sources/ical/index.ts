@@ -26,7 +26,6 @@ import { dateOfDay, dayNumber, expandRuleDays, readRule } from "./recurrence.ts"
 import type {
   Meeting,
   MeetingQuery,
-  MeetingStatus,
   MeetingVenueGap,
   DuplicateIdentityCounts,
   NormalizeDropCounts,
@@ -35,6 +34,7 @@ import type {
   RecurrenceReport,
   ReportingMeetingSource,
 } from "../types.ts";
+import { sittingStatus } from "../sitting-status.ts";
 import {
   accountedNormalize,
   type Accounted,
@@ -437,10 +437,6 @@ function zoneOffsetMs(utcMs: number, zone: string): number | null {
     // A-007: NOT `0`. See above — zero is UTC, and UTC is a claim.
     return null;
   }
-}
-
-function statusOf(startsAt: string, now: Date): MeetingStatus {
-  return Date.parse(startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED";
 }
 
 /** One event's claim on a meeting id, with the event that made it. */
@@ -1051,10 +1047,8 @@ export function makeIcalSource(
             ...(publisherPostedAt(event) ? { postedAt: publisherPostedAt(event)! } : {}),
             jurisdiction: wiring.jurisdiction,
             status:
-              CANCELED.test(title) || /^CANCELLED$/i.test(event.status ?? "") ||
-                movedOffItsDay(title, sitting.iso, wiring.timeZone)
-                ? "CANCELED"
-                : statusOf(sitting.iso, now),
+              sittingStatus(sitting.iso, CANCELED.test(title) || /^CANCELLED$/i.test(event.status ?? "") ||
+                movedOffItsDay(title, sitting.iso, wiring.timeZone), now),
             provenance: {
               sourceUrl: event.url ?? sourceUrl,
               sourceOrg: wiring.publishingOrg,

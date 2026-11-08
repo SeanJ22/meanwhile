@@ -50,7 +50,7 @@ export function MeetingRow(props: RowProps) {
   const statedPlace = gap ? statedVenueText(gap) : null;
   const where = meeting.location ? "physical" : access ? "online" : statedPlace ? "stated" : null;
   const directions = meeting.location && meeting.status !== "CONCLUDED" ? venueLink(meeting.location) : null;
-  const agendaLink = meeting.agendaUrl ?? meeting.provenance.sourceUrl;
+  const agendaLink = meeting.agendaUrl ?? meeting.provenance?.sourceUrl;
   const recording = meeting.status === "CONCLUDED" ? meeting.videoUrl : null;
   return <article data-meeting-row data-meeting-id={meeting.id} className={compact ? "py-2 t-detail leading-relaxed" : "px-5 pb-5 pt-4 t-body leading-relaxed"}>
     <h3 className="font-display t-heading font-semibold text-paper">

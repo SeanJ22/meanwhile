@@ -35,7 +35,6 @@ import {
 } from "@/lib/map/style";
 import { initialZoomForZip } from "@/lib/map/initial-zoom";
 import { recallCamera, rememberCamera } from "@/lib/map/camera-memory";
-import { viewportRadiusKm } from "@/lib/map/viewport-radius";
 import {
   DISTRICT_TYPES,
   NATIONAL_BOUNDARIES_SOURCE,
@@ -153,11 +152,15 @@ interface MapCanvasProps {
   /** The basemap is drawing again after a tile error, so the error notice can clear. */
   onTilesRecovered?: () => void;
 
+  /** Once the reader's move has ended (never during a drag): the centre, the visible box and the zoom. */
   onViewportSettle?: (view: {
     lat: number;
     lng: number;
-    /** Half the visible diagonal, so the fetch follows zoom. */
-    viewportRadiusKm: number;
+    west: number;
+    south: number;
+    east: number;
+    north: number;
+    zoom: number;
   }) => void;
   /** Whether the app may move the camera to frame results. False for a settle-driven result. */
   allowAutoFrame: boolean;
@@ -511,6 +514,8 @@ export function MapCanvas({
       userMoved = false;
       window.clearTimeout(settleTimer);
       settleTimer = window.setTimeout(() => {
+        // A drag that began in the meantime settles at its own end.
+        if (map.isMoving()) return;
         // wrap(): longitudes past the antimeridian make the API return 400.
         const center = map.getCenter().wrap();
         const bounds = map.getBounds();
@@ -524,14 +529,13 @@ export function MapCanvas({
         onViewportSettleRef.current?.({
           lat: center.lat,
           lng: center.lng,
-          viewportRadiusKm: viewportRadiusKm({
-            north: bounds.getNorth(),
-            south: bounds.getSouth(),
-            east: bounds.getEast(),
-            west: bounds.getWest(),
-          }),
+          west: bounds.getWest(),
+          south: bounds.getSouth(),
+          east: bounds.getEast(),
+          north: bounds.getNorth(),
+          zoom: map.getZoom(),
         });
-      }, 650);
+      }, 350);
     };
     map.on("movestart", onMoveStart);
     map.on("moveend", onMoveEnd);

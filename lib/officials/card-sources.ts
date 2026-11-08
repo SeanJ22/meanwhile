@@ -145,8 +145,9 @@ export function districtCardSources(
     entries.push(...fieldHolderSources(holder, true));
   }
 
+  // A published answer leaves a meeting's source to its board's detail; the line joins once it arrives.
   for (const meeting of meetings) {
-    entries.push({ what: `A meeting on this card — ${meeting.title}`, provenance: meeting.provenance });
+    if (meeting.provenance) entries.push({ what: `A meeting on this card — ${meeting.title}`, provenance: meeting.provenance });
   }
 
   return mergeSources(entries);
@@ -158,25 +159,25 @@ export function meetingCardSources(
   representation: SeatHolder[],
   evidence: MeetingCardEvidence = {},
 ): CardSource[] {
-  const entries: CardSource[] = [
+  const entries: CardSource[] = meeting.provenance ? [
     { what: `This meeting — ${meeting.title}${meeting.venueGap ? ` · ${meeting.venueGap.kind === "NOT_STATED_BY_PUBLISHER" ? "Meeting place not stated by" : "Published meeting place from"} ${meeting.venueGap.publisher}` : ""}`, provenance: meeting.provenance },
-  ];
+  ] : [];
   for (const [field, provenance] of Object.entries(meeting.fieldSources ?? {})) entries.push({ what: `This meeting — ${fieldSourceLabel(field)}`, provenance });
   if(meeting.mapPin){
     entries.push({what:pinBasisLabel(meeting.mapPin.basis),provenance:meeting.mapPin.provenance});
     if(meeting.mapPin.coordinateSourceUrl)entries.push({what:"Where the meeting is on the map",provenance:{sourceUrl:meeting.mapPin.coordinateSourceUrl,
       sourceOrg:"U.S. Census Bureau",collectedAt:meeting.mapPin.coordinateCheckedAt??meeting.fieldSources?.mapPin?.collectedAt??meeting.mapPin.provenance.collectedAt,verifiedAt:null}});
   }
-  if (meeting.carried) {
+  if (meeting.carried && meeting.provenance) {
     const clause = carriedRowClause(meeting.carried);
     entries.push({ what: `Last reached ${relativeAge(meeting.carried.lastFreshAt)}${clause ? ` — ${clause}` : ""}`, dataAttrs: { "data-meeting-carried-source": meeting.id }, status: true, provenance: { ...meeting.provenance, collectedAt: meeting.carried.lastFreshAt } });
   }
-  if (meeting.agendaUrl) entries.push({ what: "The published agenda link", provenance: { ...meeting.provenance, sourceUrl: meeting.agendaUrl } });
+  if (meeting.agendaUrl && meeting.provenance) entries.push({ what: "The published agenda link", provenance: { ...meeting.provenance, sourceUrl: meeting.agendaUrl } });
   for (const [kind, label] of Object.entries(MEETING_SOURCE_LABELS)) {
     for (const provenance of evidence[kind as keyof MeetingCardEvidence] ?? []) entries.push({ what: label, provenance });
   }
   // The recording is linked from the publisher's own record of the sitting, so that record is its source.
-  if (meeting.videoUrl) entries.push({ what: "The recording of this meeting", provenance: meeting.provenance });
+  if (meeting.videoUrl && meeting.provenance) entries.push({ what: "The recording of this meeting", provenance: meeting.provenance });
 
   for (const holder of representation) {
     const source = holderSource(holder, "Who sits on this board and their terms");

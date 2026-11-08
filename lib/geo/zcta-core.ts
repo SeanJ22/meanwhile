@@ -4,6 +4,8 @@ export interface ZctaCentroid {
   zip: string;
   lat: number;
   lng: number;
+  /** The ZIP's own state, when a published ZIP file named it; `postal` is present only for the ZIPs that file describes. */
+  state?: string;
   postal?: PostalArea;
 }
 

@@ -1,5 +1,5 @@
 import { vaultCapture } from "../facts/capture.ts";
-import { enqueueReaderPlaces } from "../reader/cache.ts";
+import { recordFactConfirmation } from "../facts/confirmation.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { FactDb, Query } from "../facts/publish.ts";
 import type { RetainedSourceResponse } from "./retained-meeting-bytes.ts";
@@ -32,13 +32,13 @@ export async function confirmMeetingFactsFromSources(input: {
     if ("error" in saved) throw new Error(`MEETING_CONFIRMATION_SOURCE_UNSAVED: ${saved.error}`);
     const hash = saved.capture.evidence.contentHash.replace(/^sha256-/, "");
     confirmed += await input.facts.transaction(async query => {
-      const rows = await query(`UPDATE fact f SET checked_at=greatest(f.checked_at,$1::timestamptz)
-        FROM source_copy s,entity e WHERE f.source_copy_id=s.id AND e.id=f.entity_id AND e.kind='meeting'
-          AND e.parent_id=ANY($2::text[]) AND f.status='live' AND f.provenance_kind<>'OWNER'
+      const rows = await query(`SELECT s.id,array_agg(f.id) AS fact_ids
+        FROM checked_fact f JOIN source_copy s ON f.source_copy_id=s.id JOIN entity e ON e.id=f.entity_id AND e.kind='meeting'
+        WHERE e.parent_id=ANY($2::text[]) AND f.status='live' AND f.provenance_kind<>'OWNER'
           AND s.sha256=$3 AND s.final_url=$4 AND NOT s.is_archive AND f.checked_at<$1::timestamptz
-        RETURNING f.entity_id`, [saved.capture.observedAt, [...new Set(input.bodyIds)], hash, saved.capture.evidence.canonicalUrl]);
-      if (rows.length) await enqueueReaderPlaces({ entities: [...new Set(rows.map(row => String(row.entity_id)))] }, query);
-      return rows.length;
+        GROUP BY s.id`, [saved.capture.observedAt, [...new Set(input.bodyIds)], hash, saved.capture.evidence.canonicalUrl]);
+      for (const row of rows) await recordFactConfirmation(query,{copyId:Number(row.id),scope:"meeting-source",at:saved.capture.observedAt,factIds:(row.fact_ids as number[]).map(Number)});
+      return rows.reduce((n,row)=>n+(row.fact_ids as unknown[]).length,0);
     });
   }
   return confirmed;

@@ -1,7 +1,8 @@
+import { searchMeetings } from "../lib/meetings/search.ts";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { meetingBodyIds, searchMeetings } from "../lib/meetings/query.ts";
+import { meetingBodyIds } from "../lib/meetings/query.ts";
 import { snapshotSourceFor } from "../lib/meetings/snapshot-source.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 

@@ -2,7 +2,6 @@
 export { composePlaceRow } from "../../lib/reader/place-decode.ts";
 export { mergePlaceRows } from "../../lib/reader/place-compose.ts";
 export { currentPlaceRow } from "../../lib/reader/place-identity.ts";
-export { unpackPlaceContextRow } from "../../lib/reader/place-ready.ts";
 export { stateCoverage, withPlaceRegistry } from "../../lib/reader/coverage.ts";
 export { searchMeetingsFromSource, meetingBodyIds } from "../../lib/meetings/query.ts";
 export { snapshotSourceFor } from "../../lib/meetings/snapshot-source.ts";
@@ -14,6 +13,7 @@ export { withRegistryRuntimeProjection } from "../../lib/registry/runtime-read-m
 export { bindGovernmentBodies } from "../../lib/registration/listings.ts";
 export { attemptsByFamily } from "../../lib/registry/attempt-families.ts";
 export { zipMemberDirectories, stateMemberDirectories } from "../../lib/reader/member-directories.ts";
+export { composeStateAnswer } from "../../lib/reader/state-answer.ts";
 export { censusWorkDivision } from "../../lib/census-geography/division-id.ts";
 export { selectGeographyVersion } from "../../lib/census-geography/selection.ts";
 export { stateCoverageForZip, mergeReaderCoverage } from "../../lib/reader/client.ts";

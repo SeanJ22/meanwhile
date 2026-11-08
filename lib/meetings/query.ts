@@ -1,13 +1,9 @@
-import { readReaderMeetingSettings } from "./reader-settings.ts";
 import type { Body } from "../registry/types.ts";
 import type { CoverageSummary } from "../registry/coverage.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { MeetingListingIdentityReadback } from "./listing-identity.ts";
 
-import {
-  DEFAULT_RADIUS_KM,
-  type CoverageTier,
-} from "./constants.ts";
+import { type CoverageTier } from "./constants.ts";
 import type { ResolvedMeetingSource } from "./snapshot-source.ts";
 
 // Re-exported from ./constants.ts so client code can import the values without this module's server-only graph.
@@ -98,22 +94,6 @@ export function meetingBodyIds(bodies: readonly MeetingBody[], divisions: Readon
   return ids;
 }
 
-export async function searchMeetings(
-  lat: number,
-  lng: number,
-  radiusKm: number = DEFAULT_RADIUS_KM,
-  now: Date = new Date(),
-  divisionsAtPoint: ReadonlySet<string> = new Set(),
-  injectedSource?: ResolvedMeetingSource,
-  shownSettings?: Pick<import("./settings.ts").MeetingSettings, "shownBackDays" | "shownAheadDays">,
-  bodyIds: ReadonlySet<string> = new Set(),
-  /** The bodies the registry lists; a meeting of any other body is placed by its own division. */
-  registeredBodyIds?: ReadonlySet<string>,
-): Promise<MeetingSearchResult> {
-  const source = injectedSource ?? (await import("./registry.ts")).getMeetingSource();
-  return searchMeetingsFromSource(lat, lng, radiusKm, now, divisionsAtPoint, source, shownSettings, bodyIds, registeredBodyIds);
-}
-
 /** Readers already hold their place's source; loading acquisition adapters is unnecessary. */
 export async function searchMeetingsFromSource(
   lat: number,
@@ -122,11 +102,10 @@ export async function searchMeetingsFromSource(
   now: Date,
   divisionsAtPoint: ReadonlySet<string>,
   source: ResolvedMeetingSource,
-  shownSettings?: Pick<import("./settings.ts").MeetingSettings, "shownBackDays" | "shownAheadDays">,
+  shown: Pick<import("./settings.ts").MeetingSettings, "shownBackDays" | "shownAheadDays">,
   bodyIds: ReadonlySet<string> = new Set(),
   registeredBodyIds?: ReadonlySet<string>,
 ): Promise<MeetingSearchResult> {
-  const shown = shownSettings ?? await readReaderMeetingSettings();
   const horizonMs = shown.shownAheadDays * 86_400_000;
   const lookbackMs = shown.shownBackDays * 86_400_000;
   const all = (await source.load({

@@ -23,6 +23,16 @@ export class JobRunBook {
     this.#runs.set(job, { since: this.now(), lastStartedAt: null, lastFinishedAt: null, lastFailedAt: null, lastError: null, heldBy: null,
       ...this.#runs.get(job), everyMs });
   }
+  /** A lane finishes at most once per run budget, unless its runs are quick checks launched on their interval. */
+  registerLane(lane: { id: string; everyMs: number; budgetMs: number; cadenceIsLaunch?: true }): void {
+    this.register(lane.id, lane.cadenceIsLaunch ? lane.everyMs : Math.max(lane.everyMs, lane.budgetMs));
+  }
+  /** One settled launcher pass: each note it left is a failure to read, and the pass itself finished. */
+  settled(job: string, notes: readonly string[]): void {
+    this.started(job);
+    for (const note of notes) this.failed(job, note);
+    this.finished(job);
+  }
   #update(job: string, change: Partial<JobRun>): void {
     const held = this.#runs.get(job);
     if (held) this.#runs.set(job, { ...held, ...change });

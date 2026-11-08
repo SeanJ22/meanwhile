@@ -45,11 +45,13 @@ test("installing a release is a scheduled job: it never blocks other lanes, a fa
   let otherLaneRuns = 0;
   const scheduler = new IndependentRuntimeLaneScheduler([
     { id: "other-lane", everyMs: 1_000, budgetMs: 5_000, run: async () => { otherLaneRuns += 1; } },
-    { id: "release-install", everyMs: 60_000, budgetMs: 20 * 60_000, run: deadlineMs => runInContext(`runReleaseInstall(${deadlineMs})`, context) },
+    { id: "release-install", everyMs: 60_000, budgetMs: 20 * 60_000, cadenceIsLaunch: true, run: deadlineMs => runInContext(`runReleaseInstall(${deadlineMs})`, context) },
   ], outcome => {
     if (outcome.state === "FAILED") jobRuns.failed(outcome.id, outcome.error); else jobRuns.completed(outcome.id);
   }, id => jobRuns.started(id));
-  for (const lane of scheduler.lanes) jobRuns.register(lane.id, lane.everyMs);
+  for (const lane of scheduler.lanes) jobRuns.registerLane(lane);
+  assert.equal(jobRuns.merged(null)["release-install"]!.everyMs, 60_000, "the recorded interval is the real cadence, not the 20-minute budget");
+  assert.equal(jobRuns.merged(null)["other-lane"]!.everyMs, 5_000);
 
   // The first pass starts the install; it is still running, and other lanes keep launching meanwhile.
   assert.deepEqual(scheduler.tick(clock), ["other-lane", "release-install"]);

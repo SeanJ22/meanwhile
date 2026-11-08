@@ -118,3 +118,59 @@ test("the measure number remains readable when No. has no following space", () =
   const found = matchElectionResult(result("AK", [], { office: "measure", officeName: "Measure", measure: { name: "Primaries", number: "Measure 2", outcome: "counting" } }), ballot([held], [], [measure]));
   assert.equal(found.kind, "matched");
 });
+
+for (const [state, sourceOffice, title, district] of [
+  ["AL", "Agriculture Commissioner", "Commissioner of Agriculture and Industries", ""],
+  ["AL", "Public Service Commissioner Place 1", "Public Service Commission Place 1", ""],
+  ["AL", "Public Service Commissioner Place 2", "Public Service Commission Place 2", ""],
+  ["AR", "Commissioner of State Lands", "COMMISSIONER OF STATE LANDS", ""],
+  ["DE", "Auditor", "Auditor of Accounts", ""],
+  ["FL", "Treasurer", "Chief Financial Officer", ""],
+  ["GA", "Insurance Commissioner", "Insurance and Fire Safety Commissioner", ""],
+  ["GA", "Superintendent of Public Instruction", "State School Superintendent", ""],
+  ["IN", "Auditor", "State Comptroller (Auditor of State)", ""],
+  ["IN", "Treasurer", "Treasurer of State", ""],
+  ["IA", "Agriculture Commissioner", "Secretary of Agriculture", ""],
+  ["IA", "Treasurer", "Treasurer of State", ""],
+  ["MS", "State House", "For State House Of Rep 70, District 70", "sldl:70"],
+  ["NE", "Auditor", "Auditor of Public Accounts", ""],
+  ["ND", "Public Service Commissioner Seat 2", "Public Service Commissioner Unexpired 2-Year Term", ""],
+  ["ND", "Superintendent of Public Instruction", "Superintendent of Public Instruction Unexpired 2-Year Term", ""],
+  ["ND", "Tax Commissioner", "Tax Commissioner", ""],
+  ["ND", "State House", "State Representative Unexpired 2-Year Term District 20", "sldl:20"],
+  ["OH", "Treasurer", "Treasurer of State", ""],
+  ["SC", "Comptroller General", "Comptroller General", ""],
+  ["SC", "Superintendent of Public Instruction", "State Superintendent of Education", ""],
+  ["SD", "Commissioner of School and Public Lands", "Commissioner of School and Public Lands", ""],
+  ["TX", "Commissioner of the General Land Office", "COMMISSIONER OF THE GENERAL LAND OFFICE", ""],
+  ["TX", "Comptroller", "COMPTROLLER OF PUBLIC ACCOUNTS", ""],
+  ["TX", "State House", "STATE REPRESENTATIVE, DISTRICT 93 — Special Election", "sldl:93"],
+  ["TX", "State Senate", "STATE SENATE, DISTRICT 22 — Special Election", "sldu:22"],
+  ["VT", "Auditor", "AUDITOR OF ACCOUNTS", ""],
+]) test(`${state} results recognize the served office title: ${title}`, () => {
+  const held = contest("served-office", state, title, district);
+  const set = ballot([held], [candidate("served-person", held.id, "Alice Eleanor Quinn")]);
+  const office = sourceOffice.toLowerCase().replaceAll(" ", "_");
+  const found = matchElectionResult(result(state, ["Alice Eleanor Quinn"], { office, officeName: sourceOffice, districtHint: "999" }), set);
+  assert.equal(found.kind, "matched");
+  if (found.kind === "matched") assert.equal(found.contest.id, held.id);
+  assert.equal(matchElectionResult(result(state, ["Another Full Name"], { office, officeName: sourceOffice }), set).kind, "unmatched",
+    "an office alias still requires the full candidate name");
+});
+
+for (const [state, sourceOffice, title, district] of [
+  ["NC", "State House", "GASTON SOIL AND WATER CONSERVATION DISTRICT SUPERVISOR", "county:gaston"],
+  ["TX", "State House", "Williamson-Travis Counties Municipal Utility District No. 1 Directors", "special_district:williamson_travis_counties_mud_1"],
+  ["TX", "State Senate", "JUDGE, COUNTY CRIMINAL COURT NO. 1", "county:tarrant"],
+  ["GA", "Superintendent of Public Instruction", "State School Superintendent", "county:example"],
+  ["FL", "Treasurer", "Chief Financial Officer", "county:example"],
+  ["CA", "Treasurer", "Chief Financial Officer", ""],
+  ["ND", "Tax Commissioner", "Tax Commissioner", "county:example"],
+  ["SC", "Comptroller General", "Comptroller of Public Accounts", ""],
+]) test(`${state} a full name cannot match the wrong office or scope: ${title}`, () => {
+  const held = contest("wrong-office", state, title, district);
+  const found = matchElectionResult(result(state, ["Alice Eleanor Quinn"], {
+    office: sourceOffice.toLowerCase().replaceAll(" ", "_"), officeName: sourceOffice,
+  }), ballot([held], [candidate("same-full-name", held.id, "Alice Eleanor Quinn")]));
+  assert.equal(found.kind, "unmatched");
+});

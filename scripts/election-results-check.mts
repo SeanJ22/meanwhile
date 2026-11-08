@@ -1,8 +1,8 @@
-import { execFile } from "node:child_process";
+import { execFile, spawn } from "node:child_process";
 import { createHash, randomBytes } from "node:crypto";
 import { readFile, readdir } from "node:fs/promises";
 import { promisify } from "node:util";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import assert from "node:assert/strict";
 import { matchElectionResult } from "../lib/election-results/matcher.ts";
 import { parseMultiStateResults } from "../lib/election-results/multistate.ts";
@@ -19,32 +19,89 @@ const record = (value: unknown): Record<string, unknown> => value !== null && ty
 const strings = (value: unknown): string[] => Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
 
 /** Public HTTP only. curl honors the managed environment's proxy and never loads saved database keys. */
-async function publicText(url: string): Promise<string> {
+export async function publicText(url: string): Promise<string> {
   const { stdout } = await run("curl", ["--fail-with-body", "--silent", "--show-error", "--location", "--compressed", "--retry", "1", "--max-time", "60", url],
     { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
   return stdout;
 }
 
-function flightRows(html: string): unknown[] {
+function flightRows(html: string) {
   const stream = [...html.matchAll(/self\.__next_f\.push\(\[(\d+),("(?:\\.|[^"\\])*")\]\)/g)]
     .filter(match => match[1] === "1").map(match => JSON.parse(match[2]) as string).join("");
-  return stream.split("\n").flatMap(line => {
-    try { return [JSON.parse(line.slice(line.indexOf(":") + 1)) as unknown]; } catch { return []; }
-  });
+  const rows = new Map<string, unknown>();
+  const bytes = Buffer.from(stream);
+  let offset = 0;
+  while (offset < bytes.length) {
+    const split = bytes.indexOf(58, offset);
+    if (split < 0) break;
+    const id = bytes.subarray(offset, split).toString();
+    offset = split + 1;
+    if (bytes[offset] === 84) {
+      // Flight text frames carry a UTF-8 byte length and need no trailing newline.
+      // Splitting on newlines can otherwise discard the next contest's JSON row.
+      const comma = bytes.indexOf(44, offset), length = Number.parseInt(bytes.subarray(offset + 1, comma).toString(), 16);
+      if (comma < 0 || !Number.isSafeInteger(length) || length < 0 || comma + 1 + length > bytes.length)
+        throw new Error("Public ballot has an incomplete Flight text frame");
+      rows.set(id, bytes.subarray(comma + 1, comma + 1 + length).toString());
+      offset = comma + 1 + length;
+      if (bytes[offset] === 10) offset++;
+      continue;
+    }
+    const newline = bytes.indexOf(10, offset), end = newline < 0 ? bytes.length : newline;
+    try { rows.set(id, JSON.parse(bytes.subarray(offset, end).toString()) as unknown); } catch { /* Module frames are not choice records. */ }
+    offset = end + 1;
+  }
+  const resolve = (value: unknown): unknown => {
+    const reference = typeof value === "string" && /^\$(?:L|@)?([a-f0-9]+)$/i.exec(value)?.[1];
+    return reference && rows.has(reference) ? rows.get(reference) : value;
+  };
+  return { rows: [...rows.values()], resolve };
 }
 
 /** A read-only verification snapshot of what the public page actually sends, never the ballot files in git. */
-export function publicBallotSnapshot(html: string, zip: string, state: string): BallotSet {
-  const choices = new Map<string, Record<string, unknown>>(), measureIds = new Map<string, string>();
+export function publicBallotSnapshot(html: string, zip: string, state: string, options: { requireElectionDate?: boolean } = {}): BallotSet {
+  const choices = new Map<string, Record<string, unknown>>(), measureIds = new Map<string, string>(), electionDates = new Set<string>();
+  const flight = flightRows(html), visited = new Set<object>();
+  const descendants = (value: unknown, inspect: (row: Record<string, unknown>) => void, seen = new Set<object>()): void => {
+    value = flight.resolve(value);
+    if (!value || typeof value !== "object" || seen.has(value)) return;
+    seen.add(value);
+    if (Array.isArray(value)) { for (const child of value) descendants(child, inspect, seen); return; }
+    const row = record(value);
+    inspect(row);
+    for (const child of Object.values(row)) descendants(child, inspect, seen);
+  };
   const walk = (value: unknown) => {
+    value = flight.resolve(value);
+    if (!value || typeof value !== "object" || visited.has(value)) return;
+    visited.add(value);
     if (Array.isArray(value)) { for (const child of value) walk(child); return; }
     const row = record(value);
+    if (typeof row.electionDate === "string" && /^\d{4}-\d{2}-\d{2}$/.test(row.electionDate)) electionDates.add(row.electionDate);
     if (Array.isArray(row.pickable)) for (const choice of row.pickable) {
       const item = record(choice);
       if (typeof item.contestId === "string") choices.set(item.contestId, item);
     }
     const attrs = record(row.attrs), contestId = attrs["data-contest-id"];
     if (typeof contestId === "string") {
+      // Voting controls omit contests whose instructions are unknown. Their visible
+      // cards still carry the existing contest and candidate identities.
+      if (typeof attrs["data-ocd-id"] === "string" && typeof row.title === "string" && !choices.has(contestId)) {
+        const options: Record<string, unknown>[] = [];
+        descendants(row.children, candidate => {
+          if (typeof candidate["data-candidate-target"] !== "string") return;
+          const names: string[] = [];
+          descendants(candidate.children, part => {
+            if (typeof part.cardId === "string" && part.cardId.startsWith("CANDIDATE:")) names.push(part.cardId.slice("CANDIDATE:".length));
+          });
+          const name = names[0];
+          if (!name) throw new Error(`Visible candidate name missing from public ballot ${zip}: ${contestId}`);
+          let aliases: string[] = [];
+          if (typeof candidate["data-candidate-aliases"] === "string") aliases = strings(JSON.parse(candidate["data-candidate-aliases"]));
+          options.push({ id: name, label: name, reactionTargetId: candidate["data-candidate-target"], reactionTargetAliases: aliases });
+        });
+        if (options.length) choices.set(contestId, { contestId, contestTitle: row.title, contestOcdId: attrs["data-ocd-id"], voteFor: null, options });
+      }
       const findMeasure = (value: unknown): void => {
         if (Array.isArray(value)) { for (const child of value) findMeasure(child); return; }
         const item = record(value);
@@ -55,10 +112,13 @@ export function publicBallotSnapshot(html: string, zip: string, state: string): 
     }
     for (const child of Object.values(row)) walk(child);
   };
-  for (const row of flightRows(html)) walk(row);
+  for (const row of flight.rows) walk(row);
   if (!choices.size) throw new Error(`Public ballot ${zip} has no readable choice data`);
+  if (electionDates.size > 1 || options.requireElectionDate && electionDates.size !== 1)
+    throw new Error(`Public ballot ${zip} has no single observed election date`);
+  const electionDate = [...electionDates][0] ?? "2026-11-03";
   const provenance = { sourceUrl: `${PUBLIC_SITE_ORIGIN}/ballot?zip=${zip}`, sourceOrg: "Meanwhile public ballot", collectedAt: new Date().toISOString(), verifiedAt: null };
-  const electionId = `public:${state}:2026-11-03`, contests: Contest[] = [], candidacies: Candidacy[] = [], measures: Measure[] = [];
+  const electionId = `public:${state}:${electionDate}`, contests: Contest[] = [], candidacies: Candidacy[] = [], measures: Measure[] = [];
   for (const [id, choice] of choices) {
     const options = Array.isArray(choice.options) ? choice.options.map(record) : [];
     const yesNo = options.length > 0 && options.every(option => /^(YES|NO)$/i.test(String(option.id)));
@@ -83,7 +143,7 @@ export function publicBallotSnapshot(html: string, zip: string, state: string): 
       candidacies.push(candidate);
     }
   }
-  return { election: { id: electionId, date: "2026-11-03", name: "2026 general election", state }, contests, candidacies, measures, absences: [] };
+  return { election: { id: electionId, date: electionDate, name: "Public ballot", state }, contests, candidacies, measures, absences: [] };
 }
 
 async function randomZipSample(seed: string, count: number): Promise<{ zip: string; state: string }[]> {
@@ -127,7 +187,7 @@ async function federalBatch(contest: Contest, state: string, checkedAt: string):
   }
 }
 
-async function verifyOnCopy(copy: FactDb & { query: Query }, ballot: BallotSet, batches: readonly ElectionResultBatch[], at: string) {
+export async function verifyZipResultsOnCopy(copy: FactDb & { query: Query }, ballot: BallotSet, batches: readonly ElectionResultBatch[], at: string) {
   const { publishElectionResultBatch, ensureOpenElectionResults } = await import("../lib/election-results/publisher.ts");
   const { withBallotResultFacts } = await import("../lib/ballot/election-results.ts");
   const { ensureEntity } = await import("../lib/facts/entities.ts");
@@ -143,7 +203,10 @@ async function verifyOnCopy(copy: FactDb & { query: Query }, ballot: BallotSet, 
   const db: FactDb = { transaction: work => copy.transaction(query => work(counted(query))) };
   let exactComparisons = 0, published = 0, sourceFixes = 0, unchangedSqlCalls = 0;
   for (const batch of batches) {
-    const input = { db, query: counted(copy.query), ballots: [ballot], batch, state, now: new Date(at), purge: async () => ({ purged: true }) };
+    // A ZIP is a reader-field sample, not a complete state contest inventory.
+    // Only its matched races belong in this copy; absence here cannot establish a state-wide gap.
+    const sampleBatch = { ...batch, races: batch.races.filter(race => matchElectionResult(race, ballot).kind === "matched") };
+    const input = { db, query: counted(copy.query), ballots: [ballot], batch: sampleBatch, state, now: new Date(at), purge: async () => ({ purged: true }) };
     const first = await publishElectionResultBatch(input);
     published += first.counts.published;
     sourceFixes += first.counts.unmatched + first.counts.ambiguous;
@@ -181,13 +244,24 @@ async function verifyOnCopy(copy: FactDb & { query: Query }, ballot: BallotSet, 
   await ensureOpenElectionResults(copy.query, [ballot], covered);
   const [work] = await copy.query("SELECT count(*) FILTER(WHERE kind='fix')::int AS fixes,count(*) FILTER(WHERE kind='detect')::int AS detectives,count(*) FILTER(WHERE kind='hunt')::int AS standing FROM work WHERE state=$1", [state]);
   assert.equal(unchangedSqlCalls, 0, "Unchanged source rechecks must issue no SQL");
+  assert.equal(sourceFixes, 0, "A ZIP sample cannot establish unmatched source races anywhere in a state");
   return { exactComparisons, localQuestionIds, publishedFacts: published, unmatchedSourceRaces: sourceFixes, fixRows: Number(work?.fixes),
     detectiveRows: Number(work?.detectives), standingRows: Number(work?.standing), unchangedRecheckSqlCalls: unchangedSqlCalls };
 }
 
 async function check() {
   for (const name of ["DATABASE_URL", "WTP_CONTROL_PLANE_DATABASE_URL", "WTP_CONTROL_PLANE_DATABASE_URL_READONLY", "WTP_PRODUCTION_DATABASE_URL_READONLY"]) delete process.env[name];
-  const args = process.argv.slice(2), seed = args[args.indexOf("--seed") + 1] && args.includes("--seed") ? args[args.indexOf("--seed") + 1] : randomBytes(16).toString("hex");
+  const args = process.argv.slice(2);
+  if (args.includes("--national")) {
+    await new Promise<void>((resolve, reject) => {
+      const child = spawn(process.execPath, [...process.execArgv, fileURLToPath(new URL("./election-results-national-check.mts", import.meta.url)),
+        ...args.filter(arg => arg !== "--national")], { stdio: "inherit" });
+      child.on("error", reject);
+      child.on("exit", code => code === 0 ? resolve() : reject(new Error(`National election audit exited ${code}`)));
+    });
+    return;
+  }
+  const seed = args[args.indexOf("--seed") + 1] && args.includes("--seed") ? args[args.indexOf("--seed") + 1] : randomBytes(16).toString("hex");
   const sample = await randomZipSample(seed, 10), checkedAt = new Date().toISOString();
   if (args.includes("--nation-only")) { await checkCongress(sample, checkedAt); return; }
   const raw = await publicText("https://multistate.us/elections/data/live_results_general_2026.json");
@@ -221,7 +295,7 @@ async function check() {
     const matched = new Set(matches.map(match => match.contestId));
     const owed = ballot.contests.filter(contest => contest.type !== "RETENTION" &&
       (/\/(?:sldl|sldu|cd):/.test(contest.ocdId) || /\/state:[a-z]{2}$/.test(contest.ocdId)));
-    const verified = await verifyOnCopy(copy, ballot, batches, checkedAt);
+    const verified = await verifyZipResultsOnCopy(copy, ballot, batches, checkedAt);
     const report = { ...place, ...verified, pageBytes: Buffer.byteLength(page), elapsedMs: Date.now() - start, servedContests: ballot.contests.length,
       owedStateAndCongressContests: owed.length, matchedRaces: matches.length, matchedCandidates: matches.reduce((n, match) => n + match.candidates, 0),
       candidateFixes: matches.reduce((n, match) => n + match.missingCandidates, 0),
@@ -235,7 +309,7 @@ async function check() {
     unmatchedContests: reports.reduce((n, row) => n + row.unmatchedContests.length, 0), sourceFailures: reports.reduce((n, row) => n + row.failures.length, 0),
     exactFieldComparisons: reports.reduce((n, row) => n + row.exactComparisons, 0), publishedCopyFacts: reports.reduce((n, row) => n + row.publishedFacts, 0),
     unchangedRecheckSqlCalls: reports.reduce((n, row) => n + row.unchangedRecheckSqlCalls, 0),
-    productionDatabaseConnections: 0, publication: "Live public ballots and sources published through the Slide on a disposable local copy; reader fields compared exactly" };
+    productionDatabaseConnections: 0, publication: "ZIP-matched results published through the Slide on a disposable local copy; reader fields compared exactly. Unmatched-race counts require the complete national ballot audit." };
   console.log(JSON.stringify(total));
 }
 

@@ -2,13 +2,14 @@ import { createHash } from "node:crypto";
 import { electionResultClockRows, readCanonicalShelf } from "../reader/canonical.ts";
 import { readGenericBallotProjection } from "../ballot/generic-projection.ts";
 import { withCandidateTickets } from "../ballot/tickets.ts";
+import { withCurrentCandidacies } from "../ballot/filing-changes.ts";
 import type { BallotSet } from "../ballot/types.ts";
 import { stateBallotScope } from "../civic-data/state-scopes.ts";
 import { stateName } from "../facts/entity-read.ts";
 import { writePassCursor } from "../facts/db.ts";
 import type { FactDb, Query } from "../facts/publish.ts";
 import { withBatchedReaderInvalidation, type ReaderCachePurger } from "../reader/cache.ts";
-import { workList } from "../core/work.ts";
+import { workId, workList, type WorkInput } from "../core/work.ts";
 import type { DoorRepository, DoorRecord } from "../doors/registry.ts";
 import { isDoorRecord } from "../doors/registry.ts";
 import { parseMultiStateResults, readMultiStateResults } from "./multistate.ts";
@@ -34,6 +35,7 @@ interface StateProgress extends ResultProgress {
   readonly federalRoutes?: readonly BallotpediaRace[];
   readonly ballotVersion?: string | null;
   readonly pendingSources?: readonly string[];
+  readonly pendingFixes?: readonly WorkInput[];
 }
 type CachedClock = { readonly position: string; readonly hashMD5: string };
 const progressHash = (position: string) => createHash("md5").update(position).digest("hex");
@@ -41,7 +43,7 @@ const CLOCK_CACHE_NAMESPACE = "election-results-progress";
 const CLOCK_CACHE_KEY = "source-clocks-v1";
 
 /** Select the same promoted ballot authority readers use, restricted to one state. */
-async function servedBallots(query: Query, state: string): Promise<readonly BallotSet[]> {
+export async function servedBallots(query: Query, state: string): Promise<readonly BallotSet[]> {
   const scope = stateBallotScope("ballot-contests", state);
   const store = await readCanonicalShelf([{ recordClass: "BALLOT_CANDIDACY", scope }], async statements => {
     const results = [];
@@ -51,7 +53,7 @@ async function servedBallots(query: Query, state: string): Promise<readonly Ball
   const read = await readGenericBallotProjection(state, { store });
   if (read.kind === "NOT_RECORDED") return [];
   if (read.kind !== "PROMOTED") throw new Error(`Election results cannot read ${state}'s served ballot: ${read.kind}`);
-  return Object.values(read.value.ballots).map(withCandidateTickets);
+  return Object.values(read.value.ballots).map(ballot => withCandidateTickets(withCurrentCandidacies(ballot)));
 }
 
 /** Congress page routes are discovered from held source links, with the ordinary national page names as fallback. */
@@ -102,11 +104,16 @@ export async function runElectionResults(input: {
   deadlineMs?: number;
   clock?: () => number;
   cache?: CivicReadCache;
-}): Promise<ResultCounts & { reads: number; nextCheckAt: string | null }> {
+  /** Bounds all fix upserts across both sources and every state in one turn. Detectives are separate. */
+  maxFixRows?: number;
+}): Promise<ResultCounts & { reads: number; nextCheckAt: string | null; fixRowsWritten: number; pendingFixRows: number }> {
+  const maxFixRows = input.maxFixRows ?? 100;
+  if (!Number.isSafeInteger(maxFixRows) || maxFixRows < 1) throw new RangeError("maxFixRows must be a positive integer");
+  let fixRowsWritten = 0;
   const now = input.now ?? new Date(), at = now.toISOString(), states = input.states ?? STATES;
   const more = () => (input.clock ?? Date.now)() < (input.deadlineMs ?? Number.POSITIVE_INFINITY);
   const result: ResultCounts = { matched: 0, unmatched: 0, ambiguous: 0, published: 0, unchanged: 0 };
-  if (!more()) return { ...result, reads: 0, nextCheckAt: at };
+  if (!more()) return { ...result, reads: 0, nextCheckAt: at, fixRowsWritten, pendingFixRows: 0 };
   let reads = 0;
   const count = (query: Query): Query => async (text, params) => {
     if (/^\s*(?:SELECT|WITH)\b/i.test(text)) reads++;
@@ -144,10 +151,30 @@ export async function runElectionResults(input: {
     progress.set(state, saved as StateProgress);
     cached[name] = { position, hashMD5 };
   }
+  const queuedFixes = new Map<string, Map<string, WorkInput>>();
+  for (const [state, prior] of progress) queuedFixes.set(state, new Map((prior.pendingFixes ?? []).map(row => [workId(row), row])));
+  const dirtyFixStates = new Set<string>(), writtenFixes = new Set<string>();
+  const writeFix = async (row: WorkInput) => {
+    if (row.kind !== "fix") throw new Error("Election result fix allowance accepts only fix work");
+    const state = row.state ?? "US", id = workId(row);
+    let queue = queuedFixes.get(state);
+    if (!queue) { queue = new Map(); queuedFixes.set(state, queue); }
+    if (writtenFixes.has(id)) return;
+    if (fixRowsWritten < maxFixRows && more()) {
+      fixRowsWritten++;
+      await workList(query, { owner: "election-results" }).ensure([row]);
+      writtenFixes.add(id);
+      if (queue.delete(id)) dirtyFixStates.add(state);
+    } else {
+      queue.set(id, row); dirtyFixStates.add(state);
+    }
+  };
   const saveProgress = async (state: string, value: StateProgress) => {
-    const name = cursorName(state), position = JSON.stringify(value);
+    const saved = { ...value, pendingFixes: [...queuedFixes.get(state)?.values() ?? []] };
+    const name = cursorName(state), position = JSON.stringify(saved);
     await writePassCursor(query, name, position);
     cached[name] = { position, hashMD5: progressHash(position) };
+    progress.set(state, saved); dirtyFixStates.delete(state);
   };
   const doors = new Map<string, DoorRecord>();
   const doorRows = new Map<string, Persisted<DoorRecord>>();
@@ -163,6 +190,11 @@ export async function runElectionResults(input: {
     }
   }
   let unfinished = false;
+  // These descriptors already passed matching. Their source clocks need no extra read, even after certification.
+  for (const queue of queuedFixes.values()) for (const row of [...queue.values()]) {
+    if (fixRowsWritten >= maxFixRows || !more()) break;
+    await writeFix(row);
+  }
   let multistateText: string | undefined, multistateFailure: unknown;
   const due: string[] = [];
   const sourceNext = (prior: StateProgress, source: string, requested = true): string | null => {
@@ -191,10 +223,10 @@ export async function runElectionResults(input: {
     const safeReason = reason.replace(/postgres(?:ql)?:\/\/\S+/g, "database connection");
     if (url.includes("ballotpedia.org")) noteOutcome("ballotpedia", safeReason);
     if (url.includes("multistate.us")) noteOutcome("multistate", safeReason);
-    await workList(query, { owner: "election-results" }).ensure([{ kind: "fix", state,
+    await writeFix({ kind: "fix", state,
       placeId: state === "US" ? "ocd-division/country:us" : `ocd-division/country:us/state:${state.toLowerCase()}`, subjectId: `election-results:${state}`,
       field: `source:${createHash("sha256").update(url).digest("hex").slice(0, 16)}`, url,
-      source: { source: "Election results", reason: safeReason }, value: { reason: safeReason }, origin: { from: "loader" } }]);
+      source: { source: "Election results", reason: safeReason }, value: { reason: safeReason }, origin: { from: "loader" } });
     const next = nextElectionResultCheck({ status: "pending", lastCheckedAt: at }, doors.get(url.includes("ballotpedia.org") ? "ballotpedia" : "multistate"), now);
     if (next) due.push(next);
   };
@@ -220,7 +252,7 @@ export async function runElectionResults(input: {
         ...nation.federalRoutes ?? [], ...batch.racePages,
       ].map(page => [ballotpediaRaceId(page.url), page])).values()] };
       const changed = await publishElectionResultBatch({ query, db, batch, ballots: [], state: "US", prior: nation, now,
-        door: doors.get("ballotpedia"), purge: input.purge, more });
+        door: doors.get("ballotpedia"), purge: input.purge, more, writeFix });
       nation = checked(pending({ ...nation, ...changed.progress }, key, changed.deferred), key, Boolean(batch.catalogErrors?.length));
       unfinished ||= changed.deferred;
       for (const issue of batch.catalogErrors ?? []) await failure("US", issue.url, issue.reason);
@@ -291,7 +323,7 @@ export async function runElectionResults(input: {
           }
         }
         const changed = await publishElectionResultBatch({ query, db, batch: { ...batch, races: eligible, summaries }, ballots: held,
-          state, prior, now, door: doors.get(source), purge, more });
+          state, prior, now, door: doors.get(source), purge, more, writeFix });
         for (const race of eligible) {
           const key = raceClockKey(race);
           if (changed.progress.races[key]?.lastCheckedAt === at) for (const id of newlyCovered.get(key) ?? []) covered.add(id);
@@ -372,6 +404,8 @@ export async function runElectionResults(input: {
       console.warn(`Election results source clock changed during its read: ${source}; the current Admin setting is retained.`);
     }
   }
+  for (const state of [...dirtyFixStates]) await saveProgress(state, progress.get(state) ?? empty());
+  const pendingFixRows = [...queuedFixes.values()].reduce((count, queue) => count + queue.size, 0);
   await cache.checkpoint(CLOCK_CACHE_NAMESPACE, CLOCK_CACHE_KEY, cached);
-  return { ...result, reads, nextCheckAt: unfinished ? at : due.sort()[0] ?? null };
+  return { ...result, reads, nextCheckAt: unfinished || pendingFixRows ? at : due.sort()[0] ?? null, fixRowsWritten, pendingFixRows };
 }

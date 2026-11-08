@@ -1088,9 +1088,12 @@ async function advanceStagedRelease(targetSha: string): Promise<StagedReleaseSte
 
 const pendingRestart = new PendingRestart();
 let releaseCheck: Promise<void> | null = null;
-/** The standing clock looks for a new release every minute, whether or not a research cycle is running. */
+let releaseLookedAt = 0;
+/** The standing clock looks for a new release every five minutes, whether or not a research cycle is running. */
+const RELEASE_LOOK_MS = 300_000;
 function checkReleaseForRestart(): void {
-  if (!AUTO_RELEASE_HANDOFF || pendingRestart.target !== null || releaseCheck !== null) return;
+  if (!AUTO_RELEASE_HANDOFF || pendingRestart.target !== null || releaseCheck !== null || Date.now() - releaseLookedAt < RELEASE_LOOK_MS) return;
+  releaseLookedAt = Date.now();
   releaseCheck = (async () => {
     const release = await inspectRuntimeRelease();
     wantedRelease = release.state === "UPDATE_REQUIRED" ? release.targetSha : null;
@@ -1098,7 +1101,7 @@ function checkReleaseForRestart(): void {
     if (await advanceStagedRelease(wantedRelease) !== "DRAIN") return;
     holdForRestart(wantedRelease);
   })().catch(error => {
-    console.error(`  runtime release inspection failed (${error instanceof Error ? error.name : "error"}); standing work continues and the next minute looks again`);
+    console.error(`  runtime release inspection failed (${error instanceof Error ? error.name : "error"}); standing work continues and the next look is in five minutes`);
   }).finally(() => { releaseCheck = null; });
 }
 

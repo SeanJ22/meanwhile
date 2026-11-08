@@ -68,10 +68,11 @@ test("an absent variable renders as absence, never as a seven-character SHA", ()
   assert.match(ROUTE, /\?\? "unknown"/, "absence no longer renders as an honest unknown");
 });
 
-test("the stamp is never cached", () => {
+test("the stamp is never cached by a browser, and the CDN keeps it only until the next deploy", () => {
   assert.match(
     ROUTE,
     /cache-control["']?\s*:\s*["']no-store/,
     "a cached build stamp reports the previous deploy's SHA — the lie this endpoint prevents",
   );
+  assert.match(ROUTE, /netlify-cdn-cache-control["']?\s*:\s*["']public, durable, max-age=86400/, "robots asking which commit is live would run a function every time");
 });

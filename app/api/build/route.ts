@@ -54,10 +54,9 @@ export function GET() {
       },
     },
     {
-      // Never cached: a cached build stamp is precisely the lie this endpoint
-      // exists to prevent — it would keep reporting the previous deploy's SHA
-      // and a verification would pass against the build it was meant to catch.
-      headers: { "cache-control": "no-store, max-age=0" },
+      // Browsers and proxies never keep it. Netlify's CDN keeps the answer until the next deploy empties it, which is exactly
+      // when the stamp changes, so the runner and the checks that ask which commit is live cost one function run per deploy.
+      headers: { "cache-control": "no-store, max-age=0", "netlify-cdn-cache-control": "public, durable, max-age=86400" },
     },
   );
 }

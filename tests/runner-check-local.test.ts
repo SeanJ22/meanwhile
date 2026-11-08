@@ -9,7 +9,7 @@ import { describe, it } from "node:test";
 import { readSetting, settingDefinition } from "../lib/control-plane/settings.ts";
 import { LIVE_VISITS_DEFAULT, LIVE_VISITS_SETTING, takeLiveVisit, type LiveVisitLedger } from "../lib/ops/live-visits.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
-import { guardProxy, openSite, type LocalSite } from "../scripts/site.mts";
+import { guardProxy, liveVisitsPerDay, openSite, type LocalSite } from "../scripts/site.mts";
 
 const MORNING = "2026-11-07T09:00:00.000Z";
 const NEXT_MORNING = "2026-11-08T09:00:00.000Z";
@@ -30,6 +30,11 @@ describe("the daily live-site allowance", () => {
 
   it("keeps every visit on the runner's copy when the allowance is zero", () => {
     assert.equal(takeLiveVisit(null, "resident-tasks", MORNING, 0).live, false);
+  });
+
+  it("gives no live visits to a machine with no control plane, so only the runner touches the live site", async () => {
+    assert.equal(await liveVisitsPerDay(null), 0);
+    assert.equal(await liveVisitsPerDay({ adminConfig: { read: async () => null } } as never), LIVE_VISITS_DEFAULT);
   });
 
   it("is an Admin setting that reads its default and refuses nonsense", () => {

@@ -268,7 +268,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
 
   /* 1 · Reclaim first, so a worker that died since the last cycle costs one cycle of latency. */
   const reclaim = input.skipReclaim
-    ? { reclaimed: [], releasedSettled: [], stillLive: [], refused: [] }
+    ? { reclaimed: [], releasedSettled: [], stillLive: [], refused: [], unswept: 0 }
     : await sweepExpiredLeases(input.recoveryRepos ?? input.repos, {
         now: input.now,
         observedBy: input.holder,

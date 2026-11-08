@@ -6,6 +6,8 @@ import type { DiscoveryOpen, DiscoveryRuntime } from "./meetings-discovery-execu
 
 export const CENSUS_LANE_INTERVAL_MS = 5 * 60_000;
 export const CENSUS_LANE_BUDGET_MS = 10 * 60_000;
+/** A pass cut by its deadline is finished only if it printed progress this recently: the reporter beats every 30 s and live walks land 10-50 s apart, so two minutes is four missed beats, a stall. */
+export const CENSUS_PARTIAL_WINDOW_MS = 2 * 60_000;
 type CensusPage = Awaited<ReturnType<DiscoveryOpen>> & { url: string; artifactId: string };
 
 export function censusReader(runtime: DiscoveryRuntime, subjectId: string) {

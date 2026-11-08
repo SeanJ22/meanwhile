@@ -212,7 +212,7 @@ test("SEEDED: an expired lease on a DISPOSED RouteTask is released exactly once,
 
     const observed = recording(repos);
     const next = await sweepExpiredLeases(observed.repos, { now: T3, observedBy: "sweeper" });
-    assert.deepEqual(next, { reclaimed: [], releasedSettled: [], stillLive: [], refused: [] }, `${label}: nothing left to walk`);
+    assert.deepEqual(next, { reclaimed: [], releasedSettled: [], stillLive: [], refused: [], unswept: 0 }, `${label}: nothing left to walk`);
     assert.deepEqual(observed.calls.filter((call) => call.includes(task.id)), [], `${label}: the settled task was not walked again`);
     assert.ok(observed.calls.includes("leases.listWhere()"), `${label}: the sweep queries unreleased leases`);
     assert.ok(!observed.calls.includes("leases.list()"), `${label}: the sweep does not load released lease history`);
@@ -366,4 +366,26 @@ test("POSITIVE CONTROL: a sweep over N dead settled leases makes zero full Attem
     }
     assert.equal(attemptReads("list"), N, `${label}: the counter sees every full listing, so the zero above is a measurement`);
   }
+});
+
+test("a backlog of abandoned leases is swept inside the sweep's budget, and the next sweep takes the rest", async () => {
+  const repos = createMemoryRepositories();
+  const abandoned: string[] = [];
+  for (let n = 0; n < 60; n++) {
+    const task = await registered(repos, `wtp-body/abandoned#${n}`);
+    const died = await claimRouteTask(repos, { routeTaskId: task.id, holder: "walker-dead", now: T1, ttlMs: TTL });
+    await beginAttemptFor(repos, { routeTaskId: task.id, workItemId: task.workItemId, worker: walker("walker-dead"), lease: died.lease.value,
+      now: T1, methodVersion: 1, policyVersion: "p1" });
+    abandoned.push(task.id);
+  }
+  // Each slice of work costs one second on a controlled clock; the budget allows two slices.
+  let wall = 0;
+  const clock = () => (wall += 1_000);
+  const first = await sweepExpiredLeases(repos, { now: T2, observedBy: "sweeper", budgetMs: 2_500, clock });
+  assert.equal(first.reclaimed.length + first.refused.length, 50, "two slices of 25 fit the budget");
+  assert.equal(first.unswept, 10, "the rest is named, not dropped");
+  const second = await sweepExpiredLeases(repos, { now: T2, observedBy: "sweeper", budgetMs: 60_000, clock });
+  assert.equal(second.unswept, 0);
+  assert.deepEqual([...first.reclaimed, ...second.reclaimed].sort(), [...abandoned].sort(), "every abandoned lease is reclaimed once");
+  assert.equal((await repos.leases.listWhere(["released"], "false")).length, 0, "no dead lease is left unreleased");
 });

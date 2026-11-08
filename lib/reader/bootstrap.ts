@@ -68,7 +68,7 @@ else if(!previous){requests[outlines]=early(outlines);requests[outlines].catch((
 if(previous?.requests[settings])requests[settings]=previous.requests[settings];
 else if(!previous){requests[settings]=early(settings);requests[settings].catch(()=>{})}
 // A ZIP the ZIP3 file does not list (its state is not published yet) is looked up in the database, as it was before.
-start.location=entry.then(e=>e?{zip,lat:e.point[0],lng:e.point[1],state:e.states[0],...(e.postal?{postal:e.postal}:{})}
+start.location=entry.then(e=>e?{zip,lat:e.point[1],lng:e.point[0],state:e.states[0],...(e.postal?{postal:e.postal}:{})}
 :fetch("/api/location/zip?zip="+zip).then(r=>{
 if(!r.ok)throw new Error("ZIP lookup failed: "+r.status);return r.json()}).then(d=>{
 if(!d||!("location" in d))throw new Error("Invalid ZIP location response");return d.location??null})).then(p=>{

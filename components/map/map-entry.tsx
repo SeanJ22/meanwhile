@@ -359,7 +359,7 @@ function MapEntryInner() {
       catch (error) { status = (error as { status?: number }).status ?? null; throw error; }
       if (!answer) return false;
       if (controller.signal.aborted) return true;
-      const state = answer.stateResponse ?? null;
+      const state = answer.stateResponse?.value ?? null;
       if (state) {
         primeReaderState(state, zip!);
         primeStateMemberDirectories(state.memberDirectories, state.state);

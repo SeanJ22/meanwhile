@@ -12,6 +12,7 @@ import type { ReaderStateResponse } from "./client.ts";
  */
 export interface Zip3Entry {
   readonly states: readonly string[];
+  /** [lng, lat] */
   readonly point: readonly [number, number];
   /** The version stamp in the answer's address. */
   readonly key: string;
@@ -40,9 +41,10 @@ type SlimCoverage = Omit<CoverageSummary, "bodies"> & { bodies: SlimBody[] };
 export type SlimAnswer = Omit<MeetingSearchResult, "coverage" | "meetings"> & {
   coverage: SlimCoverage | null;
   meetings: Meeting[];
-  stateResponse?: Omit<ReaderStateResponse, "coverage"> & { coverage: SlimCoverage };
+  /** The state's answer as its route gave it: the status and the body. */
+  stateResponse?: { status: number; value: (Omit<ReaderStateResponse, "coverage"> & { coverage: SlimCoverage }) | { error: string } };
 };
-export type ReaderAnswer = MeetingSearchResult & { nearZip?: string | null; stateResponse?: ReaderStateResponse };
+export type ReaderAnswer = MeetingSearchResult & { nearZip?: string | null; stateResponse?: { status: number; value: ReaderStateResponse } };
 
 const ZIP3_KEPT_MS = 10 * 60_000;
 const zip3Files = new Map<string, { promise: Promise<Zip3File | null>; expires: number }>();
@@ -67,7 +69,7 @@ export function loadZip3(zip: string): Promise<Zip3File | null> {
 export const loadZipEntry = async (zip: string): Promise<Zip3Entry | null> => (await loadZip3(zip))?.zips[zip] ?? null;
 
 export const centroidOfEntry = (zip: string, entry: Zip3Entry): ZctaCentroid =>
-  ({ zip, lat: entry.point[0], lng: entry.point[1], ...(entry.states[0] ? { state: entry.states[0] } : {}), ...(entry.postal ? { postal: entry.postal } : {}) });
+  ({ zip, lat: entry.point[1], lng: entry.point[0], ...(entry.states[0] ? { state: entry.states[0] } : {}), ...(entry.postal ? { postal: entry.postal } : {}) });
 
 /** A stale key answers with a redirect to the current one, which the browser follows. Null when no answer is published under the key. */
 export async function loadAnswer(zip: string, entry: Zip3Entry, signal?: AbortSignal): Promise<ReaderAnswer | null> {
@@ -89,7 +91,7 @@ function expandCoverage<T extends SlimCoverage | null>(coverage: T): T extends n
 export function expandAnswer(slim: SlimAnswer): ReaderAnswer {
   const { coverage, stateResponse, ...rest } = slim;
   return { ...rest, coverage: expandCoverage(coverage),
-    ...(stateResponse ? { stateResponse: { ...stateResponse, coverage: expandCoverage(stateResponse.coverage) } } : {}) } as ReaderAnswer;
+    ...(stateResponse && stateResponse.status < 400 && "coverage" in stateResponse.value ? { stateResponse: { ...stateResponse, value: { ...stateResponse.value, coverage: expandCoverage(stateResponse.value.coverage) } } } : {}) } as ReaderAnswer;
 }
 
 const details = new Map<string, Promise<BoardDetail>>();
@@ -113,7 +115,7 @@ export function detailUrlOfBody(result: Pick<MeetingSearchResult, "coverage" | "
   return body?.readerRosterRef?.detail ?? result.meetings.find(meeting => meeting.bodyId === bodyId && meeting.detail)?.detail ?? null;
 }
 
-const merge = <T extends object>(base: T, extra: Partial<T>): T => ({ ...base, ...Object.fromEntries(Object.entries(extra).filter(([, value]) => value !== undefined)) });
+const merge = <T extends object>(base: T, extra: Partial<T>): T => ({ ...base, ...Object.fromEntries(Object.entries(extra).filter(([, value]) => value !== undefined && value !== null)) });
 
 /** The answer with one board's detail filled in; the same object when there is nothing to add. */
 export function withBoardDetail<T extends Pick<MeetingSearchResult, "coverage" | "meetings">>(result: T, bodyId: string, detail: BoardDetail): T {

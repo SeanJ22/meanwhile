@@ -85,8 +85,12 @@ export function slimAnswer(full: Row, detail: (bodyId: string) => string | null,
     // A board seated by another body's roster is not made from its own file alone, so it keeps what it says.
     if (!url || !body.readerRoster || compositionFor(body.bodyId)?.aliasOfBodyId || !rosterMovable(body.bodyId)) return body;
     const { readerRoster, fieldSources: _sources, ...rest } = body;
-    // A governing board's roster is the first thing its place shows, so it stays; its sources are at the board.
-    return body.bodyClass === "GOVERNING" ? { ...rest, readerRoster, detail: url } : { ...rest, readerRoster: { count: readerRoster.members.length, detail: url } };
+    // First paint reads a roster's members in one place: the Select Board line (components/map/coverage-notice.tsx:567, over the governing boards it lists),
+    // so only a governing board with a Select Board member keeps its members. It reads gaps from the governing board of a district
+    // (lib/registry/body-roster-client.ts projectedRosterGapsForDivision, used by district-subject.tsx and door-overlay.tsx), so every board keeps its gaps.
+    const selectBoard = body.bodyClass === "GOVERNING" && readerRoster.members.some((member: Row) => /select\s?board/i.test(member.officeTitle ?? ""));
+    return selectBoard ? { ...rest, readerRoster, detail: url }
+      : { ...rest, readerRoster: { count: readerRoster.members.length, ...(readerRoster.gaps?.length ? { gaps: readerRoster.gaps } : {}), detail: url } };
   });
   const meetings = (list: readonly Row[]) => list.map(meeting => {
     const url = meeting.bodyId ? detail(meeting.bodyId) : null;

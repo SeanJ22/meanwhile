@@ -89,6 +89,9 @@ export function readPlaceIndex(index: PlaceIndex): { files: Map<string, string>;
     fringe: [...named(row[5]), ...row[8]?.[2] ?? []], districts: named(row[6]) }])) };
 }
 
-/** The address of a ZIP's assembled answer: the keys of the ZIP in each state it touches, and the day (US Eastern) whose meetings it shows. */
+/** Raised only when the shape of the assembled answer changes, so a deploy that changes it moves every key and one that does not keeps every cached answer. */
+export const ANSWER_FORMAT = 1;
+
+/** The address of a ZIP's assembled answer: the format of the answer, the keys of the ZIP in each state it touches, and the day (US Eastern) whose meetings it shows. */
 export const answerKey = (keys: readonly string[], now: Date): string =>
-  createHash("sha256").update([...keys, now.toLocaleDateString("en-CA", { timeZone: "America/New_York" })].join("|")).digest("hex").slice(0, 12);
+  createHash("sha256").update([`format:${ANSWER_FORMAT}`, ...keys, now.toLocaleDateString("en-CA", { timeZone: "America/New_York" })].join("|")).digest("hex").slice(0, 12);

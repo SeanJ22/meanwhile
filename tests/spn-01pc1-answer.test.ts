@@ -38,11 +38,13 @@ test("SPN-01PC1: an answer is kept for a year by every CDN node and survives a d
     assert.equal(response.headers.get("etag"), '"0123456789ab"');
     assert.equal(response.headers.get("netlify-cache-tag"), "reader-settings", "the publication of the meeting settings clears it");
     assert.equal(response.headers.get("content-encoding"), "br");
-    assert.equal(response.headers.get("vary"), "Accept-Encoding");
+    assert.equal(response.headers.get("vary"), null, "one copy for every reader");
     assert.deepEqual(await body(response), { meetings: [], zip: "85701" });
-    assert.equal((await serveAnswer(asked("gzip"), "85701", "0123456789ab", store, assemble)).headers.get("content-encoding"), "gzip");
-    assert.deepEqual(await body(await serveAnswer(asked("identity"), "85701", "0123456789ab", store, assemble)), { meetings: [], zip: "85701" });
-    assert.equal(made, 3);
+    const plain = await serveAnswer(asked("gzip"), "85701", "0123456789ab", store, assemble);
+    assert.equal(plain.headers.get("content-encoding"), null, "a client without brotli is given the plain JSON");
+    assert.equal(plain.headers.get("netlify-cdn-cache-control"), "no-store", "which the CDN does not keep in place of the brotli copy");
+    assert.deepEqual(await body(plain), { meetings: [], zip: "85701" });
+    assert.equal(made, 2);
   });
 });
 
@@ -132,13 +134,14 @@ test("SPN-01PC1: the answer is made as of the first instant of the Eastern day i
 });
 
 test("SPN-01PC1: the heavy parts of an answer stay at their boards, and a board that has no file keeps its own", () => {
-  const roster = { members: [{ name: "A" }, { name: "B" }], gaps: [], officePhone: null }, sources = { name: { sourceUrl: "https://x.gov/" } };
+  const roster = { members: [{ name: "A", officeTitle: "Alderman" }, { name: "B", officeTitle: "Alderman" }], gaps: [{ statement: "one missing" }], officePhone: null }, board = { members: [{ name: "C", officeTitle: "Select Board Member" }], gaps: [], officePhone: null }, sources = { name: { sourceUrl: "https://x.gov/" } };
   const url = boardPath("body:with", "a".repeat(32));
   const full = {
     meetings: [{ id: "m1", bodyId: "body:with", title: "T", fieldSources: sources, publicationConflicts: [1], provenance: { sourceUrl: "u" } },
       { id: "m2", bodyId: "body:without", title: "U", fieldSources: sources, provenance: { sourceUrl: "u" } }, { id: "m3", bodyId: null, title: "V", provenance: { sourceUrl: "u" } }],
     coverage: { bodies: [{ bodyId: "body:with", name: "W", readerRoster: roster, fieldSources: sources }, { bodyId: "body:without", name: "X", readerRoster: roster, fieldSources: sources },
-      { bodyId: "body:with", bodyClass: "GOVERNING", name: "G", readerRoster: roster, fieldSources: sources }] },
+      { bodyId: "body:with", bodyClass: "GOVERNING", name: "G", readerRoster: board, fieldSources: sources },
+      { bodyId: "body:with", bodyClass: "GOVERNING", name: "H", readerRoster: roster, fieldSources: sources }] },
     stateResponse: { status: 200, headers: [], value: { coverage: { bodies: [{ bodyId: "body:with", readerRoster: roster }] }, zip: "85701" } },
     tier: "exact",
   };
@@ -146,10 +149,11 @@ test("SPN-01PC1: the heavy parts of an answer stay at their boards, and a board 
   assert.deepEqual(slim.meetings[0], { id: "m1", bodyId: "body:with", title: "T", sourceUrl: "u", detail: url }, "the page of the meeting stays for a row with no agenda");
   assert.deepEqual(slim.meetings[1], full.meetings[1]);
   assert.deepEqual(slim.meetings[2], full.meetings[2]);
-  assert.deepEqual(slim.coverage.bodies[0], { bodyId: "body:with", name: "W", readerRoster: { count: 2, detail: url } });
+  assert.deepEqual(slim.coverage.bodies[0], { bodyId: "body:with", name: "W", readerRoster: { count: 2, gaps: [{ statement: "one missing" }], detail: url } });
   assert.deepEqual(slim.coverage.bodies[1], full.coverage.bodies[1]);
-  assert.deepEqual(slim.coverage.bodies[2], { bodyId: "body:with", bodyClass: "GOVERNING", name: "G", readerRoster: roster, detail: url }, "a governing board keeps its roster; its sources are at the board");
-  assert.deepEqual(slim.stateResponse.value.coverage.bodies[0], { bodyId: "body:with", readerRoster: { count: 2, detail: url } });
+  assert.deepEqual(slim.coverage.bodies[2], { bodyId: "body:with", bodyClass: "GOVERNING", name: "G", readerRoster: board, detail: url }, "a board with a Select Board line keeps its members; its sources are at the board");
+  assert.deepEqual(slim.coverage.bodies[3], { bodyId: "body:with", bodyClass: "GOVERNING", name: "H", readerRoster: { count: 2, gaps: [{ statement: "one missing" }], detail: url } }, "any other governing board keeps only its gaps");
+  assert.deepEqual(slim.stateResponse.value.coverage.bodies[0], { bodyId: "body:with", readerRoster: { count: 2, gaps: [{ statement: "one missing" }], detail: url } });
   assert.equal(slim.tier, "exact");
   assert.ok(full.meetings[0]!.fieldSources, "the answer it was made from is not changed");
 });

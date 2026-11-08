@@ -41,6 +41,16 @@ async function keptFile<T>(store: ReaderArtifactStore, name: string): Promise<T 
   return value;
 }
 
+/** A state's file names by place id, made once for each index a server holds. */
+const placeNames = (() => {
+  const held = new WeakMap<PlaceIndex, ReadonlyMap<string, string>>();
+  return (index: PlaceIndex): ReadonlyMap<string, string> => {
+    let names = held.get(index);
+    if (!names) held.set(index, names = new Map(index.places.map(row => [lengthen(index.base, row[0]), row[4]])));
+    return names;
+  };
+})();
+
 /** The files of a store, read through the states' pointers: what a reader that has only the store has. */
 export function openPlaceFiles(store: ReaderArtifactStore) {
   const indexes = new Map<string, Promise<{ pointer: IndexPointer; index: PlaceIndex; etag: string | null } | null>>();
@@ -49,7 +59,7 @@ export function openPlaceFiles(store: ReaderArtifactStore) {
     let held = indexes.get(state);
     if (!held) indexes.set(state, held = (async () => {
       const pointer = await store.readJsonPointer<IndexPointer>(indexPointerKey(state));
-      const found = pointer && await getFile<PlaceIndex>(store, pointer.value.index);
+      const found = pointer && await keptFile<PlaceIndex>(store, pointer.value.index);
       return pointer && found ? { pointer: pointer.value, index: found, etag: pointer.etag } : null;
     })());
     return held;
@@ -57,7 +67,7 @@ export function openPlaceFiles(store: ReaderArtifactStore) {
   const source = async (state: string): Promise<PlaceFileSource> => {
     const held = await index(state);
     if (!held) throw new Error(`PLACE_INDEX_MISSING:${state}`);
-    const at = new Map(held.index.places.map(row => [lengthen(held.index.base, row[0]), row[4]]));
+    const at = placeNames(held.index);
     if (!national.has(held.pointer.national)) national.set(held.pointer.national, keptFile<NationalFile>(store, held.pointer.national));
     return {
       has: id => at.has(id),

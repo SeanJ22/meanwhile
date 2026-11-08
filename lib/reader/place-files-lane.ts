@@ -45,6 +45,8 @@ export interface PlaceFilesDeps {
   readonly national: () => Promise<Omit<NationalFile, "v">>;
   /** Copies one state's inputs once. */
   readonly openMirror: (state: string) => Promise<StateMirror>;
+  /** Asks for the new answers of the busiest ZIPs once they are published, a few at a time, so readers find them kept (see answer-warm.ts). */
+  readonly warm?: () => Promise<number>;
 }
 
 /** A state's published index as the lane holds it. */
@@ -270,6 +272,8 @@ export async function runPlaceFilesLane(input: { readonly deps: PlaceFilesDeps; 
       let turn: PlaceFilesTurn | undefined;
       try { turn = await placeFilesTurn(input.deps); }
       catch (error) { if (!input.turnEnd?.aborted) log(`Place files: a look failed (${error instanceof Error ? error.message : String(error)}); it is made again`); }
+      try { await input.deps.warm?.(); }
+      catch (error) { log(`Place files: warming answers failed (${error instanceof Error ? error.message : String(error)})`); }
       tab.until = start + owedMs(Math.max(0, databaseBytesSpent() - before));
       if (turn?.considered) { total.considered += turn.considered; log(`Place files: ${turn.considered} places looked at (${turn.kind === "pages" ? "saved pages changed" : "from a state's copy"})`); }
       if (!turn || turn.considered) await writePassCursor(facts, TAB_CURSOR, String(tab.until)).catch(() => undefined);

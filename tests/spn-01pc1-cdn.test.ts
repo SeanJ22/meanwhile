@@ -3,6 +3,7 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
+import { brotliDecompressSync } from "node:zlib";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { answerPath, easternDay, type assembleAnswer } from "../lib/reader/answer.ts";
 import { serveAnswer, serveZip3 } from "../lib/reader/answer-serve.ts";
@@ -28,7 +29,7 @@ test("SPN-01PC1: behind a CDN that keeps by address, 1,000 visits over 30 neighb
     const assemble = (async (_store: unknown, zip: string, found: ZipRow) => {
       assemblies++; assembled.set(`${zip}/${found.key}`, (assembled.get(`${zip}/${found.key}`) ?? 0) + 1); return { zip, key: found.key };
     }) as unknown as typeof assembleAnswer;
-    const accepts = new Request("https://example.test/a", { headers: { "accept-encoding": "identity" } });
+    const accepts = new Request("https://example.test/a", { headers: { "accept-encoding": "gzip, br" } });
     const cdn = fakeCdn(async url => {
       const [area, first, second] = url.pathname.split("/").slice(2);
       if (area === "reader") { zip3Runs++; return serveZip3(second!.replace(".json", ""), store); }
@@ -56,7 +57,7 @@ test("SPN-01PC1: behind a CDN that keeps by address, 1,000 visits over 30 neighb
       if (file.zips[zip]!.key !== keys.get(zip)) redirected++;
       const response = await cdn.get(answerPath(zip, file.zips[zip]!.key));
       if (response.status !== 200) refused.add(zip);
-      else { const made = await response.json() as { zip: string; key: string }; requested.add(`${made.zip}/${made.key}`); assert.ok(made.key === keys.get(zip) || made.key === file.zips[zip]!.key, "a reader is given the answer the file they read names, or the current one"); }
+      else { const made = JSON.parse(brotliDecompressSync(Buffer.from(await response.arrayBuffer())).toString()) as { zip: string; key: string }; requested.add(`${made.zip}/${made.key}`); assert.ok(made.key === keys.get(zip) || made.key === file.zips[zip]!.key, "a reader is given the answer the file they read names, or the current one"); }
     }
     console.log(`1000 visits: ${assemblies} assemblies for ${requested.size} addresses, ${zip3Runs} ZIP-file runs, ${cdn.runs.origin} origin runs in all, ${cdn.runs.hits} answered by the CDN, ${redirected} read a stale ZIP file`);
     assert.equal(refused.size, 0);

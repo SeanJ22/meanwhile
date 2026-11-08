@@ -23,8 +23,11 @@ export interface Zip3File { readonly v: 1; readonly zips: Readonly<Record<string
 export const zip3Key = (prefix: string): string => `reader/zip3/${prefix}.json`;
 export const READER_ZIP3_TAG = (prefix: string): string => `reader-zip3:${prefix}`;
 
-/** A ZIP's row, or null when its prefix has no file or the file lists no such ZIP. Reads the store and nothing else. */
-export async function readZipRow(store: ReaderArtifactStore, zip: string): Promise<ZipRow | null> {
-  const file = await store.readJsonPointer<Zip3File>(zip3Key(zip.slice(0, 3)));
-  return file?.value.zips[zip] ?? null;
+/** A ZIP's row, or null when its prefix has no file or the file lists no such ZIP. Reads the store and nothing else; given a map, each prefix is read once for it. */
+export async function readZipRow(store: ReaderArtifactStore, zip: string, files?: Map<string, Promise<ZipRow | null>>): Promise<ZipRow | null> {
+  const read = () => store.readJsonPointer<Zip3File>(zip3Key(zip.slice(0, 3)));
+  if (!files) return (await read())?.value.zips[zip] ?? null;
+  let held = files.get(zip.slice(0, 3)) as Promise<{ value: Zip3File } | null> | undefined;
+  if (!held) files.set(zip.slice(0, 3), held = read() as never);
+  return (await held)?.value.zips[zip] ?? null;
 }

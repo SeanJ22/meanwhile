@@ -1,4 +1,4 @@
-import { brotliCompressSync, constants, gzipSync } from "node:zlib";
+import { brotliCompressSync, constants } from "node:zlib";
 import { resolveReaderArtifactStore, type ReaderArtifactStore } from "../meetings/edge-store.ts";
 import { answerPath, assembleAnswer, assembleBoard, boardPath, boardVersion, easternDay } from "./answer.ts";
 import type { PlaceFile } from "./place-file.ts";
@@ -25,13 +25,16 @@ const missing = () => new Response(null, { status: 404, headers: NOT_THERE });
 const moved = (to: string) => new Response(null, { status: 307, headers: { ...MOVED, Location: to } });
 const failed = (error: unknown) => { console.error("READER_ANSWER_FAILED", error); return new Response(null, { status: 503, headers: { "Cache-Control": "no-store" } }); };
 
-/** The JSON, compressed for the reader that asked: brotli, gzip, or as it is. It is made once for the CDN, so it is made small. */
+/**
+ * The JSON as one body for every reader, so the CDN keeps one copy per address and the answer is assembled once. Netlify documents no compression of
+ * function responses (docs.netlify.com, Functions overview and configuration pages), so the body is brotli, which every current browser accepts. A client
+ * that does not accept brotli is given the plain JSON and the CDN is told not to keep it, so it never stands in for the brotli copy.
+ */
 function encoded(request: Request, value: unknown, headers: Record<string, string>): Response {
-  const json = Buffer.from(JSON.stringify(value)), accepts = request.headers.get("accept-encoding") ?? "";
-  const base = { ...headers, "Content-Type": "application/json; charset=utf-8", "Vary": "Accept-Encoding" };
-  if (/\bbr\b/.test(accepts)) return new Response(new Uint8Array(brotliCompressSync(json, { params: { [constants.BROTLI_PARAM_QUALITY]: 9, [constants.BROTLI_PARAM_SIZE_HINT]: json.length } })), { headers: { ...base, "Content-Encoding": "br" } });
-  if (/\bgzip\b/.test(accepts)) return new Response(new Uint8Array(gzipSync(json, { level: 6 })), { headers: { ...base, "Content-Encoding": "gzip" } });
-  return new Response(json, { headers: base });
+  const json = Buffer.from(JSON.stringify(value)), base = { ...headers, "Content-Type": "application/json; charset=utf-8" };
+  if (!/\bbr\b/.test(request.headers.get("accept-encoding") ?? "")) return new Response(json, { headers: { ...base, "Netlify-CDN-Cache-Control": "no-store" } });
+  const packed = brotliCompressSync(json, { params: { [constants.BROTLI_PARAM_QUALITY]: 9, [constants.BROTLI_PARAM_SIZE_HINT]: json.length } });
+  return new Response(new Uint8Array(packed), { headers: { ...base, "Content-Encoding": "br" } });
 }
 
 /** `/api/answer/<zip>/<key>`: one ZIP's answer. The store is read and nothing else. */

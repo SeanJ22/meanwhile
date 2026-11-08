@@ -1,4 +1,4 @@
-import { districtTitle, flipParty, type DistrictResult, type ResultParty, type SeatParty } from "./results.ts";
+import { districtTitle, flipCount, flipParty, type DistrictResult, type ResultParty, type SeatParty } from "./results.ts";
 
 export interface CardRow { name: string; party: SeatParty; note: string }
 export interface CardModel {
@@ -13,6 +13,8 @@ export interface CardModel {
 const percent = (votes: number | null, total: number) => votes !== null && total > 0 ? `${(votes / total * 100).toFixed(votes / total < 0.1 ? 2 : 1)}%` : "";
 
 function rowsFor(result: DistrictResult): CardRow[] {
+  // The national summary names no candidates: a seat shows the party that holds it.
+  if (result.candidates.length === 0) return result.seats.map((seat, index) => ({ name: result.seats.length > 1 ? `Seat ${index + 1}` : "Winner's party", party: seat.party, note: "" }));
   const total = result.candidates.reduce((sum, candidate) => sum + (candidate.votes ?? 0), 0);
   const single = result.seats.length === 1;
   const rows: CardRow[] = result.candidates.filter(candidate => candidate.result === "won").map(candidate => ({
@@ -25,8 +27,9 @@ function rowsFor(result: DistrictResult): CardRow[] {
 }
 
 function flipPill(result: DistrictResult) {
-  const party = flipParty(result);
-  return party ? { party, label: "Flipped" } : null;
+  const party = flipParty(result), count = flipCount(result);
+  if (!party) return null;
+  return { party, label: count > 1 ? `${count} seats flipped` : result.seats.length > 1 ? "1 seat flipped" : "Flipped" };
 }
 
 /** A legislative or U.S. House district's card. */
@@ -56,4 +59,13 @@ export function senateCard(name: string, result: DistrictResult | undefined, you
 /** Phone House view: how many seats in a state have flipped so far. */
 export function houseStateMeta(name: string, flips: number, yours: boolean): { title: string; meta: string } {
   return { title: `U.S. House, ${name}`, meta: `${yours ? "Your state · " : ""}${flips ? `${flips} ${flips > 1 ? "seats" : "seat"} flipped so far` : "No flips reported yet"}` };
+}
+
+const PARTY_NAME = { D: "Democrat", R: "Republican", O: "Other", C: "still counting" } as const;
+
+/** "Democrat 3 · Republican 2 · 1 still counting": the seats a state holds in one chamber so far. */
+export function seatSummary(result: DistrictResult): string {
+  const counts = new Map<SeatParty, number>();
+  for (const seat of result.seats) counts.set(seat.party, (counts.get(seat.party) ?? 0) + 1);
+  return (["D", "R", "O", "C"] as const).flatMap(party => counts.has(party) ? [party === "C" ? `${counts.get(party)} still counting` : `${PARTY_NAME[party]} ${counts.get(party)}`] : []).join(" · ");
 }

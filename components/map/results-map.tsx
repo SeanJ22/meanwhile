@@ -7,8 +7,8 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, typ
 import { NATIONAL_BOUNDARIES_SOURCE } from "@/lib/map/districts";
 import { CONUS_BOUNDS } from "@/lib/map/style";
 import { loadStateOutlines, stateAbbrFromOcdId, stateFilter, type StateOutlines } from "@/lib/map/state-focus";
-import { houseFlipsByState, parseDistrictOcd, stateOcd, type DistrictResult } from "@/lib/map/results";
-import { districtCard, houseStateMeta, senateCard } from "@/lib/map/results-card";
+import { flipCount, stateOcd, type DistrictResult } from "@/lib/map/results";
+import { districtCard, houseStateMeta, seatSummary, senateCard } from "@/lib/map/results-card";
 import { countyChoices, outlineBounds, type CountyChoice } from "@/lib/map/results-counties";
 import { canDrawResults, clearResultLayers, drawResultLayers } from "@/lib/map/results-apply";
 import { countyOutlineLayers, resultLayers, resultsLayerId, stateBadgeLayers, stateBadgePoints, type ResultsSurface, type ResultsTheme } from "@/lib/map/results-style";
@@ -21,9 +21,9 @@ type StateLayer = "sen" | "house" | "cd";
 const BOUNDARY = { sen: "state-senate", house: "state-house", cd: "congressional" } as const;
 const STATE_LAYERS = [{ id: "sen", label: "State Senate" }, { id: "house", label: "State House" }, { id: "cd", label: "U.S. House" }] as const;
 const NATION_LAYERS = [{ id: "sen", label: "U.S. Senate" }, { id: "house", label: "U.S. House" }] as const;
-const HOUSE_SEATS = 435;
 
 type Results = Readonly<Record<string, DistrictResult>>;
+const NO_RESULTS: Results = {};
 const loads = new Map<string, Promise<Results>>();
 function readResults(request: string): Promise<Results> {
   let load = loads.get(request);
@@ -89,7 +89,7 @@ export default function ResultsMap({ theme, phone, yours, zip, scorecard }: Resu
   const [topBottom, setTopBottom] = useState(0);
 
   const nation = scope === "nation";
-  const statesFirst = nation && natLayer === "house" && phone && !houseState;
+  const statesFirst = nation && natLayer === "house" && !houseState;
   const sceneKey = !nation ? `state:${state.abbr}` : houseState ? `house:${houseState.abbr}` : "nation";
   const county = countyHeld?.scene === sceneKey ? countyHeld.county : null;
   const picked = pickedHeld?.scene === sceneKey ? pickedHeld : null;
@@ -99,22 +99,15 @@ export default function ResultsMap({ theme, phone, yours, zip, scorecard }: Resu
   const surface: ResultsSurface = useMemo(() => !nation
     ? { kind: "districts", boundary: BOUNDARY[layer], state: state.abbr }
     : natLayer === "sen" || statesFirst ? { kind: "states" }
-    : { kind: "districts", boundary: "congressional", state: phone ? houseAbbr : null },
-  [nation, layer, state.abbr, natLayer, statesFirst, phone, houseAbbr]);
+    : { kind: "districts", boundary: "congressional", state: houseAbbr },
+  [nation, layer, state.abbr, natLayer, statesFirst, houseAbbr]);
   const needsDistricts = surface.kind === "districts";
   useEffect(() => { setResultsDistricts(needsDistricts); }, [needsDistricts]);
 
-  const request = !nation ? `scope=state&state=${state.abbr}` : natLayer === "sen" ? "scope=us-senate" : "scope=us-house";
+  // A state's districts come from that state's results; the national views come from the one national summary.
+  const request = !nation ? `scope=state&state=${state.abbr}` : houseAbbr ? `scope=state&state=${houseAbbr}` : natLayer === "sen" ? "scope=us-senate" : "scope=us-house";
   const { results, failed } = useResults(request);
-  const flips = useMemo(() => results ? houseFlipsByState(results) : {}, [results]);
-
-  // The phone's first House view colors a state by the party that flipped its seats.
-  const drawn: Results = useMemo(() => {
-    if (!results) return {};
-    if (!statesFirst) return results;
-    return Object.fromEntries(Object.entries(flips).map(([abbr, { party }]) => [stateOcd(abbr),
-      { ocdId: stateOcd(abbr), status: "called" as const, seats: [{ party }], flipTo: null, candidates: [] }]));
-  }, [results, statesFirst, flips]);
+  const drawn: Results = results ?? NO_RESULTS;
 
   const stateName = useCallback((abbr: string) => outlines?.features.find(f => stateAbbrFromOcdId(f.properties.ocdId) === abbr)?.properties.name ?? abbr, [outlines]);
   const yoursOnSurface = useMemo(() => surface.kind === "states" ? [stateOcd(home.abbr)] : yours.filter(id => id.includes(surface.boundary === "congressional" ? "/cd:" : surface.boundary === "state-senate" ? "/sldu:" : "/sldl:")),
@@ -124,12 +117,13 @@ export default function ResultsMap({ theme, phone, yours, zip, scorecard }: Resu
   const specs = useMemo(() => {
     const base = resultLayers(surface, drawn, { theme, yours: yoursOnSurface });
     const badges = surface.kind === "states" && outlines
-      ? stateBadgePoints(outlines.features, statesFirst
-        ? Object.fromEntries(Object.entries(flips).map(([abbr, { party, count }]) => [stateOcd(abbr), { party, count }]))
-        : Object.fromEntries(Object.values(drawn).flatMap(result => result.flipTo ? [[result.ocdId, { party: result.flipTo }]] : [])))
+      ? stateBadgePoints(outlines.features, Object.fromEntries(Object.values(drawn).flatMap(result => {
+        const count = flipCount(result);
+        return statesFirst ? count > 0 ? [[result.ocdId, { party: result.flipTo ?? "O" as const, count }]] : [] : result.flipTo ? [[result.ocdId, { party: result.flipTo }]] : [];
+      })))
       : null;
     return { layers: [...base, ...(badges ? stateBadgeLayers(statesFirst) : []), ...(county && surface.kind === "districts" ? countyOutlineLayers(county.ocdId, theme) : [])], badges };
-  }, [surface, drawn, theme, yoursOnSurface, outlines, statesFirst, flips, county]);
+  }, [surface, drawn, theme, yoursOnSurface, outlines, statesFirst, county]);
 
   useEffect(() => {
     let attaching = false;
@@ -211,10 +205,9 @@ export default function ResultsMap({ theme, phone, yours, zip, scorecard }: Resu
   const count = Object.keys(results ?? {}).length;
   const banner = failed ? <>We couldn&apos;t load results just now. Reload to try again.</>
     : !results ? null
-    : nation && houseState ? <>{houseState.name} districts. <button type="button" onClick={() => setHouseState(null)}>Back to all states</button></>
+    : nation && houseState ? <>{count === 0 ? <GettingBanner about={`${houseState.name} district results`} /> : `${houseState.name} districts.`} <button type="button" onClick={() => setHouseState(null)}>Back to all states</button></>
+    : nation && count === 0 ? <GettingBanner about={natLayer === "sen" ? "U.S. Senate results" : "U.S. House results"} />
     : statesFirst ? <>Numbers show House seats flipped so far. Tap a state to see its districts.</>
-    : nation && natLayer === "house" && count < HOUSE_SEATS ? <GettingBanner about="results for every House district" />
-    : nation && count === 0 ? <GettingBanner about="U.S. Senate results" />
     : !nation && !Object.keys(results).some(id => id.includes(layer === "cd" ? "/cd:" : layer === "sen" ? "/sldu:" : "/sldl:")) ? <GettingBanner about={`${state.name} district results`} />
     : null;
 
@@ -230,14 +223,6 @@ export default function ResultsMap({ theme, phone, yours, zip, scorecard }: Resu
   const card = (() => {
     if (!picked) return null;
     const close = () => setPicked(null);
-    if (surface.kind === "districts" && nation && !phone) {
-      // On the national House map a district opens its state's card.
-      const abbr = parseDistrictOcd(picked.ocdId)?.state.toUpperCase() ?? "", name = stateName(abbr);
-      const model = houseStateMeta(name, flips[abbr.toLowerCase()]?.count ?? 0, abbr === home.abbr);
-      return <MapCard title={model.title} meta={model.meta} onClose={close}>
-        <PillButton arrow="right" onClick={() => showResultsState({ abbr, name })}>See more about {name}</PillButton>
-      </MapCard>;
-    }
     if (surface.kind === "districts") {
       const model = districtCard(picked.ocdId, results?.[picked.ocdId], yours.includes(picked.ocdId));
       return <MapCard title={model.title} meta={model.meta} flip={model.flip} onClose={close}>
@@ -249,8 +234,9 @@ export default function ResultsMap({ theme, phone, yours, zip, scorecard }: Resu
     }
     const abbr = stateAbbrFromOcdId(picked.ocdId) ?? "", name = picked.name || stateName(abbr), mine = abbr === home.abbr;
     if (statesFirst) {
-      const model = houseStateMeta(name, flips[abbr.toLowerCase()]?.count ?? 0, mine);
+      const result = results?.[picked.ocdId], model = houseStateMeta(name, result ? flipCount(result) : 0, mine);
       return <MapCard title={model.title} meta={model.meta} onClose={close}>
+        {result && <p className={styles.dim} style={{ margin: 0, lineHeight: 1.45 }}>{seatSummary(result)}</p>}
         <PillButton arrow="right" onClick={() => { setHouseState({ abbr, name }); setPicked(null); }}>See {name}&rsquo;s districts</PillButton>
       </MapCard>;
     }

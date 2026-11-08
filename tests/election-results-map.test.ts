@@ -2,39 +2,47 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
-  districtTitle, fillClass, flipParty, houseFlipsByState, parseDistrictOcd, resultContests, resultsByDistrict,
-  type ContestStatus, type ResultContest, type ResultParty,
+  districtTitle, fillClass, flipCount, flipParty, nationalResults, parseDistrictOcd, resultContests, resultsByDistrict,
+  type ContestStatus, type ResultContest,
 } from "../lib/map/results.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
+import type { BallotResultFacts } from "../lib/ballot/election-results.ts";
 
 const AT = "2026-11-06T12:00:00.000Z";
 const provenance = { sourceOrg: "Synthetic", sourceUrl: "https://example.gov", collectedAt: AT, verifiedAt: AT };
 const attribution = { sources: [{ name: "Synthetic results" }], checkedAt: AT };
 type Person = [name: string, party: string, incumbent: boolean, won: boolean, votes: number];
-interface Race { id: string; ocdId: string; title?: string; status: ContestStatus; seats?: number; flip?: string; people: Person[] }
-/** A ballot carrying the result fields CX-ELECTION-RESULTS files on contests and candidacies. */
+interface Race { id: string; ocdId: string; title?: string; status: ContestStatus; seats?: number; flip?: string; flipSeats?: number; people: Person[] }
+/** A state's sliced ballot: who ran in which contest. Results are not on it; the results job publishes them separately. */
 function ballotOf(races: Race[], date = "2026-11-03"): Pick<BallotSet, "contests" | "candidacies"> & { election: BallotSet["election"] } {
   return {
     election: { id: `az-${date}`, date, name: "General", state: "AZ" },
     contests: races.map(race => ({ id: race.id, electionId: "e", ocdId: race.ocdId, divisionVintage: "2026", title: race.title ?? "State House", type: "CANDIDACY" as const,
-      voteFor: race.seats ?? 1, termYears: 2, scopeNote: null, provenance,
-      result: { status: race.status, seatsToFill: race.seats ?? 1, flipped: Boolean(race.flip), gainedByParty: race.flip ?? null, ...attribution } })),
-    candidacies: races.flatMap(race => race.people.map(([name, party, incumbent, won, votes], index) => ({ id: `${race.id}-${index}`, contestId: race.id,
-      givenName: name, familyName: "Test", partyLabel: party, slogan: null, incumbent, websiteUrl: null, provenance, result: { won, votes, ...attribution } }))),
+      voteFor: race.seats ?? 1, termYears: 2, scopeNote: null, provenance })),
+    candidacies: races.flatMap(race => race.people.map(([name, party, incumbent], index) => ({ id: `${race.id}-${index}`, contestId: race.id,
+      givenName: name, familyName: "Test", partyLabel: party, slogan: null, incumbent, websiteUrl: null, provenance }))),
   };
 }
+/** What the results job's state feed holds for those races, keyed by contest and candidate id. */
+const factsOf = (races: Race[]): BallotResultFacts => Object.fromEntries(races.flatMap(race => [
+  [race.id, { status: race.status, seatsToFill: race.seats ?? 1, flipped: Boolean(race.flip), gainedByParty: race.flip ?? null,
+    ...race.flipSeats === undefined ? {} : { seatsFlipped: race.flipSeats }, ...attribution }],
+  ...race.people.map(([, , , won, votes], index) => [`${race.id}-${index}`, { won, votes, ...attribution }]),
+]));
+const azId = (kind: string, n: number) => az(kind, n);
 const az = (kind: string, n: number) => `ocd-division/country:us/state:az/${kind}:${n}`;
-const ballot = ballotOf([
+const races: Race[] = [
   { id: "h1", ocdId: az("sldl", 1), status: "called", seats: 2, people: [["A", "Republican", true, true, 100], ["B", "Republican", true, true, 99], ["C", "Democrat", false, false, 60]] },
-  { id: "h4", ocdId: az("sldl", 4), status: "called", seats: 2, flip: "Democrat", people: [["Gresham", "Democrat", false, true, 58], ["Caputi", "Democrat", false, true, 57], ["Gress", "Republican", true, false, 54], ["Carter", "Republican", true, false, 50]] },
+  { id: "h4", ocdId: az("sldl", 4), status: "called", seats: 2, flip: "Democrat", flipSeats: 2, people: [["Gresham", "Democrat", false, true, 58], ["Caputi", "Democrat", false, true, 57], ["Gress", "Republican", true, false, 54], ["Carter", "Republican", true, false, 50]] },
   { id: "h5", ocdId: az("sldl", 5), status: "called", seats: 2, people: [["D1", "Democrat", true, true, 70], ["R1", "Republican", false, true, 69], ["R2", "Republican", false, false, 40]] },
   { id: "h6", ocdId: az("sldl", 6), status: "counting", seats: 2, people: [["D2", "Democrat", false, true, 10], ["R3", "Republican", false, false, 9]] },
   { id: "s1", ocdId: az("sldu", 1), status: "called", people: [["S1", "Republican", true, true, 5], ["S2", "Democrat", false, false, 4]] },
   { id: "s2", ocdId: az("sldu", 2), status: "called", flip: "Democrat", people: [["S3", "Democrat", false, true, 5], ["S4", "Republican", true, false, 4]] },
   { id: "gov", ocdId: "ocd-division/country:us/state:az", title: "Governor / Lieutenant Governor", status: "called", people: [["G", "Democrat", true, true, 9]] },
   { id: "sen", ocdId: "ocd-division/country:us/state:az", title: "U.S. Senator", status: "called", flip: "Democrat", people: [["U1", "Democrat", false, true, 9], ["U2", "Republican", true, false, 8]] },
-]);
-const contests = resultContests(ballot);
+];
+const ballot = ballotOf(races), facts = factsOf(races);
+const contests = resultContests(ballot, facts);
 const results = resultsByDistrict(contests);
 const lower = Object.values(results).filter(r => parseDistrictOcd(r.ocdId)?.kind === "sldl");
 const upper = Object.values(results).filter(r => parseDistrictOcd(r.ocdId)?.kind === "sldu");
@@ -59,8 +67,11 @@ test("a seat with one member of each party draws as split", () => {
   assert.equal(split.seats.length, 2);
 });
 
-test("a flip carries the gaining party and no seat count, because the source states none", () => {
+test("a flip carries the gaining party and the source's own seat count, and none where the source gives none", () => {
   assert.equal(flipParty(results[az("sldl", 4)]), "D");
+  assert.equal(flipCount(results[az("sldl", 4)]), 2);
+  assert.equal(results[az("sldu", 2)].flipSeats, null);
+  assert.equal(flipCount(results[az("sldu", 2)]), 1, "a single-seat contest that flipped is one seat");
   assert.equal(flipParty(results[az("sldu", 2)]), "D");
   assert.equal(flipParty(results[az("sldu", 1)]), null);
   assert.equal(flipParty(results[az("sldl", 1)]), null);
@@ -74,24 +85,37 @@ test("titles and ids", () => {
   assert.equal(parseDistrictOcd("ocd-division/country:us/state:az"), null);
 });
 
-test("phone House view counts flipped seats by state", () => {
-  const cd = (state: string, n: number, flip: boolean, to: ResultParty = "D"): ResultContest => ({
-    ocdId: `ocd-division/country:us/state:${state}/cd:${n}`, status: "called", seats: 1, flip: flip ? { to } : null,
-    candidates: [{ name: "A", party: to, incumbent: false, result: "won", votes: 1 }],
-  });
-  const byState = houseFlipsByState(resultsByDistrict([cd("oh", 7, true), cd("oh", 10, true), cd("oh", 1, false), cd("pa", 1, true, "R")]));
-  assert.deepEqual(byState, { oh: { count: 2, party: "D" }, pa: { count: 1, party: "R" } });
+const row = (seatsNow: Record<string, number>, stillCounting: number, seatsFlipped: number, reportedRaces = 1) =>
+  ({ scope: "election-races" as const, seatsNow, stillCounting, seatsFlipped, unknownFlipRaces: 0, incumbentsLost: 0, unknownIncumbentLossRaces: 0, reportedRaces, totalRaces: reportedRaces + stillCounting });
+const summary = { states: {
+  OH: { us_house: row({ D: 5, R: 10 }, 0, 2, 15), us_senate: row({ D: 1 }, 0, 1) },
+  PA: { us_house: row({ D: 8, R: 9 }, 1, 0, 17), us_senate: row({}, 0, 0, 0) },
+  TX: { us_house: row({}, 0, 0, 0), us_senate: row({ R: 1 }, 1, 0, 1) },
+} };
+
+test("the national summary becomes one result per state: seats held, seats still counting, and flips so far", () => {
+  const house = nationalResults(summary, "us_house"), ohio = house["ocd-division/country:us/state:oh"];
+  assert.equal(fillClass(ohio), "split");
+  assert.equal(flipCount(ohio), 2);
+  assert.equal(ohio.seats.length, 15);
+  assert.equal(fillClass(house["ocd-division/country:us/state:pa"]), "counting");
+  assert.equal(house["ocd-division/country:us/state:tx"], undefined, "a state that reported no races in the chamber is absent");
+  const senate = nationalResults(summary, "us_senate");
+  assert.equal(fillClass(senate["ocd-division/country:us/state:oh"]), "D");
+  assert.equal(flipParty(senate["ocd-division/country:us/state:oh"]), "D", "a flip's party is known when one party holds every seat won");
+  assert.equal(flipParty(ohio), null, "a state split between parties names no gaining party");
+  assert.equal(senate["ocd-division/country:us/state:pa"], undefined);
 });
 
 test("a ballot without result fields yields no results, so the map shows its banner", () => {
   const bare = ballotOf([{ id: "c1", ocdId: az("cd", 6), title: "U.S. Representative", status: "called", people: [["A", "Democrat", false, true, 1]] }]);
-  for (const row of bare.contests) delete (row as { result?: unknown }).result;
-  assert.deepEqual(resultContests(bare), []);
+  assert.deepEqual(resultContests(bare, {}), []);
 });
 
 test("a called race with a flip, a winner's share, and an incumbent who lost", () => {
-  const one = resultsByDistrict(resultContests(ballotOf([{ id: "c", ocdId: az("cd", 6), title: "U.S. Representative", status: "called", flip: "Democrat",
-    people: [["JoAnna", "Democrat", false, true, 181117], ["Juan", "Republican", true, false, 160000]] }])))[az("cd", 6)];
+  const race: Race = { id: "c", ocdId: az("cd", 6), title: "U.S. Representative", status: "called", flip: "Democrat", flipSeats: 1,
+    people: [["JoAnna", "Democrat", false, true, 181117], ["Juan", "Republican", true, false, 160000]] };
+  const one = resultsByDistrict(resultContests(ballotOf([race]), factsOf([race])))[az("cd", 6)];
   assert.equal(fillClass(one), "D");
   assert.equal(flipParty(one), "D");
   assert.equal(one.candidates[1].incumbent, true);
@@ -137,7 +161,7 @@ test("the national House view draws every state's districts: no state filter", (
 });
 
 test("state shapes draw from the state source, and flip badges are not drawn on districts there", () => {
-  const states = resultsByDistrict([{ ocdId: "ocd-division/country:us/state:tx", status: "called", seats: 1, flip: { to: "D" },
+  const states = resultsByDistrict([{ ocdId: "ocd-division/country:us/state:tx", status: "called", seats: 1, flip: { to: "D", seats: 1 },
     candidates: [{ name: "A", party: "D", incumbent: false, result: "won", votes: 1 }] }]);
   const layers = resultLayers({ kind: "states" }, states, { theme: "light", yours: [] });
   for (const layer of layers) assert.equal((layer as { source: string }).source, RESULTS_STATES_SOURCE);
@@ -195,29 +219,53 @@ test("the map's district request is shared so the one map loads boundaries only 
 
 /* --------------------------------------------------------------- the read --- */
 
-import { inRequest, latestResultBallot, mapResults, parseResultsRequest } from "../lib/map/results-read.ts";
+import { latestResultBallot, mapResults, parseResultsRequest } from "../lib/map/results-read.ts";
+import { electionFeedFixture } from "./helpers/election-feed-fixture.ts";
+import type { StateResultFeed } from "../lib/election-results/feed-types.ts";
 
 test("requests parse to one state, the Senate, or the House; anything else is refused", () => {
   assert.deepEqual(parseResultsRequest({ scope: "state", state: "az" }), { scope: "state", state: "AZ" });
   assert.deepEqual(parseResultsRequest({ scope: "us-senate", state: null }), { scope: "us-senate" });
   assert.deepEqual(parseResultsRequest({ scope: "us-house", state: null }), { scope: "us-house" });
-  for (const bad of [{ scope: "state", state: null }, { scope: "state", state: "arizona" }, { scope: "county", state: null }, { scope: null, state: null }])
+  for (const bad of [{ scope: "state", state: null }, { scope: "state", state: "arizona" }, { scope: "state", state: "ZZ" }, { scope: "county", state: null }, { scope: null, state: null }])
     assert.equal(parseResultsRequest(bad), null);
 });
 
-test("a state request returns only that state's districts; Senate returns states; House returns districts only", async () => {
-  const contest = (ocdId: string): ResultContest => ({ ocdId, status: "called", seats: 1, flip: null, candidates: [{ name: "A", party: "D", incumbent: false, result: "won", votes: 1 }] });
-  const all = [contest("ocd-division/country:us/state:az/sldu:1"), contest("ocd-division/country:us/state:tx/sldu:1"), contest("ocd-division/country:us/state:az/cd:6"),
-    contest("ocd-division/country:us/state:az"), contest("ocd-division/country:us/district:dc")];
-  const read = async () => all;
-  assert.deepEqual(Object.keys(await mapResults({ scope: "state", state: "AZ" }, read)).sort(), ["ocd-division/country:us/state:az/cd:6", "ocd-division/country:us/state:az/sldu:1"]);
-  assert.deepEqual(Object.keys(await mapResults({ scope: "us-senate" }, read)).sort(), ["ocd-division/country:us/district:dc", "ocd-division/country:us/state:az"]);
-  assert.deepEqual(Object.keys(await mapResults({ scope: "us-house" }, read)), ["ocd-division/country:us/state:az/cd:6"]);
-  assert.equal(inRequest({ scope: "state", state: "AZ" }, "ocd-division/country:us/state:az/county:pima"), false);
+const feedOf = (state: string, facts: BallotResultFacts): StateResultFeed => ({ formatVersion: 1, state, ballotVersion: null, checkedAt: AT, fingerprint: "synthetic", facts });
+const rowsFor = (ballot: ReturnType<typeof ballotOf>) => [{ published: true, payload: { kind: "ballot-contests", ballots: { [`${ballot.election.state}:${ballot.election.id}`]: ballot } } }];
+
+test("a national request reads the one published summary and never touches the ballots or the database", async context => {
+  const copy = electionFeedFixture(context);
+  await copy.store.writeNation({ checkedAt: AT, sources: [], states: summary.states });
+  let queries = 0;
+  const query = async () => { queries++; return [[]]; };
+  const senate = await mapResults({ scope: "us-senate" }, { store: copy.store, query });
+  assert.deepEqual(Object.keys(senate).sort(), ["ocd-division/country:us/state:oh", "ocd-division/country:us/state:tx"]);
+  const house = await mapResults({ scope: "us-house" }, { store: copy.store, query });
+  assert.deepEqual(Object.keys(house).sort(), ["ocd-division/country:us/state:oh", "ocd-division/country:us/state:pa"]);
+  assert.equal(queries, 0);
+  assert.equal(copy.databaseReads(), 0);
+  assert.deepEqual(copy.reads, ["nation.json", "nation.json"]);
 });
 
-test("with no filed results the read is empty, so every district shows the banner", async () => {
-  assert.deepEqual(await mapResults({ scope: "state", state: "TX" }, async () => []), {});
+test("nothing published nationally is an empty answer, so the national views show their banner", async context => {
+  const copy = electionFeedFixture(context);
+  assert.deepEqual(await mapResults({ scope: "us-house" }, { store: copy.store }), {});
+});
+
+test("a state's districts join its sliced ballot to its results feed; a state with no feed costs no database request", async context => {
+  const copy = electionFeedFixture(context);
+  let queries = 0;
+  const query = async () => { queries++; return [rowsFor(ballot)]; };
+  assert.deepEqual(await mapResults({ scope: "state", state: "TX" }, { store: copy.store, query }), {});
+  assert.equal(queries, 0);
+  await copy.store.writeState("AZ", feedOf("AZ", facts));
+  const az = await mapResults({ scope: "state", state: "AZ" }, { store: copy.store, query });
+  assert.equal(queries, 1);
+  assert.equal(fillClass(az[azId("sldl", 1)]), "R");
+  assert.equal(flipCount(az[azId("sldl", 4)]), 2);
+  assert.ok(az["ocd-division/country:us/state:az"], "the U.S. Senate seat is carried");
+  assert.equal(Object.values(az).some(result => result.candidates.some(person => person.name === "G Test")), false, "the governor's race is not drawn");
 });
 
 /* ---------------------------------------------------------------- counties --- */
@@ -253,7 +301,7 @@ test("a two-seat district card lists both winners, the incumbent who lost, and a
   const card = districtCard(sldl(4), district, true);
   assert.equal(card.title, "State House, District 4");
   assert.equal(card.meta, "Your district · Top 2 win");
-  assert.deepEqual(card.flip, { party: "D", label: "Flipped" });
+  assert.deepEqual(card.flip, { party: "D", label: "2 seats flipped" });
   assert.deepEqual(card.rows.filter(r => r.note === "Won").map(r => r.name).sort(), ["Caputi Test", "Gresham Test"]);
   assert.deepEqual(card.rows.filter(r => r.note === "Incumbent · lost").map(r => r.name).sort(), ["Carter Test", "Gress Test"]);
 });
@@ -296,8 +344,9 @@ test("a state's box covers every part of its outline", () => {
 test("a state with a primary and a general on file shows the latest election that has results", () => {
   const race: Race = { id: "r", ocdId: az("sldu", 1), status: "called", people: [["A", "Democrat", false, true, 1]] };
   const primary = ballotOf([race], "2026-07-21"), general = ballotOf([race], "2026-11-03"), upcoming = ballotOf([], "2026-12-01");
-  assert.equal(latestResultBallot([primary as BallotSet, upcoming as BallotSet, general as BallotSet])?.election.date, "2026-11-03");
-  assert.equal(latestResultBallot([upcoming as BallotSet]), null);
+  const found = factsOf([race]);
+  assert.equal(latestResultBallot([primary as BallotSet, upcoming as BallotSet, general as BallotSet], found)?.election.date, "2026-11-03");
+  assert.equal(latestResultBallot([upcoming as BallotSet], found), null);
 });
 
 test("a results link opens the map: /?results, with or without a value, and not any other query", () => {

@@ -1,12 +1,10 @@
 import { loadWebsiteSavedKeys } from "../core/keys-entry.ts";
-import { REGISTRY_STATES } from "../civic-data/state-scopes.ts";
 import { readerRoute } from "../api/reader-route.ts";
-import { readerCacheHeaders, readerStateCacheHeaders } from "../reader/cache.ts";
 import { mapResults, parseResultsRequest } from "./results-read.ts";
 
 /**
  * Filed election results for the results map, keyed by district. An empty answer means nothing is filed there yet.
- * Results are the same for every reader, so the answer is cached for everyone and cleared when the results job publishes.
+ * Results are the same for every reader, so the answer is cached for everyone for a minute, the same as the results job's own feed.
  */
 export const mapResultsResponse = readerRoute("/api/map-results", async function GET(request: Request): Promise<Response> {
   await loadWebsiteSavedKeys();
@@ -16,8 +14,7 @@ export const mapResultsResponse = readerRoute("/api/map-results", async function
   try {
     const results = await mapResults(wanted);
     return Response.json({ ok: true, results }, { headers: {
-      ...(wanted.scope === "state" ? readerStateCacheHeaders(wanted.state) : readerCacheHeaders({ states: REGISTRY_STATES })),
-      "Netlify-Vary": "query=scope|state",
+      "Cache-Control": "public, max-age=0, must-revalidate", "Netlify-CDN-Cache-Control": "public, s-maxage=60", "Netlify-Vary": "query=scope|state",
     } });
   } catch {
     return Response.json({ ok: false }, { status: 503, headers: { "Cache-Control": "no-store" } });

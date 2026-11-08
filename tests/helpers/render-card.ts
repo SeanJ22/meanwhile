@@ -40,13 +40,13 @@ export async function renderCardWithSources({ modulePath, exportName, props, sou
     const context = await browser.context();
     const page = await context.newPage();
     await page.goto(`http://127.0.0.1:${address.port}/`);
+    await page.getByRole("button", { name: /^Sources/ }).click();
     await page.waitForFunction(urls => {
       const links = [...document.querySelectorAll<HTMLAnchorElement>("[data-card-sources] a")].map(link => link.href);
       return urls.every(url => links.includes(url));
     }, sourceUrls);
     assert.equal(await page.locator("[data-card-sources]").count(), 1);
     assert.equal(await page.getByRole("button", { name: /^Sources/ }).count(), 1);
-    await page.getByRole("button", { name: /^Sources/ }).click();
     const markup = await page.locator(".reader-card").evaluate(card => card.outerHTML);
     await context.close();
     return markup;

@@ -20,10 +20,10 @@ import { decodeEntities, politeGetText } from "../http.ts";
 import type {
   Meeting,
   MeetingQuery,
-  MeetingStatus,
   NormalizeDropCounts,
   ReportingMeetingSource,
 } from "../types.ts";
+import { sittingStatus } from "../sitting-status.ts";
 import {
   accountedNormalize,
   type Accounted,
@@ -474,10 +474,6 @@ function agendaTitleDate(
   };
 }
 
-function statusOf(startsAt: string, now: Date): MeetingStatus {
-  return Date.parse(startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED";
-}
-
 export interface PastAgendaEntry {
   /** The link text as the Clerk wrote it: `IDA Agenda (Revised) 08-20-26`. */
   title: string;
@@ -691,7 +687,7 @@ export function makeClerksBoardsSource(
           agendaUrl:
             sameDay(agendaDate) && page.agendaPdfUrl ? page.agendaPdfUrl : null,
           jurisdiction: wiring.jurisdiction,
-          status: sameDay(canceled) ? "CANCELED" : statusOf(startsAt, now),
+          status: sittingStatus(startsAt, sameDay(canceled), now),
           provenance: {
             sourceUrl: boardUrl,
             sourceOrg: wiring.publishingOrg,

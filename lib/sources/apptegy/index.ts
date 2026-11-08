@@ -10,10 +10,10 @@ import { decodeEntities, politeGetJson } from "../http.ts";
 import type {
   Meeting,
   MeetingQuery,
-  MeetingStatus,
   NormalizeDropCounts,
   ReportingMeetingSource,
 } from "../types.ts";
+import { sittingStatus } from "../sitting-status.ts";
 import {
   accountedNormalize,
   type Accounted,
@@ -83,10 +83,6 @@ export interface ApptegyRaw {
   /** The exact first-page URL these events were read from — the citation
    *  the record carries. Optional so recorded fixtures keep working. */
   sourceUrl?: string;
-}
-
-function statusOf(startsAt: string, now: Date): MeetingStatus {
-  return Date.parse(startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED";
 }
 
 /**
@@ -202,9 +198,7 @@ export function makeApptegySource(
           ...(venueGap ? { venueGap } : {}),
           agendaUrl: agendaLinkFrom(event.description),
           jurisdiction: wiring.jurisdiction,
-          status: isCancelled(event)
-            ? "CANCELED"
-            : statusOf(event.start_at, now),
+          status: sittingStatus(event.start_at, isCancelled(event), now),
           provenance: {
             sourceUrl:
               sourceUrl ??

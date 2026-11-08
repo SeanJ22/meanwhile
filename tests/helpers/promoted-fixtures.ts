@@ -6,7 +6,7 @@ import { pathToFileURL } from "node:url";
 import type { CivicDataReadResult, PromotedEdgeEntry } from "../../lib/civic-data/read-model.ts";
 import type { CandidateVersionRecord, PromotedProjection, RoutineRecordClass } from "../../lib/civic-data/types.ts";
 import { MemoryRoutineDataStore } from "../../lib/civic-data/store.ts";
-import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../../lib/registry/runtime-edge.ts";
+import { currentReaderAuthorityEdge, enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../../lib/registry/runtime-edge.ts";
 import { readRegistryRuntimeProjection } from "../../lib/registry/runtime-read-model.ts";
 import type { RegistryRuntimeReadModel } from "../../lib/registry/runtime-data-plane.ts";
 import {
@@ -96,6 +96,13 @@ export function installPromotedValue<T>(input: {
   installCanonicalEntries([entry]);
   enter();
   return entry;
+}
+
+export function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
+  const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
+  return { stateAuthorities: current.stateAuthorities,
+    ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
+    ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
 }
 
 export function installManualValue<T>(id: ManualProductionContractId, value: T, versionId: string = `test:${id}`) {

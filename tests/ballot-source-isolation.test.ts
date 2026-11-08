@@ -24,7 +24,7 @@ import {
   settleBallotAuxiliaryPreloads,
   type BallotAuxiliaryFamily,
 } from "../lib/ballot/auxiliary-preloads.ts";
-import { installAbsent, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { installAbsent, installRegistryAuthority, promotedFixtureBundle } from "./helpers/promoted-fixtures.ts";
 import type { StateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
 import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import { withReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
@@ -33,7 +33,6 @@ import { POST as ballotScope } from "../app/api/ballot/scope/route.ts";
 import { fixtureZipResolution } from "./helpers/zip-location.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
 import type { Contest } from "../lib/ballot/types.ts";
-import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 
 
@@ -44,13 +43,6 @@ function nhBallot(races: readonly TestRace[]): BallotSet {
 
 
 
-
-function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
-  const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
-  return { stateAuthorities: current.stateAuthorities,
-    ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
-    ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
-}
 
 
 

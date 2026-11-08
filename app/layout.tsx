@@ -91,7 +91,6 @@ export default async function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
-        <link rel="preload" href="/maplibre-gl-worker.mjs" as="script" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://api.maptiler.com" crossOrigin="anonymous" />
         <script dangerouslySetInnerHTML={{ __html: READER_START_SCRIPT }} />
         <script async src="/map-first-view.mjs" data-map-dark={resolveBasemap("dark")?.styleUrl} data-map-light={resolveBasemap("light")?.styleUrl} />

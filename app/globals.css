@@ -5068,7 +5068,7 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   margin-top: 14px;
 }
 
-.ballot-top-pills .address-prompt {
+.ballot-top-pills > .flex .address-prompt {
   flex: 1 0 100%;
   margin-top: 0;
 }

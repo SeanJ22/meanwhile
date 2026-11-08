@@ -75,6 +75,7 @@ test("Open data follows opaque cursors, replaces a changed publication, reaches 
     assert.equal(await emptyGap.getByRole("link",{name:"Want us to get this sooner?",exact:true}).count(),1);
     await empty.getByRole("button",{name:"Show more",exact:true}).click();await empty.locator('[data-open-data-record="epa-echo:empty-reached"]').waitFor();
     assert.equal(await emptyGap.count(),0,"the local gap disappears when held facts arrive");
+    await empty.getByRole("button",{name:/Sources/}).click();
     await empty.locator(`[data-card-sources] a[href="${record("empty-reached").sourceUrl}"]`).waitFor({state:"attached"});
     await place.getByRole("button",{name:"Show more",exact:true}).click();
     await Promise.race([oldResetRequest,new Promise<never>((_resolve,reject)=>AbortSignal.timeout(5000).addEventListener("abort",()=>reject(Error("Old place never requested its409 reset page"))))]);

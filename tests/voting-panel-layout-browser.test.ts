@@ -105,6 +105,7 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
         const card = page.locator(item.embedded ? "[data-reader-card]" : ".voting-panel > .reader-card");
         await card.locator('[data-voting-site]').first().waitFor({ state: "visible" });
         assert.equal(await card.locator("[data-voting-lookup] a").first().getAttribute("href"), "https://example.gov/polling-place");
+        await card.getByRole("button", { name: /^Sources/ }).click();
         await card.locator('[data-card-sources] a[href^="https:"]').first().waitFor({ state: "attached" });
         assert.equal(await card.locator('[data-card-gap-contribution="voting-answer"]').count(), 0);
         assert.equal(await card.locator("[data-card-footer] [data-card-gap]").count(), 0);
@@ -127,7 +128,6 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
           assert.match(text, /Nov 2 2026 5:00PM/); assert.match(text, /Door A1 \(west side\)/);
         }
         const base = `.scratch/ci/vs01-layout-${item.county.toLowerCase()}-${viewport.name}`;
-        await card.getByRole("button", { name: /^Sources/ }).click();
         assert.match(await card.locator("[data-card-sources]").innerText(), /Voting locations|2026 General Election/);
         const links = await card.locator("[data-card-sources] a[href]").evaluateAll(elements => elements.map(element => element.getAttribute("href")));
         assert.equal(links.length, new Set(links).size);

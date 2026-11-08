@@ -1,0 +1,26 @@
+{
+  "n": 187,
+  "branch": "release/187",
+  "head_sha": "8a3b48fd25e7309c8884dac32d266d51758e8d91",
+  "base_river_sha": "97a693b6948a504d07eb53ea1818d4a17ee7447f",
+  "main_sha": "e0e942fd20d6d1a58ec267309220d554ccc8ad99",
+  "lanes": [
+    {
+      "lane": "cx-writes",
+      "steps": [
+        "CX-WRITES"
+      ],
+      "ready_sha": "413cb58eaf75072b3c033c9b3eeae734a2ddeb6f",
+      "result_sha": "08fbd659b66b34973b1a2c8d9ecb691dc0f544db"
+    }
+  ],
+  "steps": [
+    "CX-WRITES"
+  ],
+  "pr": {
+    "number": 906,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/906"
+  },
+  "ci": "running",
+  "at": "2026-11-08T03:58:55Z"
+}

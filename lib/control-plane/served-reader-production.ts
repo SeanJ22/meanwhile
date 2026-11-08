@@ -6,12 +6,20 @@ import { collectServedReader } from "./served-reader-collector.ts";
 import type { ServedReaderReadback } from "./served-reader.ts";
 import { observeCampaignControls } from "./campaign-reader-controls.ts";
 import { launchGuarded } from "../../scripts/browser.mts";
+import type { Site } from "../../scripts/site.mts";
 import { PUBLIC_SITE_ORIGIN } from "../ops/origins.ts";
 import { PostgresRoutineDataStore } from "../civic-data/store.ts";
 import type { WorkItem } from "./work-item.ts";
 import { collectWorkerRosterReadback, collectWorkerManualReadback, observePublishedRoster, observePublishedFilings, observePublishedManual } from "./worker-reader-readback.ts";
 
-export async function collectPublishedCampaignReadback(state: string, now: string): Promise<ServedReaderReadback> {
+/** Where one page visit goes: the runner's copy of this release, or the live site while the day's allowance lasts. Neither: the visit does not happen. */
+async function visitOrigin(site: Site, runId: string): Promise<string> {
+  const visit = await site.next({ runId, writes: false });
+  if (!visit) throw new Error("no runner copy of this release and the live allowance is spent");
+  return visit.origin;
+}
+
+export async function collectPublishedCampaignReadback(state: string, now: string, site: Site): Promise<ServedReaderReadback> {
   const derived = await readDerivedCampaignSites(state);
   if (derived.kind !== "PROMOTED") return { checkedAt: now, witnesses: [],
     errors: derived.kind === "NOT_RECORDED" ? [] : [`${state} campaign publication readback unavailable: ${derived.kind}.`] };
@@ -53,7 +61,7 @@ export async function collectPublishedCampaignReadback(state: string, now: strin
         const page = await browser.page();
         page.setDefaultTimeout(3000);
         try {
-          const response = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 15_000 });
+          const response = await page.goto(url.replace(PUBLIC_SITE_ORIGIN, await visitOrigin(site, browser.runId)), { waitUntil: "domcontentloaded", timeout: 15_000 });
           const { openedLinks, failures } = await observeCampaignControls(page, derived.value.records.filter(r => destinations.get(r.candidacyId) === url));
           return { status: response?.status() ?? 0, html: await page.content(), openedLinks, failures };
         } finally { await page.close(); }
@@ -64,7 +72,7 @@ export async function collectPublishedCampaignReadback(state: string, now: strin
 
 /** Same scheduler/publisher, public controls and isolated browser as campaign
  * readbacks. No browser starts unless a worker receipt actually needs a visit. */
-export async function collectPublishedWorkerReadback(items: readonly WorkItem[], now: string, previous: ServedReaderReadback | null): Promise<ServedReaderReadback> {
+export async function collectPublishedWorkerReadback(items: readonly WorkItem[], now: string, previous: ServedReaderReadback | null, site: Site): Promise<ServedReaderReadback> {
   let browser: Awaited<ReturnType<typeof launchGuarded>> | null = null;
   let deadline: ReturnType<typeof setTimeout> | undefined;
   const destinations = new Map<string,Promise<string|null>>();
@@ -87,7 +95,8 @@ export async function collectPublishedWorkerReadback(items: readonly WorkItem[],
         try {
           const page = await context.newPage();
           page.setDefaultTimeout(3000);
-          return await ("filings" in input ? observePublishedFilings(page, input) : observePublishedRoster(page, input));
+          const origin = await visitOrigin(site, browser.runId);
+          return await ("filings" in input ? observePublishedFilings(page, input, origin) : observePublishedRoster(page, input, origin));
         } finally { await context.close(); }
       } });
     return { ...result, ...(browser ? { syntheticRunId: (browser as Awaited<ReturnType<typeof launchGuarded>>).runId } : {}) };
@@ -96,7 +105,7 @@ export async function collectPublishedWorkerReadback(items: readonly WorkItem[],
 
 /** Same receipt identity as the worker publisher, with only exact accepted
  * manual records visited. The isolated browser blocks Ask server requests. */
-export async function collectPublishedManualReaderReadback(items: readonly WorkItem[], now: string, previous: ServedReaderReadback | null): Promise<ServedReaderReadback> {
+export async function collectPublishedManualReaderReadback(items: readonly WorkItem[], now: string, previous: ServedReaderReadback | null, site: Site): Promise<ServedReaderReadback> {
   let browser: Awaited<ReturnType<typeof launchGuarded>> | null = null;
   let deadline: ReturnType<typeof setTimeout> | undefined;
   const destinations = new Map<string,Promise<string|null>>();
@@ -119,7 +128,7 @@ export async function collectPublishedManualReaderReadback(items: readonly WorkI
         try {
           const page = await context.newPage();
           page.setDefaultTimeout(3000);
-          return await observePublishedManual(page, visit);
+          return await observePublishedManual(page, visit, await visitOrigin(site, browser.runId));
         } finally { await context.close(); }
       } });
     return { ...result, ...(browser ? { syntheticRunId: (browser as Awaited<ReturnType<typeof launchGuarded>>).runId } : {}) };

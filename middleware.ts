@@ -157,9 +157,12 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
  * Plain files never reach the middleware: Next's static output, the image
  * optimizer, and any non-API path ending in a static-file extension (public/**
  * and the app icons). Every admin route is still matched on EVERY host for
- * rule 1 (even one ending in an extension), and the admin host still matches
- * every path so it 404s anything that is not admin. The extension list and the
- * admin host are mirrored in tests/middleware-matcher.test.ts.
+ * rule 1 (even one ending in an extension). There is deliberately no matcher
+ * with a `has` host condition: Netlify turns each matcher into an edge-function
+ * path pattern and drops `has`, so such a matcher would run the handler on every
+ * request, files included. The admin host therefore serves the same public files
+ * as the reader host; every page and API path on it is still matched. The
+ * extension list is mirrored in tests/middleware-matcher.test.ts.
  */
 export const config = {
   runtime: "nodejs",
@@ -167,6 +170,5 @@ export const config = {
     "/((?!_next/static|_next/image|(?!api/)[^?]*\\.(?:avif|css|gif|geojson|ico|jpe?g|js|json|map|mjs|otf|pbf|png|pmtiles|svg|ttf|txt|wasm|webmanifest|webp|woff2?|xml)$).*)",
     "/admin/:path*",
     "/api/admin/:path*",
-    { source: "/:path*", has: [{ type: "host", value: "admin.meanwhileusa.com" }] },
   ],
 };

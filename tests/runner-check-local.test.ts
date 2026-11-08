@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import http from "node:http";
 import type net from "node:net";
-import { mkdtempSync } from "node:fs";
+import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
@@ -139,5 +139,16 @@ describe("the guard in front of the runner's copy", () => {
       await assert.rejects(fetch(`${f.base}/api/maptiler/tiles/v3/1/1/1.pbf`));
       assert.equal(f.seen.length, 1);
     } finally { f.close(); }
+  });
+});
+
+describe("publication readbacks", () => {
+  it("open their pages on the origin the site gives them, never straight on the live site", () => {
+    const readback = readFileSync("lib/control-plane/worker-reader-readback.ts", "utf8");
+    const production = readFileSync("lib/control-plane/served-reader-production.ts", "utf8");
+    assert.doesNotMatch(readback, /page\.goto\(`?\$?\{?PUBLIC_SITE_ORIGIN/);
+    assert.equal(readback.match(/page\.goto\(`?\$?\{?origin/g)?.length, 4);
+    assert.match(production, /site\.next\(/);
+    assert.match(production, /url\.replace\(PUBLIC_SITE_ORIGIN, await visitOrigin\(site/);
   });
 });

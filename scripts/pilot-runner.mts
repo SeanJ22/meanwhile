@@ -105,6 +105,7 @@ import {
 import {
   applyRuntimeRelease,
   resumeRuntimeReleaseInstall,
+  fetchDeployedCommit,
   fetchGithubCheckRuns,
   fetchRuntimeProductionDeploys,
   inspectNewestDeployedRuntimeRelease,
@@ -116,7 +117,6 @@ import {
 } from "../lib/ops/runtime-release-handoff.ts";
 import { discardStagedReleases, defaultAsyncRunCommand, INSTALL_TIMEOUT_MS, readStagedRelease, stageRuntimeRelease, stagedReleaseDirectory, stagedReleaseIsReady } from "../lib/ops/runtime-release-stage.ts";
 import { parentCodeChanged } from "../lib/ops/runtime-release-switch.ts";
-import { fetchServedCommit, PRODUCTION_BASE_URL } from "./post-deploy-observer.mts";
 import {
   acquireProcessSingleton,
   PILOT_RUNNER_SINGLETON_PORT,
@@ -1596,20 +1596,19 @@ function releaseInspectionRefusal(code: string, detail: string, targetSha: strin
 }
 
 async function inspectRuntimeRelease(): Promise<RuntimeReleaseInspection> {
-  const served = await fetchServedCommit(process.env.WTP_RUNTIME_BASE_URL ?? PRODUCTION_BASE_URL, {
-    runId: `pilot-runtime-release:${process.pid}`, timeoutMs: 15_000,
-  });
   const repository = await runtimeGithubRepository(ROOT);
-  if (repository === null) return releaseInspectionRefusal("GITHUB_ORIGIN_UNRESOLVED", "runtime origin is not a GitHub repository", served.sha);
+  if (repository === null) return releaseInspectionRefusal("GITHUB_ORIGIN_UNRESOLVED", "runtime origin is not a GitHub repository");
+  const token = runtimeGithubCredential(storedKeyEnvironment());
+  const served = await fetchDeployedCommit({ repository, token });
   const checkRuns = typeof served.sha === "string" && /^[0-9a-f]{40}$/i.test(served.sha)
-    ? await fetchGithubCheckRuns({ repository, sha: served.sha, token: runtimeGithubCredential(storedKeyEnvironment()) })
+    ? await fetchGithubCheckRuns({ repository, sha: served.sha, token })
     : null;
   const found = await inspectNewestDeployedRuntimeRelease({ runningSha: RUNNING_CODE_SHA, served, checkRuns,
     readDeploys: () => fetchRuntimeProductionDeploys({
       siteId: process.env.NETLIFY_SITE_ID ?? process.env.WTP_BLOBS_SITE_ID,
       token: storedKeyValue("NETLIFY_AUTH_TOKEN") ?? storedKeyValue("NETLIFY_TOKEN") ?? storedKeyValue("WTP_BLOBS_TOKEN") ?? storedKeyValue("NETLIFY_BLOBS_TOKEN"),
     }),
-    readChecks: sha => fetchGithubCheckRuns({ repository, sha, token: runtimeGithubCredential(storedKeyEnvironment()) }),
+    readChecks: sha => fetchGithubCheckRuns({ repository, sha, token }),
   });
   // A release this server switched to and had to leave stays unstaged until a newer one is deployed.
   return found.targetSha !== null && failedRuntimeReleases(ROOT).includes(found.targetSha)

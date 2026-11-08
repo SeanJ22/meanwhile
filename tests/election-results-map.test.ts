@@ -355,3 +355,23 @@ test("a results link opens the map: /?results, with or without a value, and not 
   assert.equal(resultsRequestedBy("?zip=85704"), false);
   assert.equal(resultsRequestedBy(""), false);
 });
+
+test("redrawing the results keeps the large state-shapes source and closing them removes everything", async () => {
+  const { clearResultLayers, drawResultLayers } = await import("../lib/map/results-apply.ts");
+  const sources = new Map<string, unknown>(), layers: { id: string }[] = [];
+  const map = { getStyle: () => ({ layers: [...layers] }), removeLayer: (id: string) => { layers.splice(layers.findIndex(l => l.id === id), 1); },
+    getSource: (id: string) => sources.get(id), addSource: (id: string, spec: unknown) => { sources.set(id, spec); }, removeSource: (id: string) => { sources.delete(id); },
+    addLayer: (layer: { id: string }) => { layers.push(layer); }, hasImage: () => true, addImage: () => undefined } as unknown as import("maplibre-gl").Map;
+  (globalThis as { window?: unknown }).window = { location: { href: "https://example.org/" } };
+  const states = resultLayers({ kind: "states" }, {}, { theme: "dark", yours: [] });
+  const badges = { type: "FeatureCollection" as const, features: [] };
+  drawResultLayers(map, states, { theme: "dark", states: true, badges });
+  const held = sources.get("results-states");
+  assert.ok(held && sources.has("results-state-badges"));
+  drawResultLayers(map, states, { theme: "dark", states: true, badges });
+  assert.equal(sources.get("results-states"), held, "a redraw does not make the browser parse the shapes again");
+  clearResultLayers(map, true);
+  assert.equal(sources.size, 0);
+  assert.equal(layers.length, 0);
+  delete (globalThis as { window?: unknown }).window;
+});

@@ -3,9 +3,10 @@ import { firstSymbolLayerId, NATIONAL_BOUNDARIES_SOURCE } from "./districts.ts";
 import { STATE_OUTLINES_URL } from "./state-focus.ts";
 import { addResultImages, isResultsLayer, RESULTS_BADGES_SOURCE, RESULTS_STATES_SOURCE, type ResultsTheme } from "./results-style.ts";
 
-export function clearResultLayers(map: MapLibreMap): void {
+/** Remove the results layers. The state shapes are a large file the browser parses once: they stay unless the results close (`all`). */
+export function clearResultLayers(map: MapLibreMap, all = false): void {
   for (const layer of map.getStyle()?.layers ?? []) if (isResultsLayer(layer.id)) map.removeLayer(layer.id);
-  for (const id of [RESULTS_STATES_SOURCE, RESULTS_BADGES_SOURCE]) if (map.getSource(id)) map.removeSource(id);
+  for (const id of all ? [RESULTS_STATES_SOURCE, RESULTS_BADGES_SOURCE] : [RESULTS_BADGES_SOURCE]) if (map.getSource(id)) map.removeSource(id);
 }
 
 /** Whether the map can take these layers now: its style is up and the sources they draw on exist. */
@@ -20,7 +21,7 @@ export function drawResultLayers(
 ): void {
   clearResultLayers(map);
   addResultImages(map, options.theme);
-  if (options.states) map.addSource(RESULTS_STATES_SOURCE, { type: "geojson", data: new URL(STATE_OUTLINES_URL, window.location.href).href, promoteId: "ocdId" });
+  if (options.states && !map.getSource(RESULTS_STATES_SOURCE)) map.addSource(RESULTS_STATES_SOURCE, { type: "geojson", data: new URL(STATE_OUTLINES_URL, window.location.href).href, promoteId: "ocdId" });
   if (options.badges) map.addSource(RESULTS_BADGES_SOURCE, { type: "geojson", data: options.badges });
   const before = firstSymbolLayerId(map);
   for (const layer of layers) map.addLayer(layer, before);

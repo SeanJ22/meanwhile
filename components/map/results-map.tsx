@@ -141,6 +141,9 @@ export default function ResultsMap({ theme, phone, yours, zip, scorecard }: Resu
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, specs, theme]);
 
+  // Closing the results takes everything off the map, the state shapes too.
+  useEffect(() => () => { try { clearResultLayers(map, true); } catch { /* The map is gone. */ } }, [map]);
+
   /* ------------------------------------------------------------- the camera --- */
   const fit = useCallback((bounds: [[number, number], [number, number]], maxZoom = 14) => {
     const panel = !phone && scorecard ? 460 : 16;

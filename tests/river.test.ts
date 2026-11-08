@@ -41,6 +41,7 @@ import {
   setStatusFields,
   slugOf,
   stepIds,
+  usableNow,
   zipsByState,
 } from "../scripts/river.mjs";
 import { REQUIRED_CONTEXTS } from "../lib/ops/required-contexts.ts";
@@ -653,5 +654,31 @@ test("fold, migrations, the quick check, release, settle and the lock protocol w
     assert.equal(lock("claim", "B").code, 0);
   } finally {
     rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("a ZIP is usable only once its district lines are drawn on the map", () => {
+  const g = globalThis as Record<string, unknown>;
+  const saved = { document: g.document, window: g.window };
+  const page = (rendered: number, lineLayer: boolean) => {
+    const map = {
+      loaded: () => true,
+      isMoving: () => false,
+      getStyle: () => ({ layers: [{ id: "water" }, ...(lineLayer ? [{ id: "district-congressional-line" }] : [])] }),
+      queryRenderedFeatures: () => new Array(rendered).fill({}),
+    };
+    g.window = { __wtpMap: map };
+    g.document = { querySelector: (selector: string) => (selector.includes("data-stat") ? { textContent: "12" } : null) };
+  };
+  try {
+    page(0, false);
+    assert.equal(usableNow(), false, "no district line layer yet");
+    page(0, true);
+    assert.equal(usableNow(), false, "layer added but no lines rendered");
+    page(3, true);
+    assert.equal(typeof usableNow(), "number", "lines rendered");
+  } finally {
+    g.document = saved.document;
+    g.window = saved.window;
   }
 });

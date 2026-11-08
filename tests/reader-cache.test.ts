@@ -218,7 +218,7 @@ test("both Postgres nothing-changed paths purge nothing today and on tomorrow's 
   }
 });
 
-test("an empty calendar's new source check queues its consuming place without rereading payloads", async () => {
+test("an empty calendar's new source check leaves consuming pages alone without rereading payloads", async () => {
   const db = await factDb();
   try {
     const root = "ocd-division/country:us/state:az", own = "ocd-division/country:us/state:az/place:own-zip", unrelated = "ocd-division/country:us/state:az/place:other-zip";
@@ -246,9 +246,9 @@ test("an empty calendar's new source check queues its consuming place without re
         rawHash: "b".repeat(64), retrievedAt: NOW.toISOString() } };
     const observedAt = new Date(NOW.getTime() + 1_000).toISOString();
     assert.equal((await store.confirmUnchanged(input,observedAt)).kind,"CONFIRMED");
-    assert.deepEqual((await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL AND place_id=ANY($1::text[])",[[own,unrelated]])).map(row=>row.place_id),[own]);
+    assert.deepEqual(await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL AND place_id=ANY($1::text[])",[[own,unrelated]]),[]);
     assert.ok(statements.every(text=>!text.includes("reader_payload_node")&&!text.includes("civic_data_payload_parts")),
-      "the canonical body alias supplies the queue footprint even when the confirmed calendar is empty");
+      "an empty calendar's check does not load any stored payload");
     await db.query("UPDATE place_page SET stale_at=NULL");
     for(const recordClass of ["CURATED_READER_RECORD","REGISTRATION","FEDERAL_MONEY"] as const)
       assert.equal((await store.confirmUnchanged({...input,recordClass},observedAt)).kind,"CONFIRMED");

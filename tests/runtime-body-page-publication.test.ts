@@ -1,3 +1,4 @@
+import { PLACE_CHECKS_SQL } from "../lib/reader/place-builder.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
@@ -59,7 +60,7 @@ test("a later runtime publication gives its new board a queued ready page while 
     assert.equal(result.failed,0);
     assert.equal(result.remaining,0);
     let reads=0;
-    const read:Query=async(text,params)=>{reads++;assert.equal(text,PLACE_PAGES_SQL);return query(text,params);};
+    const read:Query=async(text,params)=>{if(text===PLACE_CHECKS_SQL)return query(text,params);reads++;assert.equal(text,PLACE_PAGES_SQL);return query(text,params);};
     const ready=await readPlacePackage({state:"AZ",divisionIds:[],bodyIds:[NEW_BODY]},read);
     assert.deepEqual(ready.bodies.map(body=>body.id),[NEW_BODY]);
     assert.equal(reads,1,"an explicit body visit reads its saved page");

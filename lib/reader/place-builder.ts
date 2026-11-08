@@ -778,3 +778,14 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<R
   const [more]=await db.transaction(query=>query("SELECT EXISTS(SELECT 1 FROM place_page WHERE stale_at IS NOT NULL AND (lease_until IS NULL OR lease_until<clock_timestamp())) AS more"));
   return {rebuilt,failed,remaining:more?.more===true?1:0,...(unchanged?{unchanged}:{})};
 }
+
+/** Only current check metadata for the exact facts and source versions a reader has opened. */
+export const PLACE_CHECKS_SQL = `SELECT
+    (SELECT jsonb_agg(jsonb_build_array(s.n,f.checked_at)) FROM jsonb_to_recordset($1::jsonb) AS s(n int,entity text,field text,value jsonb,url text,quote text,at timestamptz)
+      JOIN checked_fact f ON f.entity_id=s.entity AND f.field=s.field AND f.status='live' AND f.value=s.value
+      JOIN source_copy c ON c.id=f.source_copy_id AND c.url=s.url
+      WHERE f.checked_at>s.at AND f.quote IS NOT DISTINCT FROM s.quote) AS facts,
+    (SELECT jsonb_object_agg(p.scope,(SELECT detail FROM civic_data_candidate_events e WHERE e.candidate_id=p.current_version_id
+      AND left(e.detail,26)='UNCHANGED_CONFIRMATION_V1 ' ORDER BY e.sequence DESC LIMIT 1))
+      FROM jsonb_to_recordset($2::jsonb) AS s(scope text,version text) JOIN civic_data_promotions p
+      ON p.key='MEETING:'||s.scope AND p.current_version_id=s.version) AS calendars`;

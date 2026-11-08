@@ -1,6 +1,5 @@
 import { storedKeyEnvironment, storedKeyValue } from "../lib/core/keys-values.ts";
 import { LEGISTAR_MEMBER_DATABASE_BYTES } from "../lib/sources/legistar/members-queue.ts";
-import { SLICE_JOB, slicesLane } from "../lib/reader/slice-lane.ts";
 import { keysRunnerPass, savedKeysLane } from "../lib/core/keys-runner.ts";
 import { readPlanningContinuation } from "../lib/control-plane/scheduler/state-planning.ts";
 import { CENSUS_LANE_BUDGET_MS, CENSUS_LANE_INTERVAL_MS } from "../lib/control-plane/discovery/census-lane.ts";
@@ -1337,9 +1336,6 @@ function drainLaneChildren(): void {
 async function runMemberLane(deadlineMs: number): Promise<void> {
   await runLaneChild("legistar-members", LEGISTAR_MEMBER_DATABASE_BYTES, "scripts/legistar-members-worker.mts", deadlineMs, "Legistar members stopped; queued records remain due");
 }
-async function runSliceLane(deadlineMs: number): Promise<void> {
-  await runLaneChild(SLICE_JOB.id, SLICE_JOB.databaseBytesPerRun, "scripts/slice-lane.mts", deadlineMs, "Slices stopped; marked slices stay waiting");
-}
 /** Reads the links on the work list with the reader of each kind of website. */
 async function runParserLane(deadlineMs: number): Promise<void> {
   await runLaneChild("parser-lane", PARSER_LANE_DATABASE_BYTES, "scripts/parser-worker.mts", deadlineMs, "The page readers stopped; the links they had remain on the work list");
@@ -1421,7 +1417,6 @@ const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   { id: "hunter-lane", everyMs: 60_000, budgetMs: HUNTER_LANE_LIFE_MS + HUNTER_WORKER_WALL_MS, run: runHunterLane },
   { id: "parser-lane", everyMs: 60_000, budgetMs: 55 * 60_000, run: runParserLane },
   placePagesLane(runPlacePages),
-  slicesLane(runSliceLane),
   publishNowLane(runPublishNow),
   placeMapsLane(deadlineMs => runRoutineLane("place-maps", deadlineMs)),
   votingSitesLane(deadlineMs => runRoutineLane("voting-sites", deadlineMs)),

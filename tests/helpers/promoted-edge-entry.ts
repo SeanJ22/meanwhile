@@ -6,7 +6,8 @@ import { requiredManualProductionContract, type ManualProductionContractId } fro
 import type { CivicDataReadResult, PromotedEdgeEntry } from "../../lib/civic-data/read-model.ts";
 import type { PromotedFamilyArtifactValue } from "../../lib/meetings/edge-artifacts.ts";
 import { projectionKey } from "../../lib/civic-data/store.ts";
-import { VALIDATION_CHECKS, type RoutineRecordClass, type ValidationReceipt } from "../../lib/civic-data/types.ts";
+import type { RoutineRecordClass } from "../../lib/civic-data/types.ts";
+import { routineReceiptFixture } from "./routine-candidate-fixture.ts";
 
 /**
  * A proven pointer as the reader edge carries it: the pointer row with a GOOD
@@ -26,17 +27,13 @@ export function provenEdgeEntry<T>(input: {
 }): Extract<PromotedEdgeEntry<T>, { kind: "PROMOTED" }> {
   const retrievedAt = input.retrievedAt ?? "2026-09-25T12:00:00.000Z";
   const promotedAt = input.promotedAt ?? retrievedAt;
-  const receipt: ValidationReceipt = {
-    contractVersion: 2,
-    decision: "GOOD",
-    candidateId: input.versionId,
+  const receipt = routineReceiptFixture({
+    id: input.versionId,
     sourceId: input.sourceId,
     recordClass: input.recordClass,
     scope: input.scope,
-    validatedAt: retrievedAt,
-    checks: VALIDATION_CHECKS.map((check) => ({ check, verdict: "PASS", code: `${check}_PASS`, detail: "Held for the reader edge test." })),
-    excludedFacts: [],
-  } as unknown as ValidationReceipt;
+    retrieval: { retrievedAt },
+  }, { detail: "Held for the reader edge test." });
   return {
     kind: "PROMOTED",
     projection: {

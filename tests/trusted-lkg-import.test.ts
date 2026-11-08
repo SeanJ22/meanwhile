@@ -20,12 +20,12 @@ import {
   trustedLkgValidatorIds,
 } from "../lib/civic-data/trusted-lkg-import.ts";
 import {
-  sourceProjectionEvidence,
   type CandidateVersionRecord,
   type RoutineCandidate,
   type CandidateEvent,
   type TrustedLkgImportEvidence,
 } from "../lib/civic-data/types.ts";
+import { routineCandidateFixture } from "./helpers/routine-candidate-fixture.ts";
 
 const FIRST = "2026-09-09T12:00:00.000Z";
 const SECOND = "2026-09-09T13:00:00.000Z";
@@ -72,30 +72,14 @@ function candidate(
   }] as const;
   const fixtureSetSha256 = trustedLkgFixtureSetSha256(fixtures);
   const normalizedPayloadSha256 = sha256(canonicalCivicDataJson(payload));
-  const partial: RoutineCandidate = {
+  const partial = routineCandidateFixture({
     id: "pending-content-address",
     sourceId,
     recordClass,
     scope,
-    retrieval: {
-      succeeded: true,
-      requestedUrl: trustedLkgImportUrl(contractId),
-      finalUrl: null,
-      httpStatus: null,
-      retrievedAt: importedAt,
-      rawHash: fixtureSetSha256,
-    },
-    normalization: {
-      succeeded: true,
-      parserVersion,
-      schemaVersion: `${contractId}:trusted-lkg:1`,
-      normalizedHash: normalizedPayloadSha256,
-      normalizedPayloadHash: normalizedPayloadSha256,
-      inputRecords: civicRecords.length,
-      outputRecords: civicRecords.length,
-      droppedRecords: 0,
-      missingRequiredFields: [],
-    },
+    parserVersion,
+    schemaVersion: `${contractId}:trusted-lkg:1`,
+    records: civicRecords.length,
     identities: [{
       subjectId: manual ? MANUAL_RECORD_ID : "elections.example.gov",
       jurisdiction: "US",
@@ -113,19 +97,9 @@ function candidate(
     },
     semantics: { factKind: `frozen ${contractId} LKG`, violations: [] },
     horizon: {
-      kind: "OPEN_FACT_SET",
       query: "exact frozen LKG members without a current publisher-universe claim",
-      returnedRecords: civicRecords.length,
-      declaredTotal: null,
       paginationComplete: false,
-      claimsComplete: false,
     },
-    absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
-    sourceProjectionEvidence: sourceProjectionEvidence(
-      sourceId,
-      recordClass,
-      scope,
-    ),
     dependentChecks: [{
       consumer: `${contractId} Reader projection`,
       passed: true,
@@ -133,8 +107,17 @@ function candidate(
     }],
     normalizedPayload: payload,
     readModel: payload,
+  }, {
+    retrieval: {
+      succeeded: true,
+      requestedUrl: trustedLkgImportUrl(contractId),
+      finalUrl: null,
+      httpStatus: null,
+      retrievedAt: importedAt,
+      rawHash: fixtureSetSha256,
+    },
     civicRecords,
-  };
+  });
   const evidence: TrustedLkgImportEvidence = {
     contractVersion: 1,
     kind: "TRUSTED_LKG_IMPORT",
@@ -271,7 +254,7 @@ test("trusted LKG evidence is content-bound and cannot replace an existing autho
 });
 
 test("Reader proof fails closed if durable trusted-LKG evidence is altered", async () => {
-  const { store, outcome } = retainedHistoricalLkg();
+  const { outcome } = retainedHistoricalLkg();
   assert.ok(outcome.promoted);
   const altered = {
     ...outcome.candidate,

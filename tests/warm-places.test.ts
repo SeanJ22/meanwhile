@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { publishedCountyDivisions, warmPlacesForCounties } from "../lib/ops/warm-places.ts";
+import { publishedCountyDivisions, publishedPlaces, warmPlacesForCounties } from "../lib/ops/warm-places.ts";
 
 const D = (rest: string) => `ocd-division/country:us/${rest}`;
 
@@ -24,4 +24,8 @@ test("one place per county: its lowest ZIP and the map's centroid; a shared ZIP 
   });
   assert.deepEqual(out.places, [{ zip: "11111", lat: 1, lng: 2 }]);
   assert.equal(out.skipped, 2, "no centroid for c, no ZIP for d");
+});
+
+test("failed place discovery throws and never passes as an empty list", async () => {
+  await assert.rejects(publishedPlaces("https://example.test", async () => new Response(null, { status: 503 }), 100), /HTTP 503/);
 });

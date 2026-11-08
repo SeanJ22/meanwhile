@@ -1,4 +1,4 @@
-/** Which places a new deploy warms: one ZIP per published county, from the reader edge manifest. Pure. */
+/** The places the speed and walk scripts read: one ZIP per published county, from the reader edge manifest. Pure. */
 
 export interface WarmPlace {
   readonly zip: string;
@@ -41,4 +41,13 @@ export function warmPlacesForCounties(input: {
     places.push({ zip, lat: centroid.lat, lng: centroid.lng });
   }
   return { places, skipped };
+}
+
+/** One place per published county, from the live site's own reader edge manifest. */
+export async function publishedPlaces(origin: string, fetchImpl: typeof fetch, timeoutMs: number): Promise<readonly WarmPlace[]> {
+  const response = await fetchImpl(`${origin}/api/reader/places`, { headers: { accept: "application/json" }, signal: AbortSignal.timeout(timeoutMs) });
+  if (!response.ok) throw new Error(`Published places HTTP ${response.status}`);
+  const body = (await response.json()) as { places?: unknown };
+  return Array.isArray(body.places) ? body.places.filter((p): p is WarmPlace =>
+    typeof p?.zip === "string" && typeof p.lat === "number" && typeof p.lng === "number") : [];
 }

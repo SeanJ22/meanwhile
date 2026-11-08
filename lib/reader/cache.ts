@@ -67,12 +67,14 @@ export function readerCacheTags(scope: ReaderCacheScope): string[] {
   ];
 }
 
-/** Published changes purge their tags; unchanged checks keep the saved answer. */
+/** Published changes purge their tags; unchanged checks and new deploys keep the saved answer. */
 export function readerCacheHeaders(scope: ReaderCacheScope): Record<string, string> {
   return {
     "Cache-Control": "public, max-age=0, must-revalidate",
     "Netlify-CDN-Cache-Control": `public, durable, max-age=${READER_CACHE_SECONDS}, stale-while-revalidate=${READER_CACHE_SECONDS}`,
     "Netlify-Cache-Tag": [...readerCacheTags({ ...scope, nationalPeople: true }), "reader-settings"].join(","),
+    // Opts out of the purge-on-deploy: a release does not empty the CDN, so no robot has to refill it. Staleness stays bounded by the lifetime above.
+    "Netlify-Cache-ID": "reader-answers",
   };
 }
 

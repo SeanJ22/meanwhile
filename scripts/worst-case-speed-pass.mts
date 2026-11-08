@@ -30,7 +30,7 @@ import {
 } from "../lib/health/worst-case-speed.ts";
 import { openSurfaceFixes } from "../lib/health/surface-fixes.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
-import { publishedPlaces } from "../lib/ops/post-deploy-warm.ts";
+import { publishedPlaces } from "../lib/ops/warm-places.ts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";
 import { liveVisitsPerDay, openSite } from "./site.mts";
 

@@ -89,6 +89,7 @@ test("reader answers keep national people, state and place tags with a fifteen-m
   assert.ok(tags.includes("reader-state:AZ"));
   assert.ok(tags.includes("reader-settings"));
   assert.match(tags.find(tag => tag.startsWith("reader-place:"))!, /^reader-place:[a-f0-9]{64}$/);
+  assert.equal(headers["Netlify-Cache-ID"], "reader-answers", "a deploy must not empty the CDN");
   assert.equal(headers["Cache-Control"], "public, max-age=0, must-revalidate");
   assert.equal(headers["Netlify-CDN-Cache-Control"], "public, durable, max-age=900, stale-while-revalidate=900");
   assert.deepEqual(readerCacheTags({ states: ["TX", "CA", "TX"] }), ["reader-state:CA", "reader-state:TX"]);

@@ -33,7 +33,7 @@ import {
   type Finder, type ResidentTask, type ResidentTaskFile, type TaskCheck, type TaskProfile, type TaskRun, type TaskStepRecord,
 } from "../lib/health/resident-tasks.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
-import { publishedPlaces } from "../lib/ops/post-deploy-warm.ts";
+import { publishedPlaces } from "../lib/ops/warm-places.ts";
 import { storeRunScreenshot } from "../lib/photos/store.ts";
 import { seedZip } from "./browser.mts";
 import { liveVisitsPerDay, openSite, visitBrowsers } from "./site.mts";

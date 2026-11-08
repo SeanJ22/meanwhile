@@ -44,7 +44,7 @@ import { decodePng, patchStats, regionChange } from "./png.mts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";
 
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
-import { publishedPlaces } from "../lib/ops/post-deploy-warm.ts";
+import { publishedPlaces } from "../lib/ops/warm-places.ts";
 
 const DEFAULT_BASE = "http://localhost:3000";
 const BASE = (process.env.SHOOT_BASE_URL ?? DEFAULT_BASE).replace(/\/$/, "");

@@ -155,13 +155,13 @@
       "file": "lib/control-plane/worker-reader-readback.ts",
       "kind": "readCandidate",
       "fingerprint": "5deec1395ece98eae17c51e76496cbf8d1a0136c5c60d123adf9974edeee7c6e",
-      "line": 222
+      "line": 224
     },
     {
       "file": "lib/control-plane/worker-reader-readback.ts",
       "kind": "readCandidate",
       "fingerprint": "5deec1395ece98eae17c51e76496cbf8d1a0136c5c60d123adf9974edeee7c6e",
-      "line": 295
+      "line": 297
     },
     {
       "file": "lib/coverage/owed-read.ts",

@@ -19,7 +19,7 @@ import {
 } from "maplibre-gl";
 import { boundaryProtocol } from "@/lib/map/boundary-protocol";
 import { startMap } from "@/lib/map/start-map";
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { holdMapPresentation, releaseMapPresentation, mapPresentationHeld, setPresentationVisible } from "@/lib/map/flight-presentation";
 import { detectRaster } from "@/components/map/raster-capability";
@@ -101,6 +101,7 @@ interface CameraProbe {
 }
 
 import { OfficePinsLayer, isOfficePress } from "./office-pins-layer";
+import { MapInstance } from "./map-instance";
 import type { MapBounds, OfficeSite } from "@/lib/map/office-pins";
 
 const NO_OFFICE_SITES: readonly OfficeSite[] = [];
@@ -165,6 +166,8 @@ interface MapCanvasProps {
   focusStateOcdId?: string | null;
 
   votingSites?: VotingSitePin[];
+  /** The election-results overlay, drawn on this map once it has loaded (it reads the map with `useMapInstance`). While it is up, taps belong to it. */
+  results?: ReactNode;
   /** The point the reader's typed address resolved to; the address never reaches the map. */
   votingAddressPoint?: { lat: number; lng: number } | null;
   onSelectVotingSite?: (id: string) => void;
@@ -230,10 +233,14 @@ export function MapCanvas({
   selectedOfficeId = null,
   onBoundsChange,
   votingSites,
+  results,
   votingAddressPoint = null,
   onSelectVotingSite,
   selectedVotingSiteId = null,
 }: MapCanvasProps) {
+  const resultsUpRef = useRef(false);
+  const resultsUp = Boolean(results);
+  useEffect(() => { resultsUpRef.current = resultsUp; }, [resultsUp]);
   const [presentationReady, setPresentationReady] = useState(false);
   const [graphicsUnavailable, setGraphicsUnavailable] = useState(false);
   const presentationCallbackRef = useRef(onPresentationReadyChange);
@@ -444,6 +451,7 @@ export function MapCanvas({
 
     /* Click to select a district: one hit selects, several open a picker, none keeps the selection. */
     const onClick = (event: MapMouseEvent) => {
+      if (resultsUpRef.current) return;
       /* An office pin press is the office layer's own. */
       if (isOfficePress(event.originalEvent)) return;
       /* A press on the map puts a fanned pin group back; pin presses never reach here. */
@@ -1090,6 +1098,7 @@ export function MapCanvas({
           onSelect={id => onSelectOffice?.(id)}
         />
       )}
+      {officeMap && results && <MapInstance.Provider value={officeMap}>{results}</MapInstance.Provider>}
       {graphicsUnavailable && (
         <p role="status" className="absolute inset-x-0 bottom-0 p-4 t-body text-voice bg-panel">
           The map can’t show on this device. You can still browse the meeting list.

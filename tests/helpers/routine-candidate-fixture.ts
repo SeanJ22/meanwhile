@@ -1,4 +1,4 @@
-import { normalizedHash } from "../../lib/civic-data/candidate-builders.ts";
+import { fecFundingCandidate, normalizedHash } from "../../lib/civic-data/candidate-builders.ts";
 import { VALIDATION_CHECKS, sourceProjectionEvidence, type CandidateVersionRecord, type PromotedProjection,
   type RoutineCandidate, type RoutineRecordClass, type ValidationCheckName, type ValidationReceipt } from "../../lib/civic-data/types.ts";
 
@@ -57,8 +57,11 @@ export function routineCandidateFixture(input: CandidateInput, overrides: Partia
 }
 
 type CheckText = string | ((check: ValidationCheckName) => string);
+type ReceiptCandidate = Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope"> & {
+  readonly retrieval: Pick<RoutineCandidate["retrieval"], "retrievedAt">;
+};
 /** Preserve a scenario's exact proof text while sharing the receipt envelope. */
-export function routineReceiptFixture(value: RoutineCandidate, options: Partial<Omit<ValidationReceipt, "checks">> & {
+export function routineReceiptFixture(value: ReceiptCandidate, options: Partial<Omit<ValidationReceipt, "checks">> & {
   code?: CheckText; detail?: CheckText; checks?: ValidationReceipt["checks"];
 } = {}): ValidationReceipt {
   const { code = (check: ValidationCheckName) => `${check}_PASS`, detail = "persisted proof", checks, ...overrides } = options;
@@ -87,6 +90,66 @@ export function routineRecordFixture(value: RoutineCandidate, overrides: Partial
     failureDetail: null,
     ...overrides,
   };
+}
+
+/** A newly acquired candidate has no validation, promotion or failure evidence yet. */
+export function routineAcquiredFixture(candidate: RoutineCandidate, lastKnownGoodVersion: string | null = null): CandidateVersionRecord {
+  return {
+    candidate,
+    state: "FETCHED",
+    acquisitionSucceeded: true,
+    receipt: null,
+    promotedVersion: null,
+    lastKnownGoodVersion,
+    failureCode: null,
+    failureDetail: null,
+  };
+}
+
+/** The same complete FEC source fixture used by runner and verification tests. */
+export function fecSourceFixture(input: { name: string; retrievedAt: string; receipts?: number; rawBody?: string }): RoutineCandidate {
+  const { name, retrievedAt, receipts = 10, rawBody = "official FEC response bytes" } = input;
+  return fecFundingCandidate({
+    snapshot: {
+      formatVersion: 1,
+      fetchedAt: retrievedAt,
+      cycle: 2026,
+      matchReport: { rosterMatched: 1, rosterTotal: 1, ballotMatched: 0, ballotTotal: 0 },
+      candidates: [{
+        dataClass: "FEC_COMMITTEE",
+        fecCandidateId: "H6AZ01001",
+        name,
+        state: "AZ",
+        office: "H",
+        district: "01",
+        targetKeys: ["congress:test"],
+        matchRoutes: ["bioguide-bridge"],
+        principalCommitteeId: "C00999999",
+        cycle: 2026,
+        totals: {
+          receipts,
+          disbursements: 1,
+          cashOnHand: receipts - 1,
+          individualItemized: receipts,
+          individualUnitemized: 0,
+          smallDonorShare: 0,
+          coverageEndDate: "2026-06-30",
+        },
+        topContributions: [],
+        provenance: {
+          sourceUrl: "https://api.open.fec.gov/v1/",
+          sourceOrg: "Federal Election Commission",
+          collectedAt: retrievedAt,
+          verifiedAt: retrievedAt,
+        },
+      }],
+      absences: [],
+    },
+    rawBodies: [rawBody],
+    finalUrl: "https://api.open.fec.gov/v1/candidates/search/",
+    retrievedAt,
+    excludedFacts: [],
+  });
 }
 
 /** The same candidate and pointer fixture used by scalar, batch and memoized reader tests. */

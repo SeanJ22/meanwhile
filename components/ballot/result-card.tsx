@@ -33,12 +33,14 @@ export interface ResultCardProps {
   /** Visible in the header beside the title (jurisdiction mark). */
   titleAfter?: ReactNode;
   /** Expanded body. */
+  /** Open when first shown, outside an accordion: the results map opens its scorecard. */
+  startOpen?: boolean;
   children: ReactNode;
 }
 
-export function ResultCard({ id, title, tier = null, rule = null, summary, sources, attrs, className = "", titleAfter, children }: ResultCardProps) {
+export function ResultCard({ id, title, tier = null, rule = null, summary, sources, attrs, className = "", titleAfter, startOpen = false, children }: ResultCardProps) {
   const accordion = useContext(AccordionContext);
-  const [localOpen, setLocalOpen] = useState(false);
+  const [localOpen, setLocalOpen] = useState(startOpen);
   const open = accordion ? accordion.openId === id : localOpen;
   const root = useRef<HTMLDivElement>(null);
   const wasOpen = useRef(false);

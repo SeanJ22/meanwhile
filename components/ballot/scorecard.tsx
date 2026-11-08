@@ -124,22 +124,24 @@ function ScorecardBody({ card }: { card: Scorecard }) {
 
 const tabId = (scope: string) => `scorecard-tab-${scope}`;
 
-/** The party scorecard card on the ballot: the reader's state and the whole country, switchable. */
-export function ScorecardCard({ homeScope, homeName }: { homeScope: string; homeName: string }) {
-  const feed = useResultsFeed();
-  const scorecards = feed.status === "settled" ? scorecardsFromFacts(feed.facts, homeScope, homeName) ?? {} : undefined;
-  const scopes = homeScope === "US" ? ["US"] : [homeScope, "US"];
-  const [scope, setScope] = useState(homeScope);
-  const card = scorecards?.[scope];
-  const labelOf = (code: string) => code === "US" ? "United States" : scorecards?.[code]?.name ?? stateName(code) ?? code;
+export interface ScorecardTab { code: string; label: string }
+
+/**
+ * The party scorecard card for one chosen area. `settled` is false while the results load. The ballot's card keeps its own
+ * choice of area; the results map drives it from its state tabs, and opens it (`startOpen`).
+ */
+export function ScorecardView({ tabs, scope, onScope, card, settled, startOpen }: {
+  tabs: readonly ScorecardTab[]; scope: string; onScope: (code: string) => void; card: Scorecard | undefined; settled: boolean; startOpen?: boolean;
+}) {
+  const labelOf = (code: string) => tabs.find(tab => tab.code === code)?.label ?? stateName(code) ?? code;
   const title = scorecardTitle(card, labelOf(scope), scope);
   const moveTab = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
     const step = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
-    const target = event.key === "Home" ? 0 : event.key === "End" ? scopes.length - 1 : step ? (index + step + scopes.length) % scopes.length : -1;
+    const target = event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : step ? (index + step + tabs.length) % tabs.length : -1;
     if (target < 0) return;
     event.preventDefault();
-    setScope(scopes[target]);
-    document.getElementById(tabId(scopes[target]))?.focus();
+    onScope(tabs[target].code);
+    document.getElementById(tabId(tabs[target].code))?.focus();
   };
 
   const rows = card ? chamberHeaderRows(card) : [];
@@ -153,18 +155,27 @@ export function ScorecardCard({ homeScope, homeName }: { homeScope: string; home
     </div>}
   </div> : undefined;
 
-  return <ResultCard id="scorecard" title={title} tier={scope === "US" ? "national" : "state"} summary={summary}
+  return <ResultCard id="scorecard" title={title} tier={scope === "US" ? "national" : "state"} summary={summary} startOpen={startOpen}
     sources={scorecardSources(card)} attrs={{ "data-scorecard": scope }}>
     <div className={`${styles.fills} ${styles.body}`}>
       <div className={styles.tabs} role="tablist" aria-label="Scorecard area">
-        {scopes.map((code, index) => <button key={code} id={tabId(code)} type="button" role="tab" className={styles.tab}
-          aria-selected={code === scope} aria-controls="scorecard-panel" tabIndex={code === scope ? 0 : -1}
-          onClick={() => setScope(code)} onKeyDown={event => moveTab(event, index)}>{labelOf(code)}</button>)}
+        {tabs.map((tab, index) => <button key={tab.code} id={tabId(tab.code)} type="button" role="tab" className={styles.tab}
+          aria-selected={tab.code === scope} aria-controls="scorecard-panel" tabIndex={tab.code === scope ? 0 : -1}
+          onClick={() => onScope(tab.code)} onKeyDown={event => moveTab(event, index)}>{tab.label}</button>)}
       </div>
       <div id="scorecard-panel" role="tabpanel" aria-labelledby={tabId(scope)} className={styles.body}>
         {card ? <ScorecardBody card={card} />
-          : !scorecards ? null : <CardGapSection label={`${labelOf(scope)} results`}><CardGapContribution id={`scorecard:${scope}`} label={`${labelOf(scope)} results`} /></CardGapSection>}
+          : !settled ? null : <CardGapSection label={`${labelOf(scope)} results`}><CardGapContribution id={`scorecard:${scope}`} label={`${labelOf(scope)} results`} /></CardGapSection>}
       </div>
     </div>
   </ResultCard>;
+}
+
+/** The party scorecard card on the ballot: the reader's state and the whole country, switchable. */
+export function ScorecardCard({ homeScope, homeName }: { homeScope: string; homeName: string }) {
+  const feed = useResultsFeed();
+  const scorecards = feed.status === "settled" ? scorecardsFromFacts(feed.facts, homeScope, homeName) ?? {} : undefined;
+  const [scope, setScope] = useState(homeScope);
+  const tabs = (homeScope === "US" ? ["US"] : [homeScope, "US"]).map(code => ({ code, label: code === "US" ? "United States" : scorecards?.[code]?.name ?? stateName(code) ?? code }));
+  return <ScorecardView tabs={tabs} scope={scope} onScope={setScope} card={scorecards?.[scope]} settled={scorecards !== undefined} />;
 }

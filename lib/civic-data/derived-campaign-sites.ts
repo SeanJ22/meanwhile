@@ -1,13 +1,9 @@
-import { currentStateAuthorityProjection, readStateAuthorityProjection } from "./state-reader.ts";
+import { currentStateAuthorityProjection } from "./state-authority-held.ts";
 import { stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
-import {
-  civicDataReadNotInitialized,
-  readPromotedCivicData,
-  type CivicDataReadResult,
-  type PromotedCivicDataReadOptions,
-} from "./read-model.ts";
+import type { CivicDataReadResult } from "./read-model.ts";
+import { civicDataReadNotInitialized } from "./read-result.ts";
 import { campaignLinkRefreshIssue } from "./campaign-link-refresh.ts";
-import { createHash } from "node:crypto";
+import { sha256Text } from "../sha256-text.ts";
 import type { CampaignSiteSourceReference } from "../candidates/campaign-site-verifier.ts";
 import { portraitBindingMatches } from "../photos/binding.ts";
 import type { CandidatePortraitPatch } from "../ballot/candidate-portraits.ts";
@@ -109,8 +105,8 @@ const instant = (value: unknown): value is string => typeof value === "string" &
 /** URL, raw bytes, extracted text and extractor together identify a source revision. */
 export function derivedCandidateRevisionId(input: { readonly candidateKey: string; readonly documentUrl: string;
   readonly rawContentHash: string; readonly contentHash: string; readonly extractorVersion: number }): string {
-  return createHash("sha256").update(JSON.stringify([input.candidateKey, input.documentUrl, input.rawContentHash,
-    input.contentHash, input.extractorVersion])).digest("hex");
+  return sha256Text(JSON.stringify([input.candidateKey, input.documentUrl, input.rawContentHash,
+    input.contentHash, input.extractorVersion]));
 }
 
 export function derivedCandidateDocumentId(candidateKey: string, contentHash: string, revisionId: string): string {
@@ -166,7 +162,7 @@ export function derivedCampaignSitesProjectionIssue(value: unknown): string | nu
       const date = d?.publicationDate;
       if (!d || !e || d.candidateKey !== record.id || documentIds.has(d.id) || d.id !== expectedId ||
           d.sourceClass !== "CAMPAIGN_SITE" || d.basis !== "HUNTED_AND_VERIFIED" || d.extraction !== "html" || !text(d.text) ||
-          createHash("sha256").update(d.text).digest("hex") !== d.contentHash ||
+          sha256Text(d.text) !== d.contentHash ||
           !SHA256.test(e.sha256) || d.sourceContentHash !== e.sha256 || d.documentUrl !== e.finalUrl ||
           (revision !== undefined && (!SHA256.test(revision.revisionId) || revision.revisionId !== expectedId.split("~").at(-1) ||
             revision.artifactId !== e.artifactId || revision.canonicalUrl !== e.finalUrl ||
@@ -216,14 +212,6 @@ export function derivedCampaignSitesProjectionIssue(value: unknown): string | nu
   }
   return null;
 }
-
-export async function readDerivedCampaignSites(state: string, options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> {
-  return Object.keys(options).length
-    ? readPromotedCivicData<DerivedCampaignSitesProjection>(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope(state), options)
-    : (await readStateAuthorityProjection<DerivedCampaignSitesProjection>("candidate-campaign-sites-derived", state)).result;
-}
-
-export const refreshDerivedCampaignSites = (state: string, options: PromotedCivicDataReadOptions = {}) => readDerivedCampaignSites(state, options);
 
 function derivedCampaignSitesReadState(state: string): CivicDataReadResult<DerivedCampaignSitesProjection> {
   return currentStateAuthorityProjection<DerivedCampaignSitesProjection>("candidate-campaign-sites-derived", state)?.result ??

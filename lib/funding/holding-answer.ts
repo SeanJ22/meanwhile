@@ -1,4 +1,5 @@
-import { settleFundingSnapshotRead } from "./snapshot.ts";
+
+import { settleFundingSnapshotRead } from "./snapshot-read.ts";
 import { REGISTRY_STATES,type BallotState } from "../civic-data/state-scopes.ts";
 import { readerBallotSourcesForDivisions } from "../ballot/reader-sources.ts";
 import { ballotCandidateAliases, ballotCandidatePeople, withCandidateTickets } from "../ballot/tickets.ts";

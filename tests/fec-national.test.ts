@@ -1,3 +1,4 @@
+import { refreshFundingFromPromoted, settleFundingRead } from "../lib/funding/snapshot-read.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -12,7 +13,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { sourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-error.ts";
 import { fundingAnswerForTarget } from "../lib/funding/display.ts";
-import { refreshFundingFromPromoted, settleFundingRead } from "../lib/funding/snapshot.ts";
+
 import type { FundingSnapshot } from "../lib/funding/types.ts";
 import type { OfficeholderSet } from "../lib/officials/types.ts";
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";

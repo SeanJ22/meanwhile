@@ -1,3 +1,5 @@
+import { readGenericBallotProjection } from "../lib/ballot/generic-projection-read.ts";
+import { refreshFundingFromPromoted } from "../lib/funding/snapshot-read.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { isRenderable } from "../lib/funding/state-money-reader.ts";
 import assert from "node:assert/strict";
@@ -9,11 +11,11 @@ import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { campaignMoneyApiAnswer, campaignMoneyForTarget, currentOfficialIdentity, resolvedCandidacyForOfficial, officialFinanceIdentityMatches } from "../lib/funding/campaign-money.ts";
 import { ROSTER_READER_DISPOSITIONS } from "./fixtures/held-body-rosters.ts";
 import { fundingAnswerForTarget } from "../lib/funding/display.ts";
-import { getFundingSnapshot, refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
+import { getFundingSnapshot } from "../lib/funding/snapshot.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { type StateMoneyRecord } from "../lib/funding/state-money.ts";
 import { resetStateMoneyCache, stateMoneyReadState } from "../lib/funding/state-snapshot.ts";
-import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+
 import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
 import type { StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
 import { installRegistryAuthority, installStateMoney, stateMoneyFixture, syntheticFiledStateMoneyRecord } from "./helpers/promoted-fixtures.ts";

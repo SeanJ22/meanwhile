@@ -1,3 +1,4 @@
+import { stateAuthorityPointers } from "../lib/civic-data/state-authority-held.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
@@ -11,7 +12,7 @@ import type { CuratedReaderProjection } from "../lib/civic-data/manual-projectio
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { section3Record } from "../lib/control-plane/promotion/section3.ts";
 import { readBallotNavigationProjection } from "../lib/civic-data/curated-reader-read-model.ts";
-import { stateAuthorityPointers } from "../lib/civic-data/state-reader.ts";
+
 import { withReaderSelection } from "../lib/db/reader-route.ts";
 import { primeReaderCanonicalStore } from "../lib/reader/canonical-context.ts";
 import { readCanonicalPackages } from "../lib/reader/canonical.ts";

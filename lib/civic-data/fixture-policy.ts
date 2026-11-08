@@ -12,7 +12,7 @@ export interface CivicDataFixtureEnvironment {
  * or explicitly set.
  */
 export function mayUseTestFixture(
-  env: CivicDataFixtureEnvironment = process.env,
+  env: CivicDataFixtureEnvironment = (globalThis as { process?: { env: CivicDataFixtureEnvironment } }).process?.env ?? {},
 ): boolean {
   return env.NODE_ENV !== "production" &&
     (env.NODE_ENV === "test" || env.NODE_TEST_CONTEXT !== undefined);

@@ -1,3 +1,4 @@
+import { reconcileOfficialCandidacies, type OfficialCandidacyBridgeRow } from "../lib/registry/official-candidacy-bridge.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { stateBallotScope, stateBallotContractId, REGISTRY_STATES, type BallotState } from "../lib/civic-data/state-scopes.ts";
 import assert from "node:assert/strict";
@@ -26,7 +27,7 @@ import { routineTaskDue } from "../lib/civic-data/runner.ts";
 import { ballotPublicationDue } from "../lib/civic-data/ballot-publication.ts";
 import { ballotInputStamp, ballotInputHash } from "../lib/civic-data/ballot-input.ts";
 import { ballotCandidateAliases, withCandidateTickets } from "../lib/ballot/tickets.ts";
-import { reconcileOfficialCandidacies, type OfficialCandidacyBridgeRow } from "../lib/registry/runtime-data-plane.ts";
+
 
 async function runBallotState(options: Parameters<typeof runBallotPublication>[0]) {
   const environment = { WTP_RUNTIME_MODE: "staging", WTP_DB_ROLE: "local", DATABASE_URL: "postgresql://local:local@staging.invalid/reader",

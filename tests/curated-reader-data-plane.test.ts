@@ -1,12 +1,8 @@
+import { CURATED_READER_CONTRACT_IDS } from "../lib/civic-data/curated-reader-held.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import {
-  CURATED_READER_CONTRACT_IDS,
-  readBallotNavigationProjection,
-  readCuratedReaderProjection,
-  readMemberOfficeStateProjection,
-} from "../lib/civic-data/curated-reader-read-model.ts";
+import { readBallotNavigationProjection, readCuratedReaderProjection, readMemberOfficeStateProjection } from "../lib/civic-data/curated-reader-read-model.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import {
   manualProjectionCandidate,

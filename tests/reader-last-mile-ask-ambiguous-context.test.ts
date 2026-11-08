@@ -1,3 +1,4 @@
+import { readGenericBallotProjection } from "../lib/ballot/generic-projection-read.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read.ts";
 import assert from "node:assert/strict";
 import test from "./helpers/playbooks.ts";
@@ -14,7 +15,7 @@ import { syntheticCandidateCard, candidateProfilesFor } from "./helpers/reader-f
 import { installManualValue } from "./helpers/promoted-fixtures.ts";
 import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
-import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+
 import type { CandidateCorpus } from "../lib/candidates/corpus.ts";
 import { readStateAuthorityProjection } from "../lib/civic-data/state-reader.ts";
 import type { CandidateProfilesProjection } from "../lib/civic-data/manual-projections.ts";

@@ -1,7 +1,8 @@
+import { readGenericBallotProjection } from "../lib/ballot/generic-projection-read.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { candidateContactForCandidacy } from "../lib/ballot/candidate-contacts.ts";
-import { ballotElectionKey, readGenericBallotProjection, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+import { ballotElectionKey, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import type { CivicDataReadStore } from "../lib/civic-data/read-model.ts";
 import { manualEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 

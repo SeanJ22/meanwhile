@@ -1,6 +1,7 @@
+import { readGenericBallotProjection } from "../ballot/generic-projection-read.ts";
 import { ballotCandidateDisplayName } from "../ballot/name-case.ts";
 import { ballotCandidateAliases, ballotCandidatePeople, withCandidateTickets } from "../ballot/tickets.ts";
-import { readGenericBallotProjection } from "../ballot/generic-projection.ts";
+
 import { requireBallotState } from "../civic-data/state-scopes.ts";
 
 export interface CandidacyDisplay {

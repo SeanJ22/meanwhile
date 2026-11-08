@@ -1,10 +1,11 @@
+import { refreshFundingFromPromoted } from "../lib/funding/snapshot-read.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { FundingDisplay } from "../components/funding/funding-section.tsx";
 import { fundingAnswerForTarget } from "../lib/funding/display.ts";
-import { refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
+
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { concentrationOf } from "../lib/funding/concentration.ts";
 import type { ContributionRow } from "../lib/funding/types.ts";

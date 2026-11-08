@@ -1,3 +1,4 @@
+import { readGenericBallotProjection } from "../lib/ballot/generic-projection-read.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { ballotAskInventory, ballotRecordsFor } from "../lib/ask/ballot-inventory.ts";
@@ -10,7 +11,7 @@ import { getSingleCandidateTargetIds } from "../lib/ballot/uncontested.ts";
 import { withCandidateTickets } from "../lib/ballot/tickets.ts";
 import { displayFor } from "../lib/questionnaire/candidacy-display.ts";
 import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
-import { currentBallotPeopleProjection, currentGenericBallotProjection, readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+import { currentBallotPeopleProjection, currentGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { installManualValue } from "./helpers/promoted-fixtures.ts";
 import type { BallotSet, Candidacy, Contest } from "../lib/ballot/types.ts";
 import { getStoredReaction } from "../lib/reactions/client.ts";

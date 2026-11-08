@@ -1,3 +1,4 @@
+import { refreshFundingFromPromoted } from "../lib/funding/snapshot-read.ts";
 import {currentReaderAuthorityEdge} from "../lib/registry/runtime-edge.ts";
 import {stateBallotContractId} from "../lib/civic-data/state-scopes.ts";
 import test from "./helpers/playbooks.ts";
@@ -15,7 +16,7 @@ for (const state of ["AZ","NH","NJ"] as const) for(const family of ["ballot-cont
 for (const state of ["AZ", "NH", "NJ"] as const) await installStateMoney(state);
 await installPimaLocalFinance();
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { getFundingSnapshot, refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
+import { getFundingSnapshot } from "../lib/funding/snapshot.ts";
 import { fundingAnswerForTarget } from "../lib/funding/display.ts";
 import { resetGroundedState } from "../lib/ask/grounded-state.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";

@@ -1,3 +1,4 @@
+import { primeCuratedReaderProjection } from "../lib/civic-data/curated-reader-held.ts";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { once } from "node:events";
@@ -11,7 +12,7 @@ import { CompositeSource } from "../lib/sources/composite/index.ts";
 import { accountedNormalize } from "../lib/sources/normalize-account.ts";
 import type { ReportingMeetingSource } from "../lib/sources/types.ts";
 import type { DerivedWiringRow } from "../lib/civic-data/derived-meeting-wiring.ts";
-import { primeCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
+
 import { runtimeCivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { failedMeetingAcquisitionCandidate } from "../lib/civic-data/failed-meeting-acquisition.ts";

@@ -1,3 +1,4 @@
+import { refreshFundingFromPromoted } from "../../../lib/funding/snapshot-read.ts";
 import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import { validReactionTargetsFor, type ReactionAuthorityReaders } from "@/lib/reactions/authority-targets";
 import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
@@ -29,11 +30,7 @@ import {
 import { getCandidateTargetIds } from "@/lib/ballot/candidate-targets";
 import { getProvisionTargetIds } from "@/lib/ballot/measure-provisions";
 import { getSingleCandidateTargetIds } from "@/lib/ballot/uncontested";
-import {
-  getContributorReactionTargetIds,
-  getFundingTargetIds,
-  refreshFundingFromPromoted,
-} from "@/lib/funding/snapshot";
+import { getContributorReactionTargetIds, getFundingTargetIds } from "@/lib/funding/snapshot";
 import { getVoteIds, refreshFederalVotesFromPromoted } from "@/lib/votes/snapshot";
 import { readCampaignMoneyForTarget } from "@/lib/funding/state-reader";
 

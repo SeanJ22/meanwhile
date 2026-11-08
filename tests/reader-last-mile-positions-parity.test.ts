@@ -1,3 +1,5 @@
+import { officialCandidacySeatMatches } from "../lib/registry/official-candidacy-bridge.ts";
+import { readGenericBallotProjection } from "../lib/ballot/generic-projection-read.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -10,12 +12,12 @@ import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 import { positionsFor as candidatePositionsFor } from "../lib/candidates/positions.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";
 
-import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+
 import { statementEvidenceFor } from "../lib/ask/statements.ts";
 import { type CandidateCorpus, type CandidateDocument } from "../lib/candidates/corpus.ts";
 import { createHash } from "node:crypto";
 import { installOfficeholderStatements, installRegistryAuthority, registryTransferImport, syntheticCandidateCorpus } from "./helpers/promoted-fixtures.ts";
-import { officialCandidacySeatMatches } from "../lib/registry/runtime-data-plane.ts";
+
 
 import { installManualValue } from "./helpers/promoted-fixtures.ts";
 import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";

@@ -1,9 +1,10 @@
+import { currentStateAuthorityProjection } from "./state-authority-held.ts";
 import type {RoutineDataStore} from "./store.ts";
 import {readPromotedCivicData,type PromotedCivicDataReadOptions} from "./read-model.ts";
 import type {PlaceCaptureRead} from "./held-place-slices.ts";
 import type {RegistryPlanningView} from "./keyed-registry-planning.ts";
 import {readRegistryPlaceRows,selectRegistryPlaceView,type RegistryPlaceSlice} from "./keyed-registry-place.ts";
-import {currentStateAuthorityProjection} from "./state-reader.ts";
+
 import {stateRegistryRuntimeScope} from "./state-scopes.ts";
 import {currentReaderAuthorityEdge,ensurePromotedEdge,refuseDatabaseInEdgeOnlyContext,reportReaderStateFailure} from "../registry/runtime-edge.ts";
 import {withStateRegistryFacts} from "../registry/state-composition.ts";

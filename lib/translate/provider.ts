@@ -1,5 +1,6 @@
+import { readGenericBallotProjection } from "../ballot/generic-projection-read.ts";
 import type { BallotSet } from "../ballot/types.ts";
-import { readGenericBallotProjection } from "../ballot/generic-projection.ts";
+
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";

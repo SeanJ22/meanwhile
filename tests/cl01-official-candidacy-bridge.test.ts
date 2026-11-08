@@ -1,9 +1,9 @@
+import { officialCandidacySeatMatches, reconcileOfficialCandidacies, type OfficialCandidacyBridge, type OfficialCandidacyBridgeRow } from "../lib/registry/official-candidacy-bridge.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import type { BallotSet, Candidacy, Contest } from "../lib/ballot/types.ts";
 import { sameSeatDiscriminators } from "../lib/officials/office-seat.ts";
-import { officialCandidacySeatMatches, reconcileOfficialCandidacies,
-  registryRuntimeProjectionIssues, type OfficialCandidacyBridge, type OfficialCandidacyBridgeRow, type RegistryRuntimeCarton } from "../lib/registry/runtime-data-plane.ts";
+import { registryRuntimeProjectionIssues, type RegistryRuntimeCarton } from "../lib/registry/runtime-data-plane.ts";
 
 const division = "ocd-division/country:us/state:az";
 const provenance = { sourceUrl: "https://elections.example.gov/candidates", sourceOrg: "State election authority",

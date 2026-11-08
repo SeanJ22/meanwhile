@@ -1,4 +1,5 @@
-import { currentCuratedReaderRecords } from "../civic-data/curated-reader-read-model.ts";
+
+import { currentCuratedReaderRecords } from "../civic-data/curated-reader-held.ts";
 import { electionFieldIssue, type PublishedElectionField } from "../civic-data/election-fields.ts";
 
 type ElectionOffice = PublishedElectionField["value"];

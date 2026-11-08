@@ -1,10 +1,11 @@
+import { stateAuthorityPointers } from "../lib/civic-data/state-authority-held.ts";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { primeReaderCanonicalStore, readerCanonicalEntry, readerCanonicalEntries } from "../lib/reader/canonical-context.ts";
 import { withReaderSelection, type ReaderSelection } from "../lib/db/reader-route.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { readStateAuthorityProjection } from "../lib/civic-data/state-reader.ts";
-import { stateAuthorityPointers } from "../lib/civic-data/state-reader.ts";
+
 import type { CivicDataReadStore } from "../lib/civic-data/read-model.ts";
 import { readStatePackage, readStateAuthorities, readStateDistricts, primeStateDistrictPointers, primeStateReaderPointers } from "../lib/reader/state.ts";
 import { installReaderDatabaseQuery as installQuery } from "../lib/reader/database.ts";

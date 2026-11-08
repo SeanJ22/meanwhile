@@ -14,10 +14,11 @@
  * Exit 0 with a one-line summary; exit 1 when the control plane or every family is unreadable.
  *
  */
+import { CURATED_READER_CONTRACT_IDS } from "../lib/civic-data/curated-reader-held.ts";
 import { randomUUID } from "node:crypto";
 import { join } from "node:path";
 
-import { CURATED_READER_CONTRACT_IDS, readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
+import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
 import { readReaderDemand } from "../lib/control-plane/reader-demand.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { curatedReaderCatalog, demandRanker, type LiveFact, type LiveFactCatalog, type PageRead } from "../lib/control-plane/workers/live-audit.ts";

@@ -1,3 +1,4 @@
+import { readFundingSnapshot } from "../lib/funding/snapshot-read.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import {migratedReaderDb} from "./helpers/migrated-reader-db.ts";
@@ -12,7 +13,7 @@ import {readFederalDirectoryProjection} from "../lib/officials/federal-directory
 import {federalDirectoryScope,type FederalDirectoryReadModel} from "../lib/officials/federal-directory-data-plane.ts";
 import type {Officeholder} from "../lib/officials/types.ts";
 import {provenEdgeEntry} from "./helpers/promoted-edge-entry.ts";
-import {readFundingSnapshot} from "../lib/funding/snapshot.ts";
+
 import {fundingAnswerForTarget} from "../lib/funding/display.ts";
 import type {FundingCandidate,FundingSnapshot} from "../lib/funding/types.ts";
 import {CivicReadCache} from "../lib/db/civic-read-cache.ts";

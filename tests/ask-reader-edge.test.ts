@@ -1,3 +1,4 @@
+import { readFundingSnapshot } from "../lib/funding/snapshot-read.ts";
 import { azDistricts } from "./helpers/ballot-district-fixtures.ts";
 import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
@@ -16,7 +17,7 @@ import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
-import { readFundingSnapshot } from "../lib/funding/snapshot.ts";
+
 import { PIMA_LOCAL_FINANCE_CONTRACT, STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
 import { federalRollCallsReadState } from "../lib/votes/snapshot.ts";
 import { FEDERAL_KEY_VOTE_SCOPE, FEDERAL_ROLLCALL_SCOPE, FEDERAL_VOTES_SOURCE_ID } from "../lib/votes/data-plane.ts";

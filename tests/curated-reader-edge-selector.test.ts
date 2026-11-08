@@ -1,7 +1,8 @@
+import { primeCuratedReaderProjection } from "../lib/civic-data/curated-reader-held.ts";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { primeCuratedReaderProjection, readBallotNavigationProjection } from "../lib/civic-data/curated-reader-read-model.ts";
+import { readBallotNavigationProjection } from "../lib/civic-data/curated-reader-read-model.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import type { CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
 import { ballotNavigationFor } from "../lib/ballot/navigation.ts";

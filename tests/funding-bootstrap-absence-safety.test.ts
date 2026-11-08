@@ -1,10 +1,11 @@
+import { readFundingSnapshot } from "../lib/funding/snapshot-read.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 
 import type { CivicDataReadStore } from "../lib/civic-data/read-model.ts";
-import { readFundingSnapshot } from "../lib/funding/snapshot.ts";
+
 import type { FundingSnapshot } from "../lib/funding/types.ts";
 
 const noPointer: CivicDataReadStore = {

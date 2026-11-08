@@ -85,7 +85,7 @@ test('owner decisions reach the reader edge without a database call and concurre
 test('an owner removal of the last record serves an empty edge projection',async()=>{
  const {mkdtemp,rm}=await import('node:fs/promises');const {tmpdir}=await import('node:os');const {join}=await import('node:path');
  const {LocalFileArtifactStore}=await import('../lib/meetings/edge-store.ts');const {publishOwnerChoice}=await import('../lib/facts/owner-choices-edge.ts');
- const {primeCuratedReaderProjectionWithOwnerChoices,curatedReaderReadState}=await import('../lib/civic-data/curated-reader-read-model.ts');
+ const {primeCuratedReaderProjectionWithOwnerChoices}=await import('../lib/civic-data/curated-reader-read-model.ts');const {curatedReaderReadState}=await import('../lib/civic-data/curated-reader-held.ts');
  const dir=await mkdtemp(join(tmpdir(),'ck01-empty-'));const prior=process.env.WTP_READER_EDGE_DIR;
  try{
  process.env.WTP_READER_EDGE_DIR=dir;const row={id:'campaign-site:nj-legislature:283',officeholderId:'nj-legislature:283',site:{url:'https://campaign.example.com'}};

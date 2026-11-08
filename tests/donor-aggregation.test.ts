@@ -1,7 +1,8 @@
+import { refreshFundingFromPromoted } from "../lib/funding/snapshot-read.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { getFundingSnapshot, refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
+import { getFundingSnapshot } from "../lib/funding/snapshot.ts";
 import { campaignMoneyApiAnswer } from "../lib/funding/campaign-money.ts";
 import { campaignMoneyEvidenceFor } from "../lib/ask/campaign-money.ts";
 import { publicStateMoneyRecord } from "../lib/funding/state-money-reader.ts";

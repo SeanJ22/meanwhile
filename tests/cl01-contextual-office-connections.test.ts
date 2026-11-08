@@ -1,3 +1,4 @@
+import { readGenericBallotProjection } from "../lib/ballot/generic-projection-read.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -6,7 +7,7 @@ import { ballotAskInventory, ballotRecordsFor } from "../lib/ask/ballot-inventor
 import { composeOfficeField, contestsOfOffice } from "../lib/ask/ballot-summary.ts";
 import { resolveSubjectRef } from "../lib/ask/subject.ts";
 import { withCandidateTickets } from "../lib/ballot/tickets.ts";
-import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+
 import type { BallotSet, Candidacy, Contest } from "../lib/ballot/types.ts";
 import { stateBallotContractId, stateRegistryRuntimeContractId } from "../lib/civic-data/state-scopes.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";

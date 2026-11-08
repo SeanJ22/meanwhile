@@ -1,3 +1,4 @@
+import { officialCandidacySeatMatches } from "../lib/registry/official-candidacy-bridge.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -5,7 +6,7 @@ import { officialIdsForCandidacy, resolvedCandidacyForOfficial } from "../lib/fu
 import { partyConflictCardForFiling, reconciledCandidacyIdForCard } from "../lib/identity/az-2026.ts";
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
-import { officialCandidacySeatMatches } from "../lib/registry/runtime-data-plane.ts";
+
 import { bindNamedEntity, type BindableEntity } from "../lib/routing/named-entity.ts";
 import { AZ_TEST_CANVASS_URL, AZ_TEST_FILINGS_URL, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 

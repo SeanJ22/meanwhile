@@ -1,9 +1,11 @@
+import { curatedReaderReadState } from "../civic-data/curated-reader-held.ts";
 import { federalDirectoryReadState, getFederalOfficeholderSet } from "../officials/federal-directory-held.ts";
 import { primeStatePeopleProjection } from "../state-rollcalls/people-held.ts";
 import { readPointPlace, readZipDivisions } from "../place-map/reader.ts";
 import { readStatePackage } from "../reader/state.ts";
 import { readPlacePackage } from "../reader/place.ts";
 import { stateCoverage, withPlaceRegistry } from "../reader/coverage.ts";
+import { stateOfficesForStates } from "../reference/state-offices.ts";
 import { readerLocation, readerTerritory, territoryBodies } from "../reader/location.ts";
 import { sha256OfJson } from "../meetings/edge-artifacts.ts";
 import type { Meeting } from "../sources/types.ts";
@@ -42,7 +44,7 @@ import { currentReaderSelection } from "../db/reader-route.ts";
 import { factReader } from "../facts/db.ts";
 import type { Query } from "../facts/publish.ts";
 import { stateRegistryRuntimeScope, statesForRegistryDivisions } from "../civic-data/state-scopes.ts";
-import { curatedReaderReadState, primeCuratedReaderProjectionWithOwnerChoices, refreshCampaignSitesFromPromoted } from "../civic-data/curated-reader-read-model.ts";
+import { primeCuratedReaderProjectionWithOwnerChoices, refreshCampaignSitesFromPromoted } from "../civic-data/curated-reader-read-model.ts";
 import { primeCommentAccess, readCommentAccessFacts } from "./comment-access.ts";
 import { CivicDataStoreUnavailableError } from "../civic-data/read-model.ts";
 import { composeRegistration, type RegistrationLayer } from "../registration/compose.ts";
@@ -677,7 +679,7 @@ export async function coverageAt(
   ]);
   const meetings = heldMeetings.length ? heldMeetings : place.meetings;
   const local = place.registry ? withPlaceRegistry(bundle, place.registry) : bundle;
-  const coverage = stateCoverage(local, ids, lat, lng, meetings, place.bodies, [...place.divisions, ...resolvedDivisions ?? []], territory, meetingCount);
+  const coverage = stateCoverage({ ...local, stateOffices: stateOfficesForStates([state]) }, ids, lat, lng, meetings, place.bodies, [...place.divisions, ...resolvedDivisions ?? []], territory, meetingCount);
   return { ...coverage, governments: bindGovernmentBodies(place.governments, local.registry.registry.bodies),
     governmentInventoryUnavailableStates: place.registrationHeld ? [] : [state] };
 }

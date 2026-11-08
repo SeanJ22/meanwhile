@@ -1,3 +1,4 @@
+import { settleCandidateCorpusRead } from "../lib/civic-data/manual-read-models-read.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -6,7 +7,7 @@ import { DEFAULT_STANCE_TOPICS, STANCE_TOPICS_SETTING, validStanceTopics } from 
 import { positionsFor } from "../lib/candidates/positions.ts";
 import { settingDefinition } from "../lib/control-plane/settings.ts";
 import type { CandidateCorpus } from "../lib/candidates/corpus.ts";
-import { settleCandidateCorpusRead } from "../lib/civic-data/manual-read-models.ts";
+
 import { installManualValue } from "./helpers/promoted-fixtures.ts";
 
 

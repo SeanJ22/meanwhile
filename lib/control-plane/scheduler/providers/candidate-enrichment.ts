@@ -1,5 +1,7 @@
+import { readGenericBallotProjection } from "../../../ballot/generic-projection-read.ts";
+import { readDerivedCampaignSites } from "../../../civic-data/derived-campaign-sites-read.ts";
 import { stateBallotContractId, stateBallotScope } from "../../../civic-data/state-scopes.ts";
-import { readGenericBallotProjection, type GenericBallotProjection } from "../../../ballot/generic-projection.ts";
+import { type GenericBallotProjection } from "../../../ballot/generic-projection.ts";
 import { currentExtraction, type CandidateCorpus } from "../../../candidates/corpus.ts";
 import {
   ENRICHMENT_FIELDS,
@@ -16,7 +18,7 @@ import type {
 } from "../../../civic-data/manual-projections.ts";
 import { requiredManualProductionContract } from "../../../civic-data/manual-contracts.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../../../civic-data/read-model.ts";
-import { readDerivedCampaignSites, composeCampaignLinks, type DerivedCampaignSiteRecord } from "../../../civic-data/derived-campaign-sites.ts";
+import { composeCampaignLinks, type DerivedCampaignSiteRecord } from "../../../civic-data/derived-campaign-sites.ts";
 import type {
   ObligationProvider,
   ProvidedObligation,

@@ -4,6 +4,7 @@ import { selectGeographyVersion, currentRepresentationSelection } from "../censu
 import type { Division } from "../registry/types";
 import { readZipPlace, withPlaceMapReads, type PlaceEntry } from "../place-map/reader";
 import { stateCoverage } from "../reader/coverage";
+import { stateOfficesForStates } from "../reference/state-offices";
 import { readStatePackage } from "../reader/state";
 import { requireRegistryState } from "../civic-data/state-scopes";
 import { withReaderRoute } from "../db/reader-route";
@@ -47,7 +48,7 @@ async function stateResponse(request: Request) {
     const divisionsById = new Map(value.registry.registry.divisions.map(division => [division.ocdId, division]));
     const statewide = { ...value, registry: { ...value.registry, bodyRosters: [],
       registry: { ...value.registry.registry, bodies: value.registry.registry.bodies.filter(body => body.ocdId && ["national", "state"].includes(divisionsById.get(body.ocdId)?.tier ?? "")) } } };
-    const summary = stateCoverage(statewide, ids, 0, 0, [], [], extraDivisions);
+    const summary = stateCoverage({ ...statewide, stateOffices: stateOfficesForStates([state]) }, ids, 0, 0, [], [], extraDivisions);
     const coverage = { ...summary, governments: [], bodies: summary.bodies.filter(body => body.tier !== "local") };
     return Response.json({ state, version: value.version, coverage, zipPlaces, boundaryUrl: value.boundaryUrl, directory: zip ? null : value.federal?.directory ?? null,
       memberDirectories: zip ? zipMemberDirectories(value.people, value.memberOffices, value.federal,

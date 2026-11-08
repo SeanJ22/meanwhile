@@ -1,3 +1,4 @@
+import { refreshFundingFromPromoted } from "../lib/funding/snapshot-read.ts";
 import assert from "node:assert/strict";
 
 import test from "node:test";
@@ -10,7 +11,7 @@ import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.t
 
 import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
 
-import { refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
+
 
 const PROVEN_AT = "2026-09-08T12:00:00.000Z";
 

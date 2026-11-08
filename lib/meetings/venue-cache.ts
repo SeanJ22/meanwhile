@@ -1,6 +1,7 @@
+import { currentCuratedReaderRecords } from "../civic-data/curated-reader-held.ts";
 import { CURATED_PREFIX } from "../ocd/curated.ts";
 import type { MeetingVenueGap, OcdId } from "../sources/types.ts";
-import { currentCuratedReaderRecords } from "../civic-data/curated-reader-read-model.ts";
+
 import { exactVenueMatchContentKey } from "./venue-record-identity.ts";
 import { AsyncLocalStorage } from "node:async_hooks";
 

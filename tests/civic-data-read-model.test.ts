@@ -1,3 +1,4 @@
+import { readFundingSnapshot } from "../lib/funding/snapshot-read.ts";
 import assert from "node:assert/strict";
 import { beforeEach, test } from "node:test";
 
@@ -16,7 +17,7 @@ import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 beforeEach(() => clearPromotedReadModelCache());
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
 import { VALIDATION_CHECKS, sourceProjectionEvidence, type ValidationReceipt } from "../lib/civic-data/types.ts";
-import { readFundingSnapshot } from "../lib/funding/snapshot.ts";
+
 import { readPopulationProjection } from "../lib/reference/acs-population.ts";
 import { nhLegislativeHolders, refreshNhSeatHolders } from "../lib/ballot/seat-holders.ts";
 import { meetingPartitionFreshnessMs } from "../lib/civic-data/contracts.ts";

@@ -1,3 +1,4 @@
+import { officialCandidacySeatMatches, reconcileOfficialCandidacies, type OfficialCandidacyBridge } from "../lib/registry/official-candidacy-bridge.ts";
 import { currentStatePeopleProjection, primeStatePeopleProjection } from "../lib/state-rollcalls/people-held.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read.ts";
 import assert from "node:assert/strict";
@@ -7,7 +8,7 @@ import { publishOfficialBallotCandidacies, statePeopleCandidacyHolders } from ".
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { ManualSourceSetReceipt } from "../lib/civic-data/types.ts";
 import { officialIdsForCandidacy, resolvedCandidacyForOfficial } from "../lib/funding/campaign-money.ts";
-import { officialCandidacySeatMatches, reconcileOfficialCandidacies, type OfficialCandidacyBridge } from "../lib/registry/runtime-data-plane.ts";
+
 
 
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";

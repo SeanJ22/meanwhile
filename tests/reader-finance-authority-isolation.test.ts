@@ -1,6 +1,7 @@
+import { readGenericBallotProjection } from "../lib/ballot/generic-projection-read.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+
 import { lineupForContest } from "../lib/ballot/general-lineup.ts";
 import { analysisForContest } from "../lib/ballot/analyses.ts";
 import { lineupBridgeCovers, lineupRowForCard, reconciledCandidacyIdForCard } from "../lib/identity/az-2026.ts";

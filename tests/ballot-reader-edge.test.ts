@@ -1,5 +1,8 @@
+import { readGenericBallotProjection } from "../lib/ballot/generic-projection-read.ts";
+import { readFundingSnapshot } from "../lib/funding/snapshot-read.ts";
+import { currentStateAuthorityProjection } from "../lib/civic-data/state-authority-held.ts";
 import { federalDirectoryReadState } from "../lib/officials/federal-directory-held.ts";
-import { currentStateAuthorityProjection } from "../lib/civic-data/state-reader.ts";
+
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
@@ -25,7 +28,7 @@ import { runBallotPublication } from "../scripts/assemble-ballot-package.mts";
 import type { readBallotStateFile } from "../lib/civic-data/ballot-input.ts";
 type BallotStateFile = Awaited<ReturnType<typeof readBallotStateFile>>;
 
-import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+
 import { readerBallotSourceForTargetId, readerBallotSourcesForDivisions } from "../lib/ballot/reader-sources.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
@@ -33,7 +36,7 @@ import { requiredManualProductionContract } from "../lib/civic-data/manual-contr
 import {
   candidateProfilesReadState,
 } from "../lib/civic-data/manual-read-models.ts";
-import { fundingReadState, readFundingSnapshot } from "../lib/funding/snapshot.ts";
+import { fundingReadState } from "../lib/funding/snapshot.ts";
 import { readNhMembers } from "../lib/civic-data/state-members.ts";
 import { readOfficialStateLegislatorsProjection } from "../lib/state-rollcalls/legislators.ts";
 import { registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";

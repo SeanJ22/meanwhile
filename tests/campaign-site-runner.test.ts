@@ -1,3 +1,4 @@
+import { readGenericBallotProjection } from "../lib/ballot/generic-projection-read.ts";
 import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -71,7 +72,7 @@ import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
 import { installManualValue } from "./helpers/promoted-fixtures.ts";
-import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+
 
 
 

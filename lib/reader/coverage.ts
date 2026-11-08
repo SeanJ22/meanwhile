@@ -1,3 +1,4 @@
+import { primeStateAuthorityProjection } from "../civic-data/state-authority-held.ts";
 import { withFederalDirectoryProjection } from "../officials/federal-directory-held.ts";
 import { primeStatePeopleProjection } from "../state-rollcalls/people-held.ts";
 import type { ReaderStatePackage } from "./state.ts";
@@ -12,7 +13,7 @@ import { withStateRegistryFacts } from "../registry/state-composition.ts";
 import { rosterGapForBody } from "../registry/body-rosters.ts";
 import { earlierMembersOfBody, membersOfBody } from "../registry/body-membership.ts";
 import { officePhoneForBody } from "../meetings/office-phone.ts";
-import { stateOfficesForStates } from "../reference/state-offices.ts";
+import type { StateOfficeContact } from "../reference/state-offices.ts";
 import type { BodyFacts } from "../facts/registry-overlay.ts";
 import type { Body, Division } from "../registry/types.ts";
 import type { Meeting } from "../sources/types.ts";
@@ -21,7 +22,7 @@ import { serverReaderValue } from "./memory.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 
 
-import { primeStateAuthorityProjection } from "../civic-data/state-reader.ts";
+
 
 /** Place reads carry canonical local boards; the state still supplies its official people and portraits. */
 export function withPlaceRegistry<T extends { readonly registry: RegistryRuntimeReadModel }>(state: T, place: RegistryRuntimeReadModel): T {
@@ -29,7 +30,8 @@ export function withPlaceRegistry<T extends { readonly registry: RegistryRuntime
     bodyRosters: place.bodyRosters, rosterReaderDispositions: place.rosterReaderDispositions } };
 }
 
-type CoverageState = Pick<ReaderStatePackage, "state" | "registry" | "version"> & Partial<Pick<ReaderStatePackage,
+/** The state's own election and campaign-finance offices are held as data and handed in; composing reads no file. */
+type CoverageState = Pick<ReaderStatePackage, "state" | "registry" | "version"> & { readonly stateOffices?: readonly StateOfficeContact[] } & Partial<Pick<ReaderStatePackage,
   "people" | "peopleRead" | "candidateProfilesRead" | "candidatePortraitsRead" | "ballotRead" | "legislativePeople" | "federal" | "federalRead" | "stateLegislatorAuthority">>;
 type Officials = { photos: ReaderStatePackage["registry"]["officialPhotos"]; federal: CoverageState["federal"]; people: CoverageState["legislativePeople"]; version: string; officials: ReturnType<typeof indexByDivision> };
 const heldOfficials = serverReaderValue("state-official-index", () => new WeakMap<object, Officials>());
@@ -113,7 +115,7 @@ export function stateCoverage(
       governments: [],
       governmentInventoryStates: [state.state],
       governmentInventoryUnavailableStates: [],
-      stateOffices: stateOfficesForStates([state.state]),
+      stateOffices: [...state.stateOffices ?? []],
       ...(state.federal === undefined ? {} : { federalDirectoryUnavailable: state.federal === null }),
       bodies: coverage.bodies.map(body => {
         const gap = rosterGapForBody(body.bodyId);

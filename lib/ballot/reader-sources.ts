@@ -1,4 +1,5 @@
-import { readGenericBallotProjection } from "./generic-projection.ts";
+
+import { readGenericBallotProjection } from "./generic-projection-read.ts";
 import { ballotForDivisions } from "./contests.ts";
 import { districtFamilyKey } from "../census-geography/division-id.ts";
 import { ocdStateCode } from "../ocd/state-of.ts";

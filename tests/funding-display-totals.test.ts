@@ -1,9 +1,10 @@
+import { refreshFundingFromPromoted } from "../lib/funding/snapshot-read.ts";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { fundingAnswerForTarget, smallDonorShare } from "../lib/funding/display.ts";
-import { getFundingSnapshot, refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
+import { getFundingSnapshot } from "../lib/funding/snapshot.ts";
 
 test("numeric funding totals copy the exact five held committee values for every target", async () => {
   await refreshFundingFromPromoted({ store: new MemoryRoutineDataStore() });

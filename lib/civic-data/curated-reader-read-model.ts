@@ -1,14 +1,8 @@
+import { CuratedReaderContractId, readerStates, validate, storeCuratedReaderProjection } from "./curated-reader-held.ts";
 import { storedKeyValue } from "../core/keys-values.ts";
 import { memberOfficeStateScope, readMemberOfficeRows, type MemberOfficeSlice } from "../officials/member-office-data.ts";
 import { selectedRegistryStates } from "../registry/runtime-read-model.ts";
-import {
-  civicDataReadNotInitialized,
-  mayUseTestFixture,
-  promotedVersionOrThrow,
-  readPromotedCivicData,
-  type CivicDataReadResult,
-  type PromotedCivicDataReadOptions,
-} from "./read-model.ts";
+import { civicDataReadNotInitialized, promotedVersionOrThrow, readPromotedCivicData, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "./read-model.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { validateOnce } from "./validated-once.ts";
 import { readPromotedEdgeFirst, currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
@@ -28,60 +22,7 @@ import { readerQuery } from "./promoted-reader-query.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
-export const CURATED_READER_CONTRACT_IDS = [
-  "official-filings",
-  "ballot-navigation",
-  "stances",
-  "campaign-sites",
-  "member-offices",
-  "venue-resolutions",
-  "meeting-body-crosswalk",
-] as const;
-export type CuratedReaderContractId = (typeof CURATED_READER_CONTRACT_IDS)[number];
-
 const BALLOT_NAVIGATION = requiredManualProductionContract("ballot-navigation");
-
-export interface BallotNavigationProjectionRecord {
-  readonly id: string;
-  readonly kind: "POLLING_PLACE_LINK" | "REGISTRATION_LINK";
-  readonly value: Readonly<Record<string, unknown>>;
-}
-
-export interface CampaignSiteProjectionRecord {
-  readonly id: string;
-  readonly officeholderId: string;
-  readonly site: Readonly<Record<string, unknown>>;
-}
-
-const states = new Map<CuratedReaderContractId, CivicDataReadResult<CuratedReaderProjection>>();
-const selectedStates = new WeakMap<object, Map<CuratedReaderContractId, CivicDataReadResult<CuratedReaderProjection>>>();
-function readerStates() {
-  const selection = currentReaderSelection();
-  if (!selection) return states;
-  let held = selectedStates.get(selection);
-  if (!held) { held = new Map(); selectedStates.set(selection, held); }
-  return held;
-}
-
-
-function initial(id: CuratedReaderContractId): CivicDataReadResult<CuratedReaderProjection> {
-  const contract = requiredManualProductionContract(id);
-  return civicDataReadNotInitialized(
-    contract.recordClass,
-    contract.scope,
-    `The ${id} canonical pointer has not been read for this process.`,
-  );
-}
-
-function validate(id: CuratedReaderContractId, value: CuratedReaderProjection, version: string, records: "ALL" | "SELECTED" = "ALL"): void {
-  if (value?.kind !== id || !Array.isArray(value.records) || (records === "ALL" && value.records.length === 0)) {
-    throw new Error(`${id} projection ${version} has the wrong family or no records.`);
-  }
-  const keys = value.records.map((record) => record?.id);
-  if (keys.some((key) => typeof key !== "string" || key.length === 0) || new Set(keys).size !== keys.length) {
-    throw new Error(`${id} projection ${version} has an empty or duplicate record id.`);
-  }
-}
 
 export async function readCuratedReaderProjection(
   id: CuratedReaderContractId,
@@ -167,38 +108,6 @@ export async function refreshCuratedReaderProjection(
   return version;
 }
 
-/** Primes from a validated edge serving copy, with no database read; its state is BOOTSTRAP. */
-export function primeCuratedReaderProjection(
-  id: CuratedReaderContractId,
-  value: CuratedReaderProjection,
-  versionId: string,
-): void {
-  validateOnce(id, value, versionId, () => validate(id, value, versionId));
-  storeCuratedReaderProjection(id,value,versionId);
-}
-
-function storeCuratedReaderProjection(id:CuratedReaderContractId,value:CuratedReaderProjection,versionId:string):void {
-  const contract = requiredManualProductionContract(id);
-  readerStates().set(id, {
-    kind: "BOOTSTRAP",
-    value,
-    metadata: {
-      recordClass: contract.recordClass,
-      scope: contract.scope,
-      sourceId: contract.sourceId ?? null,
-      version: null,
-      versionId,
-      lastKnownGoodVersionId: versionId,
-      sourceThrough: null,
-      retrievedAt: null,
-      promotedAt: null,
-      stale: "CURRENT",
-      staleAt: null,
-    },
-    detail: `Served from the ${id} edge artifact (version ${versionId}); the promotion receipt stays on the authoritative database path.`,
-  });
-}
-
 /** Apply the owner's edge choices before the request primes its serving projection. */
 export async function primeCuratedReaderProjectionWithOwnerChoices(id: CuratedReaderContractId,value:CuratedReaderProjection,versionId:string):Promise<void> {
   const records=await readerRecordsWithOwnerChoices(null,id,value.records);
@@ -237,18 +146,3 @@ export async function refreshMemberOfficesFromPromoted(options: PromotedCivicDat
 }
 export const refreshVenueResolutionsFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
   refreshCuratedReaderProjection("venue-resolutions", options);
-
-export function curatedReaderReadState(id: CuratedReaderContractId): CivicDataReadResult<CuratedReaderProjection> {
-  return readerStates().get(id) ?? initial(id);
-}
-
-/** Only after the canonical pointer was read. A BOOTSTRAP state is a validated edge copy of a promoted version and is served; the seed is test evidence, never a production fallback. */
-export function currentCuratedReaderRecords<T>(
-  id: CuratedReaderContractId,
-  testSeed: readonly T[],
-): readonly T[] {
-  const state = readerStates().get(id) ?? initial(id);
-  if (state.kind === "PROMOTED" || state.kind === "BOOTSTRAP") return state.value.records as readonly T[];
-  if (mayUseTestFixture()) return testSeed;
-  throw new Error(`${id} projection is ${state.kind}; initialize its canonical read before using the synchronous Reader projection.`);
-}

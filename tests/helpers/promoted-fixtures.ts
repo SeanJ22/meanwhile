@@ -1,3 +1,4 @@
+import { stateAuthorityPointers } from "../../lib/civic-data/state-authority-held.ts";
 import { readRegistryRuntimeProjection } from "../../lib/registry/runtime-read.ts";
 import { gunzipSync } from "node:zlib";
 import { readFileSync } from "node:fs";
@@ -50,7 +51,7 @@ import { canonicalCivicDataHash } from "../../lib/civic-data/canonical-hash.ts";
 import { trustedLkgCandidateEnvelopeSha256, trustedLkgCandidateId, trustedLkgImportUrl, trustedLkgValidatorIds } from "../../lib/civic-data/trusted-lkg-import.ts";
 import { withStateRecordHashes } from "../../lib/civic-data/state-publication.ts";
 import { STATE_AUTHORITY_FAMILIES, type StateAuthorityFamily } from "../../lib/meetings/edge-artifacts.ts";
-import { stateAuthorityPointers } from "../../lib/civic-data/state-reader.ts";
+
 import { installCanonicalEntries, activateCanonicalFixture } from "./canonical-reader-fixtures.ts";
 
 const ROOT = join(import.meta.dirname, "..", "..");

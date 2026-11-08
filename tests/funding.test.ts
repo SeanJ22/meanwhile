@@ -1,3 +1,4 @@
+import { refreshFundingFromPromoted } from "../lib/funding/snapshot-read.ts";
 import { readerCacheHeaders } from "../lib/reader/cache.ts";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync, statSync } from "node:fs";
@@ -17,13 +18,7 @@ import {
   questionForTargetType,
   scaleForTargetType,
 } from "../lib/signal/reactions.ts";
-import {
-  contributorRowsForDisplay,
-  getContributorReactionTargetIds,
-  getFundingSnapshot,
-  getFundingTargetIds,
-  refreshFundingFromPromoted,
-} from "../lib/funding/snapshot.ts";
+import { contributorRowsForDisplay, getContributorReactionTargetIds, getFundingSnapshot, getFundingTargetIds } from "../lib/funding/snapshot.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import {
   fundingAnswerForTarget,

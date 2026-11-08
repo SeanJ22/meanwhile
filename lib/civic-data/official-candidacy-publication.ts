@@ -1,3 +1,4 @@
+import { reconcileOfficialCandidacies, type OfficialCandidacyBridgeRow } from "../registry/official-candidacy-bridge.ts";
 import { requireRegistryState, stateRegistryRuntimeContractId } from "./state-scopes.ts";
 import { createHash } from "node:crypto";
 import type { BallotSet } from "../ballot/types.ts";
@@ -6,7 +7,7 @@ import { statePeopleScopeForDivision, type StatePeopleJurisdiction } from "../of
 import type { OfficeholderSet } from "../officials/types.ts";
 import { readFederalDirectoryProjection } from "../officials/federal-directory-read-model.ts";
 import { readStatePeopleProjection } from "../state-rollcalls/legislators.ts";
-import { readRegistryRuntimePrior, reconcileOfficialCandidacies, registryRuntimeCandidate, type OfficialCandidacyBridgeRow } from "../registry/runtime-data-plane.ts";
+import { readRegistryRuntimePrior, registryRuntimeCandidate } from "../registry/runtime-data-plane.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
 import type { RoutineDataStore } from "./store.ts";

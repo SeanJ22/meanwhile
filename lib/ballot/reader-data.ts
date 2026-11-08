@@ -1,3 +1,4 @@
+import { stateAuthorityPointers } from "../civic-data/state-authority-held.ts";
 import { getFederalOfficeholderSet } from "../officials/federal-directory-held.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
@@ -8,7 +9,7 @@ import { readerTerritory, territoryBodies } from "../reader/location.ts";
 import { readCanonicalShelf, readCanonicalPackages } from "../reader/canonical.ts";
 import { primeReaderCanonicalStore, readerCanonicalEntry } from "../reader/canonical-context.ts";
 import { primeReaderProjection } from "../civic-data/read-model.ts";
-import { stateAuthorityPointers } from "../civic-data/state-reader.ts";
+
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
 import { requiredRoutineContract } from "../civic-data/contracts.ts";
 import { translationScope } from "../translate/records.ts";

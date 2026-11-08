@@ -1,3 +1,8 @@
+import { type CampaignSiteProjectionRecord } from "../civic-data/curated-reader-held.ts";
+import { readGenericBallotProjection } from "../ballot/generic-projection-read.ts";
+import { readCandidateProfilesProjection } from "../civic-data/manual-read-models-read.ts";
+import { readDerivedCampaignSites } from "../civic-data/derived-campaign-sites-read.ts";
+import { stateAuthorityPointers } from "../civic-data/state-authority-held.ts";
 import { selectedBallotStatement } from "./selected-ballot.ts";
 import { readMemberOfficeStateProjection } from "../civic-data/curated-reader-read-model.ts";
 import {selectedPointerSql,selectedMetadataSql,selectedStateEntry,peopleIdentityKeysSql} from "./selected-entry.ts";
@@ -23,7 +28,7 @@ import { federalDirectoryScope } from "../officials/federal-directory-data-plane
 import { officialStateLegislatorTargetByScope } from "../state-rollcalls/authority.ts";
 import { personIdentityKeys, statePeopleSourcePointers } from "../officials/people-identity.ts";
 import { statePeopleWithLegislativeAuthority } from "./state-people.ts";
-import { readCuratedReaderProjection, type CampaignSiteProjectionRecord } from "../civic-data/curated-reader-read-model.ts";
+import { readCuratedReaderProjection } from "../civic-data/curated-reader-read-model.ts";
 import { EVERYDAY_ROUTING_POINTER, readEverydayRoutingProjection } from "../routing/everyday-data-plane.ts";
 import type { EverydayRoutingProjection } from "../routing/everyday.ts";
 import { nationalPresident } from "./national.ts";
@@ -32,11 +37,11 @@ import type { MemberOfficeRecord } from "../officials/member-offices.ts";
 import type { Division } from "../registry/types.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { primeReaderCanonicalStore } from "./canonical-context.ts";
-import { readCandidateProfilesProjection } from "../civic-data/manual-read-models.ts";
+
 import type { CandidateProfilesProjection } from "../civic-data/manual-projections.ts";
-import { readDerivedCampaignSites, type DerivedCampaignSitesProjection } from "../civic-data/derived-campaign-sites.ts";
-import { stateAuthorityPointers } from "../civic-data/state-reader.ts";
-import { readGenericBallotProjection, type GenericBallotProjection } from "../ballot/generic-projection.ts";
+import { type DerivedCampaignSitesProjection } from "../civic-data/derived-campaign-sites.ts";
+
+import { type GenericBallotProjection } from "../ballot/generic-projection.ts";
 
 export interface ReaderStatePackage {
   readonly state: string;

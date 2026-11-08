@@ -1,8 +1,9 @@
+import { currentCuratedReaderRecords } from "../lib/civic-data/curated-reader-held.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { currentCuratedReaderRecords, readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
+import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
 import type { DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { manualProjectionCandidate, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { CROSSWALK_CITATION, type MeetingBodyCrosswalkRow } from "../lib/civic-data/meeting-body-crosswalk.ts";

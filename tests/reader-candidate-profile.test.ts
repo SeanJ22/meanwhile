@@ -1,3 +1,4 @@
+import { readGenericBallotProjection } from "../lib/ballot/generic-projection-read.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read.ts";
 import assert from "node:assert/strict";
 import { test } from "node:test";
@@ -6,7 +7,7 @@ import { allCandidateLinks } from "../lib/ballot/candidate-sites.ts";
 import { candidateProfileEvidenceFor } from "../lib/ask/candidate-profile.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";
 
-import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+
 import type { CandidateProfilesProjection } from "../lib/civic-data/manual-projections.ts";
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";

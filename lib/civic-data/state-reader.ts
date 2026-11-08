@@ -1,56 +1,14 @@
+import { stateKey, stateReadsByRequest, type Held, type StateRead } from "./state-authority-held.ts";
 import { storedKeyValue } from "../core/keys-values.ts";
-import { stateBallotScope } from "./state-scopes.ts";
-import { ballotNavigationScope } from "./ballot-navigation-scope.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { currentReaderAuthorityEdge, refuseDatabaseInEdgeOnlyContext, reportReaderStateFailure } from "../registry/runtime-edge.ts";
-import { stateRegistryRuntimeScope } from "./state-scopes.ts";
-import { federalDirectoryScope } from "../officials/federal-directory-data-plane.ts";
-import { peopleSourceScope } from "../officials/people-sources.ts";
 import type { PromotedFamilyArtifactValue, StateAuthorityFamily } from "../meetings/edge-artifacts.ts";
-import { civicDataReadNotInitialized, readPromotedCivicData, registerIntegrityCheckedEdgeEntries, type CivicDataReadResult, type PromotedEdgeEntry } from "./read-model.ts";
+import { civicDataReadNotInitialized, readPromotedCivicData, registerIntegrityCheckedEdgeEntries, type PromotedEdgeEntry } from "./read-model.ts";
 import { readerQuery } from "./promoted-reader-query.ts";
 import { readStateReaderEntry } from "./state-reader-store.ts";
 import { readerCanonicalEntry } from "../reader/canonical-context.ts";
 import type { RoutineRecordClass } from "./types.ts";
-
-type StateRead<T> = { readonly result: CivicDataReadResult<T>; readonly source: "EDGE" | "DATABASE" };
 type Query = Parameters<typeof readStateReaderEntry>[0];
-type Held = { pending: Promise<StateRead<unknown>>; result?: StateRead<unknown> };
-const requests = new WeakMap<object, Map<string, Held>>();
-const classes: Record<StateAuthorityFamily, RoutineRecordClass> = {
-  "registry-runtime": "REGISTRY_RUNTIME_BINDING", "federal-directory": "FEDERAL_DIRECTORY", "ballot-contests": "BALLOT_CANDIDACY", "candidate-profiles": "CANDIDATE_PROFILE",
-  "candidate-publications": "CANDIDATE_PUBLICATION", "voting-sites": "VOTING_SITE", "candidate-campaign-sites-derived": "CURATED_READER_RECORD",
-  "ballot-navigation": "CURATED_READER_RECORD",
-};
-
-/** Canonical pointers belonging to one state family. */
-export function stateAuthorityPointers(family: StateAuthorityFamily, state: string): readonly { readonly recordClass: RoutineRecordClass; readonly scope: string }[] {
-  if (family === "registry-runtime") return [{ recordClass: classes[family], scope: stateRegistryRuntimeScope(state) }];
-  if (family === "federal-directory") return [{ recordClass: classes[family], scope: federalDirectoryScope(state) },
-    { recordClass: "STATE_LEGISLATOR", scope: peopleSourceScope(`US-${state}`, "people-portraits") }];
-  if (family === "ballot-navigation") return [{ recordClass: classes[family], scope: ballotNavigationScope(state) }];
-  return [{ recordClass: classes[family], scope: stateBallotScope(family === "candidate-publications" ? "candidate-corpus" : family, state) }];
-}
-
-function stateKey(family: StateAuthorityFamily, state: string) {
-  const { recordClass, scope } = stateAuthorityPointers(family, state)[0];
-  return { scope, recordClass, key: `${recordClass}:${scope}` };
-}
-
-export function currentStateAuthorityProjection<T>(family: StateAuthorityFamily, state: string): StateRead<T> | null {
-  const context = currentReaderSelection() ?? currentReaderAuthorityEdge();
-  return context ? requests.get(context)?.get(stateKey(family, state).key)?.result as StateRead<T> ?? null : null;
-}
-
-/** A cached state answer carries its already read canonical sources into composition. */
-export function primeStateAuthorityProjection<T>(family: StateAuthorityFamily, state: string, result: CivicDataReadResult<T>): void {
-  const context = currentReaderSelection() ?? currentReaderAuthorityEdge();
-  if (!context) return;
-  const held = requests.get(context) ?? new Map<string, Held>();
-  const read: StateRead<T> = { source: "DATABASE", result };
-  held.set(stateKey(family, state).key, { result: read, pending: Promise.resolve(read) });
-  requests.set(context, held);
-}
 
 export function readStateAuthorityProjection<T>(family: StateAuthorityFamily, state: string, query?: Query): Promise<StateRead<T>> {
   const { recordClass, scope } = stateKey(family, state);
@@ -60,8 +18,8 @@ export function readStateAuthorityProjection<T>(family: StateAuthorityFamily, st
 /** One canonical state pointer, with optional request-injected values. */
 export async function readStateAuthorityEntry<T>(family: StateAuthorityFamily, state: string, recordClass: RoutineRecordClass, scope: string, query?: Query): Promise<StateRead<T>> {
   const key = `${recordClass}:${scope}`, edge = currentReaderAuthorityEdge();
-  const context = currentReaderSelection() ?? edge, held = context ? requests.get(context) ?? new Map<string, Held>() : new Map<string, Held>();
-  if (context) requests.set(context, held);
+  const context = currentReaderSelection() ?? edge, held = context ? stateReadsByRequest.get(context) ?? new Map<string, Held>() : new Map<string, Held>();
+  if (context) stateReadsByRequest.set(context, held);
   const prior = held.get(key);
   if (prior) return prior.pending as Promise<StateRead<T>>;
   const load = async (): Promise<StateRead<T>> => {

@@ -1,4 +1,5 @@
-import type { OfficialCandidacyBridgeRow } from "./runtime-data-plane.ts";
+
+import { type OfficialCandidacyBridgeRow } from "./official-candidacy-bridge.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { sameSeatDiscriminators } from "../officials/office-seat.ts";

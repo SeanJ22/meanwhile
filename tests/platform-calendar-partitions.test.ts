@@ -1,3 +1,4 @@
+import { primeCuratedReaderProjection } from "../lib/civic-data/curated-reader-held.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { platformWiringDoors, reusePlatformDoor, legacyPlatformDoorId } from "../lib/doors/platform-census.ts";
@@ -8,7 +9,7 @@ import { installDoorRecords } from "../lib/doors/meeting-doors.ts";
 import { meetingPartitionContract, meetingPartitionOfId } from "../lib/civic-data/meeting-partitions.ts";
 import { buildCompositeSource, wiringForSelectedMeetingSource } from "../lib/sources/composite/wiring.ts";
 import type { DerivedWiringRow } from "../lib/civic-data/derived-meeting-wiring.ts";
-import { primeCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
+
 
 const row: DerivedWiringRow = {
   bodyId: "government:US-ID:cog:fixture#governing", ocdId: "ocd-division/country:us/state:id", bodyName: "County Commissioners",

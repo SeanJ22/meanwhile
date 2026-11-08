@@ -1,5 +1,6 @@
+import { readFundingSnapshot } from "../../lib/funding/snapshot-read.ts";
 import { MemoryRoutineDataStore } from "../../lib/civic-data/store.ts";
-import { readFundingSnapshot } from "../../lib/funding/snapshot.ts";
+
 
 /** Explicit deterministic first-seed install for tests using FEC selectors. */
 export async function installFundingFirstSeed(): Promise<void> {

@@ -1,7 +1,8 @@
+import { readGenericBallotProjection } from "../../lib/ballot/generic-projection-read.ts";
 import { readFileSync } from "node:fs";
 
 import type { CivicDataReadResult } from "../../lib/civic-data/read-model.ts";
-import { ballotElectionKey, readGenericBallotProjection, type GenericBallotProjection } from "../../lib/ballot/generic-projection.ts";
+import { ballotElectionKey, type GenericBallotProjection } from "../../lib/ballot/generic-projection.ts";
 import type { BallotSet, Contest } from "../../lib/ballot/types.ts";
 import { requireBallotState, stateBallotContractId, stateBallotScope } from "../../lib/civic-data/state-scopes.ts";
 import type { LineupOutcome } from "../../lib/identity/types.ts";

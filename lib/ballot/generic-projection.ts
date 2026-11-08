@@ -1,11 +1,8 @@
+import { currentStateAuthorityProjection } from "../civic-data/state-authority-held.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
-import { currentStateAuthorityProjection, readStateAuthorityProjection } from "../civic-data/state-reader.ts";
-import { requireBallotState, stateBallotScope } from "../civic-data/state-scopes.ts";
 import type { BallotSet } from "./types.ts";
 import { measureRecordIssue } from "./measure-record-contract.ts";
-import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { withCandidateTickets } from "./tickets.ts";
-
 
 export interface GenericBallotProjection {
   readonly kind: "ballot-contests";
@@ -93,11 +90,4 @@ export function currentGenericBallotProjection(state: string): GenericBallotProj
 /** The person/choice view is derived from, and never replaces, the published source holding. */
 export function currentBallotPeopleProjection(state: string): GenericBallotProjection {
   return ballotPeopleProjection(currentGenericBallotProjection(state));
-}
-
-export async function readGenericBallotProjection(state: string, options: PromotedCivicDataReadOptions = {}) {
-  const key = requireBallotState(state);
-  return Object.keys(options).length
-    ? readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", key), options)
-    : (await readStateAuthorityProjection<GenericBallotProjection>("ballot-contests", key)).result;
 }

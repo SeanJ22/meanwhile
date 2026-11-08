@@ -1,7 +1,5 @@
-import {
-  currentCuratedReaderRecords,
-  type BallotNavigationProjectionRecord,
-} from "../civic-data/curated-reader-read-model.ts";
+import { currentCuratedReaderRecords, type BallotNavigationProjectionRecord } from "../civic-data/curated-reader-held.ts";
+
 
 interface RegistrationLink {
   state: string;

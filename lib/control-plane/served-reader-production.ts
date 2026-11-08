@@ -1,7 +1,9 @@
-import { readDerivedCampaignSites } from "../civic-data/derived-campaign-sites.ts";
+
+import { readGenericBallotProjection } from "../ballot/generic-projection-read.ts";
+import { readDerivedCampaignSites } from "../civic-data/derived-campaign-sites-read.ts";
 import { lowestZipForDivision, lowestZipsForDivisions } from "../place-map/reader.ts";
 import { canonicalContestId, canonicalCandidacyId } from "../hunt/candidate-universe.ts";
-import { readGenericBallotProjection } from "../ballot/generic-projection.ts";
+
 import { collectServedReader } from "./served-reader-collector.ts";
 import type { ServedReaderReadback } from "./served-reader.ts";
 import { observeCampaignControls } from "./campaign-reader-controls.ts";

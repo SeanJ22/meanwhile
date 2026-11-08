@@ -232,7 +232,7 @@ export async function verifyRoutineReaderProjection(
         return verifyExactVersion(verifierId, await readDotGovProjection({ store: options.store, now: options.now }), options.expectedVersionId, "government domains");
       }
       case "fec-funding": {
-        const { readFundingSnapshot } = await import("../funding/snapshot.ts");
+        const { readFundingSnapshot } = await import("../funding/snapshot-read.ts");
         const result = await readFundingSnapshot({ store: options.store, now: options.now });
         return verifyExactVersion(verifierId, result, options.expectedVersionId, "funding");
       }

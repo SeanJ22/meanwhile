@@ -1,7 +1,5 @@
-import {
-  currentCuratedReaderRecords,
-  type CampaignSiteProjectionRecord,
-} from "../civic-data/curated-reader-read-model.ts";
+import { currentCuratedReaderRecords, type CampaignSiteProjectionRecord } from "../civic-data/curated-reader-held.ts";
+
 
 /**
  * Campaign sites, keyed by roster officeholder id. Always shown as a separate

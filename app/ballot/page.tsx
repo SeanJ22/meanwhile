@@ -1,3 +1,5 @@
+import { settleCandidateCorpusRead, settleCandidateProfilesRead } from "../../lib/civic-data/manual-read-models-read.ts";
+import { settleFundingSnapshotRead } from "../../lib/funding/snapshot-read.ts";
 import { readPointPlace } from "@/lib/place-map/reader";
 import {Suspense} from "react";
 import {preload as preloadResource} from "react-dom";
@@ -116,16 +118,12 @@ import {
   STATE_FUNDING_NOTE,
   type FundingAnswer,
 } from "@/lib/funding/display";
-import { settleFundingSnapshotRead } from "@/lib/funding/snapshot";
+
 import { promotedVersionOrThrow } from "@/lib/civic-data/read-model";
 import { officeIdentity } from "@/lib/officials/office-identity";
 import { settleFundingHoldingAnswer } from "@/lib/funding/holding-answer";
 
-import {
-  settleCandidateCorpusRead,
-  settleCandidateProfilesRead,
-  candidateProfilesReadState,
-} from "@/lib/civic-data/manual-read-models";
+import { candidateProfilesReadState } from "@/lib/civic-data/manual-read-models";
 import { readBallotNavigationProjection, settleBallotNavigationRead } from "@/lib/civic-data/curated-reader-read-model";
 import {
   FundingAbsence,

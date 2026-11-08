@@ -1,4 +1,5 @@
-import { readStateAuthorityProjection, stateAuthorityPointers } from "./state-reader.ts";
+import { stateAuthorityPointers } from "./state-authority-held.ts";
+import { readStateAuthorityProjection } from "./state-reader.ts";
 import type { StateAuthorityFamily } from "../meetings/edge-artifacts.ts";
 import { REGISTRY_STATES } from "./state-scopes.ts";
 import { statesForRegistryDivisions } from "./state-scopes.ts";

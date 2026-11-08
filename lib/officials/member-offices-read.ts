@@ -1,7 +1,8 @@
+import { currentCuratedReaderRecords } from "../civic-data/curated-reader-held.ts";
 import { readMemberOfficeMembers } from "./member-office-data.ts";
 import { readerQuery } from "../civic-data/promoted-reader-query.ts";
 import type { RoutineDataStore } from "../civic-data/store.ts";
-import { currentCuratedReaderRecords, readMemberOfficeStateProjection } from "../civic-data/curated-reader-read-model.ts";
+import { readMemberOfficeStateProjection } from "../civic-data/curated-reader-read-model.ts";
 import { CivicDataStoreUnavailableError, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { currentReaderAuthorityEdge, currentStateLegislatorsEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
 import { selectedRegistryStates } from "../registry/runtime-read-model.ts";

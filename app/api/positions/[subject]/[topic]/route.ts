@@ -1,10 +1,11 @@
+import { refreshCandidateCorpusFromPromoted } from "../../../../../lib/civic-data/manual-read-models-read.ts";
 import { loadWebsiteSavedKeys } from "../../../../../lib/core/keys-entry.ts";
 import { settlePositionHoldingAnswer, type PositionHoldingReaders } from "@/lib/candidates/position-holding";
 import { readerRoute } from "@/lib/api/reader-route";
 import { verifiedReaderPersonKeys } from "@/lib/identity/reader-person";
 import { positionIdentityKeys } from "@/lib/identity/position-identity-keys";
 import { getCandidateCorpus } from "@/lib/candidates/positions";
-import { refreshCandidateCorpusFromPromoted } from "@/lib/civic-data/manual-read-models";
+
 import { ballotStatesForDivisions, readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
 import { refreshOfficeholderStatementsFromPromoted } from "@/lib/corpus/data-plane";

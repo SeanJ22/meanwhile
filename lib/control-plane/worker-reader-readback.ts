@@ -1,3 +1,4 @@
+import { type BallotNavigationProjectionRecord } from "../civic-data/curated-reader-held.ts";
 import { stateFromRegistryRuntimeContractId } from "../civic-data/state-scopes.ts";
 import { createHash } from "node:crypto";
 import { factReader } from "../facts/db.ts";
@@ -16,7 +17,7 @@ import type { CuratedReaderProjection } from "../civic-data/manual-projections.t
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
 import { readPromotedCivicData } from "../civic-data/read-model.ts";
 import type { CommentAccess } from "../registry/comment-access-client.ts";
-import type { BallotNavigationProjectionRecord } from "../civic-data/curated-reader-read-model.ts";
+
 import type { EverydayRoutingContactRecord } from "../routing/everyday.ts";
 import { TOPIC_ROUTES } from "../routing/topics.ts";
 

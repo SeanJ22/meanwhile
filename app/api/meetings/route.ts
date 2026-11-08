@@ -8,6 +8,7 @@ import { readerLocation, readerTerritory, territoryBodies } from "@/lib/reader/l
 import { readStatePackage } from "@/lib/reader/state";
 import { placePageCacheIds, readPlacesForStates } from "@/lib/reader/place";
 import { stateCoverage, withPlaceRegistry } from "@/lib/reader/coverage";
+import { stateOfficesForStates } from "@/lib/reference/state-offices";
 import { meetingBodyIds, searchMeetingsFromSource as searchMeetings } from "@/lib/meetings/query";
 import { snapshotSourceFor } from "@/lib/meetings/snapshot-source";
 import { wireSnapshot } from "@/lib/meetings/freshness";
@@ -75,7 +76,8 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     const result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionIds, snapshotSourceFor(place.snapshot), settings,
       selectedBodyIds, new Set(bodies.map(body => body.id)));
     const localIds = state ? ids : ids.filter(id => !/\/(?:cd|sldu|sldl):/.test(id));
-    const coverage = stateCoverage(state ? withPlaceRegistry(state, registry) : { state: location.state, registry, version: place.snapshot.generatedAt },
+    const coverage = stateCoverage({ ...(state ? withPlaceRegistry(state, registry) : { state: location.state, registry, version: place.snapshot.generatedAt }),
+      stateOffices: stateOfficesForStates([location.state]) },
       localIds, lat, lng, place.meetings, place.bodies, place.divisions, territory, result.meetings.length);
     coverage.governments = bindGovernmentBodies(place.governments, bodies);
     coverage.governmentInventoryUnavailableStates = place.registrationHeld ? [] : [location.state];

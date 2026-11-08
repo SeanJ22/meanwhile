@@ -1,3 +1,4 @@
+import { settleFundingRead } from "../../../lib/funding/snapshot-read.ts";
 import { readerRoute } from "@/lib/api/reader-route";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -9,7 +10,7 @@ import { FundingDisplay } from "@/components/funding/funding-section";
 import { PublicStatementsProfile } from "@/components/officials/public-statements-profile";
 import { PositionsSection } from "@/components/officials/positions-section";
 import { fundingAnswerForTarget } from "@/lib/funding/display";
-import { fundingForTarget, settleFundingRead } from "@/lib/funding/snapshot";
+import { fundingForTarget } from "@/lib/funding/snapshot";
 import { fecRegistrationLabel } from "@/lib/funding/fec-discovery";
 import { fecPersonId, fecPersonName } from "@/lib/ask/fec-national";
 

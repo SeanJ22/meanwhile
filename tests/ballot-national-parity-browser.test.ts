@@ -1,3 +1,4 @@
+import { reconcileOfficialCandidacies } from "../lib/registry/official-candidacy-bridge.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { createServer } from "node:http";
@@ -14,7 +15,7 @@ import { launchGuarded } from "../scripts/browser.mts";
 import type { BallotSet } from "../lib/ballot/types.ts";
 import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import { ballotElectionKey, genericBallotProblems } from "../lib/ballot/generic-projection.ts";
-import { reconcileOfficialCandidacies } from "../lib/registry/runtime-data-plane.ts";
+
 import { normalizePortrait } from "../lib/photos/decode.ts";
 import type { PortraitVerification } from "../lib/photos/binding.ts";
 import { installReaderValues, installCanonicalEntries, activateCanonicalFixture } from "./helpers/canonical-reader-fixtures.ts";

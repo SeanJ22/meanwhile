@@ -1,4 +1,5 @@
 import { loadWebsiteSavedKeys } from "../core/keys-entry.ts";
+import { REGISTRY_STATES } from "../civic-data/state-scopes.ts";
 import { readerRoute } from "../api/reader-route.ts";
 import { readerCacheHeaders, readerStateCacheHeaders } from "../reader/cache.ts";
 import { mapResults, parseResultsRequest } from "./results-read.ts";
@@ -15,7 +16,7 @@ export const mapResultsResponse = readerRoute("/api/map-results", async function
   try {
     const results = await mapResults(wanted);
     return Response.json({ ok: true, results }, { headers: {
-      ...(wanted.scope === "state" ? readerStateCacheHeaders(wanted.state) : readerCacheHeaders({ national: true })),
+      ...(wanted.scope === "state" ? readerStateCacheHeaders(wanted.state) : readerCacheHeaders({ states: REGISTRY_STATES })),
       "Netlify-Vary": "query=scope|state",
     } });
   } catch {

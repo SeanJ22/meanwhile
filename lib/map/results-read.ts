@@ -1,4 +1,7 @@
-import { readGenericBallotProjection } from "../ballot/generic-projection.ts";
+import { REGISTRY_STATES } from "../civic-data/state-scopes.ts";
+import { readerDatabaseQuery } from "../reader/database.ts";
+import { mapBallotsFromRows, mapBallotStatement } from "../reader/map-ballot.ts";
+import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 import type { BallotSet } from "../ballot/types.ts";
 import { parseDistrictOcd, resultContests, resultsByDistrict, STATE_DIVISION, type DistrictResult, type ResultContest } from "./results.ts";
 
@@ -10,7 +13,7 @@ export type ResultsRequest =
 
 export function parseResultsRequest(params: { scope: string | null; state: string | null }): ResultsRequest | null {
   const state = params.state?.toUpperCase() ?? "";
-  if (params.scope === "state") return /^[A-Z]{2}$/.test(state) ? { scope: "state", state } : null;
+  if (params.scope === "state") return (REGISTRY_STATES as readonly string[]).includes(state) ? { scope: "state", state } : null;
   return params.scope === "us-senate" || params.scope === "us-house" ? { scope: params.scope } : null;
 }
 
@@ -20,22 +23,29 @@ export function latestResultBallot(ballots: readonly BallotSet[]): BallotSet | n
     .sort((a, b) => b.election.date.localeCompare(a.election.date))[0] ?? null;
 }
 
-/** One state's filed results, from the same promoted ballot the reader's ballot page reads. A failed read is an error, never an empty answer. */
-async function stateResultContests(state: string): Promise<ResultContest[]> {
-  const read = await readGenericBallotProjection(state);
-  if (read.kind === "NOT_RECORDED") return [];
-  if (read.kind !== "PROMOTED") throw new Error(`${state} ballot read failed: ${read.kind}`);
-  const ballot = latestResultBallot(Object.values(read.value.ballots));
-  return ballot ? resultContests(ballot) : [];
-}
+const inFlight = new Map<string, Promise<ResultContest[]>>();
 
 /**
- * The contests with filed results that the request covers. Where none are filed, a district is absent and the map says so.
- * The one national summary the results job writes holds chamber seat totals only, with no state or district rows,
- * so the national views have nothing to color yet and show their banner.
+ * The contests with filed results that the request covers, selected inside the database (lib/reader/map-ballot.ts):
+ * one request returns only the contests the map draws, for one state or for every state, and readers who ask at the
+ * same moment share it. Where none are filed, a district is absent and the map says so.
  */
-export async function readResultContests(request: ResultsRequest): Promise<ResultContest[]> {
-  return request.scope === "state" ? stateResultContests(request.state) : [];
+export function readResultContests(request: ResultsRequest, query: ReadOnlyQuery | null = readerDatabaseQuery()): Promise<ResultContest[]> {
+  const key = request.scope === "state" ? request.state : "nation";
+  const held = inFlight.get(key);
+  if (held) return held;
+  const read = (async () => {
+    if (!query) throw new Error("READER_STORE_NOT_CONFIGURED");
+    const nation = request.scope !== "state";
+    const [rows] = await query([mapBallotStatement(nation ? REGISTRY_STATES : [request.scope === "state" ? request.state : ""], nation ? "nation" : "state")]);
+    const byState = new Map<string, BallotSet[]>();
+    for (const ballot of mapBallotsFromRows(rows)) byState.set(ballot.election.state, [...byState.get(ballot.election.state) ?? [], ballot]);
+    return [...byState.values()].flatMap(ballots => { const latest = latestResultBallot(ballots); return latest ? resultContests(latest) : []; });
+  })();
+  inFlight.set(key, read);
+  const clear = () => { if (inFlight.get(key) === read) inFlight.delete(key); };
+  read.then(clear, clear);
+  return read;
 }
 
 export function inRequest(request: ResultsRequest, ocdId: string): boolean {

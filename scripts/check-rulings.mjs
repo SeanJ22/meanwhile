@@ -174,7 +174,7 @@ export function coreProblems(core, texts, baseCore = null) {
       if (defined.dynamic) dynamicTables.add(file);
     }
   }
-  for (const file of THROWAWAY_COPIES) for (const why of throwawayCopyProblems(file, texts.get(file) ?? "")) problems.push(at(`${file} is listed as a throwaway copy but ${why}`, file));
+  for (const file of THROWAWAY_COPIES) if (texts.has(file)) for (const why of throwawayCopyProblems(file, texts.get(file))) problems.push(at(`${file} is listed as a throwaway copy but ${why}`, file));
   const listed = new Set();
   for (const [table, { writers, bypass }] of Object.entries(core.tables)) {
     for (const file of [...writers, ...bypass]) listed.add(`${file}\t${table}`);

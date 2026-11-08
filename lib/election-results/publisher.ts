@@ -1,12 +1,12 @@
 import { createHash } from "node:crypto";
 import type { BallotSet } from "../ballot/types.ts";
-import { workList } from "../core/work.ts";
+import { workList, type WorkInput } from "../core/work.ts";
 import { ensureSourceEntity } from "../facts/entities.ts";
 import { pageCopy, saveSourceReference } from "../facts/source-copy.ts";
 import { publishClaim, type FactDb, type Query } from "../facts/publish.ts";
 import type { SavedCopy } from "../facts/check.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
-import { matchElectionResult, type ElectionMatch } from "./matcher.ts";
+import { matchElectionResultAcrossBallots, type ElectionMatch } from "./matcher.ts";
 import { nextElectionResultCheck } from "./schedule.ts";
 import type { DoorRecord } from "../doors/registry.ts";
 import type { ReaderCachePurger } from "../reader/cache.ts";
@@ -46,15 +46,17 @@ function resultFingerprint(race: ElectionResult, match: ElectionMatch): string {
 }
 
 export async function electionResultFix(query: Query, race: ElectionResult, reason: string, kind: "fix" | "detect" = "fix",
-  details: Readonly<Record<string, unknown>> = {}): Promise<void> {
-  await workList(query, { owner: "election-results" }).ensure([{
+  details: Readonly<Record<string, unknown>> = {}, writeFix?: (row: WorkInput) => Promise<void>): Promise<void> {
+  const row: WorkInput = {
     kind, tier: "coverage", state: race.state, placeId: statePlace(race.state),
     subjectId: `election-results:${race.state}:${race.sourceRaceId}`, field: `election_result:${reason}`,
     url: race.sourceUrl, sources: sources(race).flatMap(source => source.url ? [source.url] : []),
     value: { sourceRaceId: race.sourceRaceId, office: race.officeName, district: race.districtHint,
       candidates: race.candidates.map(candidate => candidate.name), reason, ...details },
     source: { source: race.sourceName, reason }, origin: { from: kind === "detect" ? "detective" : "loader" },
-  }]);
+  };
+  if (kind === "fix" && writeFix) await writeFix(row);
+  else await workList(query, { owner: "election-results" }).ensure([row]);
 }
 
 async function publishValue(input: {
@@ -85,6 +87,8 @@ async function publishValue(input: {
 export async function publishElectionResultBatch(input: {
   query: Query; db: FactDb; batch: ElectionResultBatch; ballots: readonly BallotSet[]; state: string;
   prior?: ResultProgress; door?: DoorRecord; now?: Date; purge?: ReaderCachePurger; more?: () => boolean;
+  /** One runner-owned allowance handles every kind of fix; queued work never delays a fact. */
+  writeFix?: (row: WorkInput) => Promise<void>;
 }): Promise<{ counts: ResultCounts; progress: ResultProgress; nextCheckAt: string | null; deferred: boolean }> {
   const now = input.now ?? new Date(), at = now.toISOString(), counts: ResultCounts = { matched: 0, unmatched: 0, ambiguous: 0, published: 0, unchanged: 0 };
   const progress = { races: { ...input.prior?.races }, summaries: { ...input.prior?.summaries } };
@@ -108,15 +112,11 @@ export async function publishElectionResultBatch(input: {
     if (previous?.status === "certified") { counts.unchanged++; continue; }
     if (previous) {
       const nextCheckAt = nextElectionResultCheck(previous, input.door, now);
-      progress.races[key] = { ...previous, nextCheckAt };
-      if (nextCheckAt === null || nextCheckAt > at && !input.door?.readNow) continue;
+      if (nextCheckAt === null || nextCheckAt > at && !input.door?.readNow) {
+        progress.races[key] = { ...previous, nextCheckAt }; continue;
+      }
     }
-    const eligible = input.ballots.filter(ballot => ballot.election.state === raw.state && ballot.election.date === raw.electionDate);
-    const matches = eligible.map(ballot => matchElectionResult(raw, ballot));
-    const winners = matches.filter((match): match is Extract<ElectionMatch, { kind: "matched" }> => match.kind === "matched");
-    const match: ElectionMatch = winners.length === 1 ? winners[0] : winners.length > 1
-      ? { kind: "ambiguous", contestIds: winners.map(row => row.contest.id), reason: "Multiple served ballots match this race" }
-      : matches.find(row => row.kind === "ambiguous") ?? { kind: "unmatched", contestIds: [], reason: "No served contest matches this race" };
+    const match = matchElectionResultAcrossBallots(raw, input.ballots);
     const race = { ...raw, statusChangedAt: raw.statusChangedAt ?? (previous?.status === raw.status ? previous.statusChangedAt : raw.checkedAt) };
     const nextCheckAt = nextElectionResultCheck({ ...race, lastCheckedAt: at }, input.door, now);
     const hash = resultFingerprint(raw, match);
@@ -125,7 +125,7 @@ export async function publishElectionResultBatch(input: {
     else counts.unmatched++;
     if (previous?.fingerprint === hash) { counts.unchanged++; progress.races[key] = { ...previous, lastCheckedAt: at, nextCheckAt }; continue; }
     if (match.kind !== "matched") {
-      await electionResultFix(input.query, race, match.reason, match.kind === "ambiguous" ? "detect" : "fix", { contestIds: match.contestIds });
+      await electionResultFix(input.query, race, match.reason, match.kind === "ambiguous" ? "detect" : "fix", { contestIds: match.contestIds }, input.writeFix);
     } else {
       const evidence = await observed(), citation = { sources: sources(race), checkedAt: at,
         sourceId: race.sourceId, sourceRaceId: race.sourceRaceId, electionDate: race.electionDate };
@@ -154,7 +154,7 @@ export async function publishElectionResultBatch(input: {
         value: { yesVotes: race.measure.yesVotes ?? null, noVotes: race.measure.noVotes ?? null,
           yesPercent: race.measure.yesPercent ?? null, outcome: race.measure.outcome, ...citation } });
       if (match.unmatchedCandidates.length) await electionResultFix(input.query, race, "Candidate missing from served ballot", "fix",
-        { candidateNames: match.unmatchedCandidates.map(index => race.candidates[index].name) });
+        { candidateNames: match.unmatchedCandidates.map(index => race.candidates[index].name) }, input.writeFix);
       if (match.ambiguousCandidates.length) await electionResultFix(input.query, race, "Candidate identity tie", "detect",
         { candidateNames: match.ambiguousCandidates.map(index => race.candidates[index].name) });
       const list = workList(input.query, { owner: "election-results" });

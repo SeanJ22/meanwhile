@@ -12,13 +12,20 @@ const optionalNumber = (key: string, value: unknown) => number(value) === undefi
 /** Keep exact source substrings while reading the JSON once, including pretty-printed sources. */
 function sourceObjects(source: string): Map<string, string> {
   const found = new Map<string, string>();
-  const stack: { start: number; seat?: string; id?: string; state?: string; candidate?: string; measure?: boolean; race?: boolean; election?: string }[] = [];
+  const stack: { start: number; seat?: string; id?: string; state?: string; candidate?: string; measure?: boolean; race?: boolean; election?: string; type?: string }[] = [];
   for (let at = 0; at < source.length; at++) {
     const char = source[at];
     if (char === "{") stack.push({ start: at });
     else if (char === "}") {
       const entry = stack.pop();
       if (entry) {
+        // A seatless special can list its primary after its general results.
+        // Only the general contest identifies the source evidence for that race.
+        if (entry.election && /^General(?:_Runoff)?$/.test(entry.type ?? "")) {
+          const race = stack.findLast(item => item.race);
+          if (race) race.election = entry.election;
+          found.set(`contest:${entry.election}`, source.slice(entry.start, at + 1));
+        }
         const key = entry.seat ? `race:${entry.seat}` : entry.race && entry.election ? `election:${entry.election}` : entry.measure && entry.id ? `measure:${entry.id}` : entry.state ? `summary:${entry.state}` : entry.candidate ? `candidate:${entry.candidate}` : null;
         if (key && (!found.has(key) || key.startsWith("candidate:"))) found.set(key, source.slice(entry.start, at + 1));
       }
@@ -35,7 +42,7 @@ function sourceObjects(source: string): Map<string, string> {
       const entry = stack[stack.length - 1];
       if (key === "measure_number") entry.measure = true;
       if (key === "office") entry.race = true;
-      if (key === "seat_id" || key === "id" || key === "st" || key === "candidate_id" || key === "election_id") {
+      if (key === "seat_id" || key === "id" || key === "st" || key === "candidate_id" || key === "election_id" || key === "type") {
         const match = /^\s*("(?:[^"\\]|\\.)*"|\d+)/.exec(source.slice(after + 1));
         if (!match) continue;
         const value = String(JSON.parse(match[1]));
@@ -43,10 +50,8 @@ function sourceObjects(source: string): Map<string, string> {
         else if (key === "id") entry.id = value;
         else if (key === "st") entry.state = value;
         else if (key === "candidate_id") entry.candidate = value;
-        else {
-          const race = stack.findLast(item => item.race);
-          if (race) race.election = value;
-        }
+        else if (key === "type") entry.type = value;
+        else entry.election = value;
       }
     }
   }
@@ -67,20 +72,22 @@ function arrayText(source: string, key: string): string {
   throw new Error(`MultiState ${key} source array is incomplete`);
 }
 
-/** Select one state before JSON.parse; the national HTTP body stays transient text. */
-function stateObjectText(array: string, state: string, key: string): string | undefined {
+/** Select every event for a state before JSON.parse, regardless of source ordering. */
+function stateObjectTexts(array: string, state: string | undefined, key: string): string[] {
   const tokens = /"(?:[^"\\]|\\.)*"|[{}]/g;
+  const selectedObjects: string[] = [];
   let depth = 0, start = 0, selected = false;
   for (let token = tokens.exec(array); token; token = tokens.exec(array)) {
-    if (token[0] === "{") { if (depth++ === 0) start = token.index; }
-    else if (token[0] === "}") { if (--depth === 0 && selected) return array.slice(start, token.index + 1); }
+    if (token[0] === "{") { if (depth++ === 0) { start = token.index; selected = state === undefined; } }
+    else if (token[0] === "}") { if (--depth === 0 && selected) selectedObjects.push(array.slice(start, token.index + 1)); }
     else if (depth === 1 && JSON.parse(token[0]) === key) {
       const value = /^\s*:\s*"([^"\\]*)"/.exec(array.slice(token.index + token[0].length));
       if (value?.[1] === state) selected = true;
     }
   }
-  return undefined;
+  return selectedObjects;
 }
+const stateObjectText = (array: string, state: string, key: string): string | undefined => stateObjectTexts(array, state, key)[0];
 
 function office(value: string): string {
   if (/^lt\.? governor$/i.test(value)) return "lieutenant_governor";
@@ -105,28 +112,33 @@ function seats(value: unknown): Record<string, number> {
 /** Parses only general_events, never the primary-election `events` lookalike. */
 export function parseMultiStateResults(sourceText: string, checkedAt: string, electionDate = "2026-11-03", stateSelector?: string): ElectionResultBatch {
   const state = stateSelector?.toUpperCase(), eventsText = arrayText(sourceText, "general_events");
-  const eventText = state ? stateObjectText(eventsText, state, "state") : undefined;
+  const eventTexts = stateObjectTexts(eventsText, state, "state");
   const scoreText = state ? stateObjectText(arrayText(sourceText, "states"), state, "st")
     ?? stateObjectText(arrayText(sourceText, "special_only"), state, "st") : undefined;
-  if (state && !eventText) throw new Error(`MultiState state is missing: ${state}`);
-  const document = state ? { general_events: [JSON.parse(eventText!)], scorecard: { states: scoreText ? [JSON.parse(scoreText)] : [] } }
+  if (state && !eventTexts.length) throw new Error(`MultiState state is missing: ${state}`);
+  const document = state ? { general_events: eventTexts.map(event => JSON.parse(event)), scorecard: { states: scoreText ? [JSON.parse(scoreText)] : [] } }
     : object(JSON.parse(sourceText));
   if (!Array.isArray(document.general_events)) throw new Error("MultiState general_events is missing");
-  const quotes = sourceObjects(eventText ?? eventsText), summaryQuotes = sourceObjects(state ? scoreText ?? "{}" : sourceText);
+  const summaryQuotes = sourceObjects(state ? scoreText ?? "{}" : sourceText);
   const source = { name: "MultiState", url: MULTISTATE_RESULTS_URL };
   const races: ElectionResult[] = [], summaries: ElectionSummary[] = [];
   const scoreStates = [...list(object(document.scorecard).states), ...list(object(document.scorecard).special_only)];
-  for (const event of list(document.general_events)) {
+  for (const [eventIndex, event] of list(document.general_events).entries()) {
     const state = text(event.state).toUpperCase();
     if (!/^[A-Z]{2}$/.test(state)) throw new Error("MultiState state is missing");
+    const quotes = sourceObjects(eventTexts[eventIndex] ?? eventsText);
     for (const race of [...list(event.statewide_races), ...list(event.races)]) {
       if (text(race.election_date) !== electionDate) continue;
       const general = list(object(race.general_results).contests).filter(contest => /^General(?:_Runoff)?$/.test(text(contest.type)));
       if (general.length !== 1) throw new Error(`MultiState general results changed shape: ${state} ${race.seat_id}`);
       const result = general[0], candidates = list(result.candidates), flipped = object(race.flipped_seat);
-      const sourceRaceId = String(race.seat_id ?? result.election_id), quote = quotes.get(`${race.seat_id === undefined ? "election" : "race"}:${sourceRaceId}`);
+      const hasSeat = race.seat_id !== undefined && race.seat_id !== null;
+      const sourceObjectId = String(hasSeat ? race.seat_id : result.election_id);
+      const sourceRaceId = hasSeat ? sourceObjectId : `election:${sourceObjectId}`;
+      const quote = quotes.get(`${hasSeat ? "race" : "election"}:${sourceObjectId}`);
       if (!quote) throw new Error(`MultiState source evidence missing: ${sourceRaceId}`);
-      const candidateQuotes = sourceObjects(quote);
+      const raceQuotes = sourceObjects(quote);
+      const candidateQuotes = sourceObjects(raceQuotes.get(`contest:${result.election_id}`) ?? quote);
       races.push({ sourceId: "multistate", sourceName: source.name, sourceUrl: source.url, creditedSources: credits(result.vote_source ?? race.vote_source),
         sourceRaceId, state, office: office(text(race.office)), officeName: text(race.office),
         ...(race.district !== undefined ? { districtHint: String(race.district) } : {}), electionDate,

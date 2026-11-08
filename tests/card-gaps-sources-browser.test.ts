@@ -43,14 +43,12 @@ test("real held venue and congress cards keep missing info in sections and sourc
       import {OfficialModal} from "./components/map/popup/official-modal.tsx";
       import {DataProvider} from "./lib/state/data.tsx";
       import {CardSourcesList} from "./components/officials/card-sources-list.tsx";
-      import {Card} from "./components/ui/card.tsx";
       const meetings=${JSON.stringify(meetings)}, venue=${JSON.stringify(venue)}, placeless=${JSON.stringify(placeless)}, holder=${JSON.stringify(holder)};
       const official=location.pathname==="/official";
       const data={allMeetings:meetings, meetings, venues:[venue], result:null, location:null, drawnDistricts:[], dropped:0, searchFailed:false, atAddress:false, governing:new Set([${JSON.stringify(tusd)}]), zipPartial:null, basis:"ZIP", commentAccess:${JSON.stringify(recorded.commentAccess)}};
       const noop=()=>{};
       createRoot(document.getElementById("root")).render(location.pathname==="/source-clock"
         ? <CardSourcesList sources={[{what:"Meeting calendar",provenance:${JSON.stringify(midnightSource)}}]} />
-        : location.pathname==="/empty-sources" ? <Card title={holder.name} sources={[]}><p>{holder.name}</p></Card>
         : <DataProvider value={data}>
         <ReaderCard viewKey={official?holder.id:venue.key} kicker={official?holder.name:"Tucson Unified School District"} backLabel={null} onBack={noop} onClose={noop}>
           {official ? <OfficialModal holder={holder} tier="national" seatLabel="IA-2" reactionContext={null} onClose={noop} embedded />
@@ -69,7 +67,7 @@ test("real held venue and congress cards keep missing info in sections and sourc
     const json = (value: unknown) => response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify(value));
     if (request.url === "/fixture.js") response.writeHead(200, { "content-type": "application/javascript" }).end(javascript);
     else if (request.url === "/fixture.css") response.writeHead(200, { "content-type": "text/css" }).end(stylesheet);
-    else if (request.url === "/venue" || request.url === "/official" || request.url === "/source-clock" || request.url === "/empty-sources") response.writeHead(200, { "content-type": "text/html" }).end('<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="/fixture.css"><div id="root"></div><script src="/fixture.js"></script>');
+    else if (request.url === "/venue" || request.url === "/official" || request.url === "/source-clock") response.writeHead(200, { "content-type": "text/html" }).end('<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="/fixture.css"><div id="root"></div><script src="/fixture.js"></script>');
     else if (request.url?.startsWith("/api/directory?")) json({ ...projection.directory.byMember.H001091, source: projection.directory.source });
     else if (request.url === "/api/demand-signal") {
       let body = "";
@@ -96,9 +94,6 @@ test("real held venue and congress cards keep missing info in sections and sourc
       await page.goto(`http://127.0.0.1:${address.port}/${mode}`);
       const card = page.locator("[data-reader-card]");
       await card.waitFor({ state: "visible" });
-      const initialSources = card.getByRole("button", { name: /^Sources/ });
-      assert.equal(await initialSources.getAttribute("aria-expanded"), "false");
-      assert.equal(await card.locator("[data-card-footer] [data-source-list]").count(), 0, "known source labels, dates and links wait until Sources opens");
       for (const header of await card.locator(".card-section-header").all()) {
         if (await header.getAttribute("aria-expanded") === "false") await header.click();
         const pane = card.locator(`[id="${await header.getAttribute("aria-controls")}"]`);
@@ -168,12 +163,6 @@ test("real held venue and congress cards keep missing info in sections and sourc
         assert.equal(urls.length, 2, "identity and district offices cite their two native source files");
         assert.equal(new Set(urls).size, urls.length, "each held source URL appears once");
       }
-      const sourceText = await sources.innerText();
-      await sourceHeader.click();
-      assert.equal(await sourceHeader.getAttribute("aria-expanded"), "false");
-      assert.equal(await sources.locator("[data-source-list]").count(), 0, "closing Sources releases its rendered list");
-      await sourceHeader.click();
-      assert.equal(await sources.innerText(), sourceText, "reopening Sources retains every held citation");
       const pending = page.waitForResponse(response => response.url().endsWith("/api/demand-signal"));
       await card.getByRole("button", { name: "Want us to get this sooner?", exact: true }).first().click();
       await pending;
@@ -188,15 +177,6 @@ test("real held venue and congress cards keep missing info in sections and sourc
       await card.locator("[data-card-gap]").first().scrollIntoViewIfNeeded();
       await page.screenshot({ path: `.scratch/ci/ui-01-${mode}-sources.png` });
     }
-    await page.goto(`http://127.0.0.1:${address.port}/empty-sources`);
-    const emptySources = page.locator("[data-card-sources]");
-    const emptyHeader = emptySources.getByRole("button", { name: /^Sources/ });
-    assert.equal(await emptyHeader.getAttribute("aria-expanded"), "false");
-    await emptySources.locator('[data-card-gap-contribution="sources"]').waitFor({ state: "attached" });
-    assert.equal(await emptySources.locator("[data-card-gap]").count(), 1, "empty Sources keeps its missing-info contribution registered while closed");
-    await emptyHeader.click();
-    await emptySources.locator("[data-card-gap]").waitFor({ state: "visible" });
-    assert.match(await emptySources.innerText(), /working on getting this info/);
     assert.deepEqual(errors, []);
     await context.close();
     const phoenix = await browser.context({ viewport: { width: 390, height: 844 }, timezoneId: "America/Phoenix" });

@@ -1,7 +1,7 @@
 import { readReaderSetting } from "../civic-data/reader-settings-publication.ts";
 import { registerSetting } from "../control-plane/settings.ts";
 import { ocdStateCode } from "../ocd/state-of.ts";
-import { COUNTY_TIME_ZONES, governmentTimeZone } from "../time/county-time-zones.ts";
+import { resultStateTimeZone } from "../time/result-state-time-zones.ts";
 import { toZonedIso } from "../time/zoned.ts";
 import type { ContestResult } from "./election-results.ts";
 
@@ -28,21 +28,6 @@ export async function readVoteQuestionSetting(): Promise<VoteQuestionSetting> {
   return isSetting(value) ? value : "auto";
 }
 
-/** Where a contest's state votes. A state with several clocks uses the one most of its counties keep. */
-const principalZones = new Map<string, string | null>();
-export function stateZone(state: string): string | null {
-  const code = state.toUpperCase();
-  if (!principalZones.has(code)) {
-    const tally = new Map<string, number>();
-    for (const row of COUNTY_TIME_ZONES.values()) {
-      if (row.stateCode === code && row.timeZones.length === 1) tally.set(row.timeZones[0]!, (tally.get(row.timeZones[0]!) ?? 0) + 1);
-    }
-    const [principal] = [...tally].sort((a, b) => b[1] - a[1])[0] ?? [];
-    principalZones.set(code, governmentTimeZone(code) ?? principal ?? null);
-  }
-  return principalZones.get(code)!;
-}
-
 /** With no state to read, the latest clock in the country, so a card never switches early. */
 const LATEST_ZONE = "Pacific/Honolulu";
 const CLOSE_HOUR = 21;
@@ -60,7 +45,7 @@ export function voteQuestionPhase(input: {
   if (result && (result.status === "counting" || result.status === "called" || result.status === "certified")) return "after";
   const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(input.electionDate ?? "");
   if (!match) return "before";
-  const zone = stateZone(ocdStateCode(input.contest.ocdId) ?? "") ?? LATEST_ZONE;
+  const zone = resultStateTimeZone(ocdStateCode(input.contest.ocdId) ?? "") ?? LATEST_ZONE;
   const close = Date.parse(toZonedIso(Number(match[1]), Number(match[2]), Number(match[3]), CLOSE_HOUR, 0, zone));
   return input.now.getTime() >= close ? "after" : "before";
 }

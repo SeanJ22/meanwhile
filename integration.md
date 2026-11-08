@@ -472,3 +472,5 @@ One line per batch folded into river.
 - 2026-11-08T19:21:33Z · trim-195 · TR-07 · ready 1159b34cf1d9 · river df60bf774fd5 · GitHub CI passed on release 194
 - 2026-11-08T20:58:10Z · results-merge · CX-ELECTION, ELECTION-RESULTS · ready 78ef49bd3ac2 · river f2ff8f70e81c · GitHub CI passed on release 195
 - 2026-11-08T20:58:10Z · river-growth · RG-01 · ready a756003104cd · river f2ff8f70e81c · GitHub CI passed on release 195
+- 2026-11-08T23:43:03Z · results-turn · RT-01 · ready 8de95b834e45 · river 41ce37f64cc4 · GitHub CI passed on release 196
+- 2026-11-08T23:43:03Z · river-growth-note · RG-02 · ready 6533ab7e3bfc · river 41ce37f64cc4 · GitHub CI passed on release 196

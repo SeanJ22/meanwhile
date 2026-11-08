@@ -30,7 +30,8 @@
     "number": 915,
     "url": "https://github.com/SeanJ22/meanwhile/pull/915"
   },
-  "ci": "running",
+  "ci": "pass",
   "at": "2026-11-08T23:19:05Z",
-  "growth_reason": "election results fix: results run as their own routine step and publish to the store the live site reads (RT-01), finishing the new election-results feature"
+  "growth_reason": "election results fix: results run as their own routine step and publish to the store the live site reads (RT-01), finishing the new election-results feature",
+  "settled_at": "2026-11-08T23:43:03Z"
 }

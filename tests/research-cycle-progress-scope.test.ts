@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { RUNTIME_NO_PROGRESS_MS, runRuntimeChildren } from "../scripts/pilot-runtime-child.mts";
 import { POST_CUTOFF_QUIET_LEAD_MS } from "../lib/control-plane/scheduler/post-cutoff-bound.ts";
 import { PLANNER_SCOPE_PREFIX, progressLines } from "../lib/control-plane/scheduler/round-progress.ts";
-import { STATE_DEFERRED, runStatePlanningRound } from "../lib/control-plane/scheduler/state-planning.ts";
+import { runStatePlanningRound } from "../lib/control-plane/scheduler/state-planning.ts";
 
 const boundModule = JSON.stringify(new URL("../lib/control-plane/scheduler/post-cutoff-bound.ts", import.meta.url).href);
 const progressModule = JSON.stringify(new URL("../lib/control-plane/scheduler/round-progress.ts", import.meta.url).href);
@@ -81,11 +81,12 @@ test("the marker starts a new list of seen lines on both streams; a hung process
 test("the supervisor announces each planner before it starts, and a release handoff defers the states it never started", () => {
   const round = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
   assert.match(round, /console\.log\(`\$\{PLANNER_SCOPE_PREFIX\} \$\{state\} \$\{nowIso\(\)\}`\);\n\s+const child=fork\(/);
-  assert.match(round, /failureReasons\.set\(state,"not started \(release handoff\)"\);resolve\(STATE_DEFERRED\)/);
+  assert.match(round, /const mayStart=\(\)=>!releaseDrainRequested && roundAllowsNewState\(NOW,Date\.now\(\)\)/);
   assert.match(round, /process\.exit\(result\.failed\.length\?1:0\)/, "only a state that really failed makes the round exit non-zero");
 });
 
 test("a planning round counts a state it deferred as neither completed nor failed", async () => {
-  const round = await runStatePlanningRound(async state => state === "ak" ? true : state === "al" ? false : STATE_DEFERRED, ["ak", "al", "az", "ca"]);
+  let ran = 0;
+  const round = await runStatePlanningRound(async state => state === "ak" ? true : state === "al" ? false : true, ["ak", "al", "az", "ca"], () => ran++ < 2);
   assert.deepEqual(round, { completed: 1, failed: ["al"], deferred: ["az", "ca"] });
 });

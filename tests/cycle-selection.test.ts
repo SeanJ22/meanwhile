@@ -27,6 +27,6 @@ test("a filtered recovery reads only selected occurrence histories without a glo
   assert.deepEqual(await scoped.attempts.list(), []);
   assert.deepEqual(await scoped.costs.readAll(), []);
   assert.deepEqual(await sweepExpiredLeases(scoped, { now, observedBy: "filtered-run" }),
-    { reclaimed: [], releasedSettled: [], stillLive: [], refused: [] });
+    { reclaimed: [], releasedSettled: [], stillLive: [], refused: [], unswept: 0 });
   assert.equal((await repos.workItems.list()).length, 2);
 });

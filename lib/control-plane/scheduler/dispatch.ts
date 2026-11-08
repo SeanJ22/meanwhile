@@ -719,43 +719,47 @@ export interface ReclaimSweep {
   readonly releasedSettled: readonly string[];
   readonly stillLive: readonly string[];
   readonly refused: readonly { readonly routeTaskId: string; readonly why: string }[];
+  /** Expired leases the sweep's time budget ended before; the next sweep takes them. */
+  readonly unswept: number;
 }
+
+/** How long one sweep may spend, and how many expired leases it works at once. A sweep that outruns its budget stops and names the rest. */
+export const LEASE_SWEEP_BUDGET_MS = 60_000;
+const LEASE_SWEEP_SLICE = 25;
 
 export async function sweepExpiredLeases(
   repos: ControlPlaneRepositories,
-  input: { readonly now: string; readonly observedBy: string },
+  input: { readonly now: string; readonly observedBy: string; readonly budgetMs?: number; readonly clock?: () => number },
 ): Promise<ReclaimSweep> {
-  // A committed result outranks an expired heartbeat. Apply commits before declaring a worker dead.
-  const leases = await repos.leases.listWhere(["released"], "false");
-  const tasks = await Promise.all(leases.map(row => repos.routeTasks.mustRead(row.value.routeTaskId)));
-  await reconcileWorkerCompletions(repos, [...new Set(tasks.map(row => row.value.workItemId))]);
+  const clock = input.clock ?? Date.now, startedMs = clock(), budgetMs = input.budgetMs ?? LEASE_SWEEP_BUDGET_MS;
   const reclaimed: string[] = [];
   const releasedSettled: string[] = [];
   const stillLive: string[] = [];
   const refused: { routeTaskId: string; why: string }[] = [];
-
+  const expired: string[] = [];
   for (const row of await repos.leases.listWhere(["released"], "false")) {
-    const lease = row.value;
-    if (lease.released) continue;
-    if (!isExpired(lease, input.now)) {
-      stillLive.push(lease.routeTaskId);
-      continue;
-    }
-    try {
-      const outcome = await reclaimRouteTask(repos, {
-        routeTaskId: lease.routeTaskId,
-        now: input.now,
-        observedBy: input.observedBy,
-      });
-      (outcome.settled ? releasedSettled : reclaimed).push(lease.routeTaskId);
-    } catch (error) {
-      /* NothingToReclaim is the honest case where a lease expired before any
-         Attempt opened. Recorded, never swallowed. */
-      refused.push({
-        routeTaskId: lease.routeTaskId,
-        why: error instanceof Error ? error.message : String(error),
-      });
-    }
+    if (row.value.released) continue;
+    (isExpired(row.value, input.now) ? expired : stillLive).push(row.value.routeTaskId);
   }
-  return { reclaimed, releasedSettled, stillLive, refused };
+  /* The backlog is read once and worked in slices, so a state's round pays for the leases it can finish, not for every dead lease ever left. */
+  let at = 0;
+  for (; at < expired.length && clock() - startedMs < budgetMs; at += LEASE_SWEEP_SLICE) {
+    const slice = expired.slice(at, at + LEASE_SWEEP_SLICE);
+    // A committed result outranks an expired heartbeat. Apply commits before declaring a worker dead.
+    const tasks = await Promise.all(slice.map(id => repos.routeTasks.mustRead(id)));
+    await reconcileWorkerCompletions(repos, [...new Set(tasks.map(row => row.value.workItemId))]);
+    await Promise.all(slice.map(async routeTaskId => {
+      try {
+        // Reconciling may have released this lease already: a committed result is not a dead worker.
+        if ((await repos.leases.read(routeTaskId))?.value.released !== false) return;
+        const outcome = await reclaimRouteTask(repos, { routeTaskId, now: input.now, observedBy: input.observedBy });
+        (outcome.settled ? releasedSettled : reclaimed).push(routeTaskId);
+      } catch (error) {
+        /* NothingToReclaim is the honest case where a lease expired before any
+           Attempt opened. Recorded, never swallowed. */
+        refused.push({ routeTaskId, why: error instanceof Error ? error.message : String(error) });
+      }
+    }));
+  }
+  return { reclaimed, releasedSettled, stillLive, refused, unswept: expired.length - Math.min(at, expired.length) };
 }

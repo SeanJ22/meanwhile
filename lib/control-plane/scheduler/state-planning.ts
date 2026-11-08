@@ -56,12 +56,17 @@ export async function runStateControlBackfill(jobs:ControlReadsBackfill,state:st
   }
   onProgress(state,copied,archived);
 }
-/** A state the round never started because a release handoff was under way: not planned, not failed; the next round plans it. */
+/** A state the round never started (a release handoff began, or the round's hour was spent): not planned, not failed; the next round plans it first. */
 export const STATE_DEFERRED="DEFERRED";
-export async function runStatePlanningRound(run:(state:string)=>Promise<boolean|typeof STATE_DEFERRED>,states:readonly string[]=PLANNING_STATES):Promise<{readonly completed:number;readonly failed:readonly string[];readonly deferred:readonly string[]}> {
+/** A round starts no new state after this long; a state takes up to about half an hour, so the round ends inside its hour. */
+export const ROUND_NEW_STATE_CUTOFF_MS = 30 * 60_000;
+export const roundAllowsNewState=(roundStartedAt:string,now:number):boolean=>now-Date.parse(roundStartedAt)<ROUND_NEW_STATE_CUTOFF_MS;
+/** The runner ends a research cycle still alive after this long and records it as failed with the reason. */
+export const RESEARCH_CYCLE_BUDGET_MS = 75 * 60_000;
+export async function runStatePlanningRound(run:(state:string)=>Promise<boolean>,states:readonly string[]=PLANNING_STATES,mayStart:()=>boolean=()=>true):Promise<{readonly completed:number;readonly failed:readonly string[];readonly deferred:readonly string[]}> {
   let completed=0;const failed:string[]=[];const deferred:string[]=[];
   for(const state of states) {
-    const outcome=await run(state);
+    const outcome=mayStart()?await run(state):STATE_DEFERRED;
     if(outcome===STATE_DEFERRED)deferred.push(state);else if(outcome)completed++;else failed.push(state);
   }
   return {completed,failed,deferred};

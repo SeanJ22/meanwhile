@@ -7,6 +7,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { beginAttemptFor, claimRouteTask } from "../lib/control-plane/repository/coordinator.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import {
   OccurrenceStillOpen,
@@ -174,5 +175,26 @@ test("the close re-reads every condition at write time and skips, by name, anyth
     assert.deepEqual(applied.closed, [], label);
     assert.deepEqual(applied.skipped.map((s) => s.why), ["its RouteTask is no longer an unclaimed PENDING task"]);
     assert.equal((await repos.occurrences.mustRead(first.occurrence.id)).value.closedAt, null, `${label}: left open`);
+  }
+});
+
+test("closing an occurrence whose RouteTask is still CLAIMED ends its open Attempt and releases its lease before archiving", async () => {
+  for (const [label, repos] of await eachStore("wtp-abandoned-")) {
+    await repos.obligations.put(ID, standing(obligation(), T0), T0);
+    const opened = await openOccurrence(repos, { obligation: await fresh(repos), dueAt: T0, now: T0 });
+    assert.ok(opened);
+    const taskId = opened.routeTask.id;
+    const claimed = await claimRouteTask(repos, { routeTaskId: taskId, holder: "worker-a", now: T0, ttlMs: 60_000 });
+    const attempt = await beginAttemptFor(repos, { routeTaskId: taskId, workItemId: opened.workItem.id,
+      worker: { role: "ACQUIRER", provider: "we-the-people", version: "deterministic-walker", instance: "worker-a" },
+      lease: claimed.lease.value, now: T0, methodVersion: 1, policyVersion: "p1" });
+    await repos.routeTasks.compareAndSet(taskId, (await repos.routeTasks.mustRead(taskId)).revision,
+      { ...(await repos.routeTasks.mustRead(taskId)).value, state: "CLAIMED" }, T0);
+
+    await closeOccurrence(repos, { occurrenceId: opened.occurrence.id, disposition: null, unresolvedReason: "Worker task deferred: WORKER_CHILD_TIMEOUT", now: T1 });
+
+    assert.equal((await repos.leases.mustRead(taskId)).value.released, true, `${label}: the lease is not left for the sweep`);
+    assert.notEqual((await repos.attempts.mustRead(attempt.value.id)).value.outcome, null, `${label}: the Attempt is closed`);
+    assert.notEqual((await repos.routeTasks.mustRead(taskId)).value.state, "CLAIMED", `${label}: the task is not archived CLAIMED`);
   }
 });

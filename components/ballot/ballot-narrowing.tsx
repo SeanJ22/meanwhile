@@ -3,7 +3,6 @@
 import { startTransition, useCallback, useEffect, useState, type ReactNode } from "react";
 
 import { AddressPrompt } from "@/components/address/address-prompt";
-import { enhanceBallotResults } from "./deferred-result-enhancer";
 
 /** Results wait until the existing ballot has painted and accepts input. */
 export function afterBallotReady(start: () => void): () => void {
@@ -59,9 +58,11 @@ export function BallotNarrowing({
     const controller = new AbortController();
     let dispose: (() => void) | undefined;
     const cancel = afterBallotReady(() => {
-      void enhanceBallotResults(controller.signal, nodes => {
-        if (!controller.signal.aborted) startTransition(() => setLateNodes(nodes));
-      }).then(cleanup => {
+      void import("./deferred-result-enhancer").then(async ({ enhanceBallotResults }) => {
+        if (controller.signal.aborted) return;
+        const cleanup = await enhanceBallotResults(controller.signal, nodes => {
+          if (!controller.signal.aborted) startTransition(() => setLateNodes(nodes));
+        });
         if (controller.signal.aborted) cleanup();
         else dispose = cleanup;
       }).catch(() => { /* A result-cache failure never removes the ballot. */ });

@@ -41,7 +41,7 @@ import {
 } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { cycleVault } from "../lib/control-plane/scheduler/vault.ts";
 import { advanceHeldWorkerFleet, standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
-import { HELD_DIGGER_CLASSES, HELD_DIGGER_SOURCE_FIELDS, type HeldDiggerReads, type HeldDiggerSourceRow } from "../lib/control-plane/workers/held-digger-sources.ts";
+import { memoryDiggerReads } from "./helpers/held-digger-reads.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { askGapSourceUrl } from "../lib/control-plane/scheduler/providers/ask-gaps.ts";
 import { eachStore } from "./control-plane-fixtures.ts";
@@ -570,22 +570,7 @@ test("a recovered INGESTED calendar occurrence keeps its exact bytes eligible fo
     assert.equal(await later.readHeld(records[0]), feed, `${label}: the recovered bytes are read back`);
     assert.equal(await later.readHeld({ ...records[0], attemptId: "at-someone-else" }), null, `${label}: only under the record's own identity`);
 
-    const diggerReads: HeldDiggerReads = {
-      async sourceChanges(since, page) {
-        const changed = await repos.routeTasks.listChangedSince!(since, undefined, { projection: HELD_DIGGER_SOURCE_FIELDS,
-          page: rows => page(rows as unknown as readonly HeldDiggerSourceRow[]) });
-        return { through: changed.through! };
-      },
-      async pendingTaskIds() {
-        const ids: string[] = [];
-        for (const kind of HELD_DIGGER_CLASSES) for (const row of await repos.routeTasks.listWhereNarrowed(["workerTask", "contract", "recordClass"], kind, { state: true })) {
-          const state = (row.value as { state: string }).state;
-          if (state === "PENDING" || state === "RECLAIMABLE") ids.push(row.id);
-        }
-        return ids;
-      },
-    };
-    const runtime = Object.assign(standingFleetRuntime({ root: ROOT, method: methodFixture(), vaultRoot, repos, now: () => T2 }), { diggerReads });
+    const runtime = Object.assign(standingFleetRuntime({ root: ROOT, method: methodFixture(), vaultRoot, repos, now: () => T2 }), { diggerReads: memoryDiggerReads(repos) });
     await advanceHeldWorkerFleet(ROOT, runtime, 1, true);
     const worker = (await repos.routeTasks.list()).find(
       (row) => row.value.workerTask?.role === "ACQUIRER" && row.value.workerTask.artifactId === committed.artifactIds[0],

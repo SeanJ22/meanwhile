@@ -12,7 +12,7 @@ import { writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { fingerprint } from "../lib/control-plane/ids.ts";
 import { beginAttemptFor, claimRouteTask, disposeRouteTask, recordArtifactMetadata, registerRouteTask, registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import type { ArtifactRecord, ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
+import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import { createRouteTask, type RouteTask } from "../lib/control-plane/route-task.ts";
 import { standing } from "../lib/control-plane/scheduler/durable.ts";
 import { isScheduled, scheduleObligation } from "../lib/control-plane/scheduler/obligation.ts";
@@ -21,7 +21,7 @@ import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
 import { planHeldWorkerFleet } from "../lib/control-plane/workers/standing-plan.ts";
 import { advanceHeldWorkerFleet, legacyHeldWorkOwed } from "../lib/control-plane/workers/standing.ts";
-import { HELD_DIGGER_CLASSES, HELD_DIGGER_SOURCE_FIELDS, type HeldDiggerReads, type HeldDiggerSourceRow } from "../lib/control-plane/workers/held-digger-sources.ts";
+import { memoryDiggerReads } from "./helpers/held-digger-reads.ts";
 import { FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
 import { workerTaskAdmission } from "../lib/control-plane/workers/scheduling.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
@@ -32,24 +32,6 @@ const PARTITION = MEETING_PARTITION_CONTRACTS.find(row => row.bodyId.startsWith(
 assert.ok(PARTITION, "the recorded door fixture supplies a real registered meeting source");
 const SUBJECT = PARTITION.bodyId, DIVISION = PARTITION.ocdId ?? "ocd-division/country:us/state:az";
 const PROFILE = "https://example.gov/ada", METHOD = { version: 3, updatedOn: "2026-10-20", routes: [] };
-
-function memoryDiggerReads(repos: ControlPlaneRepositories): HeldDiggerReads {
-  return {
-    async sourceChanges(since, page) {
-      const changed = await repos.routeTasks.listChangedSince!(since, undefined, { projection: HELD_DIGGER_SOURCE_FIELDS,
-        page: rows => page(rows as unknown as readonly HeldDiggerSourceRow[]) });
-      return { through: changed.through! };
-    },
-    async pendingTaskIds() {
-      const ids: string[] = [];
-      for (const kind of HELD_DIGGER_CLASSES) for (const row of await repos.routeTasks.listWhereNarrowed(["workerTask", "contract", "recordClass"], kind, { state: true })) {
-        const state = (row.value as { state: string }).state;
-        if (state === "PENDING" || state === "RECLAIMABLE") ids.push(row.id);
-      }
-      return ids;
-    },
-  };
-}
 
 async function harness(t: TestContext) {
   const vaultRoot = await mkdtemp(path.join(tmpdir(), "worker-standing-"));

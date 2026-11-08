@@ -5,7 +5,7 @@ import { installReaderDatabaseQuery, readerDatabaseQuery } from "../lib/reader/d
 import { readFileSync } from "node:fs";
 import test from "./helpers/playbooks.ts";
 import type { CandidateDocument } from "../lib/candidates/corpus.ts";
-import { installFederalVotes, installOfficeholderStatements, installRegistryAuthority, installStateMoney, stateMoneyFixture, syntheticCandidateCorpus, syntheticFiledStateMoneyRecord } from "./helpers/promoted-fixtures.ts";
+import { installFederalVotes, installOfficeholderStatements, installRegistryAuthority, installStateMoney, stateMoneyFixture, syntheticCandidateCorpus, syntheticFiledStateMoneyRecord, promotedFixtureBundle } from "./helpers/promoted-fixtures.ts";
 import { recordedMeetings85701 } from "./helpers/reader-fixtures.ts";
 
 await installRegistryAuthority();
@@ -31,7 +31,6 @@ import { resolveSubjectRef } from "../lib/ask/subject.ts";
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
 import type { Contest } from "../lib/ballot/types.ts";
-import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 import { installManualValue } from "./helpers/promoted-fixtures.ts";
 import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
@@ -75,13 +74,6 @@ async function installCandidateCorpus(value: CandidateCorpus = syntheticCandidat
 
 
 
-
-function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
-  const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
-  return { stateAuthorities: current.stateAuthorities,
-    ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
-    ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
-}
 
 function served<T>(read: CivicDataReadResult<T>, what: string): T {
   if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(`${what} fixture did not install: ${read.kind} ${"detail" in read ? read.detail : ""}`);

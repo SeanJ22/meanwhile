@@ -19,10 +19,10 @@ import { decodeEntities, politeGetText } from "../http.ts";
 import type {
   Meeting,
   MeetingQuery,
-  MeetingStatus,
   NormalizeDropCounts,
   ReportingMeetingSource,
 } from "../types.ts";
+import { sittingStatus } from "../sitting-status.ts";
 import {
   accountedNormalize,
   type Accounted,
@@ -121,10 +121,6 @@ export function parseOrganizationPage(html: string): {
   }
 
   return { rows, undated };
-}
-
-function statusOf(startsAt: string, now: Date): MeetingStatus {
-  return Date.parse(startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED";
 }
 
 export function makeBoardBookSource(
@@ -229,9 +225,7 @@ export function makeBoardBookSource(
               ? `${BASE}/Public/Agenda/${wiring.config.orgId}?meeting=${row.meetingId}`
               : null,
           jurisdiction: wiring.jurisdiction,
-          status: /cancel/i.test(row.title)
-            ? "CANCELED"
-            : statusOf(startsAt, now),
+          status: sittingStatus(startsAt, /cancel/i.test(row.title), now),
           provenance: {
             sourceUrl: orgUrl,
             sourceOrg: wiring.publishingOrg,

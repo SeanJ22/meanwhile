@@ -5,7 +5,7 @@ import { ReaderMeetingDate, ReaderMeetingTime } from "@/components/ui/reader-mee
 import { useOfficePins } from "@/hooks/use-office-pins";
 import { primeMemberDirectories, primeStateMemberDirectories } from "@/hooks/use-member-directory";
 import { loadReaderState, loadStateAndPlace, mergeReaderCoverage, primeReaderState, stateCoverageForZip } from "@/lib/reader/client";
-import { detailUrlOfBody, loadAnswer, loadBoardDetail, loadZipEntry, withBoardDetail } from "@/lib/reader/answer";
+import { detailUrlOfBody, loadAnswer, loadBoardDetail, loadZipEntry, withBoardDetail } from "@/lib/reader/answer-client";
 import { beginReaderAgenda, discardReaderAgendaStart, fetchReaderResponse, readReaderJson } from "@/lib/reader/bootstrap";
 import { groupOfficePins, officeOwners, type MapBounds, type OfficePin } from "@/lib/map/office-pins";
 import { publishedMeetingPins, type MeetingPinLocation } from "@/lib/meetings/pin-location";

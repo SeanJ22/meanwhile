@@ -1,6 +1,6 @@
 import { isWellFormedZip, type ZctaCentroid, type ZipResolution } from "../geo/zcta-core.ts";
 import { beginReaderZip, discardReaderZipStart } from "./bootstrap.ts";
-import { centroidOfEntry, loadZipEntry } from "./answer.ts";
+import { centroidOfEntry, loadZipEntry } from "./answer-client.ts";
 
 export { isWellFormedZip };
 

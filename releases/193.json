@@ -1,0 +1,46 @@
+{
+  "n": 193,
+  "branch": "release/193",
+  "head_sha": "ddfe674f2f5723f889e3bee8db94e334cbb5df0b",
+  "base_river_sha": "38024964cc233e0d05903d91216ae168025231f0",
+  "main_sha": "a93fed1d534d9bdd905fa289db1c8606d528a497",
+  "lanes": [
+    {
+      "lane": "place-package-retire",
+      "steps": [
+        "PP-01"
+      ],
+      "ready_sha": "8cfcbbea235a6ab849b2836e2f5a33672d4acf35",
+      "result_sha": "25fb9231df4172a42b25cdd78c31359d648848e4"
+    },
+    {
+      "lane": "river-one-sweep",
+      "steps": [
+        "RM-02"
+      ],
+      "ready_sha": "64912c26e2690553d55575a7ef816528b6a1e522",
+      "result_sha": "72e668290c92f5e162e5fb21eb93550905f9193f"
+    },
+    {
+      "lane": "state-votes",
+      "steps": [
+        "STATE-VOTES",
+        "CX-WRITES"
+      ],
+      "ready_sha": "53cf2c08bf2560da79fd91df802d92beef8bdd5b",
+      "result_sha": "d50b28d94442e51eb499c32617de8132e1d8d096"
+    }
+  ],
+  "steps": [
+    "PP-01",
+    "RM-02",
+    "STATE-VOTES",
+    "CX-WRITES"
+  ],
+  "pr": {
+    "number": 912,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/912"
+  },
+  "ci": "running",
+  "at": "2026-11-08T13:44:44Z"
+}

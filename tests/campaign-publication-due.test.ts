@@ -6,7 +6,7 @@ import { CANDIDATE_PROFILE_LEAD } from "../lib/facts/finding-slots.ts";
 import { ROUTINE_SOURCE_TASKS, routineTaskDue, routineFailureDomainFrontier } from "../lib/civic-data/runner.ts";
 import { routineCivicDataSupervisorOutcome } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
-import { BOOTSTRAP_DDL } from "../lib/control-plane/repository/pg-schema.ts";
+import { BOOTSTRAP_DDL, CAMPAIGN_PUBLICATION_INDEXES } from "../lib/control-plane/repository/pg-schema.ts";
 
 test("committed approvals wake normal publication despite old acquisition clocks and survive restart", () => {
   const task = ROUTINE_SOURCE_TASKS.find(task => task.id === campaignPublicationTask("AZ"))!;
@@ -45,6 +45,28 @@ test("publication admission reads one committed snapshot and refuses malformed a
   assert.equal(campaignPublicationInputsDue(campaignPublicationTask("AZ"), sameCode), false,
     "an exact child receipt on the same code still suppresses the unchanged failure");
   await assert.rejects(readCampaignPublicationInputs("AZ", async () => [], "invalid"), /CODE_INVALID/);
+});
+
+test("publication history retains the greatest acknowledgement for each state and exact code",async()=>{
+  const db=new PGlite(),code="a".repeat(40),other="b".repeat(40);
+  try{
+    await db.exec("CREATE TABLE cp_log_promotion_pipeline(record jsonb); CREATE TABLE cp_log_owner_digests(record jsonb)");
+    for(const index of CAMPAIGN_PUBLICATION_INDEXES)await db.exec(index.ddl.replace("CONCURRENTLY ",""));
+    for(const state of ["AZ","AZ","AZ","AZ","AZ","AZ","AZ","oh"])
+      await db.query("INSERT INTO cp_log_promotion_pipeline VALUES($1)",[{stage:"APPROVED_FOR_PROMOTION",campaignSite:{identity:{stateCode:state}}}]);
+    for(const [kind,testedSha,counts] of [
+      ["ROUTINE_CIVIC_DATA_SUPERVISOR",code,{AZ:4}],["ROUTINE_CIVIC_DATA_SUPERVISOR",code,{AZ:3}],
+      ["ROUTINE_CIVIC_DATA_SUPERVISOR",code,{OH:1}],["ROUTINE_CIVIC_DATA_SUPERVISOR",other,{AZ:6}],
+      ["OTHER",code,{AZ:7}],["ROUTINE_CIVIC_DATA_SUPERVISOR",code,null],
+      ["ROUTINE_CIVIC_DATA_SUPERVISOR",code,{}],
+    ])await db.query("INSERT INTO cp_log_owner_digests VALUES($1)",[{runtimeOutcome:{kind,testedSha,campaignPublicationApprovalsByState:counts}}]);
+    const query=async(text:string,params:unknown[])=>(await db.query(text,params)).rows;
+    assert.deepEqual(await readCampaignPublicationInputs("AZ",query,code),{state:"AZ",approvals:7,attemptedApprovals:4});
+    assert.equal((await readCampaignPublicationInputs("AZ",query,other)).attemptedApprovals,6);
+    assert.equal((await readCampaignPublicationInputs("AZ",query)).attemptedApprovals,6);
+    assert.equal((await readCampaignPublicationInputs("AZ",query,"c".repeat(40))).attemptedApprovals,0);
+    assert.deepEqual(await readCampaignPublicationInputs("OH",query,code),{state:"OH",approvals:1,attemptedApprovals:1});
+  }finally{await db.close();}
 });
 
 test("only an exact publication child receipt acknowledges the captured input count", () => {

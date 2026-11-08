@@ -20,7 +20,7 @@ import { readFundingSnapshot } from "../lib/funding/snapshot.ts";
 import { readPopulationProjection } from "../lib/reference/acs-population.ts";
 import { nhLegislativeHolders, refreshNhSeatHolders } from "../lib/ballot/seat-holders.ts";
 import { meetingPartitionFreshnessMs } from "../lib/civic-data/contracts.ts";
-import { routineVersionFixture } from "./helpers/routine-candidate-fixture.ts";
+import { version } from "./helpers/promoted-version.ts";
 
 const noPointer: CivicDataReadStore = {
   readPromotion: async () => null,
@@ -50,7 +50,7 @@ test("canonical scalar and batch reads use the request's edge copies without a d
 });
 
 function promotedStore<T>(payload: T): CivicDataReadStore {
-  const { projection, candidate } = routineVersionFixture("federal-supported", "candidate-1", payload);
+  const { projection, candidate } = version("federal-supported", "candidate-1", payload);
   return {
     readPromotion: async <R>() => projection as unknown as PromotedProjection<R>,
     readCandidate: async () => candidate,

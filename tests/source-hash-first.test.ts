@@ -68,10 +68,19 @@ test("the real source-head selector and unchanged event rule compare current sou
     assert.ok(first.outcome.promoted, JSON.stringify(first.outcome.candidate.receipt));
     const head = await store.readSourceHead("STATE_LEGISLATOR", scope);
     assert.equal(head?.rawHashBasis, "SOURCE_CONTENT_V1");
+    const stored=(await pg.query<{candidate:{normalizedPayload:object}}>("SELECT candidate FROM civic_data_candidates WHERE id=$1",[head!.versionId])).rows[0].candidate;
+    assert.equal(Object.hasOwn(stored.normalizedPayload,"captures"),false,"the database holds source metadata, not another fetched roster");
+    const exact=first.outcome.candidate.candidate;
+    assert.deepEqual(await store.readCandidatePath(head!.versionId,["normalizedPayload"]),exact.normalizedPayload);
+    const captures=(exact.normalizedPayload as {captures:unknown[]}).captures;
+    assert.deepEqual(await store.readCandidateCaptures(head!.versionId,[url],[]),captures);
+    assert.deepEqual((await store.readCandidate(head!.versionId))?.candidate.normalizedPayload,exact.normalizedPayload);
+    const before=(await pg.query<{n:number}>("SELECT count(*)::int AS n FROM civic_data_payload_parts")).rows[0].n;
     for (const method of ["readCandidate", "readCandidatePath", "readPromotion", "readPublishedCandidateMetadata", "events"] as const)
       Object.assign(store, { [method]: async () => { throw new Error(`unchanged source read ${method}`); } });
     const confirmed = await confirmStatePeopleSource({ store, state: "az", roster, acquisitions, now: new Date().toISOString() });
     assert.ok(confirmed);
+    assert.equal((await pg.query<{n:number}>("SELECT count(*)::int AS n FROM civic_data_payload_parts")).rows[0].n,before,"the next unchanged scheduled acquisition creates no payload parts");
     const rows = (await pg.query<{ detail: string }>("SELECT detail FROM civic_data_candidate_events WHERE candidate_id=$1 ORDER BY sequence DESC LIMIT 1", [head!.versionId])).rows;
     assert.match(rows[0].detail, /RAW_HASH_UNCHANGED/);
     const bad = { sourceId: head!.sourceId, recordClass: head!.recordClass, scope, parserVersion: head!.parserVersion,

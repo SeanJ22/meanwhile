@@ -1,4 +1,4 @@
-import { geometryFiles } from "../lib/holdings/discovery.ts";
+import { loadFeatures } from "./helpers/holdings-features.ts";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
@@ -170,17 +170,6 @@ test("a place inherits other jobs' published fields before national acquisition"
 });
 
 const here = dirname(fileURLToPath(import.meta.url));
-const HOLDINGS_ROOT = join(here, "..");
-
-async function loadFeatures(): Promise<GeoFeature[]> {
-  const names = geometryFiles(HOLDINGS_ROOT);
-  const all: GeoFeature[] = [];
-  for (const name of names) {
-    const parsed = JSON.parse(await readFile(join(HOLDINGS_ROOT, name), "utf8"));
-    all.push(...(parsed.features as GeoFeature[]));
-  }
-  return all;
-}
 
 const features = await loadFeatures();
 const registry = JSON.parse(

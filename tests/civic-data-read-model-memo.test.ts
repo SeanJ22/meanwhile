@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import { beforeEach, test } from "node:test";
 
-import { routineVersionFixture } from "./helpers/routine-candidate-fixture.ts";
 import {
   clearPromotedReadModelCache,
   promotedEdgeEntryOf,
@@ -10,20 +9,9 @@ import {
   type CivicDataReadStore,
 } from "../lib/civic-data/read-model.ts";
 import { publishedCandidateMetadata, promotedPointerIdentity, type CandidateVersionReadback } from "../lib/civic-data/store.ts";
-import type {
-  CandidateVersionRecord,
-  PromotedProjection,
-  RoutineRecordClass,
-} from "../lib/civic-data/types.ts";
+import { CLASS, version, type Version } from "./helpers/promoted-version.ts";
+import type { CandidateVersionRecord, PromotedProjection, RoutineRecordClass } from "../lib/civic-data/types.ts";
 
-const CLASS: RoutineRecordClass = "FEC_FUNDING";
-
-interface Version {
-  projection: PromotedProjection;
-  candidate: CandidateVersionRecord;
-}
-
-const version = routineVersionFixture;
 
 interface SpyCounts {
   readPromotion: number;

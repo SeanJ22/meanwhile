@@ -21,10 +21,10 @@ import {
 import type {
   Meeting,
   MeetingQuery,
-  MeetingStatus,
   NormalizeDropCounts,
   ReportingMeetingSource,
 } from "../types.ts";
+import { sittingStatus } from "../sitting-status.ts";
 import {
   accountedNormalize,
   type Accounted,
@@ -798,10 +798,6 @@ function mergeSittings(lists: ScheduledSitting[][]): ScheduledSitting[] {
   return [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date));
 }
 
-function statusOf(startsAt: string, now: Date): MeetingStatus {
-  return Date.parse(startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED";
-}
-
 function shapesOf(wiring: BodySourceWiring): ScheduleShape[] {
   const raw = wiring.config.shapes ?? "weekday-list";
   return raw.split(",").map((s) => s.trim()) as ScheduleShape[];
@@ -1088,7 +1084,7 @@ export function makeSchedulePageSource(
           // The publisher's own agenda list for the month was read and names nothing on this date.
           ...(agendaUrl === null && destinyJoin === "EMPTY" ? { agendaSlotObservedEmpty: true } : {}),
           jurisdiction: wiring.jurisdiction,
-          status: sitting.canceled ? "CANCELED" : statusOf(startsAt, now),
+          status: sittingStatus(startsAt, sitting.canceled, now),
           provenance: {
             sourceUrl: sitting.pageUrl ?? wiring.config.schedulePage,
             sourceOrg: wiring.publishingOrg,

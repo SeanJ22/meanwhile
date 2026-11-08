@@ -6,7 +6,7 @@ import { pathToFileURL } from "node:url";
 import type { CivicDataReadResult, PromotedEdgeEntry } from "../../lib/civic-data/read-model.ts";
 import type { CandidateVersionRecord, PromotedProjection, RoutineRecordClass } from "../../lib/civic-data/types.ts";
 import { MemoryRoutineDataStore } from "../../lib/civic-data/store.ts";
-import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../../lib/registry/runtime-edge.ts";
+import { currentReaderAuthorityEdge, enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../../lib/registry/runtime-edge.ts";
 import { readRegistryRuntimeProjection } from "../../lib/registry/runtime-read-model.ts";
 import type { RegistryRuntimeReadModel } from "../../lib/registry/runtime-data-plane.ts";
 import {
@@ -98,6 +98,13 @@ export function installPromotedValue<T>(input: {
   return entry;
 }
 
+export function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
+  const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
+  return { stateAuthorities: current.stateAuthorities,
+    ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
+    ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
+}
+
 export function installManualValue<T>(id: ManualProductionContractId, value: T, versionId: string = `test:${id}`) {
   const contract = requiredManualProductionContract(id);
   return installPromotedValue({ recordClass: contract.recordClass, scope: contract.scope, sourceId: contract.sourceId, versionId, value });
@@ -151,9 +158,9 @@ export function registryFixtureForState(state: string, value: RegistryRuntimeRea
       [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
 }
 
-export function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataStore()): MemoryRoutineDataStore {
+export function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataStore(), value?: RegistryRuntimeReadModel): MemoryRoutineDataStore {
   const original = registryTransferImport();
-  const payload = registryFixtureForState(state), scope = stateRegistryRuntimeScope(state), contractId = stateRegistryRuntimeContractId(state);
+  const payload = registryFixtureForState(state, value), scope = stateRegistryRuntimeScope(state), contractId = stateRegistryRuntimeContractId(state);
   const civicRecords = rowKeyedCivicRecordsFor("REGISTRY_RUNTIME_BINDING", payload), digest = canonicalCivicDataHash(payload);
   const candidate = { ...original.record.candidate, scope,
     retrieval: { ...original.record.candidate.retrieval, requestedUrl: trustedLkgImportUrl(contractId) },

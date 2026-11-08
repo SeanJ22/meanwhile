@@ -1,6 +1,6 @@
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
-import { installAbsent, installManualValue, installPromotedValue, installStateLegislators } from "./helpers/promoted-fixtures.ts";
+import { installAbsent, installManualValue, installPromotedValue, installStateLegislators, promotedFixtureBundle } from "./helpers/promoted-fixtures.ts";
 import { ballotNavigationScope } from "../lib/civic-data/ballot-navigation-scope.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import assert from "node:assert/strict";
@@ -23,8 +23,6 @@ import { derivedCampaignSitesProjectionIssue, derivedCandidateRevisionId, derive
   type DerivedCampaignSiteRecord } from "../lib/civic-data/derived-campaign-sites.ts";
 import { readPlacePayloadParts } from "../lib/civic-data/place-payload-slices.ts";
 import { candidateDescriptionQualityIssue } from "../lib/candidates/blurbs.ts";
-import type { ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
-import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 
 
@@ -33,13 +31,6 @@ import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 
 
-
-function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
-  const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
-  return { stateAuthorities: current.stateAuthorities,
-    ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
-    ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
-}
 
 
 const county = "ocd-division/country:us/state:az/county:cochise";

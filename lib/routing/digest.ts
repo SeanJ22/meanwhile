@@ -1,6 +1,7 @@
 import type { CoverageSummary } from "../registry/coverage.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
 import type { Meeting } from "../sources/types.ts";
+import { normalize } from "./match.ts";
 
 /**
  * "What's going on where I live?": upcoming items, recent decisions, and who represents the reader,
@@ -48,16 +49,6 @@ const DIGEST_PHRASES: readonly string[] = [
   "whats going on in my town",
   "whats going on in my area",
 ];
-
-function normalize(text: string): string {
-  return ` ${text
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^a-z0-9 ]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()} `;
-}
 
 export interface DigestMatch {
   /** The phrase that carried it — mechanical evidence, same as a topic's. */

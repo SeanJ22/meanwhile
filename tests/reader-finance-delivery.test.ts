@@ -16,9 +16,7 @@ import { resetStateMoneyCache, stateMoneyReadState } from "../lib/funding/state-
 import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
 import type { StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
-import { installRegistryAuthority, installStateMoney, stateMoneyFixture, syntheticFiledStateMoneyRecord } from "./helpers/promoted-fixtures.ts";
-import type { ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
-import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { installRegistryAuthority, installStateMoney, stateMoneyFixture, syntheticFiledStateMoneyRecord, promotedFixtureBundle } from "./helpers/promoted-fixtures.ts";
 
 
 
@@ -28,13 +26,6 @@ import { installBallots, syntheticAzBallot } from "./helpers/synthetic-ballots.t
 
 
 
-
-function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
-  const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
-  return { stateAuthorities: current.stateAuthorities,
-    ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
-    ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
-}
 
 
 await installRegistryAuthority();

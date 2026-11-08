@@ -232,7 +232,7 @@ test("hour after hour, a record without a list stamp is decided from small rows,
     // The records written before the schedule fact existed (55 of 57 states on Oct 27) hold attempts and no list stamp.
     await pg.exec("ALTER TABLE civic_data_candidates DISABLE TRIGGER USER");
     await pg.query(`UPDATE civic_data_candidates c SET candidate = jsonb_set(c.candidate, '{excludedFacts}',
-      (SELECT jsonb_agg(f) FROM jsonb_array_elements(c.candidate->'excludedFacts') f WHERE f->>'code' <> $1))
+      (SELECT coalesce(jsonb_agg(f),'[]'::jsonb) FROM jsonb_array_elements(c.candidate->'excludedFacts') f WHERE f->>'code' <> $1))
       FROM civic_data_promotions p WHERE p.scope = $2 AND c.id = p.current_version_id`, [PORTRAIT_SCHEDULE_CODE, record]);
     await pg.exec("ALTER TABLE civic_data_candidates ENABLE TRIGGER USER");
     assert.equal((await store.readPortraitRunState(record))?.seen, null);

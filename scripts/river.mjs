@@ -1300,12 +1300,21 @@ async function settleFail(n, record, { failed, log, lanes: named, repo }) {
 /* measure                                                                    */
 /* -------------------------------------------------------------------------- */
 
-/** Cold visits per device: the window, and a normal connection as [Mbps down, Mbps up, ms latency]. */
-const DEVICE_VISITS = Object.freeze({
-  phone: { context: { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 3 }, net: [12, 3, 70] },
-  tablet: { context: { viewport: { width: 820, height: 1180 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 }, net: [30, 10, 40] },
-  desktop: { context: { viewport: { width: 1440, height: 900 } }, net: [30, 10, 40] },
+/**
+ * Cold visits per device: the window, a normal connection as [Mbps down, Mbps up, ms latency], and the CPU slowdown
+ * (a phone's processor is about 4 times slower than the runner's: Chromium's mid-tier mobile preset).
+ */
+export const DEVICE_VISITS = Object.freeze({
+  phone: { context: { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 3 }, net: [12, 3, 70], cpu: 4 },
+  tablet: { context: { viewport: { width: 820, height: 1180 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 }, net: [30, 10, 40], cpu: 1 },
+  desktop: { context: { viewport: { width: 1440, height: 900 } }, net: [30, 10, 40], cpu: 1 },
 });
+/** Puts a page's network and processor at a device's conditions through the browser's debugging protocol. */
+export async function applyConditions(cdp, { net, cpu }) {
+  const [down, up, latency] = net;
+  await cdp.send("Network.emulateNetworkConditions", { offline: false, latency, downloadThroughput: down * 125_000, uploadThroughput: up * 125_000 });
+  await cdp.send("Emulation.setCPUThrottlingRate", { rate: cpu });
+}
 /**
  * Usable, as a reader sees it: the side panel shows the place (no loading note; the count badge where the panel is a
  * sheet), the map has drawn, and its district lines are drawn: a district line layer is on the map and the map
@@ -1330,18 +1339,18 @@ async function zipTimes(zips) {
   // One guarded browser per ZIP: three cold visits of about 16 provider requests each.
   process.env.WTP_PROVIDER_REQUEST_CEILING ||= "100";
   const { launchGuarded } = await import("./browser.mts");
-  const times = Object.fromEntries(DEVICES.map((device) => [device, []]));
+  const times = Object.fromEntries(Object.keys(DEVICE_VISITS).map((device) => [device, []]));
   for (const { state, zip } of zips) {
     const browser = await launchGuarded({ label: "river-measure", headless: true, blockWrites: true, spendsProviderQuota: "maptiler" });
     try {
-      for (const device of DEVICES) {
-        const { context: options, net: [down, up, latency] } = DEVICE_VISITS[device];
+      for (const device of Object.keys(DEVICE_VISITS)) {
+        const { context: options } = DEVICE_VISITS[device];
         const context = await browser.context(options);
         let ms = null;
         try {
           const page = await context.newPage();
           const cdp = await context.newCDPSession(page);
-          await cdp.send("Network.emulateNetworkConditions", { offline: false, latency, downloadThroughput: down * 125_000, uploadThroughput: up * 125_000 });
+          await applyConditions(cdp, DEVICE_VISITS[device]);
           await page.goto(`${PUBLIC_SITE_ORIGIN}/?zip=${zip}`, { waitUntil: "commit", timeout: VISIT_LIMIT_MS });
           ms = Math.round(await (await page.waitForFunction(USABLE, undefined, { polling: "raf", timeout: VISIT_LIMIT_MS })).jsonValue());
         } catch {
@@ -1371,7 +1380,7 @@ function measuresOf(record) {
 }
 
 /** The notes under the four lines: the slowest ZIPs, the ZIPs drawn, and what each number means. */
-function measureNotes(record) {
+export function measureNotes(record) {
   const slowest = (side) => DEVICES.filter((device) => record[side]?.zips?.[device]).map((device) => `${device} ${record.zips
     .map((place, i) => ({ ...place, ms: record[side].zips[device][i] }))
     .sort((a, b) => (b.ms ?? 1e9) - (a.ms ?? 1e9)).slice(0, 3)
@@ -1381,7 +1390,7 @@ function measureNotes(record) {
     ...(record.zips.length ? [`The 50 ZIPs: ${record.zips.map(({ zip, state }) => `${zip} ${state}`).join(", ")}.`] : []),
     "",
     "Facts reaching readers: facts that went live in the 24 hours ending at the deploy, then in the first 24 hours on the release, counted once each, and only when the value is new for that thing and field (no earlier shown row holds the same value), is still the current value, and is on a reader's page (a place page built since it went live depends on its thing; a meeting counts when its body is on a place page). Replaced rows and reloads of values already shown don't count. An early read gives facts an hour over the first full hours.",
-    `ZIPs usable: one random ZIP in each of the 50 states, the same 50 before and after, each opened cold (new browser context, empty cache) on ${PUBLIC_SITE_ORIGIN} on a phone (390×844, touch, 12 Mbps down, 3 up, 70 ms), a tablet (820×1180, touch) and a desktop (1440×900), both 30 Mbps down, 10 up, 40 ms. Usable means the side panel shows the place with no loading note (with its count badge where the panel is a sheet) and the map, basemap and district lines included, has finished drawing; counted when under 3 seconds.`,
+    `ZIPs usable: one random ZIP in each of the 50 states, the same 50 before and after, each opened cold (new browser context, empty cache) on ${PUBLIC_SITE_ORIGIN} on a phone (390×844, touch, 12 Mbps down, 3 up, 70 ms, processor slowed ${DEVICE_VISITS.phone.cpu} times like a mid-range phone's), a tablet (820×1180, touch) and a desktop (1440×900), both 30 Mbps down, 10 up, 40 ms, no slowdown. Usable means the side panel shows the place with no loading note (with its count badge where the panel is a sheet) and the map, basemap and district lines included, has finished drawing; counted when under 3 seconds, timed from the start of the visit.`,
     "Database reads: response bytes (the data Neon bills) in database_transfer_hourly, both databases, in GB an hour, averaged over the 6 full hours before the deploy and the first 6 full hours after the runner switched.",
     "Lines of code: lines in every tracked .ts, .tsx, .mts, .cts, .mjs, .cjs, .js, .jsx, .css and .sql file, except .d.ts, *.min.*, node_modules, .next and public/vendor; river at the release base, then the release head.",
   ];

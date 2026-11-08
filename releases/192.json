@@ -1,0 +1,73 @@
+{
+  "n": 192,
+  "branch": "release/192",
+  "head_sha": "38024964cc233e0d05903d91216ae168025231f0",
+  "base_river_sha": "f1d8caf71de2e92b051040abce2b9b7a2752569d",
+  "main_sha": "19fc58469d71924ab94ac11123598267b2ef3100",
+  "lanes": [
+    {
+      "lane": "cx-writes",
+      "steps": [
+        "CX-WRITES"
+      ],
+      "ready_sha": "3983b204570b8b8873f7b002b0bf9f065e17ba81",
+      "result_sha": "e69235e51dbab3ada39739e8fb82653b82044fc6"
+    },
+    {
+      "lane": "line-keeper",
+      "steps": [
+        "LK-01"
+      ],
+      "ready_sha": "fc80d031c8ce03948294b52c7ed3e5da246ad192",
+      "result_sha": "c9f753d0e74be20784f87692f4de6362486f7b7d"
+    },
+    {
+      "lane": "research-cycle-exit",
+      "steps": [
+        "RC-X1",
+        "RC-X2"
+      ],
+      "ready_sha": "d66ca289db3af5b41e3a06a635f846b1b4ebe334",
+      "result_sha": "9ce3b54b755364966d5c53b55343e6698d68cdaa"
+    },
+    {
+      "lane": "river-phone-old-out",
+      "steps": [
+        "RP-02"
+      ],
+      "ready_sha": "7ec98ee676a4fd3ee7b11f28ce2a1ae435427d1b",
+      "result_sha": "97e719aff9367851d2900ea5f0ba1e483e0275ce"
+    },
+    {
+      "lane": "runner-authority",
+      "steps": [
+        "RA-01"
+      ],
+      "ready_sha": "698aacbc9bd4654d141f033f3de5d489e88e351f",
+      "result_sha": "3b5c45ca7ad71f63927bbb68df8f1e865b909246"
+    },
+    {
+      "lane": "trim-192",
+      "steps": [
+        "TR-05"
+      ],
+      "ready_sha": "76ec47c6efdb13380675e1c837ff9492e2a456cd",
+      "result_sha": "79c74d2a8455cfa28454e3ae22f08d0f982d71fb"
+    }
+  ],
+  "steps": [
+    "CX-WRITES",
+    "LK-01",
+    "RC-X1",
+    "RC-X2",
+    "RP-02",
+    "RA-01",
+    "TR-05"
+  ],
+  "pr": {
+    "number": 911,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/911"
+  },
+  "ci": "running",
+  "at": "2026-11-08T12:04:23Z"
+}

@@ -30,7 +30,7 @@ function encoded(request: Request, value: unknown, headers: Record<string, strin
   const json = Buffer.from(JSON.stringify(value)), accepts = request.headers.get("accept-encoding") ?? "";
   const base = { ...headers, "Content-Type": "application/json; charset=utf-8", "Vary": "Accept-Encoding" };
   if (/\bbr\b/.test(accepts)) return new Response(new Uint8Array(brotliCompressSync(json, { params: { [constants.BROTLI_PARAM_QUALITY]: 9, [constants.BROTLI_PARAM_SIZE_HINT]: json.length } })), { headers: { ...base, "Content-Encoding": "br" } });
-  if (/\bgzip\b/.test(accepts)) return new Response(new Uint8Array(gzipSync(json, { level: 9 })), { headers: { ...base, "Content-Encoding": "gzip" } });
+  if (/\bgzip\b/.test(accepts)) return new Response(new Uint8Array(gzipSync(json, { level: 6 })), { headers: { ...base, "Content-Encoding": "gzip" } });
   return new Response(json, { headers: base });
 }
 

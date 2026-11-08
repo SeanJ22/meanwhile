@@ -91,7 +91,7 @@ test("BAL-23: the ballot page passes its pill to the TRIGGER", () => {
 
 test("BAL-23: the open form gets its own row inside the ballot's pill strip", () => {
   // The strip is `display: flex`; without a basis the form competes with the other pills for one line.
-  const rule = /\.ballot-top-pills \.address-prompt\s*\{([^}]*)\}/.exec(css());
+  const rule = /\.ballot-top-pills > \.flex \.address-prompt\s*\{([^}]*)\}/.exec(css());
   assert.ok(rule, "the ballot pill strip no longer gives the open address form its own row");
   assert.match(rule[1], /flex:\s*1 0 100%/);
 });

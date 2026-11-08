@@ -21,6 +21,19 @@
     "number": 906,
     "url": "https://github.com/SeanJ22/meanwhile/pull/906"
   },
-  "ci": "running",
-  "at": "2026-11-08T03:58:55Z"
+  "ci": "fail",
+  "at": "2026-11-08T03:58:55Z",
+  "failed_jobs": [
+    "test (3/4)"
+  ],
+  "failed_tests": [
+    {
+      "file": "tests/reader-cache.test.ts",
+      "name": "an empty calendar's new source check queues its consuming place without rereading payloads"
+    }
+  ],
+  "returned": [
+    "cx-writes"
+  ],
+  "settled_at": "2026-11-08T04:21:42.918078Z"
 }

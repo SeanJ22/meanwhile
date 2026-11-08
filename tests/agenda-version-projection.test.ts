@@ -1,17 +1,11 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
-import { createElement } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
-import { tsImport } from "tsx/esm/api";
 
 import { classifyAgendaPublication, readerAgendaDocuments } from "../lib/ask/agenda-publication.ts";
 import type { AgendaDocument } from "../lib/meetings/agenda-documents.ts";
 
-// The native runner strips TypeScript but does not compile TSX; the one reader
-// leaf that states the version count is compiled through the existing tsx runtime.
-const { AgendaDocuments, agendaDocumentSources } = await tsImport("../components/map/popup/agenda-section.tsx", import.meta.url) as typeof import("../components/map/popup/agenda-section.tsx");
-const { Card } = await tsImport("../components/ui/card.tsx", import.meta.url) as typeof import("../components/ui/card.tsx");
+import { renderCardWithSources } from "./helpers/render-card.ts";
 
 const TUSD = "ocd-division/country:us/state:az/school_district:tucson_unified_district";
 const SITE_ROOT = "https://govboard.tusd1.org/";
@@ -70,15 +64,15 @@ function tusd499Corpus(): AgendaDocument[] {
 }
 
 function render(documents: readonly AgendaDocument[], publication: ReturnType<typeof classifyAgendaPublication>) {
-  return renderToStaticMarkup(createElement(Card, { title: "Meeting", sources: agendaDocumentSources(documents.map(view), publication) } as Parameters<typeof Card>[0], createElement(AgendaDocuments, {
-    documents: documents.map(view),
-    meetingId: documents[0]!.meetingId,
-    agendaUrl: documents[0]!.documentUrl,
-    publication,
-  })));
+  return renderCardWithSources({
+    modulePath: "./components/map/popup/agenda-section.tsx", exportName: "AgendaDocuments",
+    props: { documents: documents.map(view), meetingId: documents[0]!.meetingId,
+      agendaUrl: documents[0]!.documentUrl, publication },
+    sourceUrls: documents.map(document => document.documentUrl),
+  });
 }
 
-test("Tucson Unified 499: 88 identical re-reads of its portal page plus the site root are two index pages, never a version", () => {
+test("Tucson Unified 499: 88 identical re-reads of its portal page plus the site root are two index pages, never a version", async () => {
   // 88 identical re-reads of a publication-index page are one content, never a version or a revision.
   const corpus = tusd499Corpus();
   const held = corpus.filter((document) => document.meetingId === "diligent:tusd1:499");
@@ -102,7 +96,7 @@ test("Tucson Unified 499: 88 identical re-reads of its portal page plus the site
   assert.deepEqual(publication.supersededDocumentUrls, []);
   assert.equal(publication.currentDocumentUrl, OWN_PAGE);
 
-  const markup = render(shown.documents, publication);
+  const markup = await render(shown.documents, publication);
   assert.ok(markup.includes('data-agenda-publication="ACQUIRED_IS_PUBLICATION_INDEX"'), markup);
   assert.ok(!markup.includes("versions on file"), markup);
   assert.ok(!markup.includes("revised"), markup);
@@ -112,7 +106,7 @@ test("Tucson Unified 499: 88 identical re-reads of its portal page plus the site
   assert.ok(!markup.includes("Skip Navigation"), "the skip links are never shown as the sitting's document text");
 });
 
-test("a real revision is two versions: stated two, rendered as two rows, each address linked, with the revision wording", () => {
+test("a real revision is two versions: stated two, rendered as two rows, each address linked, with the revision wording", async () => {
   const meetingId = "legistar:example:4410";
   const firstUrl = "https://example.legistar.com/View.ashx?M=A&ID=4410&GUID=A";
   const amendedUrl = "https://example.legistar.com/View.ashx?M=A&ID=4410&GUID=B";
@@ -137,13 +131,13 @@ test("a real revision is two versions: stated two, rendered as two rows, each ad
   assert.equal(publication.revised, true);
   assert.deepEqual(publication.supersededDocumentUrls, [firstUrl]);
 
-  const markup = render(shown.documents, publication);
+  const markup = await render(shown.documents, publication);
   assert.ok(markup.includes("2 versions on file — a revised agenda is itself news"), markup);
   assert.equal(markup.match(/data-agenda-version=/g)?.length, 2, "stated N equals rendered rows");
   for (const url of [amendedUrl, firstUrl]) assert.ok(markup.includes(`href="${url.replaceAll("&", "&amp;")}"`), url);
 });
 
-test("a revision at the same address is still two versions, and the old address is not offered as the old text", () => {
+test("a revision at the same address is still two versions, and the old address is not offered as the old text", async () => {
   const meetingId = "legistar:example:4411";
   const url = "https://example.legistar.com/View.ashx?M=A&ID=4411";
   const held = [
@@ -153,7 +147,7 @@ test("a revision at the same address is still two versions, and the old address 
   const shown = readerAgendaDocuments(held, { documentsAcrossCorpus: held, meetingsAcrossCorpus: [] });
   const publication = classifyAgendaPublication({ meetingId, bodyName: "Council", documentsForMeeting: held,
     documentsAcrossCorpus: held, now: Date.parse("2026-09-10T00:00:00.000Z") });
-  const markup = render(shown.documents, publication);
+  const markup = await render(shown.documents, publication);
   assert.equal(shown.documents.length, 2);
   assert.equal(publication.revised, true);
   assert.ok(markup.includes("2 versions on file — a revised agenda is itself news"));
@@ -161,7 +155,7 @@ test("a revision at the same address is still two versions, and the old address 
   assert.ok(markup.includes("earlier version read"));
 });
 
-test("a sitting holding only publication-index pages is rendered as what it holds, with no version count and no revision", () => {
+test("a sitting holding only publication-index pages is rendered as what it holds, with no version count and no revision", async () => {
   const corpus = [
     // The site root read three times with the same words, and once after the page changed.
     row("diligent:tusd1:495", SITE_ROOT, SITE_ROOT_TEXT, "2026-08-18T12:00:00.000Z"),
@@ -183,7 +177,7 @@ test("a sitting holding only publication-index pages is rendered as what it hold
   assert.equal(publication.revised, false);
   assert.deepEqual(publication.supersededDocumentUrls, []);
 
-  const markup = render(shown.documents, publication);
+  const markup = await render(shown.documents, publication);
   assert.ok(markup.includes('data-agenda-publication="ACQUIRED_IS_PUBLICATION_INDEX"'), markup);
   assert.ok(markup.includes(`href="${SITE_ROOT}"`));
   assert.ok(!markup.includes("versions on file"), markup);

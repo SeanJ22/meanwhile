@@ -1,5 +1,5 @@
 import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
-import { validReactionTargetsFor, type ReactionAuthorityReaders } from "@/lib/reactions/authority-targets";
+import { validReactionTargetsFor, voteCastTargetIds, type ReactionAuthorityReaders } from "@/lib/reactions/authority-targets";
 import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
 import { readerRoute } from "@/lib/api/reader-route";
 import { withReaderFeatures } from "@/lib/civic-data/reader-feature-context.ts";
@@ -18,6 +18,8 @@ import {
 import { intakeWindows } from "@/lib/db/intake-windows";
 import {
   CONTEXT_RESTRICTED_VALUES,
+  VOTE_CAST_TARGET_MAX_CHARS,
+  voteCastContestPrefix,
   isPlausibleTargetId,
   isValidFreeText,
   isValidReactionKey,
@@ -47,6 +49,11 @@ const MAX_BODY_BYTES = 4096;
 
 const reactionAuthorityReaders = (divisions: readonly string[]): ReactionAuthorityReaders => ({
   candidateTargets: targetId => getCandidateTargetIds(divisions, targetId),
+  voteCastTargets: async (targetId) => {
+    const authority = await readerBallotSourceForTargetId(voteCastContestPrefix(targetId)?.slice(0, -1) ?? "", divisions);
+    if (!authority) return new Set();
+    return voteCastTargetIds(authority.source.normalize(await authority.source.fetch()), targetId);
+  },
   provisionTargets: async (targetId) => {
     const authority = await readerBallotSourceForTargetId(targetId, divisions);
     if (!authority) return new Set();
@@ -103,7 +110,7 @@ async function postWithSettings(request: Request) {
   if (!isValidReactionKey(submission.reactionKey)) {
     return Response.json({ error: "malformed reactionKey" }, { status: 400 });
   }
-  if (!isPlausibleTargetId(submission.targetId)) {
+  if (!isPlausibleTargetId(submission.targetId, submission.targetType === "VOTE_CAST" ? VOTE_CAST_TARGET_MAX_CHARS : undefined)) {
     return Response.json({ error: "malformed targetId" }, { status: 400 });
   }
   if (!isValidFreeText(submission.text)) {

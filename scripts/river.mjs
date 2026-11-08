@@ -22,7 +22,7 @@
  *   node scripts/river.mjs fold [--lanes a,b] [--order dep|a,b,...]
  *   node scripts/river.mjs migrations                    number step-named migrations on river-next
  *   node scripts/river.mjs check                         the quick check on river-next
- *   node scripts/river.mjs release <n> [--dry-run]       quick check, then release/<n> PR: run-full-ci, auto-merge
+ *   node scripts/river.mjs release <n> [--dry-run] [--growth "<reason>"]   quick check, then release/<n> PR: run-full-ci, auto-merge
  *   node scripts/river.mjs settle <n> [--ci pass|fail --log-file F --lanes a,b]   act on GitHub CI's verdict
  *   node scripts/river.mjs return <lane> --check C [--output-file F]   send a failure back (returns/<lane>.md)
  *   node scripts/river.mjs lock claim|heartbeat|release --branch B --file F --token T [--worker W --run-id R]
@@ -34,7 +34,8 @@
  * live after sweep), `fold`, `migrations`,
  * `release <n>`, then `settle <n>` once GitHub CI has finished, and `measure
  * --after` once the release is live. `release` refuses a release that grows
- * the lines of code; the other three numbers are read before and after.
+ * the lines of code unless `--growth "<reason>"` names a reviewed new feature
+ * (Sean, 2026-11-08: growth only by what is genuinely new); the other three numbers are read before and after.
  * `fold` leaves out a lane whose open return names the same READY, unless
  * `--lanes` names it.
  *
@@ -918,7 +919,7 @@ export function lock(mode, { branch, file, token, worker, runId }) {
  * CI on the release pull request is the one full test.
  * @param {{ commands?: boolean }} [options] false checks the fold and migrations only
  */
-function quickCheck({ commands = true } = {}) {
+function quickCheck({ commands = true, growth = null } = {}) {
   requireClean();
   if (git(["rev-parse", "--abbrev-ref", "HEAD"]) !== NEXT) throw new Refusal(`check out ${NEXT} first`);
   const folded = readScratch("fold.json");
@@ -944,7 +945,9 @@ function quickCheck({ commands = true } = {}) {
   }
   // The one release number known before ship: the code gets smaller or stays the same.
   const lines = { before: linesOfCode(folded.base_river_sha), after: linesOfCode(head) };
-  if (lines.after > lines.before) {
+  if (lines.after > lines.before && growth) {
+    console.log(`river check: river-next ${short(head)} grows the code by +${lines.after - lines.before} lines: ${growth}`);
+  } else if (lines.after > lines.before) {
     throw new Refusal(`river-next ${short(head)} grows the code from ${lines.before} to ${lines.after} lines (+${lines.after - lines.before}); a release keeps the code the same size or smaller`);
   }
   if (commands) {
@@ -1029,8 +1032,10 @@ async function returnCommand(lane, flags) {
  * for `settle`.
  */
 async function release(n, flags) {
-  if (!/^\d+$/.test(n ?? "")) throw new Refusal("usage: river.mjs release <n> [--dry-run]", 2);
-  const { folded, head, lines } = quickCheck({ commands: !flags["dry-run"] });
+  if (!/^\d+$/.test(n ?? "")) throw new Refusal("usage: river.mjs release <n> [--dry-run] [--growth \"<reason>\"]", 2);
+  const growth = flags.growth === undefined ? null : String(flags.growth === true ? "" : flags.growth).trim();
+  if (growth === "") throw new Refusal("--growth needs a reason: what is genuinely new in this release");
+  const { folded, head, lines } = quickCheck({ commands: !flags["dry-run"], growth });
   fetchBranches([BOARD]);
   const existing = readJson(remoteRef(BOARD), `releases/${n}.json`, null);
   if (existing && existing.head_sha !== head) throw new Refusal(`release ${n} is already recorded at ${short(existing.head_sha ?? existing.river_sha ?? "unknown")}`);
@@ -1057,7 +1062,9 @@ async function release(n, flags) {
   // The before numbers measured on the live site; a measurement that already has after numbers belongs to an earlier release.
   const saved = readScratch("measure.json");
   const measured = { ...(saved && !saved.after ? saved : { zips: [], before: {} }), lines, release: Number(n) };
-  const notes = `${body}${measuresBlock(measuresOf(measured), measureNotes(measured))}`;
+  const grew = growth && lines.after > lines.before ? growth : null;
+  const notes = `${body}${measuresBlock(measuresOf(measured), measureNotes(measured))}`
+    .replace(/^- Lines of code: .*$/m, (line) => (grew ? `${line} — new feature: ${grew}` : line));
 
   // Never two competing release candidates.
   const open = await github("GET", `repos/${repo}/pulls?state=open&base=main&per_page=100`);
@@ -1112,6 +1119,7 @@ async function release(n, flags) {
       n: Number(n), branch, head_sha: head, base_river_sha: folded.base_river_sha, main_sha: folded.main_sha ?? null,
       lanes: folded.lanes.map((lane) => ({ lane: lane.lane, steps: lane.steps, ready_sha: lane.ready_sha, result_sha: lane.result_sha })),
       steps, pr: pr ? { number: pr.number, url: pr.html_url } : old?.pr ?? null, ci: "running", at: nowIso(),
+      ...(grew ? { growth_reason: grew } : {}),
     };
     return { files: { [`releases/${n}.json`]: `${JSON.stringify(record, null, 2)}\n` }, message: `release ${n}: ${steps.length} steps at river-next ${short(head)}; GitHub CI running` };
   });

@@ -53,7 +53,7 @@ export interface TranslationEvidence {
   readonly checked: readonly { readonly field: string; readonly text: string; readonly supported: true }[];
 }
 
-export const MEASURE_WRITING_VERSION = translationHash(JSON.stringify([CARD_WRITING_RULES, "measure-passages/6"]));
+export const MEASURE_WRITING_VERSION = translationHash(JSON.stringify([CARD_WRITING_RULES, "measure-grade9/1"]));
 
 export interface MeasureTranslation extends TranslationEvidence {
   /** Complete original text is held once outside Neon; sourceText holds cited passages only. */

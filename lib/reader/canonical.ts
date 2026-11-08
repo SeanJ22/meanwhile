@@ -7,6 +7,7 @@ import { currentReaderRoute, withReaderRoute } from "../db/reader-route.ts";
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import { registerIntegrityCheckedEdgeEntries, type CivicDataReadStore, type PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import type { RoutineRecordClass } from "../civic-data/types.ts";
+import type { Query } from "../facts/publish.ts";
 import { isCivicPayloadPart } from "../civic-data/payload-codec.ts";
 import { serverReaderValue } from "./memory.ts";
 import { createHash } from "node:crypto";
@@ -231,4 +232,22 @@ export async function readCanonicalShelf(entries: readonly { recordClass: Routin
       return held.get(key) ?? { kind: "NOT_RECORDED", recordClass, scope };
     },
   };
+}
+
+/** Results-job clocks and source versions, without changing the foreground reader's shelf or fingerprint. */
+export function electionResultClockRows(query: Query, scopes: readonly { readonly name: string; readonly scope: string | null; readonly hashMD5?: string }[]) {
+  return query(`SELECT requested.name,md5(c.position) AS clock_hash,
+    CASE WHEN md5(c.position)=requested.hash THEN NULL ELSE c.position END AS position,p.current_version_id AS ballot_version,
+    c.position::jsonb#>>'{readerSlice,fingerprint}' AS reader_slice_hash
+    FROM unnest($1::text[],$2::text[],$3::text[]) requested(name,scope,hash) LEFT JOIN pass_cursor c ON c.name=requested.name
+    LEFT JOIN civic_data_promotions p ON p.record_class='BALLOT_CANDIDACY' AND p.scope=requested.scope`,
+    [scopes.map(row => row.name), scopes.map(row => row.scope), scopes.map(row => row.hashMD5 ?? null)]);
+}
+
+/** Results-job bootstrap only: its authority and already filed facts share the state read. */
+export function readBallotResultPublication(scope: string, factsSql: string, query: ReadOnlyQuery) {
+  const key = `BALLOT_CANDIDACY:${scope}`;
+  return readCanonicalShelf([{ recordClass: "BALLOT_CANDIDACY", scope }], query, {
+    text: `SELECT ${factsSql} AS facts FROM civic_data_promotions p WHERE p.key=$1`, params: [key],
+  });
 }

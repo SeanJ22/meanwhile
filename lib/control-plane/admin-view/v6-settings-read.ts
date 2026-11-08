@@ -1,4 +1,5 @@
 import "../../ballot/voting-refresh.ts";
+import "../../ballot/vote-phase.ts";
 import "../../ask/model.ts";
 import "../../hunt/settings.ts";
 import "../../design/copy-settings.ts";

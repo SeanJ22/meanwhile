@@ -10,12 +10,19 @@ export async function renderCardWithSources({ modulePath, exportName, props, sou
   props: object;
   sourceUrls: readonly string[];
 }): Promise<string> {
+  const [markup] = await renderWithOpenSources(`import React from "react"; import {createRoot} from "react-dom/client";
+    import {Card} from "./components/ui/card.tsx";
+    import {${exportName} as Content} from ${JSON.stringify(modulePath)};
+    createRoot(document.getElementById("root")).render(<Card title="Fixture card" sources={[]}><Content {...${JSON.stringify(props)}} /></Card>);`, sourceUrls);
+  assert.ok(markup);
+  return markup;
+}
+
+/** Read the actual mounted surfaces after their Sources controls have been opened. */
+export async function renderWithOpenSources(contents: string, sourceUrls: readonly string[], selector = ".reader-card"): Promise<string[]> {
   const output = await build({
     stdin: {
-      contents: `import React from "react"; import {createRoot} from "react-dom/client";
-        import {Card} from "./components/ui/card.tsx";
-        import {${exportName} as Content} from ${JSON.stringify(modulePath)};
-        createRoot(document.getElementById("root")).render(<Card title="Fixture card" sources={[]}><Content {...${JSON.stringify(props)}} /></Card>);`,
+      contents,
       resolveDir: process.cwd(), sourcefile: "card-source-fixture.tsx", loader: "tsx",
     },
     bundle: true, write: false, outfile: ".scratch/card-source-fixture.js",
@@ -37,17 +44,21 @@ export async function renderCardWithSources({ modulePath, exportName, props, sou
   let browser: Awaited<ReturnType<typeof launchGuarded>> | null = null;
   try {
     browser = await launchGuarded({ label: "card-source-leaf" });
-    const context = await browser.context();
+    const context = await browser.context({ timezoneId: "UTC" });
     const page = await context.newPage();
     await page.goto(`http://127.0.0.1:${address.port}/`);
+    await page.locator("[data-card-sources]").first().waitFor();
+    for (const button of await page.getByRole("button", { name: /^Sources/ }).all()) {
+      if (await button.getAttribute("aria-expanded") === "false") await button.click();
+    }
     await page.waitForFunction(urls => {
       const links = [...document.querySelectorAll<HTMLAnchorElement>("[data-card-sources] a")].map(link => link.href);
       return urls.every(url => links.includes(url));
     }, sourceUrls);
-    assert.equal(await page.locator("[data-card-sources]").count(), 1);
-    assert.equal(await page.getByRole("button", { name: /^Sources/ }).count(), 1);
-    await page.getByRole("button", { name: /^Sources/ }).click();
-    const markup = await page.locator(".reader-card").evaluate(card => card.outerHTML);
+    const count = await page.locator("[data-card-sources]").count();
+    assert.ok(count > 0);
+    assert.equal(await page.getByRole("button", { name: /^Sources/ }).count(), count);
+    const markup = await page.locator(selector).evaluateAll(nodes => nodes.map(node => node.outerHTML));
     await context.close();
     return markup;
   } finally {

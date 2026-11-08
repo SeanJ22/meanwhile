@@ -483,6 +483,12 @@ test("fold, migrations, the quick check, release, settle and the lock protocol w
     assert.equal(grown.code, 1, grown.out);
     assert.match(grown.out, /grows the code from 9 to 11 lines \(\+2\)/);
     assert.equal(remoteSha(riverCheckout, "release/1"), "", "a release that grows the code pushes no release branch");
+    // --growth: an empty reason is refused; a reviewed reason passes and rides the Lines of code line.
+    assert.match(river(riverCheckout, "release", "1", "--growth", "").out, /--growth needs a reason/);
+    const allowed = river(riverCheckout, "release", "1", "--dry-run", "--growth", "election results");
+    assert.equal(allowed.code, 0, allowed.out);
+    assert.match(allowed.out, /grows the code by \+2 lines: election results/);
+    assert.match(allowed.out, /Lines of code: 9 before, 11 after \(\+2\) — new feature: election results/);
     sh(riverCheckout, ["rm", "--quiet", "lib/old.ts"]);
     sh(riverCheckout, ["commit", "--quiet", "-m", "River: remove unused code"]);
 

@@ -16,19 +16,25 @@
  * - MEASURE_PROVISION: a measure is decomposed into contested provisions and the reaction attaches to a
  *   provision (`<contestId>#<slug>`, lib/ballot/measure-provisions.ts), never to the measure as a
  *   whole. All five provision kinds collect.
+ * - VOTE_CAST: "How did you vote? Tell us why." asked after a contest's polls close. The target is
+ *   `<contestId>@<optionId>` (a candidate id, YES/NO for a measure, or NONE for "Didn't vote on this").
+ *   YES records that option, one per reader per contest; NO withdraws it and the row is deleted. The
+ *   answers are never shown to anyone but the reader on their own device, and the free text never appears.
  */
 export type ReactionTargetType =
   | "FEDERAL_VOTE"
   | "CANDIDATE"
   | "FUNDING_TOTAL_REACTION"
   | "CONTRIBUTOR_REACTION"
-  | "MEASURE_PROVISION";
+  | "MEASURE_PROVISION"
+  | "VOTE_CAST";
 export const REACTION_TARGET_TYPES: ReactionTargetType[] = [
   "FEDERAL_VOTE",
   "CANDIDATE",
   "FUNDING_TOTAL_REACTION",
   "CONTRIBUTOR_REACTION",
   "MEASURE_PROVISION",
+  "VOTE_CAST",
 ];
 
 /** The funding reaction classes — the filter a ripcord pull applies. */
@@ -71,7 +77,7 @@ export const REACTION_VALUES: ReactionValue[] = [
  * different instruments are not comparable in any direction. Every row carries its scale version, the
  * aggregator groups by it, and the break is dated in `SCALE_BREAKS`. Nothing migrates.
  */
-export type ScaleVersion = 1 | 2 | 3;
+export type ScaleVersion = 1 | 2 | 3 | 4;
 
 export interface ReactionScale {
   version: ScaleVersion;
@@ -103,6 +109,13 @@ export const SCALE_V3_CONTRIBUTIONS: ReactionScale = {
   question: "How do you feel about these contributions?",
 };
 
+/** The vote-cast instrument, v4: YES records the option, NO withdraws it. */
+export const SCALE_V4_VOTE_CAST: ReactionScale = {
+  version: 4,
+  values: ["YES", "NO"],
+  question: "How did you vote? Tell us why.",
+};
+
 /**
  * When the funding instrument changed, and from what to what.
  *
@@ -132,6 +145,13 @@ export const SCALE_BREAKS: Array<{
     to: 3,
     why: "Until this date the contributions control asked 'how do you feel about how this campaign is funded' while sitting over a table of named contributors, so an answer could be about the campaign's finances or about the donors on screen and the row does not say which. The current wording asks about the contributions only. Same five values; two populations, never pooled.",
   },
+  {
+    targetTypes: ["VOTE_CAST"],
+    date: "2026-11-07",
+    from: 1,
+    to: 4,
+    why: "After a contest's polls close its card asks how the reader voted instead of whether they would vote for the candidate. The answer is a different instrument from the v1 candidate question; VOTE_CAST rows start on v4 and are never pooled with it.",
+  },
 ];
 
 /**
@@ -142,6 +162,7 @@ export const SCALE_BREAKS: Array<{
  */
 export function scaleForTargetType(targetType: ReactionTargetType): ReactionScale {
   if (targetType === "CONTRIBUTOR_REACTION") return SCALE_V3_CONTRIBUTIONS;
+  if (targetType === "VOTE_CAST") return SCALE_V4_VOTE_CAST;
   return FUNDING_REACTION_TYPES.includes(targetType) ? SCALE_V2_FUNDING : SCALE_V1;
 }
 
@@ -176,6 +197,7 @@ export function questionForRow(
   if (version === scaleForTargetType(targetType).version) {
     return questionForTargetType(targetType);
   }
+  if (version === 4) return SCALE_V4_VOTE_CAST.question;
   if (version === 3) return SCALE_V3_CONTRIBUTIONS.question;
   if (version === 2) return SCALE_V2_FUNDING.question;
   // v1 means two different questions depending on what was being asked
@@ -209,6 +231,7 @@ export const QUESTION_REWORDINGS: Array<{
 /** The values a scale admits, for a lookup that reads as a lookup. */
 export function valuesForScaleVersion(version: ScaleVersion): ReactionValue[] {
   if (version === 2) return SCALE_V2_FUNDING.values;
+  if (version === 4) return SCALE_V4_VOTE_CAST.values;
   if (version === 3) return SCALE_V3_CONTRIBUTIONS.values;
   return SCALE_V1.values;
 }
@@ -285,8 +308,22 @@ export function isValidReactionKey(value: unknown): value is string {
  * Roll-call ids are short; candidacy ids and lineup-nominee keys
  * (`<contestId>|<name>`) run longer. The cap keeps the column honest.
  */
-export function isPlausibleTargetId(value: unknown): value is string {
-  return typeof value === "string" && value.length > 0 && value.length <= 128;
+export function isPlausibleTargetId(value: unknown, maxChars = 128): value is string {
+  return typeof value === "string" && value.length > 0 && value.length <= maxChars;
+}
+
+/** A contest id can run past 140 characters on its own, so a vote-cast target (`<contestId>@<optionId>`) gets a longer cap. */
+export const VOTE_CAST_TARGET_MAX_CHARS = 512;
+
+/** "Didn't vote on this": the option every contest offers beside its candidates. */
+export const VOTE_CAST_NONE = "NONE";
+
+export const voteCastTargetId = (contestId: string, optionId: string): string => `${contestId}@${optionId}`;
+
+/** The `<contestId>@` prefix every answer of one contest shares, or null when the id has no contest part. */
+export function voteCastContestPrefix(targetId: string): string | null {
+  const at = targetId.indexOf("@");
+  return at > 0 ? targetId.slice(0, at + 1) : null;
 }
 
 // ── The optional verbatim ──────────────────────────────────────────────

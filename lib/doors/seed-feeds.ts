@@ -10,6 +10,7 @@ import { ROUTINE_SOURCE_CONTRACTS } from "../civic-data/contracts.ts";
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
 import { sourceAuthority } from "../civic-data/source-authority.ts";
 import { feedDoorId, normalizeHost, seedDerivedDoors, type DoorDraft, type DoorRepository } from "./registry.ts";
+import { electionResultsDoorDrafts } from "../election-results/schedule.ts";
 
 const MINUTE = 60_000;
 
@@ -115,7 +116,7 @@ export function feedDoorDrafts(): DoorDraft[] {
       authorityMode: "REGISTERED_SOURCE_ROUTES",
     });
   }
-  return [...feeds.values()].map(draftFor);
+  return [...[...feeds.values()].map(draftFor), ...electionResultsDoorDrafts()];
 }
 
 export async function seedFeedDoors(input: {

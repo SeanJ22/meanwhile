@@ -4,6 +4,43 @@ import { useCallback, useState } from "react";
 
 import { AddressPrompt } from "@/components/address/address-prompt";
 
+/** Results wait until the existing ballot has painted and accepts input. */
+export function afterBallotReady(start: () => void): () => void {
+  let stopped = false, queued = false, firstFrame = 0, secondFrame = 0, idle: number | undefined;
+  let observer: MutationObserver | undefined;
+  const run = () => { if (!stopped) { performance.mark("ballot-results-ready"); start(); } };
+  const loaded = () => {
+    if (stopped || !document.querySelector("article[data-contest-id]")) return;
+    const pills = [...document.querySelectorAll<HTMLButtonElement>("[data-battlecard-pill]")];
+    const controls = pills.length ? pills : [...document.querySelectorAll<HTMLButtonElement>('[data-kind="pick"] button')];
+    const check = () => {
+      if (stopped || queued || controls.some(node => node.disabled)) return;
+      queued = true;
+      observer?.disconnect();
+      firstFrame = requestAnimationFrame(() => {
+        secondFrame = requestAnimationFrame(() => {
+          if (stopped) return;
+          if ("requestIdleCallback" in window) idle = window.requestIdleCallback(run, { timeout: 1_000 });
+          else run();
+        });
+      });
+    };
+    observer = new MutationObserver(check);
+    for (const control of controls) observer.observe(control, { attributes: true, attributeFilter: ["disabled"] });
+    check();
+  };
+  if (document.readyState === "complete") loaded();
+  else window.addEventListener("load", loaded, { once: true });
+  return () => {
+    stopped = true;
+    observer?.disconnect();
+    window.removeEventListener("load", loaded);
+    cancelAnimationFrame(firstFrame);
+    cancelAnimationFrame(secondFrame);
+    if (idle !== undefined) window.cancelIdleCallback(idle);
+  };
+}
+
 export function BallotNarrowing({
   zip,
   electionDate,

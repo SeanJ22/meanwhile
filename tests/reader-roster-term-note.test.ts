@@ -11,17 +11,24 @@ import { rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
 import { BODY_ROSTERS, HELD_BODY_ROSTERS, ROSTER_READER_DISPOSITIONS } from "./fixtures/held-body-rosters.ts";
 import { seatHolderById } from "../lib/registry/server.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
-import { OfficialTermNote } from "../components/officials/official-term-note.tsx";
-import { Card } from "../components/ui/card.tsx";
-import { personCardSources } from "../lib/officials/card-sources.ts";
+import { renderWithOpenSources } from "./helpers/render-card.ts";
 import { getRegistryRuntimeReadModel, selectedRegistryStates, withRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import { statesForRegistryDivisions } from "../lib/civic-data/state-scopes.ts";
 
+// Browser outerHTML keeps apostrophes and quotes literal in text nodes.
+const browserText = (value: string | null | undefined) => renderToStaticMarkup(createElement("span", null, value))
+  .slice(6, -7).replaceAll("&#x27;", "'").replaceAll("&quot;", '"');
+
 /** The actual term-note leaf inside its card, whose footer owns the source link. */
-function renderTermNotes(holders: readonly SeatHolder[]): string[] {
-  return holders.map(holder => renderToStaticMarkup(createElement(Card, {
-    title: holder.name, sources: personCardSources(holder),
-  }, createElement(OfficialTermNote, { holder }))));
+function renderTermNotes(holders: readonly SeatHolder[]): Promise<string[]> {
+  return renderWithOpenSources(`
+    import React from "react"; import {createRoot} from "react-dom/client";
+    import {Card} from "./components/ui/card.tsx";
+    import {OfficialTermNote} from "./components/officials/official-term-note.tsx";
+    import {personCardSources} from "./lib/officials/card-sources.ts";
+    createRoot(document.getElementById("root")).render(<>{${JSON.stringify(holders)}.map((holder,index) =>
+      <Card key={index} title={holder.name} sources={personCardSources(holder)}><OfficialTermNote holder={holder} /></Card>)}</>);
+  `, [...new Set(holders.flatMap(holder => holder.sourceUrl ? [holder.sourceUrl] : []))]);
 }
 
 test("every eligible roster term note survives canonical holder lookup and the plain-language reader sentence", async () => {
@@ -29,7 +36,7 @@ test("every eligible roster term note survives canonical holder lookup and the p
   assert.ok(held.length > 0);
   const eligible = BODY_ROSTERS.flatMap(roster => roster.members).filter(member => member.termNote);
   const holders = BODY_ROSTERS.flatMap(roster => rosterHoldersForBody(roster.bodyId));
-  const markupByHolder = new Map(renderTermNotes(holders).map((markup, index) => [holders[index].id, markup]));
+  const markupByHolder = new Map((await renderTermNotes(holders)).map((markup, index) => [holders[index].id, markup]));
   const wholeRegistry = getRegistryRuntimeReadModel(), selectedStates = selectedRegistryStates();
   const stateFixtures = new Map(selectedStates.map(state => [state, registryFixtureForState(state, wholeRegistry)]));
   const canonicalHolder = async (holder: SeatHolder, bodyId: string) => {
@@ -51,7 +58,7 @@ test("every eligible roster term note survives canonical holder lookup and the p
     assert.equal((await canonicalHolder(holder, roster.bodyId))?.termNote, source.termNote);
     const markup = markupByHolder.get(holder.id)!;
     if (!source.termNote) { assert.doesNotMatch(markup, /data-official-term-note/); continue; }
-    const escaped = renderToStaticMarkup(createElement("span", null, source.termNote)).slice(6, -7);
+    const escaped = browserText(source.termNote);
     const sentence = markup.match(/data-official-term-note="[^"]*"[^>]*><p>(.*?)<\/p>/)?.[1];
     assert.ok(sentence, holder.id);
     const words = (value: string) => value.replace(/\bin\b/g, "").replace(/[.,]/g, "").replace(/\s+/g, " ").trim();
@@ -59,7 +66,7 @@ test("every eligible roster term note survives canonical holder lookup and the p
     assert.doesNotMatch(sentence, /Roster term|appointment note|[“”]/);
     assert.ok(markup.includes(`data-official-term-note="${holder.id}"`));
     assert.ok(markup.includes(roster.sourceUrl.replaceAll("&", "&amp;")));
-    assert.ok(markup.includes(renderToStaticMarkup(createElement("span", null, readerText(roster.sourceOrg, "title"))).slice(6, -7)));
+    assert.ok(markup.includes(browserText(readerText(roster.sourceOrg, "title"))), `${holder.id}: ${roster.sourceOrg}`);
     assert.equal((markup.match(/data-card-sources=/g) ?? []).length, 1);
     rendered++;
   }
@@ -67,20 +74,20 @@ test("every eligible roster term note survives canonical holder lookup and the p
   for (const row of ROSTER_READER_DISPOSITIONS.filter(row => row.state === "IDENTITY_UNRESOLVED")) assert.equal(await seatHolderById(row.sourceId), null);
 });
 
-test("shared term-note leaf never derives a note from a date or attaches an unresolved roster row", () => {
+test("shared term-note leaf never derives a note from a date or attaches an unresolved roster row", async () => {
   const holder = BODY_ROSTERS.flatMap(roster => rosterHoldersForBody(roster.bodyId)).find(row => row.termNote)!;
-  assert.doesNotMatch(renderTermNotes([{ ...holder, termNote: null, termEnd: "2027-01-01" }])[0], /data-official-term-note/);
+  assert.doesNotMatch((await renderTermNotes([{ ...holder, termNote: null, termEnd: "2027-01-01" }]))[0], /data-official-term-note/);
   const aliases = ROSTER_READER_DISPOSITIONS.filter(row => row.state === "EXACT_DUPLICATE");
   assert.ok(aliases.length > 0);
   for (const row of aliases) assert.ok(BODY_ROSTERS.every(roster => !roster.members.some(member => member.id === row.sourceId)));
 });
 
-test("roster-source link label never supplies a missing note, publisher or read date", () => {
+test("roster-source link label never supplies a missing note, publisher or read date", async () => {
   const holder = BODY_ROSTERS.flatMap(roster => rosterHoldersForBody(roster.bodyId)).find(row => row.termNote && row.sourceUrl && row.provenance)!;
   assert.ok(holder, "The control must start from an actual sourced roster note");
   const noPublisher = { ...holder, provenance: null };
-  const [markup, withoutNote, withoutUrl] = renderTermNotes([noPublisher, { ...noPublisher, termNote: null }, { ...noPublisher, sourceUrl: null }]);
-  const escapedNote = renderToStaticMarkup(createElement("span", null, holder.termNote)).slice(6, -7);
+  const [markup, withoutNote, withoutUrl] = await renderTermNotes([noPublisher, { ...noPublisher, termNote: null }, { ...noPublisher, sourceUrl: null }]);
+  const escapedNote = browserText(holder.termNote);
   assert.ok(markup.includes(escapedNote.replace(/^Elected /, "Elected in ")), "The held note survives the missing publisher field");
   assert.ok(markup.includes(`href="${holder.sourceUrl!.replaceAll("&", "&amp;")}"`));
   assert.ok(markup.includes("data-card-sources"), "The observed URL remains inside Sources");

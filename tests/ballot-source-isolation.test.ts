@@ -168,6 +168,10 @@ test("reaction intake opens only the authority named by its submitted target fam
       calls.push("measure");
       return new Set(["measure:one"]);
     },
+    voteCastTargets: () => {
+      calls.push("vote-cast");
+      return new Set(["contest@NONE"]);
+    },
     refreshFunding: async () => {
       calls.push("funding");
       throw new Error("PLANTED_FEC_AUTHORITY_UNAVAILABLE");
@@ -188,6 +192,10 @@ test("reaction intake opens only the authority named by its submitted target fam
   calls.length = 0;
   assert.ok((await validReactionTargetsFor("MEASURE_PROVISION", "measure:one", readers)).has("measure:one"));
   assert.deepEqual(calls, ["measure"], "measure intake opened an unrelated authority");
+
+  calls.length = 0;
+  assert.ok((await validReactionTargetsFor("VOTE_CAST", "contest@NONE", readers)).has("contest@NONE"));
+  assert.deepEqual(calls, ["vote-cast"], "vote-cast intake opened an unrelated authority");
 
   calls.length = 0;
   await assert.rejects(

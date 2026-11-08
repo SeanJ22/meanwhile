@@ -66,6 +66,8 @@ export function placeFileRow(file: PlaceFile, read: PlaceFileRead): Row | null {
 /** The files a read of places is made from. */
 export interface PlaceFileSource {
   readonly file: (id: string) => Promise<PlaceFile | null>;
+  /** Whether the place is one of this state's published places: a ZIP crossing a state line names the places of the other side too. */
+  readonly has: (id: string) => boolean;
   /** A board folded into another is read as the board it was folded into. */
   readonly canonicalBody: (id: string) => string;
   readonly routing: () => Promise<EverydayRoutingProjection | null>;
@@ -82,7 +84,7 @@ export function selectedPlaceIds(input: PlaceInput, canonicalBody: (id: string) 
 
 /** The same package a read of the saved pages makes, from the places' files alone. */
 export async function loadPlaceFromFiles(input: PlaceInput, source: PlaceFileSource): Promise<PlacePackage> {
-  const wanted = selectedPlaceIds(input, source.canonicalBody);
+  const wanted = selectedPlaceIds(input, source.canonicalBody).filter(source.has);
   const empty = !input.allBodies && !input.divisionIds.length && !input.bodyIds?.length;
   const read: PlaceFileRead = { history: input.includeHistory ?? false, empty, includeAgenda: input.includeAgenda ?? false, bodyFactsOnly: input.bodyFactsOnly ?? false, zip: input.placeId !== undefined };
   const state = input.state.toUpperCase();

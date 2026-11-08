@@ -10,9 +10,11 @@ export function zipEntry(index: PlaceIndex, zip: string): (PlaceEntry & { readon
   const row = index.zips[zip];
   if (!row) return null;
   const ids = (list: readonly number[]) => list.map(n => lengthen(index.base, index.places[n]![0]));
-  const own = ids(row[3]), fringe = ids(row[5]);
-  return { ids: own, partial: ids(row[4]), samples: 0, states: row[2], districts: ids(row[6]),
-    qualifiedDistricts: [...new Set(own.flatMap(id => districtFamilyKey(id) ?? []))], ...(fringe.length ? { fringe } : {}) };
+  const [elsewhere = [[], [], []]] = row.slice(8) as [string[][]?];
+  const whole = (own: readonly number[], more: readonly string[]) => [...ids(own), ...more].sort();
+  const all = whole(row[3], elsewhere[0]!), fringe = whole(row[5], elsewhere[2]!);
+  return { ids: all, partial: whole(row[4], elsewhere[1]!), samples: 0, states: row[2], districts: ids(row[6]),
+    qualifiedDistricts: [...new Set(all.flatMap(id => districtFamilyKey(id) ?? []))], ...(fringe.length ? { fringe } : {}) };
 }
 
 /** The state's answer for a ZIP, made from the state's statewide part and the shares in the files of the ZIP's divisions. */

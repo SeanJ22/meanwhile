@@ -178,12 +178,12 @@ async function dueStates(facts: Query, prints: Record<string, string>): Promise<
 }
 
 /**
- * Copies the state once, cuts its package by division, and lets the copy go. The national shelf is emptied around the cut: read from the copy it
- * holds no President, and what it held then must not be what the national file is made from.
+ * Copies the state once, cuts its package by division, and lets the copy go. The national shelf is held before the cut, so the cut reads it from
+ * memory, and emptied after it: a check made from the copy would find no President, and that must not be what the national file is made from.
  */
 async function cutOnce(deps: PlaceFilesDeps, state: string): Promise<Cut> {
+  await deps.national();
   const copy = await deps.openMirror(state);
-  forgetNationalShelf();
   try {
     return await withStateSeam(copy.seam, () => withPlaceMapReads(async () => {
       const full = await readStatePackage(state);
@@ -216,7 +216,7 @@ async function statePass(deps: PlaceFilesDeps, now: number): Promise<{ readonly 
     memory.pass = { state, todo: [...new Set([...ids, ...(first ? [...memory.cut.shares.keys()] : [])])], done: c.active.done };
   }
   const pass = memory.pass!, cut = memory.cut!, batch = pass.todo.slice(pass.done, pass.done + BATCH), fresh: string[] = [];
-  const pages = new Map((await deps.facts(`${PLACE_FILE_PAGE_SQL} AND p.place_id=ANY($1::text[])`, [batch])).map(row => [String(row.id), row]));
+  const pages = new Map((await deps.facts(`${PLACE_FILE_PAGE_SQL} AND p.place_id=ANY($1::text[])`, [batch.filter(id => !have.files.has(id))])).map(row => [String(row.id), row]));
   for (const id of batch) {
     const name = have.files.get(id), kept = name ? await getFile<PlaceFile>(deps.store, name, true) : null, page = pages.get(id);
     const base = kept ?? (page ? await buildPlaceFile(deps.facts, page) : { v: 1 as const, id, kind: "place" as const, state, version: 0, builtAt: 0, readAt: now, variants: {} });

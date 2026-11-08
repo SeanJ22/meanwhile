@@ -47,8 +47,8 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "people-portraits-refresh.mts": 448,
   // ZP-01: the cold ZIP turn on a production copy peaked at 835,284,992 bytes; add 5%, round up to MiB.
   "rebuild-place-pages.mts": 837,
-  // SPN-01PF: the first hundreds of California's places after the state copy and cut: 1,702 MiB peak resident (maxRSS), plus 5%, rounded up to MiB.
-  "place-files-lane.mts": 1787,
+  // SPN-01PF: California's state pass on a copy of production, 4,840 places after the state copy and cut: 1,942 MiB peak resident (maxRSS), plus 5%, rounded up to MiB.
+  "place-files-lane.mts": 2040,
   "campaign-finance-az-pima-transactions.mts": 368,
   "assemble-ballot-package.mts": STATE_PUBLICATION_PEAK_MIB,
   "ballot-navigation-refresh.mts": NAVIGATION_PUBLICATION_PEAK_MIB,

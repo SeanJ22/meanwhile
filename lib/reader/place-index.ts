@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import type { Query } from "../facts/publish.ts";
 import { readStateZipPlaces } from "../place-map/reader.ts";
 import { readZipLocations } from "../place-map/locations.ts";
@@ -7,8 +8,11 @@ import { stateDivisionId } from "./state-share.ts";
  * One light index per state: every place of the state with what a map needs to choose it, and every ZIP with its places and its point. A place is
  * `[id, kind, name, parent, file, centerLat, centerLng, west, south, east, north]`: kind 0 is a place and 1 a board, the parent is a position in
  * `places` (-1 when it has none), and the file is the name of the place's file. The box is the place's boundary and the center is the box's center.
- * A ZIP is `[lat, lng, states, ids, partial, fringe, districts]`, its places as positions in `places`; its districts are the Census districts reaching
- * into it, which its state's answer is made from beside its ids.
+ * A ZIP is `[lat, lng, states, ids, partial, fringe, districts, key]`, its places as positions in `places`; its districts are the Census districts reaching
+ * into it, which its state's answer is made from beside its ids. Its key is a short hash of the names of every file its answer reads in this state
+ * (its places, the state's own file, the national file): it moves only when one of those files does. The answer's address is the keys of every state
+ * the ZIP touches and the shown-window day in US Eastern (see answerKey). A ZIP across a state line also names, after its key, the ids, partial ids and
+ * fringe ids that are not this state's places, which the place map gives it whole.
  */
 export interface PlaceIndex {
   readonly v: 1;
@@ -20,7 +24,7 @@ export interface PlaceIndex {
   readonly places: readonly (readonly [string, 0 | 1, string, number, string, ...(number | null)[]])[];
   /** Board names folded into the boards they became. */
   readonly aliases: Readonly<Record<string, string>>;
-  readonly zips: Readonly<Record<string, readonly [number | null, number | null, readonly string[], readonly number[], readonly number[], readonly number[], readonly number[]]>>;
+  readonly zips: Readonly<Record<string, readonly [number | null, number | null, readonly string[], readonly number[], readonly number[], readonly number[], readonly number[], string, ...(readonly (readonly string[])[])[]]>>;
 }
 
 export interface PlaceMeta { readonly id: string; readonly kind: "place" | "body"; readonly name: string; readonly parent: string | null; readonly box: readonly number[] | null }
@@ -65,7 +69,12 @@ export function buildPlaceIndex(state: string, national: string, files: Readonly
   });
   const listed = (list: readonly string[]) => list.flatMap(id => at.has(id) ? [at.get(id)!] : []);
   return { v: 1, state, national, base, places, aliases,
-    zips: Object.fromEntries(Object.entries(zips).map(([zip, row]) => [zip, [row.point[0], row.point[1], row.states, listed(row.ids), listed(row.partial), listed(row.fringe), listed(row.districts)] as const])) };
+    zips: Object.fromEntries(Object.entries(zips).map(([zip, row]) => {
+      const read = [...new Set([stateDivisionId(state), ...row.ids, ...row.fringe, ...row.districts])].sort().flatMap(id => files.get(id) ?? []);
+      return [zip, [row.point[0], row.point[1], row.states, listed(row.ids), listed(row.partial), listed(row.fringe), listed(row.districts),
+        createHash("sha256").update([...read, national].join("|")).digest("hex").slice(0, 10),
+        ...([row.ids, row.partial, row.fringe].map(list => list.filter(id => !at.has(id))) as readonly (readonly string[])[]).some(list => list.length) ? [[row.ids, row.partial, row.fringe].map(list => list.filter(id => !at.has(id)))] : []] as const];
+    })) };
 }
 
 /** What the lane knows of an index it published: where each place's file is, what was known of each place, and its ZIPs. */
@@ -76,5 +85,10 @@ export function readPlaceIndex(index: PlaceIndex): { files: Map<string, string>;
     meta.set(ids[n]!, { id: ids[n]!, kind: row[1] ? "body" : "place", name: row[2], parent: row[3] >= 0 ? ids[row[3]]! : null, box: row[7] === null || row[7] === undefined ? null : [row[7], row[8]!, row[9]!, row[10]!] });
   }
   const named = (list: readonly number[]) => list.map(n => ids[n]!);
-  return { files, meta, zips: Object.fromEntries(Object.entries(index.zips).map(([zip, row]) => [zip, { point: [row[0], row[1]] as const, states: row[2], ids: named(row[3]), partial: named(row[4]), fringe: named(row[5]), districts: named(row[6]) }])) };
+  return { files, meta, zips: Object.fromEntries(Object.entries(index.zips).map(([zip, row]) => [zip, { point: [row[0], row[1]] as const, states: row[2], ids: [...named(row[3]), ...row[8]?.[0] ?? []], partial: [...named(row[4]), ...row[8]?.[1] ?? []],
+    fringe: [...named(row[5]), ...row[8]?.[2] ?? []], districts: named(row[6]) }])) };
 }
+
+/** The address of a ZIP's assembled answer: the keys of the ZIP in each state it touches, and the day (US Eastern) whose meetings it shows. */
+export const answerKey = (keys: readonly string[], now: Date): string =>
+  createHash("sha256").update([...keys, now.toLocaleDateString("en-CA", { timeZone: "America/New_York" })].join("|")).digest("hex").slice(0, 12);

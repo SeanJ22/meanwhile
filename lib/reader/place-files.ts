@@ -60,6 +60,7 @@ export function openPlaceFiles(store: ReaderArtifactStore) {
     const at = new Map(held.index.places.map(row => [lengthen(held.index.base, row[0]), row[4]]));
     if (!national.has(held.pointer.national)) national.set(held.pointer.national, keptFile<NationalFile>(store, held.pointer.national));
     return {
+      has: id => at.has(id),
       file: async id => { const name = at.get(id); return name ? keptFile<PlaceFile>(store, name) : null; },
       canonicalBody: id => held.index.aliases[id] ?? id,
       routing: async () => (await national.get(held.pointer.national))?.routing ?? null,

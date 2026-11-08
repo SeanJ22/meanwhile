@@ -10,7 +10,7 @@ import { contentHash, fileKey, loadPlaceFromFiles, type PlaceFile } from "../lib
 import { getFile, indexPointerKey, openPlaceFiles, putFile, READER_INDEX_TAG, type IndexPointer, type NationalFile } from "../lib/reader/place-files.ts";
 import { closePlaceFilesLane, placeFilesTurn } from "../lib/reader/place-files-lane.ts";
 import { servePlaceFile, servePlaceIndexPointer } from "../lib/reader/place-files-serve.ts";
-import { buildPlaceIndex, type PlaceIndex } from "../lib/reader/place-index.ts";
+import { answerKey, buildPlaceIndex, type PlaceIndex } from "../lib/reader/place-index.ts";
 import { packPlaceContext } from "../lib/reader/place-ready.ts";
 import { composeState, cutState, stateDivisionId } from "../lib/reader/state-share.ts";
 import { stateAnswerFromFiles, zipEntry } from "../lib/reader/zip-files.ts";
@@ -118,6 +118,11 @@ test("SPN-01PF: a place is read from its file and the national file alone", asyn
     const zips = { "85701": { point: [32.2, -110.9] as const, states: ["AZ"], ids: [A], partial: [], fringe: [], districts: [] } };
     const index = await putFile(store, buildPlaceIndex("AZ", national.name, new Map([[A, file.name]]), new Map(), {}, zips));
     await store.writeJsonPointer(indexPointerKey("AZ"), { index: index.name, national: national.name }, null);
+    const keyOf = (name: string) => buildPlaceIndex("AZ", national.name, new Map([[A, name]]), new Map(), {}, zips).zips["85701"]![7];
+    assert.equal(keyOf(file.name), keyOf(file.name));
+    assert.notEqual(keyOf(file.name), keyOf("f".repeat(32)), "the key moves when a file its answer reads is replaced");
+    assert.notEqual(answerKey(["k"], new Date("2026-11-08T12:00:00Z")), answerKey(["k"], new Date("2026-11-09T12:00:00Z")), "and when the Eastern day does");
+    assert.equal(answerKey(["k"], new Date("2026-11-09T03:00:00Z")), answerKey(["k"], new Date("2026-11-08T23:00:00Z")), "the day is the Eastern one");
     installFactReader(async () => { throw new Error("a read from files never reads the database"); });
     const place = await loadPlaceFromFiles({ state: "AZ", divisionIds: [A] }, await openPlaceFiles(store).source("AZ"));
     assert.equal(place.registry, null);

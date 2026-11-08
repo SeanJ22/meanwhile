@@ -237,14 +237,14 @@ export async function readCanonicalShelf(entries: readonly { recordClass: Routin
 /** How long a card keeps the time its sources were last checked before that alone is worth rebuilding it. */ export const CHECKED_EVERY_MS = 24 * 3_600_000;
 /** `text` without the moments a source was read at and the bytes it gave: those moving on alone change nothing a card shows but when it was last checked. */
 export const UNSTAMPED_SQL = (text: string) => `regexp_replace(${text},'"(collectedAt|lastFreshAt|coordinateCheckedAt|generatedAt|retrievedAt|rawHash|byteCount)": ?("[^"]*"|[0-9]+|null)','','g')`;
-/** The calendar partitions of these boards (by the family keys and the boards' encoded ids), with their headers when `$3` asks, and members too when `$4` does (else an empty list) and their last unchanged confirmation, in scope order. */
+/** The calendar partitions of these boards (by the family keys and the boards' encoded ids), with their headers and members when `$3` asks and their last unchanged confirmation, in scope order. */
 export const MEETING_PARTITIONS_SQL = `SELECT p.scope,p.key,p.current_version_id AS version,
     CASE WHEN $3::boolean THEN reader_payload_value(CASE WHEN p.scope LIKE 'source:derived:family:%'
       THEN (header-'meetings'-'agendaDocuments'-'derivedMembers'-'sources') || jsonb_build_object('sources',coalesce((
         SELECT jsonb_agg(reader_payload_node(s.item)-'acquisitions' ORDER BY s.ordinal_index) FROM reader_payload_members(header->'sources') s),'[]'::jsonb))
       ELSE header-'meetings'-'agendaDocuments'-'derivedMembers' END) END AS header,
-    CASE WHEN $3::boolean AND header ? 'derivedMembers' THEN CASE WHEN NOT $4::boolean THEN '[]'::jsonb ELSE coalesce((SELECT jsonb_agg(reader_payload_value(d.item) ORDER BY d.ordinal_index)
-      FROM reader_payload_members(header->'derivedMembers') d),'[]'::jsonb) END END AS members,
+    CASE WHEN $3::boolean AND header ? 'derivedMembers' THEN coalesce((SELECT jsonb_agg(reader_payload_value(d.item) ORDER BY d.ordinal_index)
+      FROM reader_payload_members(header->'derivedMembers') d),'[]'::jsonb) END AS members,
     (SELECT e.detail FROM civic_data_candidate_events e WHERE e.candidate_id=p.current_version_id AND left(e.detail,26)='UNCHANGED_CONFIRMATION_V1 '
       ORDER BY e.sequence DESC LIMIT 1) AS confirmation,
     md5((SELECT floor(extract(epoch FROM c.retrieved_at)/${CHECKED_EVERY_MS / 1000}) FROM civic_data_candidates c WHERE c.id=p.current_version_id)||${UNSTAMPED_SQL("(header-'meetings'-'agendaDocuments'-'sources')::text||coalesce((SELECT jsonb_agg(CASE WHEN jsonb_typeof(reader_payload_node(s.item))='object' THEN reader_payload_node(s.item)-'acquisitions' ELSE reader_payload_node(s.item) END ORDER BY s.ordinal_index) FROM reader_payload_members(header->'sources') s),'[]'::jsonb)::text")}) AS shown

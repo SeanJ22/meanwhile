@@ -47,3 +47,31 @@ test("with a whole batch of marks always waiting, every other look gives places 
     assert.equal((await db.query("SELECT count(*)::int AS n FROM work WHERE kind='slice' AND status='done'"))[0]!.n, 40, "two batches of twenty");
   } finally { await db.pg.close(); }
 });
+
+test("a backfill builds the places' entity cards together and the boards' meetings cards in small groups, and a board that fails does not stop the places", async () => {
+  const { db } = await open(5);
+  try {
+    const boards = Array.from({ length: 7 }, (_, i) => `az:city:b${i}#governing`), bad = boards[4]!;
+    for (const [i, id] of boards.entries()) {
+      await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body',$1,'AZ')", [id]);
+      await db.query("INSERT INTO entity_place(entity_id,place_id,boundary_year,placement_basis) VALUES($1,$2,0,'SERVICE_AREA')", [id, place(i % 5 + 1)]);
+    }
+    const asked: string[][] = [];
+    const facts: typeof db.query = async (text, params = []) => {
+      if (text.startsWith("SELECT id,kind,state FROM entity WHERE id=ANY")) {
+        const ids = (params[0] as string[]).filter(id => id.startsWith("az:")); if (ids.length) asked.push(ids);
+        if (ids.includes(bad)) throw new Error("Query read timeout");
+      }
+      return db.query(text, params);
+    };
+    const lines: string[] = [];
+    const turn = await sliceTurn({ list: workList(db.query, { owner: "lane" }), facts, log: line => lines.push(line) });
+    assert.equal(turn.backfilled, 5);
+    assert.ok(asked.every(ids => ids.length <= 3), "no group of boards is larger than three");
+    assert.equal((await db.query("SELECT count(*)::int AS n FROM place_slice WHERE card='agenda' AND place_id LIKE 'ocd-division/%'"))[0]!.n, 5, "every place has all its slices");
+    assert.equal((await db.query("SELECT count(*)::int AS n FROM place_slice WHERE card='agenda' AND place_id LIKE 'az:%'"))[0]!.n, 6, "six of the seven boards are built");
+    assert.equal(lines.length, 1);
+    assert.ok(lines[0]!.includes(bad) && lines[0]!.includes("Query read timeout"), "the failed board is named with its reason");
+    assert.ok(JSON.parse(String((await db.query("SELECT position FROM pass_cursor WHERE name='slices:backfill'"))[0]!.position)).after, "the cursor moved on");
+  } finally { await db.pg.close(); }
+});

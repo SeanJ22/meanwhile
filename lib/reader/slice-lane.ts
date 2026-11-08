@@ -5,7 +5,7 @@ import type { WorkList, WorkRow } from "../core/work.ts";
 import type { IndependentRuntimeLane } from "../ops/independent-runtime-pass.ts";
 import { invalidateReaderCache, type ReaderCachePurger } from "./cache.ts";
 import { cardsAsBuilt } from "./slice-meetings.ts";
-import { boardsToBuild, buildSlices, LAST_CARD, MEETING_CARDS, SLICE_CARDS, writeSlices, type SliceCard } from "./slices.ts";
+import { boardsToBuild, buildSlices, ENTITY_CARDS, LAST_CARD, MEETING_CARDS, writeSlices, type SliceCard } from "./slices.ts";
 
 /** The lane's name on the read meter. Its bytes per hour are metered under it, so the breaker slows it alone if it ever reads far more than its own normal. */
 export const SLICE_JOB = { id: "slices", databaseBytesPerRun: 32_000_000 } as const;
@@ -16,6 +16,9 @@ const BACKFILL_PLACES = 100;
 const BACKFILL_ZIPS = 25;
 /** ZIP groups looked through in one go when their places already have slices. */
 const ZIP_LOOKS = 40;
+/** Subjects whose meetings cards are first built together. A board's older calendars took 2-7 seconds each to read alone (production, 8 Nov), against a 30 second limit, so three boards stay near 20 seconds at worst; a place's meetings read only its state's one family calendar, so twenty go together. */
+const BOARD_MEETINGS_GROUP = 3;
+const PLACE_MEETINGS_GROUP = 20;
 const BACKFILL_PAUSE_MS = 3_000;
 /** What the lane may move an hour, over both databases and everything it does: marked slices, first slices, purges, claiming and finishing. Each go puts the time its bytes take to come due on a tab, kept across the lane's starts; nothing goes while the tab is owed, marked slices go before first slices, and marks the allowance cannot reach wait their turn. */
 export const SLICE_BYTES_PER_HOUR = 27_000_000;
@@ -39,6 +42,8 @@ const spent = (): number => processNeonBytes().reduce((sum, hour) => sum + hour.
 const tab = { until: 0, loaded: false };
 export const owedMs = (bytes: number): number => Math.ceil(bytes * 1.05 / SLICE_BYTES_PER_HOUR * 3_600_000);
 
+const chunks = <T,>(list: readonly T[], size: number): T[][] => Array.from({ length: Math.ceil(list.length / size) }, (_, i) => list.slice(i * size, (i + 1) * size));
+
 /** Work that ignores the turn's end cannot hold the turn open past it. */
 const untilEnd = <T,>(end: AbortSignal | undefined, work: Promise<T>): Promise<T> => end ? Promise.race([work, new Promise<never>((_, reject) => {
   if (end.aborted) reject(end.reason); else end.addEventListener("abort", () => reject(end.reason), { once: true }); })]) : work;
@@ -55,29 +60,22 @@ async function make(facts: Query, wanted: Map<string, Set<SliceCard>>, purge?: R
   return written;
 }
 
-/** Rebuilds the slices the Slide marked. A slice that reads the same as the one held is not written. A batch that fails is built again one subject at a time: the ones that build are finished, and only a subject that fails goes back (waiting longer after each failure) with its name and reason on a turn line. */
+/** Rebuilds the slices the Slide marked, each subject on its own: a board's older calendars take seconds to read, and twenty read together run past the database's statement limit. A slice that reads the same as the one held is not written. A subject that builds is finished; one that fails alone goes back (waiting longer after each failure) with its name and reason on a turn line, and the rest go on. */
 async function rebuildMarked(list: WorkList, facts: Query, end?: AbortSignal, purge?: ReaderCachePurger, log: (line: string) => void = () => undefined): Promise<SliceTurn> {
   const claims = await list.claim("slice", CLAIM_LIMIT);
   if (!claims.length) return NOTHING;
   const bySubject = new Map<string, WorkRow[]>();
   for (const claim of claims) bySubject.set(claim.subjectId!, [...bySubject.get(claim.subjectId!) ?? [], claim]);
-  const wantedOf = (subjects: readonly string[]) => new Map(subjects.map(subject => [subject, new Set(bySubject.get(subject)!.map(claim => claim.field as SliceCard))]));
   let written = 0;
-  const finishAll = async (subjects: readonly string[]) => { for (const subject of subjects) for (const claim of bySubject.get(subject)!) await list.finish(claim); };
-  const settled = { done: false };
-  if (bySubject.size > 1) {
-    try { written = await untilEnd(end, make(facts, wantedOf([...bySubject.keys()]), purge)); await finishAll([...bySubject.keys()]); settled.done = true; }
-    catch { if (end?.aborted) { for (const claim of claims) await list.release(claim); throw end.reason; } }
-  }
-  if (!settled.done) {
-    for (const [subject, mine] of bySubject) {
-      try { written += await untilEnd(end, make(facts, wantedOf([subject]), purge)); await finishAll([subject]); }
-      catch (error) {
-        if (end?.aborted) { for (const claim of claims) await list.release(claim).catch(() => false); throw end.reason; }
-        const reason = error instanceof Error ? error.message || "failed" : String(error);
-        for (const claim of mine) await list.later(claim, reason);
-        log(`Slices: ${subject} (${mine.map(claim => claim.field).join(", ")}) failed, try ${mine[0]!.attempts}: ${reason}; the rest of the batch went on`);
-      }
+  for (const [subject, mine] of bySubject) {
+    try {
+      written += await untilEnd(end, make(facts, new Map([[subject, new Set(mine.map(claim => claim.field as SliceCard))]]), purge));
+      for (const claim of mine) await list.finish(claim);
+    } catch (error) {
+      if (end?.aborted) { for (const claim of claims) await list.release(claim).catch(() => false); throw end.reason; }
+      const reason = error instanceof Error ? error.message || "failed" : String(error);
+      for (const claim of mine) await list.later(claim, reason);
+      log(`Slices: ${subject} (${mine.map(claim => claim.field).join(", ")}) failed, try ${mine[0]!.attempts}: ${reason}; the rest of the batch went on`);
     }
   }
   return { claimed: claims.length, built: bySubject.size, written, backfilled: 0 };
@@ -107,7 +105,7 @@ async function nextPlaces(facts: Query, held: BackfillCursor): Promise<{ readonl
 }
 
 /** Gives every place that lacks any of its slices its first, from the places most readers see to the rest. When all have them, new places are looked for once a day. */
-async function backfill(facts: Query, now: Date, purge?: ReaderCachePurger): Promise<SliceTurn & { readonly done: boolean }> {
+async function backfill(facts: Query, now: Date, purge?: ReaderCachePurger, end?: AbortSignal, log: (line: string) => void = () => undefined): Promise<SliceTurn & { readonly done: boolean }> {
   const held = JSON.parse(await readPassCursor(facts, BACKFILL_CURSOR) ?? "{}") as BackfillCursor;
   if (held.doneAt && now.getTime() - Date.parse(held.doneAt) < SWEEP_EVERY_MS) return { ...NOTHING, done: true };
   const { places, cursor, finished } = await nextPlaces(facts, held.doneAt ? { zipsDone: true } : held);
@@ -115,9 +113,19 @@ async function backfill(facts: Query, now: Date, purge?: ReaderCachePurger): Pro
     await writePassCursor(facts, BACKFILL_CURSOR, JSON.stringify(finished ? { doneAt: now.toISOString() } : cursor));
     return { ...NOTHING, done: finished };
   }
-  const wanted = new Map<string, Set<SliceCard>>(places.map(place => [place, new Set<SliceCard>(SLICE_CARDS)]));
-  for (const board of await boardsToBuild(facts, places)) wanted.set(board, new Set<SliceCard>(MEETING_CARDS));
-  const built = wanted.size, written = await make(facts, wanted, purge);
+  // The places' entity cards are quick to read and go together. A meetings card also reads the board's older calendars, seconds each, so those go in small groups.
+  const boards = await boardsToBuild(facts, places);
+  let written = await make(facts, new Map<string, Set<SliceCard>>(places.map(place => [place, new Set<SliceCard>(ENTITY_CARDS)])), purge);
+  const meetings = (subjects: readonly string[]) => new Map<string, Set<SliceCard>>(subjects.map(subject => [subject, new Set<SliceCard>(MEETING_CARDS)]));
+  for (const group of [...chunks(places, PLACE_MEETINGS_GROUP), ...chunks(boards, BOARD_MEETINGS_GROUP)]) {
+    try { written += await untilEnd(end, make(facts, meetings(group), purge)); continue; }
+    catch (error) { if (end?.aborted) throw end.reason; if (group.length === 1) { log(`Slices: ${group[0]} failed its first meetings slices: ${error instanceof Error ? error.message : String(error)}; the rest went on`); continue; } }
+    for (const subject of group) {
+      try { written += await untilEnd(end, make(facts, meetings([subject]), purge)); }
+      catch (error) { if (end?.aborted) throw end.reason; log(`Slices: ${subject} failed its first meetings slices: ${error instanceof Error ? error.message : String(error)}; the rest went on`); }
+    }
+  }
+  const built = places.length + boards.length;
   await writePassCursor(facts, BACKFILL_CURSOR, JSON.stringify(cursor));
   return { claimed: 0, built, written, backfilled: places.length, done: false };
 }
@@ -126,7 +134,7 @@ async function backfill(facts: Query, now: Date, purge?: ReaderCachePurger): Pro
 export async function sliceTurn(input: { readonly list: WorkList; readonly facts: Query; readonly now?: Date; readonly turnEnd?: AbortSignal; readonly purge?: ReaderCachePurger; readonly log?: (line: string) => void;
   /** Kept by the caller across looks: set when the marks last filled a whole batch. */ readonly owed?: { backfill: boolean } }): Promise<SliceTurn & { readonly idle: boolean }> {
   const owed = input.owed ?? { backfill: false };
-  const first = async () => { const turn = await untilEnd(input.turnEnd, backfill(input.facts, input.now ?? new Date(), input.purge)); return { ...turn, claimed: 0, idle: turn.done }; };
+  const first = async () => { const turn = await untilEnd(input.turnEnd, backfill(input.facts, input.now ?? new Date(), input.purge, input.turnEnd, input.log)); return { ...turn, claimed: 0, idle: turn.done }; };
   if (owed.backfill) {
     owed.backfill = false;
     const turn = await first();

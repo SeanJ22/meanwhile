@@ -1,0 +1,35 @@
+{
+  "n": 191,
+  "branch": "release/191",
+  "head_sha": "f1d8caf71de2e92b051040abce2b9b7a2752569d",
+  "base_river_sha": "326ec16319cfe1c194cbaf027ebc771e11b74429",
+  "main_sha": "522d62c28e1376b2a6a0a8ca1abc1d74c30d4e28",
+  "lanes": [
+    {
+      "lane": "map-fetch",
+      "steps": [
+        "MP-02"
+      ],
+      "ready_sha": "584b6563c8ee3b8885711051fb4f0e462855514d",
+      "result_sha": "dc87a318a86f26bdfcee6197a35bbade0adefd8c"
+    },
+    {
+      "lane": "river-phone",
+      "steps": [
+        "RP-01"
+      ],
+      "ready_sha": "7cd905f80c7fad77a161a15488667beac5a377ef",
+      "result_sha": "906a0a79689d20414f03580e6b597f78fc4d39dc"
+    }
+  ],
+  "steps": [
+    "MP-02",
+    "RP-01"
+  ],
+  "pr": {
+    "number": 910,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/910"
+  },
+  "ci": "running",
+  "at": "2026-11-08T10:02:41Z"
+}

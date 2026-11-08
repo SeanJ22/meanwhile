@@ -3,29 +3,29 @@
 lane: election-results-map
 owner: election-results-map
 writer: the election-results-map lane
-check: carries held CX-ELECTION-RESULTS per-visit ballot query; conflicts with river; lacks proof lines
+check: carries returned CX (size); +6,160 lines; conflicts with river
 ready: no step ids unknown
-river: 4639e9a619fb687d31690587cc20568e3bb4f508
-at: 2026-11-08T05:59:59Z
+river: f1d8caf71de2e92b051040abce2b9b7a2752569d
+at: 2026-11-08T12:57:45Z
 state: returned
-fix_subject: fix:4e340fb2
-fix: River · stream/election-results-map — carries held CX-ELECTION-RESULTS per-visit ballot query; conflicts with river; lacks proof lines failed for election-results-map: - Merge current river and resolve the conflict.
+fix_subject: fix:c931ff1f
+fix: River · stream/election-results-map — carries returned CX (size); +6,160 lines; conflicts with river failed for election-results-map: READY 4c3067d39 on stream/election-results-map returned by River on 2026-11-08, not folded.
 
 ## Failure
 
 ```
-READY 28c607601 on stream/election-results-map held by River on 2026-11-08, not folded.
+READY 4c3067d39 on stream/election-results-map returned by River on 2026-11-08, not folded.
 
 Why:
-1. It carries the held CX-ELECTION-RESULTS commits (df7cc590 is an ancestor), including the per-visit ballot query BALLOT_RESULT_VERSION_SQL in lib/ballot/election-results.ts used by lib/reader/canonical.ts. Sean holds that code until a READY shows ballot load times no slower than river.
-2. It conflicts with river: release 188 (CX-WRITES) removed lib/core/slice-marks.ts, which the CX publisher and runner tests import.
-3. The READY message lacks both proof lines River's fold requires: "connected end to end" and "still works on the next scheduled run", each with evidence.
+1. It carries cx-election-results READY f189064bd, which River returned today for growing the code by 4,481 lines (rulings §5: every release keeps the code the same size or smaller; scripts/river.mjs release refuses a release that grows it).
+2. Against river 38024964c (release 192) this READY is 118 files, +11,698 / −5,538 = +6,160 lines.
+3. It conflicts with river (merge-tree reports conflicts after releases 191–192).
 
 What to fix before the next READY:
-- Wait for the cx-election-results lane's fixed READY (per-visit query gone, ballot load times no slower than river, slice-marks reconciled with river), then merge that READY instead of df7cc590; or carry no CX commits at all.
-- Merge current river and resolve the conflict.
-- Measure ballot and results-map load times on river and on this branch, cold, phone/tablet/desktop, the way a reader sees them (district lines drawn), and put the numbers in the READY.
-- State both proof lines with evidence.
+- Wait for cx-election-results to post a READY that is net zero lines or smaller and re-measured on current river, then merge that READY (not f189064bd).
+- Bring this lane's own additions to net zero or below (delete what the results map replaces; reuse existing map helpers).
+- Merge current river and resolve the conflicts.
+- Measure ballot and results-map load times on river and on this branch the way a reader sees them (cold; phone with CPU slowed 4x, tablet, desktop; district lines drawn) and put the numbers in the READY. Keep both proof lines.
 ```
 
 ## Repair

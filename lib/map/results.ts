@@ -1,4 +1,6 @@
 import { officeIdentity } from "../officials/office-identity.ts";
+import { flippedParty, winnersOf } from "../ballot/results.ts";
+import { partyKey, seatCounts, type PartyKey, type SeatCounts } from "../ballot/scorecard-view.ts";
 import type { BallotSet, Contest } from "../ballot/types.ts";
 import type { BallotResultFacts, CandidateResult, ContestResult } from "../ballot/election-results.ts";
 import type { NationalCongressSummary } from "../election-results/summary.ts";
@@ -9,14 +11,9 @@ import type { NationalCongressSummary } from "../election-results/summary.ts";
  * `DistrictResult`.
  */
 
-export type ResultParty = "D" | "R" | "O";
-/** A seat's state: a party that won it, or `C` while it is still being counted. */
-export type SeatParty = ResultParty | "C";
+/** The ballot scorecard's party keys and seat counts, so the map and the scorecard count the same way. */
+export type ResultParty = PartyKey;
 export type ContestStatus = "counting" | "called" | "certified" | "runoff" | "unopposed" | "pending";
-
-export interface ResultSeat {
-  party: SeatParty;
-}
 
 export interface ResultCandidate {
   name: string;
@@ -41,7 +38,9 @@ export interface ResultContest {
 export interface DistrictResult {
   ocdId: string;
   status: ContestStatus;
-  seats: ResultSeat[];
+  /** Seats up here, and who holds them so far. */
+  seats: number;
+  counts: SeatCounts;
   /** The party that gained a seat here, when the source says a seat flipped, and how many seats flipped (null when it does not say). */
   flipTo: ResultParty | null;
   flipSeats: number | null;
@@ -50,19 +49,18 @@ export interface DistrictResult {
 
 /** The seats of one district, folded over every contest held in it. */
 export function districtResult(contests: readonly ResultContest[]): DistrictResult {
-  const seats: ResultSeat[] = [];
-  const candidates: ResultCandidate[] = [];
-  let status: ContestStatus = contests[0].status;
-  let flipTo: ResultParty | null = null, flipSeats: number | null = null, flipUnknown = false;
+  const candidates: ResultCandidate[] = [], won: Record<string, number> = {};
+  let status: ContestStatus = contests[0].status, seats = 0, flipTo: ResultParty | null = null, flipSeats: number | null = null, flipUnknown = false;
   for (const contest of contests) {
-    const winners = contest.candidates.filter(candidate => candidate.result === "won");
-    for (let index = 0; index < contest.seats; index += 1) seats.push({ party: winners[index]?.party ?? "C" });
+    seats += contest.seats;
+    for (const candidate of contest.candidates) if (candidate.result === "won") won[candidate.party] = (won[candidate.party] ?? 0) + 1;
+    candidates.push(...contest.candidates);
     flipTo ??= contest.flip?.to ?? null;
     if (contest.flip) { if (contest.flip.seats === null) flipUnknown = true; else flipSeats = (flipSeats ?? 0) + contest.flip.seats; }
-    candidates.push(...contest.candidates);
     if (contest.status === "counting" || contest.status === "pending" || contest.status === "runoff") status = contest.status;
   }
-  return { ocdId: contests[0].ocdId, status, seats, flipTo, flipSeats: flipUnknown ? null : flipSeats, candidates };
+  const decided = Object.values(won).reduce((sum, count) => sum + count, 0);
+  return { ocdId: contests[0].ocdId, status, seats, counts: seatCounts(won, Math.max(0, seats - decided)), flipTo, flipSeats: flipUnknown ? null : flipSeats, candidates };
 }
 
 export function resultsByDistrict(contests: readonly ResultContest[]): Record<string, DistrictResult> {
@@ -74,10 +72,10 @@ export function resultsByDistrict(contests: readonly ResultContest[]): Record<st
 /** How a district is drawn. */
 export type FillClass = ResultParty | "split" | "counting";
 
-export function fillClass(result: DistrictResult): FillClass {
-  const parties = new Set(result.seats.map(seat => seat.party));
-  if (parties.has("C")) return "counting";
-  return parties.size > 1 ? "split" : [...parties][0] as ResultParty;
+export function fillClass({ counts }: Pick<DistrictResult, "counts">): FillClass {
+  if (counts.counting > 0) return "counting";
+  const parties = (["D", "R", "O"] as const).filter(party => counts[party] > 0);
+  return parties.length > 1 ? "split" : parties[0] ?? "counting";
 }
 
 /** The party that gained a seat in this district, when the source says a seat changed hands. */
@@ -103,9 +101,6 @@ export function districtTitle(ocdId: string): string {
 
 /* ------------------------------------------- the results job's documents --- */
 
-export const partyOf = (label: string | null | undefined): ResultParty =>
-  /^d/i.test(label ?? "") ? "D" : /^r/i.test(label ?? "") ? "R" : "O";
-
 /** A contest the map draws: a legislative or U.S. House district, or a state's U.S. Senate seat. Governor and other statewide offices share the state's division and are not drawn. */
 const drawn = (contest: Contest) => parseDistrictOcd(contest.ocdId) !== null
   || (STATE_DIVISION.test(contest.ocdId) && officeIdentity(contest.title, contest.ocdId) === "us_senator");
@@ -122,12 +117,11 @@ export function resultContests(ballot: Pick<BallotSet, "contests" | "candidacies
   return ballot.contests.flatMap(contest => {
     const filed = factFor<ContestResult>(facts, contest);
     if (!filed || !drawn(contest)) return [];
-    const candidates = ballot.candidacies.filter(row => row.contestId === contest.id).map((row): ResultCandidate => {
-      const result = factFor<CandidateResult>(facts, row);
-      return { name: `${row.givenName} ${row.familyName}`.trim(), party: partyOf(row.partyLabel), incumbent: row.incumbent === true,
-        result: result?.won ? "won" : result?.runoff ? "runoff" : null, votes: result?.votes ?? null };
-    });
-    const gained = filed.flipped && filed.gainedByParty ? partyOf(filed.gainedByParty) : null;
+    const ran = ballot.candidacies.filter(row => row.contestId === contest.id).map(row => ({ row, result: factFor<CandidateResult>(facts, row) }));
+    const winners = new Set(winnersOf(ran).map(entry => entry.row));
+    const candidates = ran.map(({ row, result }): ResultCandidate => ({ name: `${row.givenName} ${row.familyName}`.trim(), party: partyKey(row.partyLabel) ?? "O",
+      incumbent: row.incumbent === true, result: winners.has(row) ? "won" : result?.runoff ? "runoff" : null, votes: result?.votes ?? null }));
+    const gained = flippedParty(filed);
     return [{ ocdId: contest.ocdId, status: filed.status, seats: Math.max(1, filed.seatsToFill ?? contest.voteFor ?? 1),
       flip: gained ? { to: gained, seats: filed.seatsFlipped ?? null } : null, candidates }];
   });
@@ -142,14 +136,10 @@ export function nationalResults(summary: Pick<NationalCongressSummary, "states">
   return Object.fromEntries(Object.entries(summary.states).flatMap(([state, offices]) => {
     const row = offices[office];
     if (!row || row.reportedRaces === 0) return [];
-    const seats: ResultSeat[] = [
-      ...Object.entries(row.seatsNow).flatMap(([party, count]) => Array.from({ length: count }, () => ({ party: partyOf(party) }))),
-      ...Array.from({ length: row.stillCounting }, () => ({ party: "C" as const })),
-    ];
-    const winners = new Set(seats.filter(seat => seat.party !== "C").map(seat => seat.party));
+    const counts = seatCounts(row.seatsNow, row.stillCounting), seats = counts.D + counts.R + counts.O + counts.counting;
+    const winners = (["D", "R", "O"] as const).filter(party => counts[party] > 0);
     const ocdId = stateOcd(state);
-    return [[ocdId, { ocdId, status: row.stillCounting > 0 ? "counting" as const : "called" as const, seats,
-      flipTo: row.seatsFlipped > 0 && winners.size === 1 ? [...winners][0] as ResultParty : null,
-      flipSeats: row.seatsFlipped, candidates: [] }]];
+    return [[ocdId, { ocdId, status: row.stillCounting > 0 ? "counting" as const : "called" as const, seats, counts,
+      flipTo: row.seatsFlipped > 0 && winners.length === 1 ? winners[0] : null, flipSeats: row.seatsFlipped, candidates: [] }]];
   }));
 }

@@ -29,10 +29,10 @@ export interface Scorecard {
 }
 
 /** "D", "Democratic" and "Democrat" are the Democrats; "R" and "Republican" the Republicans; every other label is other. */
-const partyKey = (label: string | null | undefined): PartyKey | null =>
+export const partyKey = (label: string | null | undefined): PartyKey | null =>
   !label ? null : /^(?:d|democrat(?:ic)?(?: party)?)$/i.test(label.trim()) ? "D" : /^(?:r|republican(?: party)?)$/i.test(label.trim()) ? "R" : "O";
 
-function seatCounts(seats: Readonly<Record<string, number>>, counting: number): SeatCounts {
+export function seatCounts(seats: Readonly<Record<string, number>>, counting: number): SeatCounts {
   const counts: SeatCounts = { D: 0, R: 0, O: 0, counting };
   for (const [label, count] of Object.entries(seats)) {
     if (/^vacant$/i.test(label)) continue;

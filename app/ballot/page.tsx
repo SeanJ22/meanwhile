@@ -161,6 +161,8 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { ResultAccordion, ResultCard } from "@/components/ballot/result-card";
 import { LiveCandidateResult, LiveMeasureBody, LiveMeasureSummary, LiveRaceSummary } from "@/components/ballot/live-results";
 import { ResultsFeedProvider } from "@/components/ballot/results-feed";
+import { SeeTheMap } from "@/components/ballot/see-the-map";
+import { jurisdictionFromOcdId } from "@/lib/coverage/states";
 import { shortDate } from "@/lib/ballot/results";
 import { stateName } from "@/lib/facts/entity-read";
 import { ScorecardCard } from "@/components/ballot/scorecard";
@@ -1478,6 +1480,7 @@ export default readerRoute("/ballot", async function BallotPage({
   );
   })();
   void contents.catch(() => {});
+  const homeAbbr = set?.election.state ?? askOcdIds.map(jurisdictionFromOcdId).find(Boolean)?.usps ?? null;
   return { contents, controls: (
     <>
       {zip && <>
@@ -1487,7 +1490,7 @@ export default readerRoute("/ballot", async function BallotPage({
         </div>
         <Link href={`/about-area?zip=${zip}`} prefetch={false} className="ballot-top-pill">About this area</Link>
         <BallotAskPill zip={zip} ocdIds={askOcdIds} activeSubjects={askSubjects} />
-        <Link href="/" prefetch={false} className="rc-map-pill">See the map <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2 6h7M6.5 3l3 3-3 3" /></svg></Link>
+        {homeAbbr && <SeeTheMap abbr={homeAbbr} name={stateName(homeAbbr) ?? homeAbbr} />}
       </>}
     </>
   ) };

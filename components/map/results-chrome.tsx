@@ -82,7 +82,7 @@ export function GettingBanner({ about }: { about: string }) {
 }
 
 export function Banner({ children, phone, below }: { children: ReactNode; phone: boolean; below: number }) {
-  return <div className={styles.banner} role="status" style={phone ? { left: 10, right: 10, top: below + 8, maxWidth: "none" } : undefined}>{children}</div>;
+  return <div className={styles.banner} role="status" style={phone ? { left: 10, right: 10, top: below + 8, maxWidth: "none" } : { right: 476 }}>{children}</div>;
 }
 
 export function MapCard({ title, meta, flip, onClose, children }: {
@@ -104,5 +104,13 @@ export function WinnerRow({ name, party, note }: { name: string; party: ResultPa
   return <div className={styles.winner}>
     <span>{name}{" "}<span className={styles.dim}>· {party === "C" ? "Still counting" : PARTY_WORD[party].word}</span></span>
     <span style={{ fontWeight: 600 }}>{note}</span>
+  </div>;
+}
+
+/** The phone's bottom sheet: collapsed it leaves the map two thirds of the screen. */
+export function Sheet({ open, onToggle, children }: { open: boolean; onToggle: () => void; children: ReactNode }) {
+  return <div className={styles.sheet} style={{ height: open ? 620 : 216, maxHeight: "86%" }}>
+    <button type="button" className={styles.sheetHandle} aria-expanded={open} aria-label={open ? "Show more map" : "Show more results"} onClick={onToggle}><span /></button>
+    <div className={styles.sheetBody}>{children}</div>
   </div>;
 }

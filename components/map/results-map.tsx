@@ -13,8 +13,9 @@ import { countyChoices, outlineBounds, type CountyChoice } from "@/lib/map/resul
 import { canDrawResults, clearResultLayers, drawResultLayers } from "@/lib/map/results-apply";
 import { countyOutlineLayers, resultLayers, resultsLayerId, stateBadgeLayers, stateBadgePoints, type ResultsSurface, type ResultsTheme } from "@/lib/map/results-style";
 import { closeResults, setResultsDistricts, setResultsScope, showResultsState, useResultsScope, type ResultsState } from "@/lib/map/results-scope";
-import { Banner, CountyChip, GettingBanner, Legend, MapCard, PillButton, Segmented, WinnerRow, type LegendKey } from "./results-chrome";
+import { Banner, CountyChip, GettingBanner, Legend, MapCard, PillButton, Segmented, Sheet, WinnerRow, type LegendKey } from "./results-chrome";
 import { useMapInstance } from "./map-instance";
+import { MapScorecard } from "./results-scorecard";
 import styles from "./results-map.module.css";
 
 type StateLayer = "sen" | "house" | "cd";
@@ -82,6 +83,7 @@ export default function ResultsMap({ theme, phone, yours, zip }: ResultsMapProps
   const [countyHeld, setCountyHeld] = useState<{ scene: string; county: CountyChoice | null } | null>(null);
   const [counties, setCounties] = useState<CountyChoice[]>([]);
   const [pickedHeld, setPickedHeld] = useState<{ scene: string; ocdId: string; name: string } | null>(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
   const topRef = useRef<HTMLDivElement>(null);
   const [topBottom, setTopBottom] = useState(0);
 
@@ -143,7 +145,8 @@ export default function ResultsMap({ theme, phone, yours, zip }: ResultsMapProps
 
   /* ------------------------------------------------------------- the camera --- */
   const fit = useCallback((bounds: [[number, number], [number, number]], maxZoom = 14) => {
-    map.fitBounds(bounds, { padding: phone ? { top: 130, bottom: 70, left: 20, right: 20 } : { top: 130, bottom: 40, left: 240, right: 40 }, maxZoom, duration: reducedMotion() ? 0 : 600 });
+    const panel = phone ? 0 : 460;
+    map.fitBounds(bounds, { padding: phone ? { top: 130, bottom: 236, left: 20, right: 20 } : { top: 130, bottom: 40, left: 240, right: panel + 24 }, maxZoom, duration: reducedMotion() ? 0 : 600 });
   }, [map, phone]);
   const fitState = useCallback(() => {
     const feature = outlines?.features.find(f => stateAbbrFromOcdId(f.properties.ocdId) === state.abbr) ?? null;
@@ -273,11 +276,15 @@ export default function ResultsMap({ theme, phone, yours, zip }: ResultsMapProps
 
       {banner && <Banner phone={phone} below={topBottom}>{banner}</Banner>}
 
+      {!phone && <aside className={styles.rightPanel} aria-label="Results scorecard"><MapScorecard /></aside>}
 
-      <div className={styles.bottom} style={phone ? { left: 10, right: 10, bottom: 10, maxWidth: "none", alignItems: "stretch" } : { bottom: 16 }}>
+
+      <div className={styles.bottom} style={phone ? { left: 10, right: 10, bottom: sheetOpen ? 630 : 226, maxWidth: "none", alignItems: "stretch" } : { bottom: 16 }}>
         {card}
         <Legend rows={legend} theme={theme} phone={phone} />
       </div>
+
+      {phone && <Sheet open={sheetOpen} onToggle={() => setSheetOpen(open => !open)}><MapScorecard /></Sheet>}
 
     </div>
   );

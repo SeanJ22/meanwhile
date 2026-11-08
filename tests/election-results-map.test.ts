@@ -54,8 +54,8 @@ test("only districts and the U.S. Senate seat are drawn; the governor's race sha
 });
 
 test("every seat is accounted for, with seats still being counted drawn as counting", () => {
-  assert.equal(lower.flatMap(r => r.seats).length, 8);
-  assert.deepEqual(lower.find(r => r.ocdId === az("sldl", 6))?.seats.map(s => s.party), ["D", "C"]);
+  assert.equal(lower.reduce((sum, r) => sum + r.seats, 0), 8);
+  assert.deepEqual(lower.find(r => r.ocdId === az("sldl", 6))?.counts, { D: 1, R: 0, O: 0, counting: 1 }, "design's seat counts: one seat won, one still counting");
   assert.equal(fillClass(lower.find(r => r.ocdId === az("sldl", 6))!), "counting");
   assert.equal(fillClass(lower.find(r => r.ocdId === az("sldl", 1))!), "R");
   assert.equal(fillClass(upper.find(r => r.ocdId === az("sldu", 1))!), "R");
@@ -64,7 +64,7 @@ test("every seat is accounted for, with seats still being counted drawn as count
 test("a seat with one member of each party draws as split", () => {
   const split = lower.find(r => r.ocdId === az("sldl", 5))!;
   assert.equal(fillClass(split), "split");
-  assert.equal(split.seats.length, 2);
+  assert.equal(split.seats, 2);
 });
 
 test("a flip carries the gaining party and the source's own seat count, and none where the source gives none", () => {
@@ -96,7 +96,8 @@ test("the national summary becomes one result per state: seats held, seats still
   const house = nationalResults(summary, "us_house"), ohio = house["ocd-division/country:us/state:oh"];
   assert.equal(fillClass(ohio), "split");
   assert.equal(ohio.flipSeats, 2, "the summary's own count of seats flipped");
-  assert.equal(ohio.seats.length, 15);
+  assert.equal(ohio.seats, 15);
+  assert.deepEqual(ohio.counts, { D: 5, R: 10, O: 0, counting: 0 });
   assert.equal(fillClass(house["ocd-division/country:us/state:pa"]), "counting");
   assert.equal(house["ocd-division/country:us/state:tx"], undefined, "a state that reported no races in the chamber is absent");
   const senate = nationalResults(summary, "us_senate");

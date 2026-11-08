@@ -10,10 +10,11 @@ import { contentHash, fileKey, loadPlaceFromFiles, type PlaceFile } from "../lib
 import { getFile, indexPointerKey, openPlaceFiles, putFile, READER_INDEX_TAG, type NationalFile } from "../lib/reader/place-files.ts";
 import { closePlaceFilesLane, placeFilesTurn } from "../lib/reader/place-files-lane.ts";
 import { servePlaceFile, servePlaceIndexPointer } from "../lib/reader/place-files-serve.ts";
-import { answerKey, buildMapIndex, buildZipFiles, lengthen, type IndexPointer, type MapIndex, type ZipPlaces } from "../lib/reader/place-index.ts";
+import { answerKey, buildMapIndex, buildZipRows, lengthen, type IndexPointer, type MapIndex, type ZipPlaces } from "../lib/reader/place-index.ts";
 import { packPlaceContext } from "../lib/reader/place-ready.ts";
 import { composeState, cutState, stateDivisionId } from "../lib/reader/state-share.ts";
-import { stateAnswerFromFiles, zipEntry } from "../lib/reader/zip-files.ts";
+import { stateAnswerFromFiles } from "../lib/reader/zip-files.ts";
+import { readZipRow, zip3Key } from "../lib/reader/zip3.ts";
 import type { ReaderStatePackage } from "../lib/reader/state.ts";
 import { migratedFactDb } from "./helpers/migrated-reader-db.ts";
 
@@ -21,12 +22,13 @@ const STATE = stateDivisionId("AZ"), A = `${STATE}/county:pima`, B = `${STATE}/c
 const page = (name: string, checked?: string) => ({ entities: [], fields: [{ entity_id: "e", field: "name", value: name, url: "https://example.gov/", quote: name, checked_at: checked ?? "2026-10-01T00:00:00Z" }],
   rosters: [], comments: [], sittings: [], meeting_rows: [], archived_documents: [], archived_document_links: [], agenda_texts: [], registry: null, governments: [], divisions: [], registration_held: false, division_ids: [] });
 
-/** A state published the way the lane publishes it: the map index, the ZIP files and the pointer. */
+const NOW = new Date("2026-11-08T12:00:00Z"), nobody = () => ({ key: "", districts: [] as string[] });
+/** A state published the way the lane publishes it: the map index, the pointer and the rows of its prefixes. */
 async function publish(store: ReaderArtifactStore, files: Map<string, string>, zips: Record<string, ZipPlaces>, national: string) {
-  const zip3: Record<string, string> = {};
-  for (const [prefix, file] of Object.entries(buildZipFiles("AZ", files, zips, national, "", () => ""))) zip3[prefix] = (await putFile(store, file)).name;
+  const rows = buildZipRows("AZ", files, zips, national, "", nobody, NOW);
+  for (const [prefix, found] of Object.entries(rows)) await store.writeJsonPointer(zip3Key(prefix), { v: 1, zips: found }, null);
   const { map, boards } = buildMapIndex("AZ", files, new Map());
-  const pointer: IndexPointer = { map: (await putFile(store, map)).name, boards: (await putFile(store, boards)).name, zip3, national };
+  const pointer: IndexPointer = { map: (await putFile(store, map)).name, boards: (await putFile(store, boards)).name, national, prefixes: Object.keys(rows) };
   assert.equal((await store.writeJsonPointer<IndexPointer>(indexPointerKey("AZ"), pointer, null)).modified, true);
   return pointer;
 }
@@ -126,23 +128,23 @@ test("SPN-01PF: a place is read from its file and the national file alone", asyn
     const national = await putFile(store, { v: 1, president: null, routing: null } satisfies NationalFile);
     const zips = { "85701": { point: [32.2, -110.9] as const, states: ["AZ"], ids: [A], partial: [], fringe: [], districts: [] } };
     await publish(store, new Map([[A, file.name]]), zips, national.name);
-    const keyOf = (name: string, territory = "") => buildZipFiles("AZ", new Map([[A, name]]), zips, national.name, territory, () => "")["857"]!.zips["85701"]![7];
+    const keyOf = (name: string, territory = "") => buildZipRows("AZ", new Map([[A, name]]), zips, national.name, territory, nobody, NOW)["857"]!["85701"]!.key;
     assert.equal(keyOf(file.name), keyOf(file.name));
     assert.notEqual(keyOf(file.name), keyOf("f".repeat(32)), "the key moves when a file its answer reads is replaced");
     assert.notEqual(keyOf(file.name), keyOf(file.name, "territory-2"), "and when the Arizona territory file does");
-    assert.notEqual(answerKey("k", new Date("2026-11-08T12:00:00Z")), answerKey("k", new Date("2026-11-09T12:00:00Z")), "and when the Eastern day does");
-    assert.equal(answerKey("k", new Date("2026-11-09T03:00:00Z")), answerKey("k", new Date("2026-11-08T23:00:00Z")), "the day is the Eastern one");
+    assert.notEqual(answerKey(["k"], new Date("2026-11-08T12:00:00Z")), answerKey(["k"], new Date("2026-11-09T12:00:00Z")), "and when the Eastern day does");
+    assert.equal(answerKey(["k"], new Date("2026-11-09T03:00:00Z")), answerKey(["k"], new Date("2026-11-08T23:00:00Z")), "the day is the Eastern one");
     const crossing = { "03579": { point: [44.9, -71] as const, states: ["AZ", "NH"], ids: [A], partial: [], fringe: [], districts: [] } };
-    const together = (other: string) => buildZipFiles("AZ", new Map([[A, file.name]]), crossing, national.name, "", () => other)["035"]!.zips["03579"]![7];
+    const together = (other: string) => buildZipRows("AZ", new Map([[A, file.name]]), crossing, national.name, "", () => ({ key: other, districts: [] }), NOW)["035"]!["03579"]!.key;
     assert.notEqual(together("a"), together("b"), "a ZIP across a state line has one key, which moves when the other side's files do");
     installFactReader(async () => { throw new Error("a read from files never reads the database"); });
     const place = await loadPlaceFromFiles({ state: "AZ", divisionIds: [A] }, await openPlaceFiles(store).source("AZ"));
     assert.equal(place.registry, null);
     assert.equal(place.everydayRouting, null);
     assert.equal(place.bodies.length, 0);
-    const opened = openPlaceFiles(store), listed = zipEntry((await opened.zipFile("AZ", "85701"))!, "ocd-division/country:us/state:az", "85701")!;
-    assert.deepEqual([listed.ids, listed.states, listed.samples], [[A], ["AZ"], 0]);
-    await assert.rejects(stateAnswerFromFiles(await openPlaceFiles(store).source("AZ"), "AZ", "85701", listed), /STATE_FILE_MISSING:AZ/, "a state without its statewide part is not answered from a guess");
+    const listed = (await readZipRow(store, "85701"))!;
+    assert.deepEqual([listed.ids, listed.states, listed.point, listed.day], [[A], ["AZ"], [-110.9, 32.2], "2026-11-08"]);
+    await assert.rejects(stateAnswerFromFiles(await openPlaceFiles(store).source("AZ"), "AZ", "85701", { ...listed, samples: 0, qualifiedDistricts: [] }), /STATE_FILE_MISSING:AZ/, "a state without its statewide part is not answered from a guess");
   } finally { installFactReader(undefined); await db.pg.close(); rmSync(root, { recursive: true, force: true }); }
 });
 

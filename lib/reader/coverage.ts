@@ -89,6 +89,11 @@ export function stateCoverage(
   const divisions = new Map([...runtime.registry.divisions, ...extraDivisions].map(division => [division.ocdId, division]));
   const resolved = divisionIds.flatMap(id => divisions.get(id) ?? []);
   const bodies = runtime.registry.bodies;
+  // Reading a roster member's portrait asks, for each person, for ballots and directories this answer does not hold; each ask throws and is caught.
+  // Building those errors' stack traces was most of this function's time, and nothing here reads them.
+  const stackLimit = Error.stackTraceLimit;
+  Error.stackTraceLimit = 0;
+  try {
   return withReaderSelection(undefined, () => withReaderAuthorityEdge({}, () => withRegistryRuntimeProjection(runtime, [state.state], () => withFederalDirectoryProjection(state.federalRead,[state.state],() => {
     // Carry the already loaded source identities into this composition context.
     // A cached state answer must not depend on another request's resident state.
@@ -125,4 +130,5 @@ export function stateCoverage(
       }),
     };
   }))));
+  } finally { Error.stackTraceLimit = stackLimit; }
 }

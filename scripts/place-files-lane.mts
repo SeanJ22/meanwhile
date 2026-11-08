@@ -5,6 +5,8 @@ import { resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
 import { installPlaceMapQuery } from "../lib/place-map/reader.ts";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { askOnRelease, laneEnds, laneTurn, slotOrLeave } from "../lib/ops/lane-turn.ts";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+import { warmAnswersTurn } from "../lib/reader/answer-warm.ts";
 import { nationalEverydayRouting, nationalPresident } from "../lib/reader/national.ts";
 import { runPlaceFilesLane } from "../lib/reader/place-files-lane.ts";
 
@@ -23,6 +25,7 @@ const release = await slotOrLeave(turn, "place-files-lane.mts", claimEnd);
 try {
   setInterval(() => turn.beat(), 60_000);
   await runPlaceFilesLane({ deps: { facts, store, log: console.log,
+    warm: () => warmAnswersTurn({ facts, store, origin: PUBLIC_SITE_ORIGIN, log: console.log }),
     national: async () => ({ president: await nationalPresident(), routing: await nationalEverydayRouting() }) }, turnEnd, total, stopRequested });
   turn.beat();
 } finally { release(); }

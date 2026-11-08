@@ -2,7 +2,7 @@ import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
 import type { EverydayRoutingProjection } from "../routing/everyday.ts";
 import { fileKey, packFile, unpackFile, fileHash, type PlaceFile, type PlaceFileSource } from "./place-file.ts";
 import { serverReaderValue } from "./memory.ts";
-import { lengthen, type BoardsIndex, type IndexPointer, type MapIndex, type ZipFile } from "./place-index.ts";
+import { lengthen, type BoardsIndex, type IndexPointer, type MapIndex } from "./place-index.ts";
 import { stateDivisionId } from "./state-share.ts";
 
 export const indexPointerKey = (state: string): string => `reader/index/${state}.json`;
@@ -48,19 +48,22 @@ export function openPlaceFiles(store: ReaderArtifactStore) {
     if (!held) pointers.set(state, held = store.readJsonPointer<IndexPointer>(indexPointerKey(state)).then(read => read?.value ?? null));
     return held;
   };
-  /** One prefix's ZIP file. */
-  const zipFile = async (state: string, zip: string): Promise<ZipFile | null> => {
-    const name = (await pointer(state))?.zip3[zip.slice(0, 3)];
-    return name ? keptFile<ZipFile>(store, name) : null;
+  const layouts = new Map<string, Promise<{ at: Map<string, string>; boards: Map<string, string>; aliases: Readonly<Record<string, string>>; national: NationalFile | null }>>();
+  const layout = (state: string) => {
+    let held = layouts.get(state);
+    if (!held) layouts.set(state, held = (async () => {
+      const found = await pointer(state);
+      if (!found) throw new Error(`PLACE_INDEX_MISSING:${state}`);
+      const map = (await keptFile<MapIndex>(store, found.map))!, boards = (await keptFile<BoardsIndex>(store, found.boards))!;
+      const named = new Map(boards.boards.map(row => [lengthen(boards.base, row[0]), row[2]] as const));
+      const at = new Map([...map.places.map(row => [lengthen(map.base, row[0]), row.at(-1) as string] as const), ...named]);
+      const aliases = (at.has(stateDivisionId(state)) ? await keptFile<PlaceFile>(store, at.get(stateDivisionId(state))!) : null)?.aliases ?? {};
+      return { at, boards: named, aliases, national: await keptFile<NationalFile>(store, found.national) };
+    })());
+    return held;
   };
   const source = async (state: string): Promise<PlaceFileSource> => {
-    const held = await pointer(state);
-    if (!held) throw new Error(`PLACE_INDEX_MISSING:${state}`);
-    const map = (await keptFile<MapIndex>(store, held.map))!;
-    const boards = (await keptFile<BoardsIndex>(store, held.boards))!;
-    const at = new Map([...map.places.map(row => [lengthen(map.base, row[0]), row.at(-1) as string] as const), ...boards.boards.map(row => [lengthen(boards.base, row[0]), row[2]] as const)]);
-    const national = await keptFile<NationalFile>(store, held.national);
-    const aliases = (at.has(stateDivisionId(state)) ? await keptFile<PlaceFile>(store, at.get(stateDivisionId(state))!) : null)?.aliases ?? {};
+    const { at, aliases, national } = await layout(state);
     return {
       has: id => at.has(id),
       file: async id => { const name = at.get(id); return name ? keptFile<PlaceFile>(store, name) : null; },
@@ -68,5 +71,10 @@ export function openPlaceFiles(store: ReaderArtifactStore) {
       routing: async () => national?.routing ?? null,
     };
   };
-  return { pointer, zipFile, source };
+  /** A board of the state by id, or by an id it was folded into; null when it has no file. */
+  const board = async (state: string, bodyId: string): Promise<{ readonly id: string; readonly version: string } | null> => {
+    const { boards, aliases } = await layout(state), id = aliases[bodyId] ?? bodyId, version = boards.get(id);
+    return version ? { id, version } : null;
+  };
+  return { pointer, source, board };
 }

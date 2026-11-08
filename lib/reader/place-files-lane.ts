@@ -17,9 +17,10 @@ import { publicationVersion } from "./canonical.ts";
 import { buildPlaceFile, PLACE_FILE_PAGE_SQL, readChecks } from "./place-file-build.ts";
 import { contentHash, fileHash, type PlaceFile } from "./place-file.ts";
 import { getFile, indexPointerKey, putFile, READER_INDEX_TAG, type NationalFile } from "./place-files.ts";
-import { buildMapIndex, buildZipFiles, localKey, placeMeta, readPublished, readZipPlaces, type BoardsIndex, type IndexPointer, type MapIndex, type PlaceMeta, type ZipFile, type ZipPlaces } from "./place-index.ts";
+import { buildMapIndex, buildZipRows, easternDay, localKey, placeMeta, readPublished, readZipPlaces, type BoardsIndex, type IndexPointer, type MapIndex, type PlaceMeta, type ZipPlaces } from "./place-index.ts";
 import { cutState, stateDivisionId } from "./state-share.ts";
 import { readStatePackage, zipStateSources } from "./state.ts";
+import { READER_ZIP3_TAG, zip3Key, type Zip3File, type ZipRow } from "./zip3.ts";
 
 /** The lane's name on the read meter. Its bytes per hour are metered under it, so the breaker slows it alone if it ever reads far more than its own normal. */
 export const PLACE_FILES_JOB = { id: "place-files", databaseBytesPerRun: 60_000_000 } as const;
@@ -47,6 +48,8 @@ export interface PlaceFilesDeps {
   readonly log?: (line: string) => void;
   /** The national file's content as the national shelf holds it. */
   readonly national: () => Promise<Omit<NationalFile, "v">>;
+  /** Asks for the new answers of the busiest ZIPs once they are published, a few at a time, so readers find them kept (see answer-warm.ts). */
+  readonly warm?: () => Promise<number>;
 }
 
 /** A state's published files as the lane holds them. */
@@ -54,12 +57,21 @@ interface Held { pointer: IndexPointer | null; etag: string | null; files: Map<s
 interface Pass { state: string; todo: string[]; done: number }
 type Cut = ReturnType<typeof cutState>;
 const memory = { national: "", nationalCheckedAt: 0, statesCheckedAt: 0, held: new Map<string, Held>(), pass: undefined as Pass | undefined, cut: undefined as Cut | undefined,
-  aliases: undefined as Record<string, string> | undefined, tab: { until: 0, loaded: false }, unpurged: new Set<string>() };
+  aliases: undefined as Record<string, string> | undefined, tab: { until: 0, loaded: false }, unpurged: new Set<string>(), rows: new Map<string, { file: Zip3File; etag: string | null }>(), day: "" };
 
 /** Lets go of everything the lane holds in memory. */
 export function closePlaceFilesLane(): void {
-  Object.assign(memory, { national: "", nationalCheckedAt: 0, statesCheckedAt: 0, pass: undefined, cut: undefined, aliases: undefined, tab: { until: 0, loaded: false } });
-  memory.held.clear(); memory.unpurged.clear();
+  Object.assign(memory, { national: "", nationalCheckedAt: 0, statesCheckedAt: 0, pass: undefined, cut: undefined, aliases: undefined, tab: { until: 0, loaded: false }, day: "" });
+  memory.held.clear(); memory.unpurged.clear(); memory.rows.clear();
+}
+
+/** The rows of a prefix as the store holds them, kept with the etag they were read at, so a write replaces them only if nothing else did. */
+async function rowsOf(deps: PlaceFilesDeps, prefix: string): Promise<{ file: Zip3File; etag: string | null }> {
+  const have = memory.rows.get(prefix);
+  if (have) return have;
+  const read = await deps.store.readJsonPointer<Zip3File>(zip3Key(prefix)), found = { file: read?.value ?? { v: 1 as const, zips: {} }, etag: read?.etag ?? null };
+  memory.rows.set(prefix, found);
+  return found;
 }
 
 async function held(deps: PlaceFilesDeps, state: string): Promise<Held> {
@@ -68,8 +80,8 @@ async function held(deps: PlaceFilesDeps, state: string): Promise<Held> {
   const pointer = await deps.store.readJsonPointer<IndexPointer>(indexPointerKey(state));
   const map = pointer && await getFile<MapIndex>(deps.store, pointer.value.map, true);
   const boards = pointer && await getFile<BoardsIndex>(deps.store, pointer.value.boards, true);
-  const zip3 = pointer ? (await Promise.all(Object.values(pointer.value.zip3).map(name => getFile<ZipFile>(deps.store, name, true)))).filter((file): file is ZipFile => file !== null) : [];
-  const known = map && boards ? readPublished(map, boards, zip3) : { files: new Map<string, string>(), meta: new Map<string, PlaceMeta>(), zips: {} };
+  const rows = pointer ? await Promise.all(pointer.value.prefixes.map(async prefix => (await rowsOf(deps, prefix)).file)) : [];
+  const known = map && boards ? readPublished(state, map, boards, rows) : { files: new Map<string, string>(), meta: new Map<string, PlaceMeta>(), zips: {} };
   const own = known.files.get(stateDivisionId(state)), file = own ? await getFile<PlaceFile>(deps.store, own, true) : null;
   const result: Held = { pointer: pointer?.value ?? null, etag: pointer?.etag ?? null, ...known, shared: new Set((file?.wide as { shared?: string[] } | undefined)?.shared) };
   memory.held.set(state, result);
@@ -89,29 +101,41 @@ async function putUnless(store: ReaderArtifactStore, value: unknown, current: st
 }
 
 /**
- * Files the state's map index and the ZIP files that changed, then moves its pointer, so a reader of the pointer always finds every file it names. A ZIP
- * across a state line has one key for every state it touches, so the other states are brought up to it. Returns the tags to clear.
+ * Files the state's map index, moves its pointer, and then writes the rows of the prefixes whose ZIPs changed, so the answer a row names is always made from
+ * files the pointer already names. A prefix is shared by every state with ZIPs in it, so a state replaces only the rows it is the first state of. A ZIP across a
+ * state line has one key for every state it touches, so the other states are brought up to it. Returns the tags to clear.
  */
 async function commit(deps: PlaceFilesDeps, state: string, refresh: readonly string[], crossing = true): Promise<string[]> {
-  const have = await held(deps, state), national = memory.national || have.pointer?.national || "";
+  const have = await held(deps, state), national = memory.national || have.pointer?.national || "", now = new Date((deps.now ?? Date.now)());
   const stale = new Set(refresh);
   for (const row of await placeMeta(deps.facts, [...have.files.keys()].filter(id => !have.meta.has(id) || stale.has(id)))) have.meta.set(row.id, row);
   const others = new Set(Object.values(have.zips).flatMap(row => row.states).filter(other => other !== state));
   for (const other of others) await held(deps, other);
-  const files = buildZipFiles(state, have.files, have.zips, national, territoryVersion(state), (zip, other) => {
-    const row = memory.held.get(other)?.zips[zip];
-    return row ? localKey(other, memory.held.get(other)!.files, row, national, territoryVersion(other)) : "";
-  });
-  const zip3: Record<string, string> = {};
-  for (const [prefix, file] of Object.entries(files)) zip3[prefix] = await putUnless(deps.store, file, have.pointer?.zip3[prefix]);
+  const ready = (zip: string) => have.zips[zip]!.states.every(other => other === state || memory.held.get(other)?.pointer);
+  const made = buildZipRows(state, have.files, Object.fromEntries(Object.entries(have.zips).filter(([zip]) => ready(zip))), national, territoryVersion(state), (zip, other, row) => {
+    const there = memory.held.get(other)!;
+    return { key: localKey(other, there.files, there.zips[zip] ?? row, national, territoryVersion(other)), districts: (there.zips[zip]?.districts ?? []).filter(id => there.files.has(id)) };
+  }, now);
   const { map, boards } = buildMapIndex(state, have.files, have.meta);
-  const next: IndexPointer = { map: await putUnless(deps.store, map, have.pointer?.map), boards: await putUnless(deps.store, boards, have.pointer?.boards), zip3, national };
-  const tags: string[] = [];
+  const next: IndexPointer = { map: await putUnless(deps.store, map, have.pointer?.map), boards: await putUnless(deps.store, boards, have.pointer?.boards), national,
+    prefixes: [...new Set(Object.keys(have.zips).map(zip => zip.slice(0, 3)))].sort() };
+  const tags: string[] = [], before = have.pointer?.prefixes ?? [];
   if (!have.pointer || JSON.stringify(have.pointer) !== JSON.stringify(next)) {
     const moved = await deps.store.writeJsonPointer<IndexPointer>(indexPointerKey(state), next, have.etag);
     if (!moved.modified) { memory.held.delete(state); throw new Error(`PLACE_INDEX_MOVED:${state}`); }
     have.pointer = next; have.etag = moved.etag;
     tags.push(READER_INDEX_TAG(state));
+  }
+  for (const prefix of new Set([...Object.keys(made), ...next.prefixes, ...before])) {
+    const stored = await rowsOf(deps, prefix), zips: Record<string, ZipRow> = {};
+    for (const [zip, row] of Object.entries(stored.file.zips)) if (row.states[0] !== state) zips[zip] = row;
+    Object.assign(zips, made[prefix]);
+    const file: Zip3File = { v: 1, zips: Object.fromEntries(Object.entries(zips).sort(([a], [b]) => a < b ? -1 : 1)) };
+    if (JSON.stringify(file) === JSON.stringify(stored.file)) continue;
+    const wrote = await deps.store.writeJsonPointer<Zip3File>(zip3Key(prefix), file, stored.etag);
+    if (!wrote.modified) { memory.rows.delete(prefix); throw new Error(`PLACE_ROWS_MOVED:${prefix}`); }
+    memory.rows.set(prefix, { file, etag: wrote.etag });
+    tags.push(READER_ZIP3_TAG(prefix));
   }
   if (crossing && tags.length) for (const other of others) if ((await held(deps, other)).pointer) tags.push(...await commit(deps, other, [], false));
   return tags;
@@ -153,6 +177,18 @@ async function file(deps: PlaceFilesDeps, have: Held, next: PlaceFile, now: numb
   const filed = await putFile(deps.store, { ...next, readAt: now });
   have.files.set(next.id, filed.name);
   return filed.name !== name;
+}
+
+/* ---- the Eastern day turned ------------------------------------------------------------------------------------------ */
+
+/** A row names the Eastern day its answer shows, so when the day turns every published state's rows are written again with the new day's keys. */
+async function dayTurn(deps: PlaceFilesDeps, now: number): Promise<string[]> {
+  const day = easternDay(new Date(now));
+  if (memory.day === day) return [];
+  const tags: string[] = [];
+  for (const state of REGISTRY_STATES) if ((await held(deps, state)).pointer) tags.push(...await commit(deps, state, [], false));
+  memory.day = day;
+  return tags;
 }
 
 /* ---- a saved page changed ------------------------------------------------------------------------------------------- */
@@ -298,6 +334,7 @@ export interface PlaceFilesTurn { readonly considered: number; readonly kind: "p
 /** One look: the national file, then a changed saved page, then the day's checked dates, then the next of a state's pass. */
 export async function placeFilesTurn(deps: PlaceFilesDeps): Promise<PlaceFilesTurn> {
   const now = (deps.now ?? Date.now)(), tags = await syncNational(deps, now);
+  tags.push(...await dayTurn(deps, now));
   let turn: PlaceFilesTurn = { considered: 0, kind: "idle" };
   const pages = await pagesTurn(deps, now);
   if (pages.considered) { tags.push(...pages.tags); turn = { considered: pages.considered, kind: "pages" }; }
@@ -327,6 +364,8 @@ export async function runPlaceFilesLane(input: { readonly deps: PlaceFilesDeps; 
       let turn: PlaceFilesTurn | undefined;
       try { turn = await placeFilesTurn(input.deps); }
       catch (error) { if (!input.turnEnd?.aborted) log(`Place files: a look failed (${error instanceof Error ? error.message : String(error)}); it is made again`); }
+      try { await input.deps.warm?.(); }
+      catch (error) { log(`Place files: warming answers failed (${error instanceof Error ? error.message : String(error)})`); }
       tab.until = start + owedMs(Math.max(0, databaseBytesSpent() - before));
       if (turn?.considered) { total.considered += turn.considered; log(`Place files: ${turn.considered} places looked at (${turn.kind})`); }
       if (!turn || turn.considered) await writePassCursor(facts, TAB_CURSOR, String(tab.until)).catch(() => undefined);

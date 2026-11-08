@@ -1,7 +1,7 @@
 import { processNeonBytes } from "../db/transfer-by-caller.ts";
 import { readPassCursor, writePassCursor } from "../facts/db.ts";
 import type { Query } from "../facts/publish.ts";
-import type { WorkList } from "../core/work.ts";
+import type { WorkList, WorkRow } from "../core/work.ts";
 import type { IndependentRuntimeLane } from "../ops/independent-runtime-pass.ts";
 import { invalidateReaderCache, type ReaderCachePurger } from "./cache.ts";
 import { cardsAsBuilt } from "./slice-meetings.ts";
@@ -55,21 +55,32 @@ async function make(facts: Query, wanted: Map<string, Set<SliceCard>>, purge?: R
   return written;
 }
 
-/** Rebuilds the slices the Slide marked. A slice that reads the same as the one held is not written. At the turn's end the marked slices go back to waiting. */
-async function rebuildMarked(list: WorkList, facts: Query, end?: AbortSignal, purge?: ReaderCachePurger): Promise<SliceTurn> {
+/** Rebuilds the slices the Slide marked. A slice that reads the same as the one held is not written. A batch that fails is built again one subject at a time: the ones that build are finished, and only a subject that fails goes back (waiting longer after each failure) with its name and reason on a turn line. */
+async function rebuildMarked(list: WorkList, facts: Query, end?: AbortSignal, purge?: ReaderCachePurger, log: (line: string) => void = () => undefined): Promise<SliceTurn> {
   const claims = await list.claim("slice", CLAIM_LIMIT);
   if (!claims.length) return NOTHING;
-  const wanted = new Map<string, Set<SliceCard>>();
-  for (const claim of claims) wanted.set(claim.subjectId!, (wanted.get(claim.subjectId!) ?? new Set<SliceCard>()).add(claim.field as SliceCard));
-  const built = wanted.size;
-  try {
-    const written = await untilEnd(end, make(facts, wanted, purge));
-    for (const claim of claims) await list.finish(claim);
-    return { claimed: claims.length, built, written, backfilled: 0 };
-  } catch (error) {
-    for (const claim of claims) await (end?.aborted ? list.release(claim) : list.later(claim, error instanceof Error ? error.message || "failed" : String(error)));
-    throw error;
+  const bySubject = new Map<string, WorkRow[]>();
+  for (const claim of claims) bySubject.set(claim.subjectId!, [...bySubject.get(claim.subjectId!) ?? [], claim]);
+  const wantedOf = (subjects: readonly string[]) => new Map(subjects.map(subject => [subject, new Set(bySubject.get(subject)!.map(claim => claim.field as SliceCard))]));
+  let written = 0;
+  const finishAll = async (subjects: readonly string[]) => { for (const subject of subjects) for (const claim of bySubject.get(subject)!) await list.finish(claim); };
+  const settled = { done: false };
+  if (bySubject.size > 1) {
+    try { written = await untilEnd(end, make(facts, wantedOf([...bySubject.keys()]), purge)); await finishAll([...bySubject.keys()]); settled.done = true; }
+    catch { if (end?.aborted) { for (const claim of claims) await list.release(claim); throw end.reason; } }
   }
+  if (!settled.done) {
+    for (const [subject, mine] of bySubject) {
+      try { written += await untilEnd(end, make(facts, wantedOf([subject]), purge)); await finishAll([subject]); }
+      catch (error) {
+        if (end?.aborted) { for (const claim of claims) await list.release(claim).catch(() => false); throw end.reason; }
+        const reason = error instanceof Error ? error.message || "failed" : String(error);
+        for (const claim of mine) await list.later(claim, reason);
+        log(`Slices: ${subject} (${mine.map(claim => claim.field).join(", ")}) failed, try ${mine[0]!.attempts}: ${reason}; the rest of the batch went on`);
+      }
+    }
+  }
+  return { claimed: claims.length, built: bySubject.size, written, backfilled: 0 };
 }
 
 /** Where the backfill is: the ZIP it has reached (most residents first), then, once every ZIP's places have slices, the rest of the places in id order. */
@@ -111,12 +122,19 @@ async function backfill(facts: Query, now: Date, purge?: ReaderCachePurger): Pro
   return { claimed: 0, built, written, backfilled: places.length, done: false };
 }
 
-/** One look: marked slices first, then, when none are marked, the next places without slices. */
-export async function sliceTurn(input: { readonly list: WorkList; readonly facts: Query; readonly now?: Date; readonly turnEnd?: AbortSignal; readonly purge?: ReaderCachePurger }): Promise<SliceTurn & { readonly idle: boolean }> {
-  const marked = await rebuildMarked(input.list, input.facts, input.turnEnd, input.purge);
-  if (marked.claimed) return { ...marked, idle: false };
-  const first = await untilEnd(input.turnEnd, backfill(input.facts, input.now ?? new Date(), input.purge));
-  return { ...first, claimed: 0, idle: first.done };
+/** One look: marked slices first, then, when none are marked, the next places without slices. While the marks fill whole batches, every other look is the backfill's, so a standing backlog cannot keep places from their first slices; a small backlog is cleared first. */
+export async function sliceTurn(input: { readonly list: WorkList; readonly facts: Query; readonly now?: Date; readonly turnEnd?: AbortSignal; readonly purge?: ReaderCachePurger; readonly log?: (line: string) => void;
+  /** Kept by the caller across looks: set when the marks last filled a whole batch. */ readonly owed?: { backfill: boolean } }): Promise<SliceTurn & { readonly idle: boolean }> {
+  const owed = input.owed ?? { backfill: false };
+  const first = async () => { const turn = await untilEnd(input.turnEnd, backfill(input.facts, input.now ?? new Date(), input.purge)); return { ...turn, claimed: 0, idle: turn.done }; };
+  if (owed.backfill) {
+    owed.backfill = false;
+    const turn = await first();
+    if (turn.backfilled) return turn;
+  }
+  const marked = await rebuildMarked(input.list, input.facts, input.turnEnd, input.purge, input.log);
+  if (marked.claimed) { owed.backfill = marked.claimed >= CLAIM_LIMIT; return { ...marked, idle: false }; }
+  return first();
 }
 
 /** The lane's turn: keeps looking until it is asked to stop, resting while the tab is owed so everything it does stays within its pace. */
@@ -127,12 +145,13 @@ export async function runSliceLane(input: { readonly list: WorkList; readonly fa
   const total = input.total ?? { built: 0, written: 0, backfilled: 0 };
   const clock = input.clock ?? Date.now;
   if (!tab.loaded) { tab.until = Number(await readPassCursor(input.facts, TAB_CURSOR) ?? 0); tab.loaded = true; }
+  const owed = { backfill: false };
   while (!input.stopRequested()) {
     const start = clock();
     if (start < tab.until) { await sleep(Math.min(tab.until - start, IDLE_MS)); continue; }
     const before = spent();
     let turn: Awaited<ReturnType<typeof sliceTurn>> | undefined;
-    try { turn = await sliceTurn({ list: input.list, facts: input.facts, turnEnd: input.turnEnd }); }
+    try { turn = await sliceTurn({ list: input.list, facts: input.facts, turnEnd: input.turnEnd, log: input.log, owed }); }
     catch (error) {
       // The rows it held come back when their lease runs out; the lane looks again after its own pause.
       if (!input.turnEnd?.aborted) input.log(`Slices: a look failed (${error instanceof Error ? error.message : String(error)}); the slices stay marked`);

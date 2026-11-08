@@ -32,7 +32,8 @@
     "number": 914,
     "url": "https://github.com/SeanJ22/meanwhile/pull/914"
   },
-  "ci": "running",
+  "ci": "pass",
   "at": "2026-11-08T20:29:27Z",
-  "growth_reason": "election results, a genuinely new feature (MultiState and Ballotpedia results on ballot cards, state and national summaries, results map), allowed by Sean's 2026-11-08 code-size ruling"
+  "growth_reason": "election results, a genuinely new feature (MultiState and Ballotpedia results on ballot cards, state and national summaries, results map), allowed by Sean's 2026-11-08 code-size ruling",
+  "settled_at": "2026-11-08T20:58:10Z"
 }

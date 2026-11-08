@@ -5307,5 +5307,30 @@
     "release": 194,
     "ci": "pass",
     "at": "2026-11-08T19:21:33Z"
+  },
+  {
+    "lane": "results-merge",
+    "steps": [
+      "CX-ELECTION",
+      "ELECTION-RESULTS"
+    ],
+    "ready_sha": "78ef49bd3ac2acf1750f0d30676fd9311de5aa54",
+    "merge_sha": "f2bf01f3edb5dc60bdacacdd51a55e65916bac3a",
+    "river_sha": "f2ff8f70e81c65038c2bb59ab8d7ad6752f21cae",
+    "release": 195,
+    "ci": "pass",
+    "at": "2026-11-08T20:58:10Z"
+  },
+  {
+    "lane": "river-growth",
+    "steps": [
+      "RG-01"
+    ],
+    "ready_sha": "a756003104cd83b5efbf35e8a34ffb01b1ee0449",
+    "merge_sha": "90b4561d7e516c4c0930ae46481cc2d595c3ae43",
+    "river_sha": "f2ff8f70e81c65038c2bb59ab8d7ad6752f21cae",
+    "release": 195,
+    "ci": "pass",
+    "at": "2026-11-08T20:58:10Z"
   }
 ]

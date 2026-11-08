@@ -4,7 +4,8 @@ import { ReaderMeetingDate, ReaderMeetingTime } from "@/components/ui/reader-mee
 
 import { useOfficePins } from "@/hooks/use-office-pins";
 import { primeMemberDirectories, primeStateMemberDirectories } from "@/hooks/use-member-directory";
-import { loadReaderState, loadStateAndPlace, mergeReaderCoverage, stateCoverageForZip } from "@/lib/reader/client";
+import { loadReaderState, loadStateAndPlace, mergeReaderCoverage, primeReaderState, stateCoverageForZip } from "@/lib/reader/client";
+import { detailUrlOfBody, loadAnswer, loadBoardDetail, loadZipEntry, withBoardDetail } from "@/lib/reader/answer-client";
 import { beginReaderAgenda, discardReaderAgendaStart, fetchReaderResponse, readReaderJson } from "@/lib/reader/bootstrap";
 import { groupOfficePins, officeOwners, type MapBounds, type OfficePin } from "@/lib/map/office-pins";
 import { publishedMeetingPins, type MeetingPinLocation } from "@/lib/meetings/pin-location";
@@ -37,8 +38,8 @@ import { captureEvent } from "@/lib/events/client";
 import { useActiveScroll } from "@/hooks/use-active-scroll";
 import { readLocationOriginFor } from "@/lib/state/location-origin";
 import { bodyDisplayName, readerGovernmentName, withReaderNames, readerText } from "@/lib/text/reader-names";
-import { requestRadiusKm, shouldRequery } from "@/lib/map/viewport-radius";
 import { useStateFocus } from "@/hooks/use-state-focus";
+import { useRoamingPins } from "@/hooks/use-roaming-pins";
 import { StateCrossingPrompt } from "./state-crossing-prompt";
 import { PillCluster, type ReaderPop } from "@/components/shell/pill-cluster";
 import { ReaderCard } from "@/components/shell/reader-card";
@@ -54,6 +55,7 @@ import { TutorialReplayButton, useTutorialRequested } from "./tutorial-overlay";
 import { useSidebarVisible } from "@/hooks/use-sidebar-visible";
 import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
+import type { PlaceEntry } from "@/lib/place-map/reader";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
 import { logEvent } from "@/lib/log/client";
 import { groupByVenue, placelessSittingsOfVenueBodies, type Venue } from "@/lib/meetings/venues";
@@ -137,6 +139,8 @@ interface ViewTarget {
 
   radiusKm?: number;
   state?: string;
+  /** A map move into another state: its officials come from the state, its pins from place files. */
+  roam?: boolean;
 }
 
 const EMPTY_MEETINGS: Meeting[] = [];
@@ -220,7 +224,7 @@ function MapEntryInner() {
       };
   const LARGE_STACK_LIMIT = 8;
   const [largeStack, setLargeStack] = useState<LargeSurface[]>([]);
-  const large = largeStack.length > 0 ? largeStack[largeStack.length - 1] : null;
+  const openCard = largeStack.length > 0 ? largeStack[largeStack.length - 1] : null;
   const setLarge = useCallback((next: LargeSurface | null) => {
     setLargeStack(next ? [next] : []);
   }, []);
@@ -259,7 +263,7 @@ function MapEntryInner() {
             zip: location.zip,
             lat: location.lat,
             lng: location.lng,
-            state: location.postal?.state,
+            state: location.state ?? location.postal?.state,
           }
         : null,
     [location],
@@ -288,13 +292,23 @@ function MapEntryInner() {
       });
       setFailure(null);
     };
-    void loadStateAndPlace({
+    if (view.roam) {
+      // Into another state by moving the map: that state's officials; its meetings are pins from place files.
+      void (async () => {
+        const state = view.state ? await loadReaderState(view.state) : null;
+        if (controller.signal.aborted) return;
+        publish({ meetings: [], localPending: false, tier: "none", center: { lat, lng }, radiusKm: DEFAULT_RADIUS_KM, governingOcdIds: null, partialOcdIds: null,
+          coverage: state ? stateCoverageForZip(state, "", { ids: [], partial: [], samples: 0, states: [state.state] } as PlaceEntry) : null });
+      })().catch(() => { if (!controller.signal.aborted) setFailure({ status: null }); });
+      return () => controller.abort();
+    }
+    const legacy = () => loadStateAndPlace({
       state: () => zip && view.state ? loadReaderState(view.state, zip) : Promise.resolve(null),
       place: async () => {
         const zipParam = zip ? `&zip=${zip}` : "";
         const radiusParam = radiusKm ? `&radiusKm=${radiusKm}` : "";
         const response = await fetchReaderResponse(
-          view.kind === "zip" && zip && !radiusKm ? `/api/meetings?zip=${zip}`
+          zip && !radiusKm ? `/api/meetings?zip=${zip}`
             : `/api/meetings?lat=${lat}&lng=${lng}${zipParam}${radiusParam}`,
           { headers: { accept: "application/json" }, signal: controller.signal },
         );
@@ -335,7 +349,35 @@ function MapEntryInner() {
           zip ?? payload.nearZip ?? null,
         );
       },
-    }).catch(() => {
+    });
+    // A published ZIP is two small files: its ZIP3 entry and its answer. The state, ZIP and meetings routes remain for a ZIP whose state is not published yet.
+    const answered = async (): Promise<boolean> => {
+      const entry = await loadZipEntry(zip!);
+      if (!entry) return false;
+      let answer;
+      try { answer = await loadAnswer(zip!, entry, controller.signal); }
+      catch (error) { status = (error as { status?: number }).status ?? null; throw error; }
+      if (!answer) return false;
+      if (controller.signal.aborted) return true;
+      const state = answer.stateResponse?.value ?? null;
+      if (state) {
+        primeReaderState(state, zip!);
+        primeStateMemberDirectories(state.memberDirectories, state.state);
+        primeMemberDirectories(state.directory, state.state);
+      }
+      const places = state?.zipPlaces[zip!];
+      const complete = {
+        ...answer,
+        governingOcdIds: places ? [...places.ids] : answer.governingOcdIds ?? [...entry.ids],
+        partialOcdIds: places ? [...places.partial] : answer.partialOcdIds ?? [...entry.partial],
+        localPending: false,
+        coverage: mergeReaderCoverage(state ? stateCoverageForZip(state, zip!) : null, answer.coverage, answer.meetings.length),
+      };
+      flushSync(() => publish(complete));
+      logEvent("SEARCH", complete.governingOcdIds, { tier: answer.tier, radiusKm: answer.radiusKm, meetingCount: answer.meetings.length }, zip);
+      return true;
+    };
+    (zip && !radiusKm ? answered().then(done => done ? undefined : legacy()) : legacy()).catch(() => {
       if (controller.signal.aborted) return;
       console.error(`meetings fetch failed for ${view.kind} view`);
       // State officials remain usable when the independent local read fails.
@@ -369,8 +411,9 @@ function MapEntryInner() {
 
   const addressLocated = useCallback((zip: string, lat: number, lng: number) => {
     search(zip, lat, lng);
+    // The street's point moves the camera only. The page is the ZIP's shared answer; no coordinate of an address goes into a request.
     setSettled({ forZip: zip, target: {
-      key: `street:${lat.toFixed(4)},${lng.toFixed(4)}`, kind: "settled", zip: null, lat, lng,
+      key: `street:${zip}`, kind: "settled", zip, lat, lng,
     } });
     setFocus({ lat, lng, zoom: 14, key: `address:${lat.toFixed(4)},${lng.toFixed(4)}` });
   }, [search]);
@@ -392,6 +435,7 @@ function MapEntryInner() {
   }, [dispatch, setLarge, dismissSidebar, location]);
 
   const focusState = useStateFocus(view);
+  const roaming = useRoamingPins(), settleRoaming = roaming.settle, openRoamingPlace = roaming.open;
   const { contains } = focusState;
 
   // Once per ZIP, with how the reader reached it; the server stamps home vs browsing.
@@ -422,12 +466,21 @@ function MapEntryInner() {
   if (current && held?.result !== current) {
     setHeld({ result: current, forZip: location?.zip ?? null, stateOcdId: focusState.activeOcdId });
   }
-  const pinned = carryPins({
+  const carried = carryPins({
     current,
     held,
     stateOcdId: focusState.activeOcdId,
     locationZip: location?.zip ?? null,
   });
+  // Wherever the reader moved the map, the pins of the places in view join the ZIP's own.
+  const pinned = useMemo(() => carried && roaming.pins.length
+    ? { ...carried, meetings: [...new Map([...roaming.pins, ...carried.meetings].map(meeting => [meeting.id, meeting])).values()] } : carried, [carried, roaming.pins]);
+  const openTarget = openCard?.kind === "entity" ? openCard.subject.subjectKind === "BODY" ? pinned?.coverage?.bodies.find(body => body.bodyId === openCard.subject.subjectId)
+    : openCard.subject.subjectKind === "MEETING" ? pinned?.meetings.find(meeting => meeting.id === openCard.subject.subjectId) : undefined : undefined;
+  // A card open while its board's detail arrives is built again from the detail; the same card otherwise.
+  const large = useMemo(() => openCard?.kind === "entity" && openTarget ? { ...openCard, subject: refreshedSubject(openCard.subject, openTarget, pinned) } : openCard,
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- the card follows the board or meeting it is about, not every pin that arrives
+    [openCard, openTarget]);
   const shown = pinned;
   const refreshing = current === null && shown !== null;
 
@@ -474,6 +527,32 @@ function MapEntryInner() {
     () => venues.find((v) => v.key === ui.selectedVenueKey) ?? null,
     [venues, ui.selectedVenueKey],
   );
+  // Opening a board, a meeting or a pin fetches its detail once: the roster, the sources and the conflicts the published answer leaves out.
+  const wantedBodies = useMemo(() => {
+    const ids = new Set<string>();
+    for (const meeting of selectedVenue?.meetings ?? []) if (meeting.bodyId) ids.add(meeting.bodyId);
+    if (popupMeeting?.bodyId) ids.add(popupMeeting.bodyId);
+    if (openCard?.kind === "entity") {
+      if (openCard.subject.subjectKind === "BODY") ids.add(openCard.subject.subjectId);
+      for (const meeting of openCard.subject.meetings ?? []) if (meeting.bodyId) ids.add(meeting.bodyId);
+      if (openCard.subject.heldByBodyId) ids.add(openCard.subject.heldByBodyId);
+    }
+    return [...ids].sort();
+  }, [selectedVenue, popupMeeting, openCard]);
+  useEffect(() => {
+    let live = true;
+    for (const bodyId of wantedBodies) {
+      const url = result ? detailUrlOfBody(result, bodyId) : null;
+      if (!url) {
+        // A pin from the map's own places: that place's file holds the meeting whole. A board of the answer already filled in needs nothing.
+        if (!result?.coverage?.bodies.some(body => body.bodyId === bodyId) && !result?.meetings.some(meeting => meeting.bodyId === bodyId)) openRoamingPlace(bodyId, view?.state ? [view.state] : []);
+        continue;
+      }
+      loadBoardDetail(url).then(detail => { if (live) setResult(previous => previous ? withBoardDetail(previous, bodyId, detail) : previous); }, () => {});
+    }
+    return () => { live = false; };
+  }, [wantedBodies, result, openRoamingPlace, view?.state]);
+
   /* The same bodies' sittings with no building, from the filtered `meetings`. */
   const selectedVenuePlaceless = useMemo(
     () => (selectedVenue ? placelessSittingsOfVenueBodies(selectedVenue, meetings, meetingPinLocations) : []),
@@ -614,69 +693,37 @@ function MapEntryInner() {
   }, [ui.tiers]);
 
   const onViewportSettle = useCallback(
-    (center: { lat: number; lng: number; viewportRadiusKm: number }) => {
-      const crossing = focusState.stateAt(center.lat, center.lng) !== focusState.activeOcdId;
+    (settledView: { lat: number; lng: number; west: number; south: number; east: number; north: number; zoom: number }) => {
       if (!view || welcomeRequested) return;
-      if (!crossing && (popupMeeting || ui.selectedVenueKey || ui.selectedDistrictOcdId)) return;
-
-      const radiusKm = requestRadiusKm(center.viewportRadiusKm);
-      // A materially larger radius is its own reason to re-ask.
-      if (
-        !crossing && !shouldRequery(
-          view
-            ? {
-                lat: view.lat,
-                lng: view.lng,
-                // Compare a ZIP view against the default radius.
-                radiusKm: view.radiusKm ?? DEFAULT_RADIUS_KM,
-              }
-            : null,
-          { lat: center.lat, lng: center.lng, radiusKm },
-        )
-      ) {
-        return;
-      }
-      if (crossing) {
-        setResult(null);
-        setHeld(null);
-        dispatch({ type: "select/venue", key: null });
-        dispatch({ type: "select/district", ocdId: null, districtType: null });
-        dispatch({ type: "district/pick", pick: null });
-        dispatch({ type: "scope/jurisdiction", ocdId: null });
-        dispatch({ type: "radius/clear" });
-        dispatch({ type: "nearMe/toggle", enabled: false });
-        dispatch({ type: "search/clear" });
-        dispatch({ type: "list/open", open: false });
-        setPopupMeeting(null);
-        setLarge(null);
-        setPop(null);
-        setLastHits([]);
-        setDrawnDistricts([]);
-      }
+      const here = focusState.stateAt(settledView.lat, settledView.lng);
+      const states = [...new Set([[settledView.lat, settledView.lng], [settledView.north, settledView.west], [settledView.north, settledView.east],
+        [settledView.south, settledView.west], [settledView.south, settledView.east]].flatMap(([lat, lng]) => stateAbbrFromOcdId(focusState.stateAt(lat!, lng!)) ?? []))];
+      // The view's places and their pins: nothing is fetched until the move has ended, and nothing below the pin zoom.
+      settleRoaming({ west: settledView.west, south: settledView.south, east: settledView.east, north: settledView.north, zoom: settledView.zoom, states });
+      if (here === focusState.activeOcdId || popupMeeting || ui.selectedVenueKey || ui.selectedDistrictOcdId) return;
+      // The middle of the map is in another state: its officials follow, as before.
+      setResult(null);
+      setHeld(null);
+      dispatch({ type: "select/venue", key: null });
+      dispatch({ type: "select/district", ocdId: null, districtType: null });
+      dispatch({ type: "district/pick", pick: null });
+      dispatch({ type: "scope/jurisdiction", ocdId: null });
+      dispatch({ type: "radius/clear" });
+      dispatch({ type: "nearMe/toggle", enabled: false });
+      dispatch({ type: "search/clear" });
+      dispatch({ type: "list/open", open: false });
+      setPopupMeeting(null);
+      setLarge(null);
+      setPop(null);
+      setLastHits([]);
+      setDrawnDistricts([]);
+      const state = stateAbbrFromOcdId(here) ?? undefined;
       setSettled({
         forZip: location?.zip ?? null,
-        target: {
-          // The radius is part of the key: same centre, different zoom is a different question.
-          key: `settled:${center.lat.toFixed(3)},${center.lng.toFixed(3)}@${radiusKm}:${focusState.stateAt(center.lat, center.lng) ?? ""}`,
-          kind: "settled",
-          zip: null,
-          lat: center.lat,
-          lng: center.lng,
-          radiusKm,
-        },
+        target: { key: `roam:${here ?? ""}`, kind: "settled", zip: null, lat: settledView.lat, lng: settledView.lng, state, roam: true },
       });
     },
-    [
-      location,
-      welcomeRequested,
-      popupMeeting,
-      ui.selectedVenueKey,
-      ui.selectedDistrictOcdId,
-      view,
-      focusState,
-      dispatch,
-      setLarge,
-    ],
+    [location, welcomeRequested, popupMeeting, ui.selectedVenueKey, ui.selectedDistrictOcdId, view, focusState, dispatch, setLarge, settleRoaming],
   );
 
   /* A different resolved ZIP closes the old card; initial coverage keeps the reader's click. */
@@ -928,12 +975,12 @@ function MapEntryInner() {
       setSettled({
         forZip: location?.zip ?? null,
         target: {
-          key: `street:${point.lat.toFixed(4)},${point.lng.toFixed(4)}`,
+          key: `street:${location?.zip ?? ""}`,
           kind: "settled",
-          // The exact point supplies its places; no ZIP is inferred.
-          zip: null,
-          lat: point.lat,
-          lng: point.lng,
+          // The point moves the camera only; the page stays the ZIP's shared answer and no coordinate goes into a request.
+          zip: location?.zip ?? null,
+          lat: location?.lat ?? point.lat,
+          lng: location?.lng ?? point.lng,
         },
       });
     },
@@ -1667,6 +1714,7 @@ function MapEntryInner() {
             onSelectVotingSite={setSelectedVotingSiteId}
             selectedVotingSiteId={selectedVotingSiteId}
           />}
+          {roaming.zoomIn && <div className="state-crossing" role="status">Zoom in or enter a ZIP to see meetings here.</div>}
           {focusState.failed && <div className="state-crossing" role="status">We couldn&apos;t load state boundaries. Reload to try again.</div>}
           {focusState.crossing && (
             <StateCrossingPrompt
@@ -1967,6 +2015,16 @@ function locationWithDirections(location: NonNullable<Meeting["location"]>): Rea
   );
 }
 
+/** The card of a board or meeting built again once its detail has arrived. */
+function refreshedSubject(subject: ModalSubject, target: CoveredBody | Meeting, result: TaggedResult | null): ModalSubject {
+  if (subject.subjectKind === "BODY") {
+    const body = target as CoveredBody;
+    return body.readerRoster || body.fieldSources ? bodySubject(body, result?.meetings ?? []) : subject;
+  }
+  const meeting = target as Meeting;
+  return meeting.provenance ? meetingSubject(meeting, result?.coverage?.bodies.find(body => body.bodyId === meeting.bodyId) ?? null, subject.mapPin) : subject;
+}
+
 function meetingSubject(
   meeting: Meeting,
   body: CoveredBody | null = null,
@@ -2093,7 +2151,8 @@ export function bodySubject(
     ],
     representation: seated,
     rosterGaps: [...projectedBodyRoster(body).gaps],
-    representationNote: representationNoteForClaim(claim),
+    // While the roster's detail is on its way the card does not say we have not sourced it.
+    representationNote: body.readerRosterRef && !body.readerRoster ? "" : representationNoteForClaim(claim),
     meetings,
     sources: [...districtCardSources([...roster, ...earlierMembers], meetings, body.officeContact?.provenance, body.fieldSources), ...bodyContactSources(body), ...(body.meetingCadence ? [{ what: "Regular meeting cadence", provenance: { sourceOrg: body.name ?? "", sourceUrl: body.meetingCadence.sourceUrl, collectedAt: "", verifiedAt: null } }] : [])],
     // Every section renders for every body: content, or its own absence line.

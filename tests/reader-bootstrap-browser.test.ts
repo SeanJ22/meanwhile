@@ -5,18 +5,23 @@ import { build } from "esbuild";
 import { launchGuarded } from "../scripts/browser.mts";
 import { readerStartScript } from "../lib/reader/bootstrap.ts";
 
-test("the arriving page starts one state/place read before hydration and the reader consumes each response once", async () => {
+const KEYS: Record<string, string> = { "85701": "aaaaaaaaaaaa", "86001": "bbbbbbbbbbbb" };
+const zip3File = (zip: string) => ({ v: 1, zips: { [zip]: { states: ["AZ"], point: [-110, zip === "86001" ? 33 : 32], key: KEYS[zip], ids: [], partial: [], fringe: [], districts: [] } } });
+
+test("the arriving page starts the ZIP3 file and then the one answer before hydration and the reader consumes each response once", async () => {
   const bundle = await build({ stdin: { resolveDir: process.cwd(), contents: `
     import {resolveStoredZip} from './hooks/use-stored-zip.ts';
-    import {loadReaderState} from './lib/reader/client.ts';
+    import {loadZipEntry,answerUrl} from './lib/reader/answer-client.ts';
     import {fetchReaderResponse,readReaderJson} from './lib/reader/bootstrap.ts';
     import {readyReaderZip} from './lib/reader/zip.ts';
     import {loadStateOutlines} from './lib/map/state-focus.ts';
     const ready=readyReaderZip('85701');
     const location=await resolveStoredZip(JSON.stringify({zip:'85701'}));
-    const response=await fetchReaderResponse('/api/meetings?zip=85701');
+    const entry=await loadZipEntry('85701');
+    const response=await fetchReaderResponse(answerUrl('85701',entry.key));
     const bodyUsedBefore=response.bodyUsed;
-    const [state,place]=await Promise.all([loadReaderState(location.postal.state,location.zip),readReaderJson(response)]);
+    const place=await readReaderJson(response);
+    const state=place.stateResponse.value;
     const bodyUsedAfter=response.bodyUsed;
     const rejectsSecondRead=await response.json().then(()=>false,error=>error.name==='TypeError');
     const settings=await readReaderJson(await fetchReaderResponse('/api/reader/settings'));
@@ -30,9 +35,10 @@ test("the arriving page starts one state/place read before hydration and the rea
     window.answer={location,state,place,settings,outlines,ready,bodyUsedBefore,bodyUsedAfter,rejectsSecondRead};
     window.openZip=async zip=>{
       const location=await resolveStoredZip(JSON.stringify({zip}));
-      const response=await fetchReaderResponse('/api/meetings?zip='+zip);
-      const [state,place]=await Promise.all([loadReaderState(location.postal.state,zip),readReaderJson(response)]);
-      return {location,state,place,bodyUsed:response.bodyUsed};
+      const entry=await loadZipEntry(zip);
+      const response=await fetchReaderResponse(answerUrl(zip,entry.key));
+      const place=await readReaderJson(response);
+      return {location,state:place.stateResponse.value,place,bodyUsed:response.bodyUsed};
     };
     window.lookupZip=zip=>resolveStoredZip(JSON.stringify({zip}));
     const previousResponse=new Response(JSON.stringify({from:'body'}));
@@ -60,20 +66,19 @@ test("the arriving page starts one state/place read before hydration and the rea
   const server = createServer(async (request, response) => {
     const url = request.url!;
     if (url.startsWith("/api/") || url === "/geo/state-outlines.geojson" || url === "/archive.pmtiles") requests.push(url);
-    if (url.startsWith("/api/location/zip?")) {
-      const zip = new URL(url,"http://localhost").searchParams.get("zip")!;
+    if (url.startsWith("/api/reader/zip3/")) {
+      const zip = url.includes("/860.json") ? "86001" : url.includes("/857.json") ? "85701" : null;
       if (zip === "86001") await nextLocation;
-      response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ location: { zip, lat: zip === "86001" ? 33 : 32, lng: -110,
-        postal: { state: "AZ", place:"Fixture place",county:"Fixture county" } } }));
+      if (!zip) response.writeHead(404).end(); else response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify(zip3File(zip)));
     }
-    else if (url.startsWith("/api/reader/state")) { releaseWorker(); const value={ state: "AZ", version: "held",
-      coverage: { seats: [{ocdId:"ocd-division/country:us/state:az/cd:7",divisionType:"cd",label:"District 7",representatives:[{id:"congress:A000001",name:"Selected member",state:"AZ"}]}],senators:[] },
+    else if (url.startsWith("/api/location/zip?")) response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ location: { zip: new URL(url, "http://localhost").searchParams.get("zip"), lat: 40, lng: -74 } }));
+    else if (url.startsWith("/api/answer/")) { releaseWorker(); const value={ meetings: ["held"], coverage: null, stateResponse: { status: 200, value: { state: "AZ", version: "held",
+      coverage: { bodies: [], seats: [{ocdId:"ocd-division/country:us/state:az/cd:7",divisionType:"cd",label:"District 7",representatives:[{id:"congress:A000001",name:"Selected member",state:"AZ"}]}],senators:[] },
       memberDirectories: [{ids:["congress:A000001"],directory:{source:null,committees:[],
         districtOffices:[{address:"100 Example Street",city:"Tucson",state:"AZ",zip:"85701",lat:null,lng:null}],
         officeDetails:[{officeKind:"DISTRICT",official:true,sourceUrl:"https://example.gov/offices",sourceOrg:"Official office",collectedAt:"2026-10-01"}] }},
-        {ids:["congress:A000002"],directory:{source:null,committees:[],districtOffices:[{address:"An unselected office"}],officeDetails:[]}}] };
+        {ids:["congress:A000002"],directory:{source:null,committees:[],districtOffices:[{address:"An unselected office"}],officeDetails:[]}}] } } };
       response.writeHead(200,{"content-type":"application/json"}).end(JSON.stringify(value)); }
-    else if (url.startsWith("/api/meetings")) response.writeHead(200,{"content-type":"application/json"}).end(JSON.stringify({meetings:["held"]}));
     else if (url === "/api/geocode") {
       let body="";for await(const chunk of request)body+=chunk;
       assert.equal(JSON.parse(body).address,"100 Example Street, Tucson, AZ 85701");
@@ -122,24 +127,23 @@ test("the arriving page starts one state/place read before hydration and the rea
     await page.waitForFunction(() => "delayedAnswer" in window);
     assert.deepEqual(await page.evaluate(() => (window as unknown as { delayedAnswer: unknown }).delayedAnswer), { value: { held: true }, bodyUsed: true, cancellationResolved: false }, "parsed data is available while original-stream cancellation is still pending");
     await page.evaluate(() => (window as unknown as { releaseCancellation: () => void }).releaseCancellation());
-    assert.deepEqual(requests.sort(), ["/api/geocode", "/api/location/zip?zip=85701", "/api/meetings?zip=85701", "/api/reader/state?state=AZ&zip=85701", "/api/reader/settings", "/geo/state-outlines.geojson", "/archive.pmtiles", "/archive.pmtiles"].sort());
-    const starts = ["/api/location/zip?zip=86001","/api/meetings"].map(path => page.waitForRequest(request => {
-      const url = new URL(request.url());return url.pathname===path.split("?")[0] && url.searchParams.get("zip")==="86001";
-    }));
+    assert.deepEqual(requests.sort(), ["/api/geocode", "/api/reader/zip3/857.json", "/api/answer/85701/aaaaaaaaaaaa", "/api/reader/settings", "/geo/state-outlines.geojson", "/archive.pmtiles", "/archive.pmtiles"].sort(),
+      "a published ZIP is two requests: the ZIP3 file and its answer, with no location, state or meetings route");
+    const starts = [page.waitForRequest(request => new URL(request.url()).pathname === "/api/reader/zip3/860.json")];
     await page.evaluate(() => {
       const reader = window as unknown as {openZip:(zip:string)=>Promise<unknown>;nextAnswer?:unknown};
       void reader.openZip("86001").then(answer=>{reader.nextAnswer=answer;});
     });
     await Promise.all(starts);
-    assert.equal(await page.evaluate(() => "nextAnswer" in window),false,"both data reads start while the new ZIP location is still pending");
+    assert.equal(await page.evaluate(() => "nextAnswer" in window),false,"the new ZIP file starts at once and its answer follows the file");
     assert.deepEqual(await page.evaluate(() => (window as unknown as {readPreviousResponse:()=>Promise<unknown>}).readPreviousResponse()),
       {from:"early parser"},"a response from the previous ZIP still consumes its parsed value after a new ZIP starts");
     releaseNextLocation();
     await page.waitForFunction(() => "nextAnswer" in window);
     const next = await page.evaluate(() => (window as unknown as {nextAnswer:{location:{zip:string};state:{state:string};place:{meetings:string[]};bodyUsed:boolean}}).nextAnswer);
     assert.equal(next.location.zip,"86001");assert.equal(next.state.state,"AZ");assert.deepEqual(next.place.meetings,["held"]);assert.equal(next.bodyUsed,true);
-    assert.deepEqual(requests.sort(),["/api/geocode","/api/reader/settings","/geo/state-outlines.geojson","/archive.pmtiles","/archive.pmtiles",...["85701","86001"].flatMap(zip=>[`/api/location/zip?zip=${zip}`,`/api/meetings?zip=${zip}`,`/api/reader/state?state=AZ&zip=${zip}`])].sort(),
-      "the new ZIP consumes state and place once without fetching their resolved aliases again");
+    assert.deepEqual(requests.sort(),["/api/geocode","/api/reader/settings","/geo/state-outlines.geojson","/archive.pmtiles","/archive.pmtiles","/api/reader/zip3/857.json","/api/reader/zip3/860.json","/api/answer/85701/aaaaaaaaaaaa","/api/answer/86001/bbbbbbbbbbbb"].sort(),
+      "the new ZIP consumes its file and answer once without fetching their resolved aliases again");
     const beforeReverse = requests.length;
     const reverse = await page.evaluate(async () => {
       const lookup = (window as unknown as {lookupZip:(zip:string)=>Promise<{zip:string}>}).lookupZip;
@@ -151,28 +155,27 @@ test("the arriving page starts one state/place read before hydration and the rea
       history.pushState(null,"","/ballot");
       await (window as unknown as {lookupZip:(zip:string)=>Promise<unknown>}).lookupZip("10001");
     });
-    assert.deepEqual(requests.slice(-1),["/api/location/zip?zip=10001"],"a lookup outside the map starts only its location request");
-    assert.equal(requests.length,beforeReverse+1);
+    assert.deepEqual(requests.slice(-2),["/api/reader/zip3/100.json","/api/location/zip?zip=10001"],"a lookup outside the map asks the ZIP3 file, and the database route only because the file lists no such ZIP");
+    assert.equal(requests.length,beforeReverse+2);
     assert.deepEqual(errors, []);
   } finally { releaseClient();releaseNextLocation(); await browser?.close(); await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve())); }
 });
 
-test("an independent state failure preserves meetings, including when the optional worker cannot start",async()=>{
+test("an answer whose state part failed still carries its meetings, including when the optional worker cannot start",async()=>{
   for(const brokenWorker of [false,true]){
     const server=createServer((request,response)=>{
       const url=request.url!;
       response.setHeader("content-type","application/json");
-      if(url.startsWith("/api/meetings"))return response.end(JSON.stringify({meetings:["held"]}));
-      if(url.startsWith("/api/reader/state")) { response.statusCode=503;return response.end(JSON.stringify({error:"State unavailable"})); }
-      if(url==="/api/location/zip?zip=85701")return response.end(JSON.stringify({location:{zip:"85701",lat:32,lng:-110,postal:{state:"AZ"}}}));
+      if(url==="/api/reader/zip3/857.json")return response.end(JSON.stringify(zip3File("85701")));
+      if(url==="/api/answer/85701/aaaaaaaaaaaa")return response.end(JSON.stringify({meetings:["held"],coverage:null,stateResponse:{status:503,value:{error:"State unavailable"}}}));
       if(url==="/map-boundary-worker.mjs"){
         response.setHeader("content-type","application/javascript");return response.end('throw new Error("Worker unavailable");');
       }
       if(url.startsWith("/api/")||url==="/geo/state-outlines.geojson")return response.end("{}");
       response.setHeader("content-type","text/html");response.end(`<!doctype html><script>${readerStartScript(brokenWorker?"/archive.pmtiles":"")}</script><script>
-        window.__readerStart.location.then(async()=>{
-          const start=window.__readerStart,state=await start.requests["/api/reader/state?state=AZ&zip=85701"],place=await start.requests["/api/meetings?zip=85701"];
-          window.answer={state:{status:state.status,value:await start.parsed.get(state)},place:{status:place.status,value:await start.parsed.get(place)}};
+        window.__readerStart.location.then(async location=>{
+          const start=window.__readerStart,file=await start.requests["/api/reader/zip3/857.json"],place=await start.requests["/api/answer/85701/aaaaaaaaaaaa"];
+          window.answer={location:{lat:location.lat,lng:location.lng,state:location.state},file:{status:file.status,value:await start.parsed.get(file)},place:{status:place.status,value:await start.parsed.get(place)}};
         });</script>`);
     });
     await new Promise<void>(resolve=>server.listen(0,"127.0.0.1",resolve));
@@ -183,8 +186,10 @@ test("an independent state failure preserves meetings, including when the option
       const page=await(await browser.context()).newPage();
       await page.goto(`http://127.0.0.1:${address.port}/?zip=85701`,{waitUntil:"commit"});
       await page.waitForFunction(()=>"answer" in window,undefined,{timeout:5000});
-      assert.deepEqual(await page.evaluate(()=>(window as unknown as {answer:unknown}).answer),
-        {state:{status:503,value:{error:"State unavailable"}},place:{status:200,value:{meetings:["held"]}}});
+      const answer=await page.evaluate(()=>(window as unknown as {answer:{location:unknown;file:{status:number};place:unknown}}).answer);
+      assert.deepEqual(answer.location,{lat:32,lng:-110,state:"AZ"},"the ZIP's point is [lng, lat] in the file");
+      assert.equal(answer.file.status,200);
+      assert.deepEqual(answer.place,{status:200,value:{meetings:["held"],coverage:null,stateResponse:{status:503,value:{error:"State unavailable"}}}});
     }finally{await browser?.close();await new Promise<void>((resolve,reject)=>server.close(error=>error?reject(error):resolve()));}
   }
 });

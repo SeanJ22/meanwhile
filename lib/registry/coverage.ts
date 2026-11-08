@@ -194,6 +194,8 @@ export interface CoveredBody {
       sourceOrg: string;
     } | null;
   };
+  /** The published answer carries a board's roster as a count and the address of its detail; `readerRoster` fills in when a reader opens the board. */
+  readerRosterRef?: { count: number; detail: string };
 }
 
 /**

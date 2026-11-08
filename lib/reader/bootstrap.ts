@@ -57,24 +57,26 @@ const response=r.clone(),value=!window.__readerBoundary?r.json():r.arrayBuffer()
 const backup=body.slice(0);return window.__readerBoundary.request({kind:"json",body}).catch(()=>JSON.parse(new TextDecoder().decode(backup)))});
 value.catch(()=>{});parsed.set(response,value);return response};
 const early=url=>fetch(url,{headers:{accept:"application/json"}}).then(parseResponse);
-const placeUrl="/api/meetings?zip="+zip,place=early(placeUrl);
-requests[placeUrl]=place;place.catch(()=>{});
+const zip3Url="/api/reader/zip3/"+zip.slice(0,3)+".json",zip3=early(zip3Url);
+requests[zip3Url]=zip3;zip3.catch(()=>{});
+// The answer's address is read from a copy of the small file at once, so it never waits for the boundary worker to start.
+const entry=zip3.then(r=>r.ok?r.clone().json():null).then(f=>f&&f.v===1&&f.zips&&f.zips[zip]||null).catch(()=>null);
+entry.then(e=>{if(e&&window.__readerStart===start){const url="/api/answer/"+zip+"/"+e.key;requests[url]=early(url);requests[url].catch(()=>{})}});
 const settings="/api/reader/settings";
 const outlines="/geo/state-outlines.geojson";
 if(previous?.requests[outlines])requests[outlines]=previous.requests[outlines];
 else if(!previous){requests[outlines]=early(outlines);requests[outlines].catch(()=>{})}
 if(previous?.requests[settings])requests[settings]=previous.requests[settings];
 else if(!previous){requests[settings]=early(settings);requests[settings].catch(()=>{})}
-start.location=fetch("/api/location/zip?zip="+zip).then(r=>{
+// A ZIP the ZIP3 file does not list (its state is not published yet) is looked up in the database, as it was before.
+start.location=entry.then(e=>e?{zip,lat:e.point[1],lng:e.point[0],state:e.states[0],...(e.postal?{postal:e.postal}:{})}
+:fetch("/api/location/zip?zip="+zip).then(r=>{
 if(!r.ok)throw new Error("ZIP lookup failed: "+r.status);return r.json()}).then(d=>{
-if(!d||!("location" in d))throw new Error("Invalid ZIP location response");
-const p=d.location??null;
+if(!d||!("location" in d))throw new Error("Invalid ZIP location response");return d.location??null})).then(p=>{
 if(p===null){if(window.__readerStart===start)start.expires=0;return null}
 if(!p||typeof p!=="object")throw new Error("Invalid ZIP location response");
 start.value=p;
 if(!previous&&window.__readerStart===start&&window.__readerBoundary){const reader=window.__readerBoundary;reader.request({kind:"prefetch",url:reader.url,zip:p.zip,lat:p.lat,lng:p.lng,width:innerWidth,height:innerHeight}).catch(()=>{})}
-if(p.postal?.state){const stateUrl="/api/reader/state?state="+encodeURIComponent(p.postal.state)+"&zip="+zip;
-requests[stateUrl]=early(stateUrl);requests[stateUrl].catch(()=>{})}
 return p}).catch(error=>{if(window.__readerStart===start)start.expires=0;throw error});
 start.location.catch(()=>{});window.__readerStart=start;return start.location;
 };

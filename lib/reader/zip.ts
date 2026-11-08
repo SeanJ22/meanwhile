@@ -1,5 +1,6 @@
 import { isWellFormedZip, type ZctaCentroid, type ZipResolution } from "../geo/zcta-core.ts";
 import { beginReaderZip, discardReaderZipStart } from "./bootstrap.ts";
+import { centroidOfEntry, loadZipEntry } from "./answer-client.ts";
 
 export { isWellFormedZip };
 
@@ -37,6 +38,9 @@ export function resolveReaderZip(input: string): Promise<ZipResolution> {
       if (validLocation(location, zip)) return { ok:true,centroid:location };
       throw new Error("Invalid ZIP location response");
     }
+    const entry = await loadZipEntry(zip);
+    if (entry) return { ok: true, centroid: centroidOfEntry(zip, entry) };
+    // The ZIP3 file does not list this ZIP (its state is not published yet): ask the database as before.
     const response = await fetch(`/api/location/zip?zip=${zip}`, { headers: { accept: "application/json" } });
     if (!response.ok) throw new Error(`ZIP lookup failed: ${response.status}`);
     const payload = await response.json() as { location?: unknown };

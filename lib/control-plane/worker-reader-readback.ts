@@ -54,7 +54,8 @@ export async function observePublishedManual(page: Page, input: PublishedManualR
     if (response?.status() !== 200) throw Error("PUBLIC_HTTP_STATUS");
     const coverageResponse = page.waitForResponse(response => {
       const url = new URL(response.url());
-      return url.pathname === "/api/meetings" && url.searchParams.get("zip") === input.zip && response.status() === 200;
+      // A published ZIP reads its one answer; a ZIP not published yet reads the database route.
+      return (url.pathname.startsWith(`/api/answer/${input.zip}/`) || url.pathname === "/api/meetings" && url.searchParams.get("zip") === input.zip) && response.status() === 200;
     });
     void coverageResponse.catch(() => undefined);
     const zip = page.locator(".welcome-overlay input").first();
@@ -150,7 +151,8 @@ export async function observePublishedRoster(page: Page, input: PublishedRosterR
 
     const coverageResponse = page.waitForResponse(response => {
       const url = new URL(response.url());
-      return url.pathname === "/api/meetings" && url.searchParams.get("zip") === input.zip && response.status() === 200;
+      // A published ZIP reads its one answer; a ZIP not published yet reads the database route.
+      return (url.pathname.startsWith(`/api/answer/${input.zip}/`) || url.pathname === "/api/meetings" && url.searchParams.get("zip") === input.zip) && response.status() === 200;
     });
     void coverageResponse.catch(() => undefined);
     const zip = page.locator(".welcome-overlay input").first();

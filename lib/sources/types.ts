@@ -157,6 +157,8 @@ export type MeetingStatus = "SCHEDULED" | "CONCLUDED" | "CANCELED";
  * school board meeting.
  */
 export interface Meeting {
+  /** The address of the detail (sources and conflicts) a published answer leaves out of this meeting. */
+  detail?: string;
   /** Source and exact quote for each composed field, when available. */
   fieldSources?: Readonly<Record<string, Provenance>>;
   /** Original partition ids retained so agenda links and evidence can follow a merge. */

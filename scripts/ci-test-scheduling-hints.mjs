@@ -413,7 +413,6 @@ export const SCHEDULING_HINTS = Object.freeze({
   "tests/trusted-lkg-import.test.ts": 31.9168,
   "tests/unsourced-fallback.test.ts": 8.9802,
   "tests/verification-vocabulary.test.ts": 34.2829,
-  "tests/viewport-radius.test.ts": 12.2719,
   "tests/visual-feedback-9-2-ask.test.ts": 217.3248,
   "tests/visual-feedback-9-2.test.ts": 14.9649,
   "tests/vote-explainers.test.ts": 18.3042,

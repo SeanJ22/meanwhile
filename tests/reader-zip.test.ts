@@ -4,6 +4,11 @@ import { resolveReaderZip, lookupReaderZip } from "../lib/reader/zip.ts";
 import { fixtureZipLocation, fixtureZipResolution } from "./helpers/zip-location.ts";
 import type { ZctaCentroid } from "../lib/geo/zcta-core.ts";
 
+/** The ZIP3 file is not published in these tests: it answers 404 and the database route answers as before. */
+function withoutZip3(handler: (input: string | URL | Request) => Promise<Response> | Response) {
+  return async (input: string | URL | Request) => String(input instanceof Request ? input.url : input).includes("/api/reader/zip3/") ? new Response(null, { status: 404 }) : handler(input);
+}
+
 function locationReply(input: string | URL | Request) {
   const url = new URL(input instanceof Request ? input.url : input, "http://localhost");
   assert.equal(url.pathname,"/api/location/zip");
@@ -13,10 +18,10 @@ function locationReply(input: string | URL | Request) {
 test("typed ZIP lookups validate immediately and share only successful source-resolved places for thirty seconds", async (t) => {
   const requests: string[] = [];
   let now = Date.now(); t.mock.method(Date, "now", () => now);
-  t.mock.method(globalThis, "fetch", async (input: string | URL | Request) => {
+  t.mock.method(globalThis, "fetch", withoutZip3(async (input: string | URL | Request) => {
     const request = input instanceof Request ? input : new Request(new URL(input, "http://localhost"));
     requests.push(request.url); return locationReply(request);
-  });
+  }));
   for (const input of ["0509", "123456", "abcde", "85701-1234"]) assert.deepEqual(await resolveReaderZip(input), { ok: false, reason: "malformed" });
   assert.equal(requests.length, 0);
   const expected = fixtureZipResolution("05009"); assert.ok(expected.ok);
@@ -34,13 +39,13 @@ test("typed ZIP lookups validate immediately and share only successful source-re
 
 test("failed and malformed location responses never poison later ZIP retries", async (t) => {
   let attempt = 0;
-  t.mock.method(globalThis, "fetch", async () => {
+  t.mock.method(globalThis, "fetch", withoutZip3(async () => {
     attempt++;
     if (attempt === 1) throw new Error("offline");
     if (attempt === 2) return Response.json({ error: "temporarily unavailable" }, { status: 503 });
     if (attempt === 3) return Response.json({ location: { zip: "85701", lat: 100, lng: -110 } });
     return locationReply("http://localhost/api/location/zip?zip=85701");
-  });
+  }));
   await assert.rejects(resolveReaderZip("85701"), /offline/);
   await assert.rejects(resolveReaderZip("85701"), /503/);
   await assert.rejects(resolveReaderZip("85701"), /Invalid ZIP/);
@@ -50,7 +55,7 @@ test("failed and malformed location responses never poison later ZIP retries", a
 
 test("an unavailable place map cannot claim an uncovered ZIP", async (t) => {
   let attempts=0;
-  t.mock.method(globalThis,"fetch",async(input:string|URL|Request)=>++attempts===1?Response.json({unavailable:true}):locationReply(input));
+  t.mock.method(globalThis,"fetch",withoutZip3(async(input:string|URL|Request)=>++attempts===1?Response.json({unavailable:true}):locationReply(input)));
   await assert.rejects(resolveReaderZip("89109"),/Invalid ZIP/);
   assert.deepEqual(await resolveReaderZip("89109"), fixtureZipResolution("89109"));
   assert.deepEqual(await resolveReaderZip("99999"), { ok: false, reason: "uncovered" });

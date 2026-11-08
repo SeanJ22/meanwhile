@@ -80,6 +80,11 @@ export function loadReaderState(state: string, zip?: string): Promise<ReaderStat
   return promise;
 }
 
+/** A ZIP's answer carries its state's part; later readers of that state and ZIP find it here without another request. */
+export function primeReaderState(state: ReaderStateResponse, zip: string): void {
+  stateCache.set(`${state.state.toUpperCase()}|${zip}`, { promise: Promise.resolve(state), value: state, expires: Date.now() + 30_000 });
+}
+
 function withCounts(coverage: CoverageSummary, meetingCount: number): CoverageSummary {
   const { bodies, seats } = coverage;
   const withSource = bodies.filter(body => WIRED_STATUSES.has(body.coverageStatus)).length;

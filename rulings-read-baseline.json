@@ -227,13 +227,13 @@
       "file": "lib/reader/canonical.ts",
       "kind": "SELECT *",
       "fingerprint": "53c4f0abf7abbbf0554b3151506b4edeef5076703e66a2bb5e73c6279129d6a7",
-      "line": 153
+      "line": 145
     },
     {
       "file": "lib/reader/canonical.ts",
       "kind": "SELECT *",
       "fingerprint": "08be67c81a10eaa313e03d3c5c7513d857c39e670f92deb09d0a1649615f964b",
-      "line": 195
+      "line": 187
     },
     {
       "file": "lib/sources/legiscan/reader.ts",

@@ -7,31 +7,34 @@ import { AddressPrompt } from "@/components/address/address-prompt";
 /** Loading the enhancer waits until the existing ballot has painted and accepts input. */
 export function afterBallotReady(start: () => void): () => void {
   let stopped = false, queued = false, firstFrame = 0, secondFrame = 0, idle: number | undefined;
+  let observer: MutationObserver | undefined;
   const run = () => { if (!stopped) { performance.mark("ballot-results-ready"); start(); } };
-  const check = () => {
-    if (stopped || queued || document.readyState !== "complete" || !document.querySelector("article[data-contest-id]")) return;
+  const loaded = () => {
+    if (stopped || !document.querySelector("article[data-contest-id]")) return;
     const pills = [...document.querySelectorAll<HTMLButtonElement>("[data-battlecard-pill]")];
     const controls = pills.length ? pills : [...document.querySelectorAll<HTMLButtonElement>('[data-kind="pick"] button')];
-    if (controls.length && !controls.some(node => !node.disabled && node.getClientRects().length > 0)) return;
-    queued = true;
-    observer.disconnect();
-    window.removeEventListener("load", check);
-    firstFrame = requestAnimationFrame(() => {
-      secondFrame = requestAnimationFrame(() => {
-        if (stopped) return;
-        if ("requestIdleCallback" in window) idle = window.requestIdleCallback(run, { timeout: 1_000 });
-        else run();
+    const check = () => {
+      if (stopped || queued || controls.some(node => node.disabled)) return;
+      queued = true;
+      observer?.disconnect();
+      firstFrame = requestAnimationFrame(() => {
+        secondFrame = requestAnimationFrame(() => {
+          if (stopped) return;
+          if ("requestIdleCallback" in window) idle = window.requestIdleCallback(run, { timeout: 1_000 });
+          else run();
+        });
       });
-    });
+    };
+    observer = new MutationObserver(check);
+    for (const control of controls) observer.observe(control, { attributes: true, attributeFilter: ["disabled"] });
+    check();
   };
-  const observer = new MutationObserver(check);
-  observer.observe(document, { subtree: true, childList: true, attributes: true, attributeFilter: ["disabled"] });
-  window.addEventListener("load", check);
-  check();
+  if (document.readyState === "complete") loaded();
+  else window.addEventListener("load", loaded, { once: true });
   return () => {
     stopped = true;
-    observer.disconnect();
-    window.removeEventListener("load", check);
+    observer?.disconnect();
+    window.removeEventListener("load", loaded);
     cancelAnimationFrame(firstFrame);
     cancelAnimationFrame(secondFrame);
     if (idle !== undefined) window.cancelIdleCallback(idle);

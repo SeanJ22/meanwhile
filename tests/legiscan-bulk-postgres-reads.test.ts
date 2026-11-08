@@ -7,6 +7,7 @@ import { withMigratedRoutineStore } from "./helpers/migrated-routine-store.ts";
 import { bulkProjectionIssue,publishBulkCandidate } from "../lib/sources/legiscan/publication.ts";
 import type { BillSession,Dataset } from "../lib/sources/legiscan/bills.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
+import { hydrateCandidateFacts } from "../lib/civic-data/candidate-vault.ts";
 
 const at="2026-10-12T12:00:00.000Z",later="2026-10-12T12:01:00.000Z",revisedAt="2026-10-12T12:02:00.000Z";
 const hash=(body:string)=>createHash("sha256").update(body).digest("hex");
@@ -29,7 +30,7 @@ function carriesNativeBill(value:unknown):boolean{
 }
 
 test("Postgres publishes and reuses exact bill parts without downloading native source bytes to their writer",async context=>{
-  await withMigratedRoutineStore("legiscan-bulk",async(store,_vault,pg)=>{
+  await withMigratedRoutineStore("legiscan-bulk",async(store,vault,pg)=>{
     const transport=neonConfig.fetchFunction;assert.ok(transport);
     const statements:string[]=[],responses:{bytes:number;nativeBodies:boolean}[]=[];
     neonConfig.fetchFunction=(async(...args:Parameters<typeof transport>)=>{
@@ -64,15 +65,17 @@ test("Postgres publishes and reuses exact bill parts without downloading native 
     // Inspect the local fixture directly after measuring transport. Original native source bytes
     // must still be held, and their ordinary source normalizer must reproduce the exact part.
     const pointer=(first!.candidate.readModel as BillSession).parts[0];
-    const held=(await pg.query<{candidate:RoutineCandidate}>("SELECT candidate FROM civic_data_candidates WHERE id=$1",[pointer.versionId])).rows[0].candidate;
+    const stored=(await pg.query<{candidate:RoutineCandidate}>("SELECT candidate FROM civic_data_candidates WHERE id=$1",[pointer.versionId])).rows[0].candidate;
+    assert.equal(Object.hasOwn(stored.normalizedPayload as object,"capture"),false,"native bill evidence is held in the vault");
+    const held=await hydrateCandidateFacts(vault,stored) as RoutineCandidate;
     assert.deepEqual(JSON.parse((held.normalizedPayload as {capture:{body:string}}).capture.body).bodies,[native]);
     assert.equal(bulkProjectionIssue(held,held.readModel),null);
     const partCount=(await pg.query<{parts:number}>("SELECT count(*)::integer AS parts FROM civic_data_candidates WHERE candidate#>>'{readModel,kind}'='PART'")).rows[0].parts;
     assert.equal(partCount,3,"two original groups plus the one changed native group are the only source parts created");
     const changedPointer=(changed!.candidate.readModel as BillSession).parts[0];
-    const changedHeld=(await pg.query<{candidate:RoutineCandidate}>("SELECT candidate FROM civic_data_candidates WHERE id=$1",[changedPointer.versionId])).rows[0].candidate;
+    const changedHeld=await hydrateCandidateFacts(vault,(await pg.query<{candidate:RoutineCandidate}>("SELECT candidate FROM civic_data_candidates WHERE id=$1",[changedPointer.versionId])).rows[0].candidate) as RoutineCandidate;
     assert.equal(bulkProjectionIssue(changedHeld,changedHeld.readModel),null);
-    await assert.rejects(pg.query("UPDATE civic_data_candidates SET candidate=jsonb_set(candidate,'{normalizedPayload,capture,body}','\"rewritten source\"'::jsonb)WHERE id=$1",[pointer.versionId]),
+    await assert.rejects(pg.query("UPDATE civic_data_candidates SET candidate=jsonb_set(candidate,'{vault,normalizedPayload,root}','\"rewritten source\"'::jsonb)WHERE id=$1",[pointer.versionId]),
       (error:unknown)=>(error as {code?:string}).code==="55000","the existing source evidence immutability trigger remains active");
   });
 });

@@ -12,7 +12,7 @@ test("HTML starts styles and fonts, then the renderer reuses only its visible ti
     const url = request.url!; requests.push(url);
     response.setHeader("Cache-Control", "public, max-age=3600");
     if (url === "/start.js") return response.setHeader("Content-Type", "text/javascript").end(bundle.outputFiles[0].text);
-    if (url === "/") return response.setHeader("Content-Type", "text/html").end(`<script>${readerStartScript("", `${origin}/fonts/Noto%20Sans%20Regular/0-255.pbf`)}</script><script>window.__readerStart={location:Promise.resolve({zip:'00000',lat:.01,lng:.01})}</script><script async src="/start.js" data-map-dark="${origin}/style.json?key=fixture"></script>`);
+    if (url === "/") return response.setHeader("Content-Type", "text/html").end(`<script>${readerStartScript("", `${origin}/fonts/Noto%20Sans%20Regular/0-255.pbf`)}</script><script>window.__readerStart={location:Promise.resolve({zip:'00000',lat:.01,lng:.01})}</script><script async src="/start.js" data-map-dark="${origin}/style.json"></script>`);
     if (url.startsWith("/style.json")) return response.setHeader("Content-Type", "application/json").end(JSON.stringify({
       version: 8, glyphs: `${origin}/fonts/{fontstack}/{range}.pbf`, sprite: `${origin}/sprite`,
       sources: { basemap: { type: "vector", url: `${origin}/source.json` }, later: { type: "vector", url: `${origin}/offscreen.json` } },

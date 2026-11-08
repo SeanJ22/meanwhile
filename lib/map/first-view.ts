@@ -99,7 +99,7 @@ if (url && location.pathname === "/") {
     const sources = await Promise.all(Object.entries(style.sources).map(async ([id, value]) => [id, visible.has(id) ? await source(value) : value]));
     return { ...style, sources: Object.fromEntries(sources) };
   });
-  const raster = tileMetadata(url.replace("/style.json?", "/tiles.json?")).then(metadata => {
+  const raster = tileMetadata(url.replace("/style.json", "/tiles.json")).then(metadata => {
     warmTiles(metadata, true, true);
     return { version: 8, transition: { duration: 0, delay: 0 },
       glyphs: mapGlyphs(url),

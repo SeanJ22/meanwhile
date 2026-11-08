@@ -1,0 +1,44 @@
+{
+  "n": 189,
+  "branch": "release/189",
+  "head_sha": "b9b55958805117e6d3488f626df290f1e518a2d9",
+  "base_river_sha": "4639e9a619fb687d31690587cc20568e3bb4f508",
+  "main_sha": "d6dbee7cfa0c24a7fa69535325ccaa23736adc4d",
+  "lanes": [
+    {
+      "lane": "river-measure-lines",
+      "steps": [
+        "RM-01"
+      ],
+      "ready_sha": "77c2d36ee104fe21f09065251f236d99817b854c",
+      "result_sha": "67de67b39525b1cb8a7733df0d7782230771366b"
+    },
+    {
+      "lane": "robots-off-netlify",
+      "steps": [
+        "NB-01"
+      ],
+      "ready_sha": "fab7b98798b3b9e35919b6d31b2269a7c68e4881",
+      "result_sha": "03fdc758bbb73d29335c88cb9e59908fe2ec2728"
+    },
+    {
+      "lane": "trim-187",
+      "steps": [
+        "TR-04"
+      ],
+      "ready_sha": "e61fa9966ec394e0ec57ce2e4ccac5a6b1395dd7",
+      "result_sha": "51e29e0c1b2539ffe970c148766af922d8c95df7"
+    }
+  ],
+  "steps": [
+    "RM-01",
+    "NB-01",
+    "TR-04"
+  ],
+  "pr": {
+    "number": 908,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/908"
+  },
+  "ci": "running",
+  "at": "2026-11-08T05:59:11Z"
+}

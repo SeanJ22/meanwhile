@@ -88,6 +88,8 @@ export async function runRuntimeChildren(
     readonly noProgressMs?: number;
     /** The lane's deadline: the child's process tree is ended when it passes. */
     readonly deadlineMs?: number;
+    /** A lane whose pass is cut by that deadline having printed progress is a finished partial pass; with none it stays a stop. */
+    readonly partialAtDeadline?: boolean;
     readonly onStarted?: (id: string, child: ChildProcess) => void },
 ): Promise<readonly BoundedChildResult[]> {
   if (options.noProgressMs !== undefined && (!Number.isSafeInteger(options.noProgressMs) || options.noProgressMs <= 0)) {
@@ -99,6 +101,8 @@ export async function runRuntimeChildren(
     let errorMessage: string | null = null;
     let overflow = false;
     let stopped = false;
+    let progressed = false;
+    let partial = false;
     let idle: ReturnType<typeof setTimeout> | undefined;
     let probe: ReturnType<typeof setTimeout> | undefined;
     const progressScope = {};
@@ -125,6 +129,7 @@ export async function runRuntimeChildren(
     } };
     ownedChildren.add(owned);
     const wall = options.deadlineMs === undefined ? undefined : setTimeout(() => {
+      partial = options.partialAtDeadline === true && progressed;
       void owned.stop(`PASS_TIME_BUDGET: ${command.id} reached its lane deadline; its unfinished work stays owed to the next pass`)
         .catch(error => { errorMessage = `${errorMessage}; ${String(error)}`; child.kill("SIGKILL"); });
     }, Math.max(0, options.deadlineMs - Date.now()));
@@ -152,7 +157,7 @@ export async function runRuntimeChildren(
       const saved = bytes[stream] > options.maxBufferBytes ? Buffer.from(chunk).subarray(0, remaining).toString("utf8") : chunk;
       if (stream === "stdout") { stdout += saved; options.onStdout?.(command.id, chunk); }
       else { stderr += saved; options.onStderr?.(command.id, chunk); }
-      if (progress[stream](chunk) > 0) renew();
+      if (progress[stream](chunk) > 0) { progressed = true; renew(); }
       if (bytes[stream] > options.maxBufferBytes && !overflow) {
         overflow = true;
         void owned.stop("OUTPUT_LIMIT_EXCEEDED").catch(() => child.kill("SIGKILL"));
@@ -169,6 +174,7 @@ export async function runRuntimeChildren(
       clearTimeout(probe);
       clearTimeout(wall);
       ownedChildren.delete(owned);
+      if (partial && !overflow) { resolve({ id: command.id, status: 0, signal, stdout, stderr, termination: "EXITED", errorMessage: null }); return; }
       resolve({ id: command.id, status: stopped ? null : code,
         signal, stdout, stderr, termination: overflow ? "OUTPUT_LIMIT_EXCEEDED" : stopped ? "TIMED_OUT" : errorMessage ? "SPAWN_FAILED" : "EXITED",
         errorMessage });

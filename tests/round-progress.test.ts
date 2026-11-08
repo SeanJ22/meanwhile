@@ -154,3 +154,23 @@ test("a census that reaches its wall having finished work exits cleanly as a par
   next.close();
   assert.match(outcomes[0]!, /CENSUS_PASS_TIMEOUT/);
 });
+
+const silentChild = (print: string) => `${print} setInterval(() => {}, 1000); await new Promise(() => {});`;
+const laneRun = (source: string, partialAtDeadline: boolean) => runRuntimeChildren([{ id: "platform-census", executable: process.execPath,
+  args: ["--experimental-strip-types", "--input-type=module", "-e", source] }],
+  { cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: 30_000, partialAtDeadline, deadlineMs: Date.now() + 1500 });
+
+test("a lane cut by its deadline having printed progress is a finished partial pass; with none it is a failure", async () => {
+  const [partial] = await laneRun(silentChild("console.log('  round progress: control read 3 finished');"), true);
+  assert.equal(partial!.termination, "EXITED");
+  assert.equal(partial!.status, 0);
+  const [none] = await laneRun(silentChild(""), true);
+  assert.equal(none!.termination, "TIMED_OUT");
+  assert.match(none!.errorMessage!, /PASS_TIME_BUDGET/);
+});
+
+test("a lane that did not ask for partial passes (the research round) is still a failure at its deadline", async () => {
+  const [result] = await laneRun(silentChild("console.log('  round progress: dispatch 3 finished');"), false);
+  assert.equal(result!.termination, "TIMED_OUT");
+  assert.match(result!.errorMessage!, /PASS_TIME_BUDGET/);
+});

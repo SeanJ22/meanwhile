@@ -30,9 +30,10 @@ test("a change marks the pages it reaches, keeps the oldest mark, and a turn bui
   try {
     await db.transaction(query => enqueueReaderPlaces({ entities: [BOARD] }, query));
     assert.ok((await marked(db)).includes(CITY));
-    const [first] = await db.query("SELECT stale_at::text AS at FROM place_page WHERE place_id=$1", [CITY]);
+    const [first] = await db.query("SELECT stale_at::text AS at,ctid::text AS tuple FROM place_page WHERE place_id=$1", [CITY]);
     await db.transaction(query => enqueueReaderPlaces({ entities: [BOARD] }, query));
     assert.equal((await db.query("SELECT stale_at::text AS at FROM place_page WHERE place_id=$1", [CITY]))[0]!.at, first!.at, "a second mark does not make the page wait longer");
+    assert.equal((await db.query("SELECT ctid::text AS tuple FROM place_page WHERE place_id=$1", [CITY]))[0]!.tuple,first!.tuple,"an already waiting page is not physically rewritten");
     const turn = await rebuildPlacePages({ db, purge: async () => purged, limit: 20, concurrency: 1 });
     assert.equal(turn.failed, 0);
     assert.deepEqual(await marked(db), []);

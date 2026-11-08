@@ -5,8 +5,8 @@ import { readFileSync } from "node:fs";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import { derivedMeetingFamilyScope, meetingPartitionScope } from "../lib/civic-data/meeting-partitions.ts";
-import { PLACE_PAGES_SQL, PLACE_PRINT_SQL, readPlacePackage, type PlaceInput } from "../lib/reader/place.ts";
-import { buildPlacePackage } from "../lib/reader/place-builder.ts";
+import { PLACE_PAGES_SQL, readPlacePackage, type PlaceInput } from "../lib/reader/place.ts";
+import { buildPlacePackage, PLACE_CHECKS_SQL } from "../lib/reader/place-builder.ts";
 import { seedPlacePages } from "./helpers/place-pages.ts";
 import type { Query } from "../lib/facts/publish.ts";
 import { GET as agendaGET } from "../app/api/agenda/route.ts";
@@ -50,7 +50,7 @@ async function canonicalTables(db: Awaited<ReturnType<typeof factDb>>) {
 async function readReadyPackage(db: Awaited<ReturnType<typeof factDb>>,input: PlaceInput,query: Query = db.query) {
   await seedPlacePages(db.query,input);
   return readPlacePackage(input,async(text,params)=>{
-    assert.ok(text===PLACE_PAGES_SQL,"the reader only queries saved pages");
+    assert.ok(text===PLACE_PAGES_SQL || text===PLACE_CHECKS_SQL,"the reader loads saved content and current check dates only");
     return query(text,params);
   });
 }
@@ -69,6 +69,7 @@ async function sameAgendaAnswer(db: Awaited<ReturnType<typeof factDb>>, meetingI
   let placeReads=0;
   installReaderDatabaseQuery(async statements=>Promise.all(statements.map(statement=>{
     if(statement.text===PLACE_PAGES_SQL){placeReads++;return db.query(statement.text,statement.params);}
+    if(statement.text===PLACE_CHECKS_SQL)return db.query(statement.text,statement.params);
     assert.match(statement.text,/WITH selected AS MATERIALIZED/);
     return [];
   })));
@@ -129,7 +130,8 @@ test("an agenda opened through a former body ID keeps its documents and the cano
         assert.deepEqual(statement.params[2],[alias],"the saved alias in the request remains intact");
         return db.query(statement.text,statement.params);
       }
-      assert.match(statement.text,/WITH selected AS MATERIALIZED/);
+      if(statement.text===PLACE_CHECKS_SQL)return db.query(statement.text,statement.params);
+    assert.match(statement.text,/WITH selected AS MATERIALIZED/);
       return [];
     })));
     const response=await agendaGET(new Request(`https://wtp.test/api/agenda?meetingId=${encodeURIComponent(meeting.id)}&bodyId=${encodeURIComponent(alias)}`));
@@ -488,7 +490,7 @@ test("an opened ready agenda keeps exact documents, neighbour URL ownership and 
     const full = await buildPlacePackage(input,async(sql,params) => {const rows=await db.query(sql,params);fullBytes=Buffer.byteLength(JSON.stringify(rows));return rows;});
     let calls = 0;
     const selected = await readReadyPackage(db,{...input,meetingIds:["alias:target"]},async(sql,params) => {
-      calls++;const rows = await db.query(sql,params);const wire = JSON.stringify(rows);
+      if(sql===PLACE_PAGES_SQL)calls++;const rows = await db.query(sql,params);const wire = JSON.stringify(rows);
       compactBytes=Buffer.byteLength(wire);
       return rows;
     });
@@ -701,7 +703,6 @@ test("the map and ballot reuse one place read for their request, and a later req
   let reads = 0, release: (() => void) | undefined;
   installReaderDatabaseQuery(async statements => {
     assert.equal(statements.length, 1, "the default place transport sends one statement through the shared socket");
-    if (statements[0].text === PLACE_PRINT_SQL) return [[{ print: "moved" }]];
     assert.equal(statements[0].text, PLACE_PAGES_SQL);
     assert.equal(statements[0].params[0], "AZ");
     reads++;

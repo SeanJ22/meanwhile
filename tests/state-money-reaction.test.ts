@@ -14,6 +14,7 @@ function readers(opts: { stateKnown: boolean }) {
     value: {
       candidateTargets: async () => new Set<string>(),
       provisionTargets: () => new Set<string>(),
+      voteCastTargets: () => new Set<string>(),
       refreshFunding: async () => { calls.push("fec"); },
       fundingTargets: () => new Set(["H0AZ01234"]),
       stateMoneyTargets: async (id: string) => { calls.push(`person:${id}`); return opts.stateKnown ? new Set([id]) : new Set<string>(); },

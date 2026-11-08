@@ -229,6 +229,7 @@ installNeonRequestDeadline();
 
 /** In-process work slowed this pass; each stays owed and is recorded as deferred. */
 const heldJobs = new Set<string>();
+let electionResultsRequestedAt: string | undefined;
 function routineJob<T>(job: RoutineJob, run: () => Promise<T>, fallback: T): Promise<T> {
   return runRoutineJob(job, run, id => { heldJobs.add(id); return fallback; });
 }
@@ -791,12 +792,14 @@ async function runFactMaintenance(deadlineMs: number): Promise<void> {
   catch (error) {
     supervisorFailures.push({ taskId: "reader-entity-ids", code: "READER_ENTITY_IDS_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   }
-  const prior = await readPassCursor(facts.query, "routine-fact-maintenance-state");
+  const maintenanceCursors = new Map((await facts.query("SELECT name,position FROM pass_cursor WHERE name=ANY($1::text[])",
+    [["routine-fact-maintenance-state", "routine-fact-entities-state"]])).map(row => [String(row.name), String(row.position)]));
+  const prior = maintenanceCursors.get("routine-fact-maintenance-state") ?? null;
   const state = states[(states.indexOf(prior ?? "") + 1) % states.length];
   if (!state || Date.now() >= deadlineMs) return;
   step = "loading fact store entities";
   try {
-    const loaded = await routineJob(ROUTINE_JOBS.factEntities, async () => loadChangedStates(states, await readPassCursor(facts.query, "routine-fact-entities-state"),
+    const loaded = await routineJob(ROUTINE_JOBS.factEntities, async () => loadChangedStates(states, maintenanceCursors.get("routine-fact-entities-state") ?? null,
       async next => {
         const loaded=await ensureFactEntities(facts, ROOT, [next]);
         return await ensurePortalBodyLabels(facts,next.toUpperCase()) ? [...new Set([...loaded,next])] : loaded;
@@ -847,6 +850,18 @@ async function runFactMaintenance(deadlineMs: number): Promise<void> {
       const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
       const common = { facts, clocks: factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null), repos,
         vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), fetch: pacedProbeFetch({ pacing: repos.websitePacing }), now: RUN_STARTED_AT, deadlineMs };
+      try {
+        const { runElectionResultsWhenDue } = await import("../lib/election-results/turn.ts");
+        const results = await runElectionResultsWhenDue({ path: join(ROOT, ".mirror", "election-results-next-check.json"),
+          now: new Date().toISOString(), requestedAt: electionResultsRequestedAt,
+          run: () => routineJob(ROUTINE_JOBS.electionResults, async () => {
+            const { runElectionResults } = await import("../lib/election-results/runner.ts");
+            return runElectionResults({ query: facts.query, db: facts, doors: repos.doors, now: new Date(), deadlineMs: common.deadlineMs });
+          }, null) });
+        if (results) console.log(`RCD_ELECTION_RESULTS ${JSON.stringify(results)}`);
+      } catch (error) {
+        supervisorFailures.push({ taskId: "election-results", code: "ELECTION_RESULTS_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+      }
       const report = (label: string, value: Awaited<ReturnType<typeof importCartonRosters>>) => {
         console.log(`fact store ${label}: ${value.live} facts live, ${value.confirmed} confirmed, ${value.blanks} blanks, ${value.unreadable.length} pages unreadable`);
       };
@@ -1002,9 +1017,14 @@ if (!FORCE && controlPlaneUrlFromEnv() !== null) {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
     const settledAt = new Date().toISOString();
     const cleared = await settleReadNow(doorRepos.doors, settledAt);
-    const marked = readNowDueRequests(await readRunnerDoors(doorRepos.doors, ["readNow"], "true", "requests"), new Set([...MEETING_PARTITION_CONTRACTS.map((contract) => contract.id), ...STANDING_SOURCE_TASKS.map((task) => task.id)]), settledAt);
-
-    const derive = editDeriveDueRequests(await readRunnerDoors(doorRepos.doors, ["origin"], "MANUAL", "requests"), new Set(DOOR_DERIVE_CONTRACT_IDS), settledAt);
+    const markedDoors = await readRunnerDoors(doorRepos.doors, ["readNow"], "true", "requests");
+    const marked = readNowDueRequests(markedDoors, new Set([...MEETING_PARTITION_CONTRACTS.map((contract) => contract.id), ...STANDING_SOURCE_TASKS.map((task) => task.id)]), settledAt);
+    const editedDoors = await readRunnerDoors(doorRepos.doors, ["origin"], "MANUAL", "requests");
+    electionResultsRequestedAt = [...markedDoors, ...editedDoors]
+      .filter(door => door.doorId.startsWith("feed:election-results:"))
+      .flatMap(door => [door.readNow ? door.updatedAt : null, door.editedAt].filter((at): at is string => Boolean(at)))
+      .sort().at(-1);
+    const derive = editDeriveDueRequests(editedDoors, new Set(DOOR_DERIVE_CONTRACT_IDS), settledAt);
     dueRequests = [...dueRequests, ...[...marked, ...derive].filter((request) => !dueRequests.some((held) => held.id === request.id))];
     shutDoors = await readRunnerDoors(doorRepos.doors, ["status"], "SHUT", "requests");
     if (marked.length > 0 || cleared > 0 || derive.length > 0) console.log(`RCD_DUE_REQUEST doors marked to be read now: ${marked.length} due, ${cleared} settled; ${derive.length} derive request(s) after door edits`);

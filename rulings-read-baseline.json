@@ -227,13 +227,13 @@
       "file": "lib/reader/canonical.ts",
       "kind": "SELECT *",
       "fingerprint": "53c4f0abf7abbbf0554b3151506b4edeef5076703e66a2bb5e73c6279129d6a7",
-      "line": 143
+      "line": 144
     },
     {
       "file": "lib/reader/canonical.ts",
       "kind": "SELECT *",
       "fingerprint": "08be67c81a10eaa313e03d3c5c7513d857c39e670f92deb09d0a1649615f964b",
-      "line": 185
+      "line": 186
     },
     {
       "file": "lib/sources/legiscan/reader.ts",
@@ -263,13 +263,13 @@
       "file": "scripts/routine-civic-data-runner.mts",
       "kind": "readCandidate",
       "fingerprint": "494a7673110ecc70f37b0d9296396ca62bd9c5669b8d369e9733c6c674a9a757",
-      "line": 856
+      "line": 871
     },
     {
       "file": "scripts/routine-civic-data-runner.mts",
       "kind": "readCandidate",
       "fingerprint": "494a7673110ecc70f37b0d9296396ca62bd9c5669b8d369e9733c6c674a9a757",
-      "line": 865
+      "line": 880
     },
     {
       "file": "scripts/split-federal-people.mts",

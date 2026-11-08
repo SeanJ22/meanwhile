@@ -10,9 +10,9 @@ import { MEASURE_WRITING_VERSION, translationHash, translationSourceContains, ty
 export const translationEvidenceVault = (vault?: EvidenceStore): EvidenceStore =>
   vault ?? new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR));
 
-/** Arizona needs the shared writer; Colorado statewide measures need the Blue Book. */
+/** Every held explainer written under older writing rules is rewritten; Colorado statewide measures also need the Blue Book. */
 export const needsMeasureRewrite = (row: MeasureTranslation) =>
-  /^ocd-division\/country:us\/state:az(?:\/|$)/.test(row.ocdId) && row.writingRulesVersion !== MEASURE_WRITING_VERSION ||
+  row.writingRulesVersion !== MEASURE_WRITING_VERSION ||
   row.ocdId === "ocd-division/country:us/state:co" && !isColoradoBlueBook(row.sourceUrl);
 
 /** One immutable original, plus only the exact passages this explanation cites. */

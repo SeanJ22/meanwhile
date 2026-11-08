@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { DM_Sans, EB_Garamond, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import "./reader.css";
+import "./results.css";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { resolveBasemap } from "@/lib/map/style";
 import { titleFor } from "@/lib/brand";

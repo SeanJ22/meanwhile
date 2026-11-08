@@ -1,7 +1,7 @@
 import { storedKeyValue } from "../core/keys-values.ts";
 import { createHash } from "node:crypto";
 
-import { sql } from "drizzle-orm";
+import { and, eq, ne, sql } from "drizzle-orm";
 
 import { getDb } from "./index.ts";
 import { reactions } from "./schema.ts";
@@ -15,6 +15,7 @@ import {
 } from "../coverage/zip-tier.ts";
 import {
   scaleForTargetType,
+  voteCastContestPrefix,
   type ReactionTargetType,
   type ReactionValue,
 } from "../signal/reactions.ts";
@@ -62,6 +63,20 @@ export interface StorableReaction {
 }
 
 /**
+ * How a vote-cast answer is stored: a reader has exactly one answer per contest. YES records the
+ * option and removes every other answer of that contest; NO withdraws the option, so the row is
+ * deleted and nothing is kept. Every other target type is one plain upsert.
+ */
+export function voteCastPlan(
+  row: Pick<StorableReaction, "targetType" | "targetId" | "reaction">,
+): { kind: "upsert" } | { kind: "withdraw" } | { kind: "replace"; contestPrefix: string } {
+  if (row.targetType !== "VOTE_CAST") return { kind: "upsert" };
+  if (row.reaction === "NO") return { kind: "withdraw" };
+  const contestPrefix = voteCastContestPrefix(row.targetId);
+  return contestPrefix ? { kind: "replace", contestPrefix } : { kind: "upsert" };
+}
+
+/**
  * Upsert one reaction: a changed answer overwrites the browser's prior one
  * for that target (the reactions_key_target_unq index), never accumulates.
  * Returns false when there is no database — accepted, not stored, and the
@@ -81,6 +96,17 @@ export async function writeReaction(row: StorableReaction): Promise<boolean> {
   if (!storedKeyValue("DATABASE_URL")) return false;
 
   assertWriteAllowed("a reaction");
+
+  const keyHash = hashReactionKey(row.reactionKey);
+  const plan = voteCastPlan(row);
+  if (plan.kind === "withdraw") {
+    await getDb().delete(reactions).where(and(
+      eq(reactions.reactionKeyHash, keyHash),
+      eq(reactions.targetType, row.targetType),
+      eq(reactions.targetId, row.targetId),
+    ));
+    return true;
+  }
 
   const occurredAt = new Date().toISOString();
   const suspectReason = row.suspectReason ?? null;
@@ -102,7 +128,7 @@ export async function writeReaction(row: StorableReaction): Promise<boolean> {
       divisionVintage: DIVISION_VINTAGE,
       // Every row starts ANONYMOUS; higher tiers come only from verification.
       verificationTier: "ANONYMOUS",
-      reactionKeyHash: hashReactionKey(row.reactionKey),
+      reactionKeyHash: keyHash,
       suspectReason,
       freeText: row.freeText ?? null,
       runClass: row.marker.runClass,
@@ -134,5 +160,14 @@ export async function writeReaction(row: StorableReaction): Promise<boolean> {
         runId: sql`CASE WHEN ${reactions.runClass} = 'ORGANIC' THEN ${runId} ELSE ${reactions.runId} END`,
       },
     });
+  if (plan.kind === "replace") {
+    /* `starts_with` reads the id literally; ids carry underscores, which LIKE would treat as wildcards. */
+    await getDb().delete(reactions).where(and(
+      eq(reactions.reactionKeyHash, keyHash),
+      eq(reactions.targetType, row.targetType),
+      ne(reactions.targetId, row.targetId),
+      sql`starts_with(${reactions.targetId}, ${plan.contestPrefix})`,
+    ));
+  }
   return true;
 }

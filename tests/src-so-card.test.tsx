@@ -1,9 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { renderToStaticMarkup } from "react-dom/server";
-import { OpenDataFacts, openDataSources } from "../components/map/open-data.tsx";
-import { Card } from "../components/ui/card.tsx";
+import { openDataSources } from "../components/map/open-data.tsx";
+import { renderCardWithSources } from "./helpers/render-card.ts";
 import { normalizeEcho, normalizeSocrata } from "../lib/sources/open-data/normalize.ts";
 import { parseCatalogPage } from "../lib/sources/open-data/acquire.ts";
 import { streamCsvObjects } from "../lib/sources/prl/streaming.ts";
@@ -12,7 +11,7 @@ test("Actual open-data card renders official attribution, dates and one bottom S
   const records=[];for await(const row of streamCsvObjects((async function*(){yield text;})())){records.push(normalizeEcho(row,"2026-10-12T23:24:00.000Z","2026-10-11T02:25:45.000Z"));break;}
   const raw=parseCatalogPage(readFileSync(new URL("./fixtures/src-so/socrata-ny.json",import.meta.url),"utf8")).rows[0];records.push(normalizeSocrata(raw,"2026-10-12T23:24:00.000Z"));
   // The facts only contribute citations; the card frame renders the one Sources list, so the card carries them as it does in the reader.
-  const html=renderToStaticMarkup(<Card title="Open data" sources={openDataSources(records)}><OpenDataFacts records={records} /></Card>);
+  const html=await renderCardWithSources({modulePath:"./components/map/open-data.tsx",exportName:"OpenDataFacts",props:{records},sourceUrls:openDataSources(records).flatMap(source=>source.provenance.sourceUrl?[source.provenance.sourceUrl]:[])});
   assert.match(html,/Titan Cleaners/);assert.match(html,/Quarters with noncompliance: 1/);assert.match(html,/Published 2026-10-11/);
   assert.match(html.replace(/<[^>]+>/g," ").replace(/\s+/g," "),/Published by U\.S\. Environmental Protection Agency/);
   // The shared footer names the publisher and dates; whether a source is official stays on the citation itself.

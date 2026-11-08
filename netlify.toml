@@ -42,6 +42,9 @@
 [functions."reader-geocode"]
   node_bundler = "esbuild"
 
+[functions."reader-election-results"]
+  node_bundler = "esbuild"
+
 # The site's default Netlify hostname forwards to the real one.
 [[redirects]]
   from = "https://sparkwtp.netlify.app/*"

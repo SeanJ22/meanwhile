@@ -3,6 +3,10 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
+import { Children, isValidElement, type ReactNode } from "react";
+import { PersonCard } from "../components/ui/person-card.tsx";
+import type { CardSource } from "../lib/officials/card-sources.ts";
+import { renderWithOpenSources } from "./helpers/render-card.ts";
 import { discoverFecCandidates, fecRegistration, fecRegistrationTargets } from "../lib/funding/fec-discovery.ts";
 import { fecBulkUrls, parseFecBulk } from "../lib/funding/fec-bulk.ts";
 import { collectFecSmallDonorLines, projectFecDiscovery } from "../lib/funding/fec-collector.ts";
@@ -153,7 +157,22 @@ test("an out-of-pilot challenger gets a sourced money profile, funding API respo
   assert.equal(evidence.denominators.federalFinanceRecordsReturned, 1);
   const response = await fundingGET(new Request("http://localhost/api/funding/fec:H2TX07119"), { params: Promise.resolve({ target: "fec:H2TX07119" }) });
   assert.equal(response.status, 200); const json = await response.json(); assert.equal(json.data.fecCandidateId, "H2TX07119");
-  const profile = renderToStaticMarkup(await FecCandidateProfile({ params: Promise.resolve({ candidate: "H2TX07119" }) }));
+  const page = await FecCandidateProfile({ params: Promise.resolve({ candidate: "H2TX07119" }) });
+  const sources: CardSource[] = [];
+  const collectSources = (node: ReactNode): void => Children.forEach(node, child => {
+    if (!isValidElement<{ children?: ReactNode; sources?: CardSource[] }>(child)) return;
+    if (child.type === PersonCard) sources.push(...child.props.sources ?? []);
+    collectSources(child.props.children);
+  });
+  collectSources(page);
+  assert.ok(sources.length, "the actual candidate profile supplies its card's sources");
+  const [footer] = await renderWithOpenSources(`
+    import React from 'react'; import {createRoot} from 'react-dom/client';
+    import {CardFooter} from './components/ui/card-footer.tsx';
+    createRoot(document.getElementById('root')).render(<CardFooter sources={${JSON.stringify(sources)}} />);
+  `, sources.flatMap(source => source.provenance.sourceUrl ? [source.provenance.sourceUrl] : []), "[data-card-footer]");
+  assert.ok(footer);
+  const profile = renderToStaticMarkup(page) + footer;
   assert.match(profile, /registered with the FEC for House TX-07/); assert.match(profile, /data-funding-section/); assert.match(profile, /Federal Election Commission/);
   // A share the weball totals cannot establish is a card gap, never an invented figure or a field placeholder.
   assert.equal(answer.data.totals?.smallDonorShare, null);

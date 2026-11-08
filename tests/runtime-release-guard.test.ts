@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 
+import { JobRunBook } from "../lib/control-plane/job-runs.ts";
 import { applyRuntimeRelease } from "../lib/ops/runtime-release-handoff.ts";
 import { defaultAsyncRunCommand, stageRuntimeRelease, type AsyncRunCommand } from "../lib/ops/runtime-release-stage.ts";
 import {
@@ -134,4 +135,17 @@ test("the launcher, started in a crash loop with a stale lock and an overdue swi
   assert.equal(git(root, "rev-parse", "HEAD"), a);
   assert.match(launched.stderr, /removed stale git lock/);
   assert.match(launched.stderr, /back on/);
+});
+
+test("a launcher pass with no notes is still a finished run, and the next pass records again", () => {
+  let clock = Date.parse("2026-11-07T10:00:00Z");
+  const book = new JobRunBook(() => new Date(clock).toISOString());
+  book.register("runtime-release-guard", 86_400_000);
+  book.settled("runtime-release-guard", []);
+  const first = book.merged(null)["runtime-release-guard"]!;
+  assert.deepEqual([first.lastStartedAt, first.lastFinishedAt, first.lastFailedAt], ["2026-11-07T10:00:00.000Z", "2026-11-07T10:00:00.000Z", null]);
+  clock += 86_400_000;
+  book.settled("runtime-release-guard", ["removed stale git lock"]);
+  const next = book.merged(null)["runtime-release-guard"]!;
+  assert.deepEqual([next.lastFinishedAt, next.lastError], ["2026-11-08T10:00:00.000Z", "removed stale git lock"]);
 });

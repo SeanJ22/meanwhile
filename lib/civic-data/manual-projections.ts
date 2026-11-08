@@ -2,7 +2,6 @@ import { statePublicationScope } from "./state-publication.ts";
 import { consumeStatePublicationRecord, rememberStatePublicationPrior } from "./state-publication.ts";
 import { REGISTRY_STATES, parseStateBallotContractId, stateBallotContractId, type BallotState, type StateBallotContractId } from "./state-scopes.ts";
 import { campaignFinanceRecordIssue } from "../funding/campaign-finance-reader.ts";
-import { createHash } from "node:crypto";
 import { officialFilingIssue } from "./official-filings.ts";
 import { electionFieldIssue } from "./election-fields.ts";
 import { translationProjectionProblems, type TranslationProjection } from "../translate/projection-contract.ts";
@@ -53,6 +52,7 @@ import type {
 } from "./types.ts";
 import { sourceProjectionEvidence } from "./types.ts";
 import { stanceRowIssue } from "./stance-rows.ts";
+import { sha256 } from "../sha256.ts";
 
 export const MANUAL_PROJECTION_CONTRACT_IDS = [
   "plain-english-translations",
@@ -145,9 +145,6 @@ export interface ManualProjectionCandidateOptions {
   readonly prior?: ManualProjectionPrior | null;
 }
 
-function sha256(value: string): string {
-  return createHash("sha256").update(value).digest("hex");
-}
 const SHA256_PATTERN = /^[a-f0-9]{64}$/;
 
 function object(value: unknown): Record<string, unknown> | null {

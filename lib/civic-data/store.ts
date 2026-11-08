@@ -92,9 +92,8 @@ import { readPublishedSourceChecks, recordPublishedSourceCheck, validPublishedSo
   type PublishedSourceCheck, type RecordPublishedSourceCheck } from "./source-checks.ts";
 import { aggregateFederalCounts, readFederalCounts as readFederalSourceCounts } from "../sources/congress/counts.ts";
 import type { FederalCounts, FederalProjection } from "../sources/congress/types.ts";
-import { enqueueReaderPlaces, invalidateReaderCache, placePageConsumesPublication, readerCacheScopeForPublication, readerPublicationNeedsGeography, type ReaderCachePurger } from "../reader/cache.ts";
+import { invalidateReaderCache, placePageConsumesPublication, readerCacheScopeForPublication, readerPublicationNeedsGeography, type ReaderCachePurger } from "../reader/cache.ts";
 import { seedRuntimeBodyPageSubjects } from "../reader/page-subjects.ts";
-import { markPublicationSlices } from "../core/slice-marks.ts";
 import { stateCalendarsCovers } from "./state-calendars.ts";
 export { projectionKey } from "./projection-key.ts";
 
@@ -3218,9 +3217,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       throw error;
     }
     if (eventRows[0]) {
-      if (input.recordClass === "MEETING") {
-        await enqueueReaderPlaces(readerCacheScopeForPublication(input.scope, { recordClass: input.recordClass }), (text, params) => this.readerRows(text, params));
-      }
       return { kind: "CONFIRMED", versionId: id, at };
     }
     const [pointerRows, candidateRows] = await this.db.batch([
@@ -3381,7 +3377,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       (text, params) => this.readerRows(text, params), publicationScope.states ?? []);
     await invalidateReaderCache({...publicationScope,statePackages:candidate.recordClass!=="MEETING"}, this.cacheOptions.purge, placePageConsumesPublication(candidate.scope, candidate.recordClass)
       ? (text, params) => this.readerRows(text, params) : null);
-    await markPublicationSlices((text, params) => this.readerRows(text, params), { recordClass: candidate.recordClass, scope: candidate.scope });
     return {
       ...postgresPromotedPointerIdentity(promotedRows[0]),
       writeFingerprint: { expected: candidate.normalization.normalizedHash, stored: promotedRows[0].payloadFingerprint },

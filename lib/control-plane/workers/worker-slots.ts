@@ -38,7 +38,6 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "state-rollcalls.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "legistar-outcomes-ingest.mts": 355,
   "legistar-members-worker.mts": 512,
-  "slice-lane.mts": 192,
   // SPN-01E8: a state pass on a copy of production, 204 California ZIPs after the state copy: 1,429 MiB peak resident (maxRSS), plus 5%, rounded up to MiB.
   "zip-answers-lane.mts": 1500,
   "parser-worker.mts": 512,

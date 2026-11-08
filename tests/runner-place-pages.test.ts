@@ -212,12 +212,12 @@ test("a place-page turn reserves its measured peak on the shared host memory", a
 });
 
 test("a pending restart drains the standing lane children, and a drained exit 0 is a finish, not a stop", async () => {
-  for (const [lane, run, stopped] of [["legistar-members", "runMemberLane", /Legistar members stopped/], ["slices", "runSliceLane", /Slices stopped/], ["parser-lane", "runParserLane", /page readers stopped/], ["platform-census", "runPlatformCensus", /Platform census stopped/]] as const) {
+  for (const [lane, run, stopped] of [["legistar-members", "runMemberLane", /Legistar members stopped/], ["parser-lane", "runParserLane", /page readers stopped/], ["platform-census", "runPlatformCensus", /Platform census stopped/]] as const) {
     for (const status of [0, null]) {
       const sent: unknown[] = [];
       const context = createContext({ storedKeyEnvironment, provider: "postgres", canary: false, runtimeAdmissionsHeld: false, pendingRestart: new PendingRestart(), jobLaunchAllowed: () => true,
         standingRuntimeScheduler: { inFlightIds: () => [lane] }, researchCycleActive: false, drainHunterLane: () => {}, console: { log: () => {}, error: () => {} }, process,
-        SLICE_JOB: { id: "slices", databaseBytesPerRun: 1 }, LEGISTAR_MEMBER_DATABASE_BYTES: 1, PARSER_LANE_DATABASE_BYTES: 1, TS_CHILD: [], CODE_ROOT: process.cwd(),
+        LEGISTAR_MEMBER_DATABASE_BYTES: 1, PARSER_LANE_DATABASE_BYTES: 1, TS_CHILD: [], CODE_ROOT: process.cwd(),
         RUNTIME_NO_PROGRESS_MS: 1, withPassDeadline, standingChildEnvironment: () => ({}), AUTO_RELEASE_HANDOFF: true, censusMemory: { acquire: async () => () => {} },
         runRuntimeChildren: async (_commands: unknown, options: { onStarted(id: string, child: unknown): void }) => {
           options.onStarted(lane, { connected: true, send: (message: unknown) => { sent.push(message); } });

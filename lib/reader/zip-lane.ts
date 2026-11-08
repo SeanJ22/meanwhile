@@ -9,7 +9,7 @@ import { withPlaceMapReads, type PlaceEntry } from "../place-map/reader.ts";
 import type { EverydayRoutingProjection } from "../routing/everyday.ts";
 import { READER_NATIONAL_CACHE_TAG, purgeReaderCacheTags, readerZipTag, type ReaderCachePurger } from "./cache.ts";
 import { publicationVersion } from "./canonical.ts";
-import { databaseBytesSpent, owedMsFor, untilEnd } from "./lane-pace.ts";
+import { processNeonBytes } from "../db/transfer-by-caller.ts";
 import { dropHeldPlaceRows } from "./place.ts";
 import type { StateMirror } from "./state-mirror.ts";
 import { mirrorScopes } from "./state-mirror.ts";
@@ -34,7 +34,13 @@ export function zipAnswersLane(run: (deadlineMs: number) => Promise<void>): Inde
   return { id: ZIP_ANSWERS_JOB.id, everyMs: 60_000, budgetMs: 55 * 60_000, run };
 }
 
-export const owedMs = (bytes: number): number => owedMsFor(bytes, ZIP_ANSWER_BYTES_PER_HOUR);
+/** Everything the database meter has counted in this process, requests and responses of both databases: the lane owes the time exactly these bytes take. */
+const databaseBytesSpent = (): number => processNeonBytes().reduce((sum, hour) => sum + hour.bytes.reader + hour.bytes["control-plane"] + (hour.sent?.reader.bytes ?? 0) + (hour.sent?.["control-plane"].bytes ?? 0), 0);
+/** The time owed for the bytes moved; 5% over what the meter counts is owed, for the hour's edges and a look that runs past it. */
+export const owedMs = (bytes: number): number => Math.ceil(bytes * 1.05 / ZIP_ANSWER_BYTES_PER_HOUR * 3_600_000);
+/** Work that ignores the turn's end cannot hold the turn open past it. */
+const untilEnd = <T,>(end: AbortSignal | undefined, work: Promise<T>): Promise<T> => end ? Promise.race([work, new Promise<never>((_, reject) => {
+  if (end.aborted) reject(end.reason); else end.addEventListener("abort", () => reject(end.reason), { once: true }); })]) : work;
 
 /** Everything the lane builds an answer from. The routes' own functions are what the real ones call. */
 export interface ZipBuilders {

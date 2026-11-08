@@ -1,6 +1,5 @@
 import { storedKeyEnvironment, storedKeyValue } from "../lib/core/keys-values.ts";
 import { LEGISTAR_MEMBER_DATABASE_BYTES } from "../lib/sources/legistar/members-queue.ts";
-import { SLICE_JOB, slicesLane } from "../lib/reader/slice-lane.ts";
 import { ZIP_ANSWERS_JOB, zipAnswersLane } from "../lib/reader/zip-lane.ts";
 import { keysRunnerPass, savedKeysLane } from "../lib/core/keys-runner.ts";
 import { readPlanningContinuation } from "../lib/control-plane/scheduler/state-planning.ts";
@@ -273,7 +272,10 @@ const INTERVAL_MIN = intervalArg ? Number(intervalArg.slice("--interval=".length
 jobRuns.register(RESEARCH_JOB, INTERVAL_MIN * 60_000);
 // What the launcher did before this runner started (removed git locks, a switch undone) rides on the job record.
 jobRuns.register(RELEASE_GUARD_JOB, 24 * 3_600_000);
-for (const { text } of takeRuntimeGuardNotes(ROOT)) { console.log(`  runtime release guard: ${text}`); jobRuns.failed(RELEASE_GUARD_JOB, text); jobRuns.finished(RELEASE_GUARD_JOB); }
+const guardNotes = takeRuntimeGuardNotes(ROOT).map(note => note.text);
+for (const text of guardNotes) console.log(`  runtime release guard: ${text}`);
+if (!guardNotes.length) console.log("  runtime release guard: nothing to clean");
+jobRuns.settled(RELEASE_GUARD_JOB, guardNotes);
 
 const maxArg = argv.find((a) => a.startsWith("--max="));
 const onlyArg = argv.find((a) => a.startsWith("--only="));
@@ -1335,9 +1337,6 @@ function drainLaneChildren(): void {
 async function runMemberLane(deadlineMs: number): Promise<void> {
   await runLaneChild("legistar-members", LEGISTAR_MEMBER_DATABASE_BYTES, "scripts/legistar-members-worker.mts", deadlineMs, "Legistar members stopped; queued records remain due");
 }
-async function runSliceLane(deadlineMs: number): Promise<void> {
-  await runLaneChild(SLICE_JOB.id, SLICE_JOB.databaseBytesPerRun, "scripts/slice-lane.mts", deadlineMs, "Slices stopped; marked slices stay waiting");
-}
 async function runZipAnswersLane(deadlineMs: number): Promise<void> {
   await runLaneChild(ZIP_ANSWERS_JOB.id, ZIP_ANSWERS_JOB.databaseBytesPerRun, "scripts/zip-answers-lane.mts", deadlineMs, "ZIP answers stopped; every ZIP keeps its last answer");
 }
@@ -1422,13 +1421,12 @@ const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   { id: "hunter-lane", everyMs: 60_000, budgetMs: HUNTER_LANE_LIFE_MS + HUNTER_WORKER_WALL_MS, run: runHunterLane },
   { id: "parser-lane", everyMs: 60_000, budgetMs: 55 * 60_000, run: runParserLane },
   placePagesLane(runPlacePages),
-  slicesLane(runSliceLane),
   zipAnswersLane(runZipAnswersLane),
   publishNowLane(runPublishNow),
   placeMapsLane(deadlineMs => runRoutineLane("place-maps", deadlineMs)),
   votingSitesLane(deadlineMs => runRoutineLane("voting-sites", deadlineMs)),
   doorProbesLane(runDoorProbes),
-  { id: RELEASE_INSTALL_JOB, everyMs: 60_000, budgetMs: INSTALL_TIMEOUT_MS + 5 * 60_000, run: runReleaseInstall },
+  { id: RELEASE_INSTALL_JOB, everyMs: 60_000, budgetMs: INSTALL_TIMEOUT_MS + 5 * 60_000, cadenceIsLaunch: true, run: runReleaseInstall },
 ], (outcome) => {
   if (outcome.state === "FAILED") {
     jobRuns.failed(outcome.id, outcome.error);
@@ -1436,7 +1434,7 @@ const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   } else jobRuns.completed(outcome.id);
 }, id => jobRuns.started(id));
 // A lane whose run may outlast its launch interval finishes at most once per run budget.
-for (const lane of standingRuntimeScheduler.lanes) jobRuns.register(lane.id, Math.max(lane.everyMs, lane.budgetMs));
+for (const lane of standingRuntimeScheduler.lanes) jobRuns.registerLane(lane);
 
 async function ownerRepositories(): Promise<ControlPlaneRepositories | null> {
   if (provider !== "postgres") return null;

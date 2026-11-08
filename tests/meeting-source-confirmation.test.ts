@@ -9,7 +9,7 @@ import { meetingFactsAfterSourceCheck } from "../lib/civic-data/meeting-fact-pro
 import { factClocks } from "../lib/facts/clocks.ts";
 import { derivedSourceContentHash } from "../lib/civic-data/derived-source-hash.ts";
 
-test("an identical source refresh updates only its body's existing facts without reading values or replacing owner facts", async () => {
+test("an identical source refresh confirms its body's exact versions without rewriting facts or replacing owner facts", async () => {
   const db = await factDb(), old = "2026-10-01T00:00:00.000Z", current = "2026-10-01T01:00:00.000Z";
   const url = "https://example.gov/calendar", body = "Council meeting\n2026-10-20T19:00:00Z", bytes = new TextEncoder().encode(body);
   const hash = createHash("sha256").update(bytes).digest("hex"), first = meetingEntityId("first"), other = meetingEntityId("other");
@@ -28,9 +28,10 @@ test("an identical source refresh updates only its body's existing facts without
       responses: [{ source: "ical", requestedUrl: url, finalUrl: url, rawHash: hash, byteCount: bytes.length, bytes, httpStatus: 200, retrievedAt: current, contentType: "text/plain" }] });
     assert.equal(confirmed, 2);
     assert.ok(responseBytes < 4000, `Only changed entity identities should return, got ${responseBytes} bytes`);
-    const rows = await db.query("SELECT entity_id,field,checked_at FROM fact ORDER BY entity_id,field");
+    const rows = await db.query("SELECT entity_id,field,checked_at FROM checked_fact ORDER BY entity_id,field");
     assert.ok(rows.filter(row => row.entity_id === first && row.field !== "location").every(row => Date.parse(String(row.checked_at)) === Date.parse(current)));
     assert.ok(rows.filter(row => row.entity_id === other || row.field === "location").every(row => Date.parse(String(row.checked_at)) === Date.parse(old)));
+    assert.ok((await db.query("SELECT checked_at FROM fact")).every(row=>Date.parse(String(row.checked_at))===Date.parse(old)),"immutable fact versions are never rewritten for a check");
     assert.equal(await meetingFactWorkRemains(db.query, ["first"], ["body:first"], current), false);
     assert.equal(await meetingFactWorkRemains(db.query, ["missing"], ["body:first"], current), true);
     const location = { name: "Old Hall", address: "1 Old Street", lat: 33, lng: -112 };

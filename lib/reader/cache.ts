@@ -214,7 +214,8 @@ export async function enqueueReaderPlaces(scope: ReaderCacheScope, query: Query)
   ) INSERT INTO place_page(place_id,stale_at,priority)
     SELECT a.id,clock_timestamp(),e.page_priority FROM affected a JOIN entity e ON e.id=a.id AND a.id NOT LIKE 'zip:%' ORDER BY a.id
     ON CONFLICT(place_id) DO UPDATE SET stale_at=CASE WHEN place_page.lease_until>clock_timestamp() THEN clock_timestamp()
-      ELSE coalesce(place_page.stale_at,clock_timestamp()) END`,
+      ELSE coalesce(place_page.stale_at,clock_timestamp()) END
+    WHERE place_page.stale_at IS NULL OR place_page.lease_token IS NOT NULL AND place_page.lease_until>clock_timestamp()`,
   [broad ? states : [],places,entities,broad && scope.national === true]);
 }
 

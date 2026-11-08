@@ -10,7 +10,6 @@ import type { RoutineRecordClass } from "../civic-data/types.ts";
 import { isCivicPayloadPart } from "../civic-data/payload-codec.ts";
 import { serverReaderValue } from "./memory.ts";
 import { createHash } from "node:crypto";
-import { MEETING_HELD_LOOKBACK_DAYS } from "../meetings/constants.ts";
 
 const refuse = (reason: string) => async (): Promise<never> => { throw new Error(reason); };
 type Pointer = { recordClass: RoutineRecordClass; scope: string };
@@ -233,44 +232,3 @@ export async function readCanonicalShelf(entries: readonly { recordClass: Routin
     },
   };
 }
-
-/** How long a card keeps the time its sources were last checked before that alone is worth rebuilding it. */ export const CHECKED_EVERY_MS = 24 * 3_600_000;
-/** `text` without the moments a source was read at and the bytes it gave: those moving on alone change nothing a card shows but when it was last checked. */
-export const UNSTAMPED_SQL = (text: string) => `regexp_replace(${text},'"(collectedAt|lastFreshAt|coordinateCheckedAt|generatedAt|retrievedAt|rawHash|byteCount)": ?("[^"]*"|[0-9]+|null)','','g')`;
-/** The calendar partitions of these boards (by the family keys and the boards' encoded ids), with their headers and members when `$3` asks and their last unchanged confirmation, in scope order. */
-export const MEETING_PARTITIONS_SQL = `SELECT p.scope,p.key,p.current_version_id AS version,
-    CASE WHEN $3::boolean THEN reader_payload_value(CASE WHEN p.scope LIKE 'source:derived:family:%'
-      THEN (header-'meetings'-'agendaDocuments'-'derivedMembers'-'sources') || jsonb_build_object('sources',coalesce((
-        SELECT jsonb_agg(reader_payload_node(s.item)-'acquisitions' ORDER BY s.ordinal_index) FROM reader_payload_members(header->'sources') s),'[]'::jsonb))
-      ELSE header-'meetings'-'agendaDocuments'-'derivedMembers' END) END AS header,
-    CASE WHEN $3::boolean AND header ? 'derivedMembers' THEN coalesce((SELECT jsonb_agg(reader_payload_value(d.item) ORDER BY d.ordinal_index)
-      FROM reader_payload_members(header->'derivedMembers') d),'[]'::jsonb) END AS members,
-    (SELECT e.detail FROM civic_data_candidate_events e WHERE e.candidate_id=p.current_version_id AND left(e.detail,26)='UNCHANGED_CONFIRMATION_V1 '
-      ORDER BY e.sequence DESC LIMIT 1) AS confirmation,
-    md5((SELECT floor(extract(epoch FROM c.retrieved_at)/${CHECKED_EVERY_MS / 1000}) FROM civic_data_candidates c WHERE c.id=p.current_version_id)||${UNSTAMPED_SQL("(header-'meetings'-'agendaDocuments'-'sources')::text||coalesce((SELECT jsonb_agg(CASE WHEN jsonb_typeof(reader_payload_node(s.item))='object' THEN reader_payload_node(s.item)-'acquisitions' ELSE reader_payload_node(s.item) END ORDER BY s.ordinal_index) FROM reader_payload_members(header->'sources') s),'[]'::jsonb)::text")}) AS shown
-  FROM civic_data_promotions p CROSS JOIN LATERAL (SELECT reader_payload_node(p.payload) AS header) h
-  WHERE p.record_class='MEETING' AND (p.key=ANY($1::text[]) OR left(p.scope,7)='source:' AND split_part(p.scope,':',3)='body' AND split_part(p.scope,':',4)=ANY($2::text[])) ORDER BY p.scope`;
-
-/** Sittings an earlier, good version of a calendar still carries past the held window, newest version first; their agenda papers follow the sittings. */
-export const ARCHIVED_MEETINGS_SQL = (collection: "meetings" | "agendaDocuments") => `WITH held AS (
-    SELECT p.scope,p.current_version_id AS id,c.source_id FROM civic_data_promotions p JOIN civic_data_candidates c ON c.id=p.current_version_id WHERE p.key=ANY($1::text[])
-  ), versions AS (
-    SELECT c.id,c.retrieved_at FROM held JOIN civic_data_candidates c ON c.record_class='MEETING' AND c.scope=held.scope AND c.source_id=held.source_id
-    WHERE c.id<>held.id AND c.state='PROMOTED' AND c.acquisition_succeeded AND c.promoted_version_id=c.id AND c.last_known_good_version_id=c.id
-      AND c.normalized_hash ~ '^[a-f0-9]{64}$' AND c.validation_receipt->>'decision'='GOOD' AND c.validation_receipt->>'candidateId'=c.id
-      AND c.validation_receipt->>'recordClass'=c.record_class AND c.validation_receipt->>'scope'=c.scope AND c.validation_receipt->>'sourceId'=c.source_id
-  ), sittings AS (
-    SELECT DISTINCT ON (header->>'id') header->>'id' AS id,header->>'bodyId' AS body,header AS value,v.retrieved_at
-    FROM versions v CROSS JOIN LATERAL (SELECT candidate->'readModel' AS payload FROM civic_data_candidates WHERE id=v.id LIMIT 1) model
-      CROSS JOIN LATERAL reader_payload_members(reader_payload_node(model.payload)->'meetings') m
-      CROSS JOIN LATERAL (SELECT reader_payload_value(m.item) AS header) h
-    WHERE header->>'bodyId'=ANY($2::text[]) AND header->>'id' IS NOT NULL AND header->>'startsAt' ~ '^\\d{4}-\\d{2}-\\d{2}T'
-      AND (header->>'startsAt')::timestamptz < now()-make_interval(days=>${MEETING_HELD_LOOKBACK_DAYS})
-    ORDER BY header->>'id',v.retrieved_at DESC
-  )${collection === "meetings" ? "SELECT id,body,value FROM sittings ORDER BY id" : `, papers AS (
-    SELECT DISTINCT ON (reader_payload_node(d.item)->>'id') s.body,reader_payload_value(d.item) AS value
-    FROM versions v CROSS JOIN LATERAL (SELECT candidate->'readModel' AS payload FROM civic_data_candidates WHERE id=v.id LIMIT 1) model
-      CROSS JOIN LATERAL reader_payload_members(reader_payload_node(model.payload)->'agendaDocuments') d
-      JOIN sittings s ON s.id=reader_payload_node(d.item)->>'meetingId'
-    ORDER BY reader_payload_node(d.item)->>'id',v.retrieved_at DESC
-  ) SELECT body,value FROM papers`}`;

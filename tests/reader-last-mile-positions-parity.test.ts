@@ -13,24 +13,11 @@ import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts
 import { statementEvidenceFor } from "../lib/ask/statements.ts";
 import { type CandidateCorpus, type CandidateDocument } from "../lib/candidates/corpus.ts";
 import { createHash } from "node:crypto";
-import { installOfficeholderStatements, installRegistryAuthority, registryTransferImport, syntheticCandidateCorpus } from "./helpers/promoted-fixtures.ts";
+import { installCandidateCorpus, installOfficeholderStatements, installRegistryAuthority, registryTransferImport, syntheticCandidateCorpus } from "./helpers/promoted-fixtures.ts";
 import { officialCandidacySeatMatches } from "../lib/registry/runtime-data-plane.ts";
 
-import { installManualValue } from "./helpers/promoted-fixtures.ts";
-import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
-import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
-import { readStateAuthorityProjection } from "../lib/civic-data/state-reader.ts";
 
-async function installCandidateCorpus(value: CandidateCorpus = syntheticCandidateCorpus(), state = "AZ"): Promise<CandidateCorpus> {
-  installManualValue(stateBallotContractId("candidate-corpus", state), value, `test:candidate-corpus:${state}`);
-  served((await readStateAuthorityProjection("candidate-publications", state)).result, "Candidate publications");
-  return value;
-}
 
-function served<T>(read: CivicDataReadResult<T>, what: string): T {
-  if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(`${what} fixture did not install: ${read.kind} ${"detail" in read ? read.detail : ""}`);
-  return read.value as T;
-}
 
 
 

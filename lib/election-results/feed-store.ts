@@ -59,6 +59,34 @@ const netlifyIO: ResultFeedJSONIO = {
   async write(key, value) { await (await netlifyStore()).setJSON(key, value); },
 };
 
+export interface ResultFeedBlobClient {
+  get(key: string, options: { type: "json"; consistency: "strong" }): Promise<unknown | null>;
+  setJSON(key: string, value: unknown): Promise<unknown>;
+}
+
+/** A native request uses the platform's context and automatic credentials, without opening saved keys. */
+export function nativeResultFeedScope(deployContext?: string): "site" | "deploy" {
+  return deployContext === "production" ? "site" : "deploy";
+}
+
+async function automaticBlobsStore(scope: "site" | "deploy"): Promise<ResultFeedBlobClient> {
+  const { getStore, getDeployStore } = await import("@netlify/blobs");
+  const options = { name: "meanwhile-election-results", consistency: "strong" as const };
+  return scope === "site" ? getStore(options) : getDeployStore(options);
+}
+
+export function nativeResultFeedStore(deployContext?: string,
+  open: (scope: "site" | "deploy") => Promise<ResultFeedBlobClient> = automaticBlobsStore): ElectionResultFeedStore {
+  if (installed) return installed;
+  const local = process.env.WTP_ELECTION_RESULTS_TEST_FEED_DIR;
+  if (local && deployContext !== "production") return localElectionResultFeedStore(local);
+  const scope = nativeResultFeedScope(deployContext);
+  return createElectionResultFeedStore({
+    read: async key => (await open(scope)).get(key, { type: "json", consistency: "strong" }),
+    write: async (key, value) => { await (await open(scope)).setJSON(key, value); },
+  });
+}
+
 async function netlifyStore() {
   const { getStore, getDeployStore } = await import("@netlify/blobs");
   const siteID = process.env.WTP_BLOBS_SITE_ID, token = storedKeyValue("WTP_BLOBS_TOKEN");

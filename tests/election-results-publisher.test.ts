@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test, { type TestContext } from "node:test";
 import { createHash } from "node:crypto";
 import type { BallotSet, Candidacy, Contest } from "../lib/ballot/types.ts";
 import { parseMultiStateResults } from "../lib/election-results/multistate.ts";
@@ -7,10 +7,8 @@ import { ensureOpenElectionResults, publishElectionResultBatch } from "../lib/el
 import { runElectionResults } from "../lib/election-results/runner.ts";
 import type { ElectionResultBatch } from "../lib/election-results/types.ts";
 import { summarizeCongressResults } from "../lib/election-results/summary.ts";
-import { createElectionResultFeedStore } from "../lib/election-results/feed-store.ts";
-import { WORK_DDL, workList } from "../lib/core/work.ts";
-import { markSlicesOn } from "../lib/core/slice-marks.ts";
-import { factDb } from "./helpers/fact-db.ts";
+import { resultFactDb, resultFeedMemory } from "./helpers/election-results.ts";
+import { workList } from "../lib/core/work.ts";
 
 const AT = "2026-11-06T12:00:00.000Z";
 const STATE = "ocd-division/country:us/state:ma";
@@ -46,108 +44,95 @@ function raw(votes = 100) {
       after: { composition: { D: 101, R: 58 }, control: "D" }, counting: 1 }], statewide: [{ office: "Governor", prev: "D", win: "D", cls: "hold" }] }] } });
 }
 
-async function fixture() {
-  const db = await factDb();
-  for (const statement of WORK_DDL) await db.pg.exec(statement);
-  await db.pg.exec("CREATE TABLE civic_data_promotions(scope text,record_class text,current_version_id text)");
-  markSlicesOn(() => workList(db.query, { owner: "test-slide" }));
-  await db.query("INSERT INTO entity(id,kind,name,state) VALUES('ocd-division/country:us','place','United States',NULL),($1,'place','Massachusetts','MA')", [STATE]);
-  return db;
-}
+const fixture = (context: TestContext) => resultFactDb(context, "test-slide", { MA: "Massachusetts" });
 
-test("source results pass the Slide, publish matching fields, preserve history, and leave every identity gap on the work list", async () => {
-  const db = await fixture();
-  try {
-    const batch = parseMultiStateResults(raw(), AT);
-    const first = await publishElectionResultBatch({ db, query: db.query, batch, ballots: [ballot], state: "MA", now: new Date(AT), purge });
-    assert.deepEqual(first.counts, { matched: 2, unmatched: 1, ambiguous: 1, published: 6, unchanged: 0 });
-    const facts = await db.query("SELECT entity_id,field,value,quote_start,provenance_kind FROM fact WHERE status='live' ORDER BY entity_id");
-    assert.equal(facts.length, 6);
-    assert.ok(facts.every(row => row.quote_start !== null && row.provenance_kind === "REFERENCE"), "the real Slide checked the transient source evidence");
-    const adams = facts.find(row => row.entity_id === "adams")!.value as { votes: number; sources: { name: string }[] };
-    assert.equal(adams.votes, 100);
-    assert.deepEqual(adams.sources.map(row => row.name), ["MultiState", "State election office (sos)"]);
-    assert.equal((facts.find(row => row.entity_id === "question-1")!.value as { yesVotes: number }).yesVotes, 120);
-    const work = await db.query("SELECT kind,value FROM work WHERE kind IN ('fix','detect') ORDER BY kind");
-    assert.deepEqual(work.map(row => row.kind), ["detect", "fix", "fix"]);
-    assert.match(JSON.stringify(work), /Candidate missing from served ballot/);
-    assert.match(JSON.stringify(work), /Carmen Carroll/);
-    assert.match(JSON.stringify(work), /CONTEST_IDENTITY_TIE/);
-    const sourceRows = await db.query("SELECT url,final_url,sha256,blob_key,text_key FROM source_copy");
-    assert.equal(sourceRows.length, 1);
-    assert.equal(sourceRows[0].sha256, batch.evidence.contentHash);
-    assert.equal(sourceRows[0].text_key, null);
-    assert.match(String(sourceRows[0].blob_key), /^observed:[a-f0-9]{64}:[a-f0-9]{64}:/);
-    assert.equal(JSON.stringify(sourceRows).includes("Avery Adams"), false, "only source URL/hash/check metadata is stored");
+test("source results pass the Slide, publish matching fields, preserve history, and leave every identity gap on the work list", async context => {
+  const db = await fixture(context);
+  const batch = parseMultiStateResults(raw(), AT);
+  const first = await publishElectionResultBatch({ db, query: db.query, batch, ballots: [ballot], state: "MA", now: new Date(AT), purge });
+  assert.deepEqual(first.counts, { matched: 2, unmatched: 1, ambiguous: 1, published: 6, unchanged: 0 });
+  const facts = await db.query("SELECT entity_id,field,value,quote_start,provenance_kind FROM fact WHERE status='live' ORDER BY entity_id");
+  assert.equal(facts.length, 6);
+  assert.ok(facts.every(row => row.quote_start !== null && row.provenance_kind === "REFERENCE"), "the real Slide checked the transient source evidence");
+  const adams = facts.find(row => row.entity_id === "adams")!.value as { votes: number; sources: { name: string }[] };
+  assert.equal(adams.votes, 100);
+  assert.deepEqual(adams.sources.map(row => row.name), ["MultiState", "State election office (sos)"]);
+  assert.equal((facts.find(row => row.entity_id === "question-1")!.value as { yesVotes: number }).yesVotes, 120);
+  const work = await db.query("SELECT kind,value FROM work WHERE kind IN ('fix','detect') ORDER BY kind");
+  assert.deepEqual(work.map(row => row.kind), ["detect", "fix", "fix"]);
+  assert.match(JSON.stringify(work), /Candidate missing from served ballot/);
+  assert.match(JSON.stringify(work), /Carmen Carroll/);
+  assert.match(JSON.stringify(work), /CONTEST_IDENTITY_TIE/);
+  const sourceRows = await db.query("SELECT url,final_url,sha256,blob_key,text_key FROM source_copy");
+  assert.equal(sourceRows.length, 1);
+  assert.equal(sourceRows[0].sha256, batch.evidence.contentHash);
+  assert.equal(sourceRows[0].text_key, null);
+  assert.match(String(sourceRows[0].blob_key), /^observed:[a-f0-9]{64}:[a-f0-9]{64}:/);
+  assert.equal(JSON.stringify(sourceRows).includes("Avery Adams"), false, "only source URL/hash/check metadata is stored");
 
-    let repeatedReads = 0;
-    const neverRead = async () => { repeatedReads++; throw new Error("An unchanged fingerprint must stop before the database"); };
-    const unchanged = await publishElectionResultBatch({ db: { transaction: neverRead }, query: neverRead,
-      batch: parseMultiStateResults(raw(), "2026-11-06T18:00:00.000Z"), ballots: [ballot], state: "MA", prior: first.progress,
-      now: new Date("2026-11-06T18:00:00.000Z"), purge });
-    assert.equal(repeatedReads, 0);
-    assert.equal(unchanged.counts.published, 0);
+  let repeatedReads = 0;
+  const neverRead = async () => { repeatedReads++; throw new Error("An unchanged fingerprint must stop before the database"); };
+  const unchanged = await publishElectionResultBatch({ db: { transaction: neverRead }, query: neverRead,
+    batch: parseMultiStateResults(raw(), "2026-11-06T18:00:00.000Z"), ballots: [ballot], state: "MA", prior: first.progress,
+    now: new Date("2026-11-06T18:00:00.000Z"), purge });
+  assert.equal(repeatedReads, 0);
+  assert.equal(unchanged.counts.published, 0);
 
-    const nextAt = "2026-11-07T00:00:00.000Z";
-    const changed = await publishElectionResultBatch({ db, query: db.query, batch: parseMultiStateResults(raw(101), nextAt),
-      ballots: [ballot], state: "MA", prior: unchanged.progress, now: new Date(nextAt), purge });
-    assert.equal(changed.counts.published, 1, "only the changed candidate value publishes; other values retain their versions");
-    assert.deepEqual((await db.query("SELECT status,value->>'votes' AS votes FROM fact WHERE entity_id='adams' ORDER BY id")),
-      [{ status: "superseded", votes: "100" }, { status: "live", votes: "101" }]);
-    assert.equal((await db.query("SELECT count(*)::int n FROM fact WHERE entity_id='baker'"))[0].n, 1);
-    await ensureOpenElectionResults(db.query, [ballot], new Set(["governor", "measure"]));
-    assert.ok((await db.query("SELECT 1 FROM work WHERE kind='hunt' AND subject_id='local' AND field='election_result' AND status='waiting'")).length);
-  } finally { await db.pg.close(); }
+  const nextAt = "2026-11-07T00:00:00.000Z";
+  const changed = await publishElectionResultBatch({ db, query: db.query, batch: parseMultiStateResults(raw(101), nextAt),
+    ballots: [ballot], state: "MA", prior: unchanged.progress, now: new Date(nextAt), purge });
+  assert.equal(changed.counts.published, 1, "only the changed candidate value publishes; other values retain their versions");
+  assert.deepEqual((await db.query("SELECT status,value->>'votes' AS votes FROM fact WHERE entity_id='adams' ORDER BY id")),
+    [{ status: "superseded", votes: "100" }, { status: "live", votes: "101" }]);
+  assert.equal((await db.query("SELECT count(*)::int n FROM fact WHERE entity_id='baker'"))[0].n, 1);
+  await ensureOpenElectionResults(db.query, [ballot], new Set(["governor", "measure"]));
+  assert.ok((await db.query("SELECT 1 FROM work WHERE kind='hunt' AND subject_id='local' AND field='election_result' AND status='waiting'")).length);
 });
 
-for (const statusDate of [AT, undefined]) test(`replaying unchanged results with ${statusDate ? "known" : "unknown"} status dates and no progress confirms Sources without new history`, async () => {
-  const db = await fixture();
+for (const statusDate of [AT, undefined]) test(`replaying unchanged results with ${statusDate ? "known" : "unknown"} status dates and no progress confirms Sources without new history`, async context => {
+  const db = await fixture(context);
   const batch = (at: string) => {
     const document = JSON.parse(raw());
     document.general_events[0].statewide_races[0].result_status_set_at = statusDate;
     const parsed = parseMultiStateResults(JSON.stringify(document), at);
     return { ...parsed, races: parsed.races.filter(race => race.sourceRaceId === "10") };
   };
-  try {
-    const first = await publishElectionResultBatch({ db, query: db.query, batch: batch(AT), ballots: [ballot], state: "MA", now: new Date(AT), purge });
-    assert.equal(first.counts.published, 4);
-    const before = (await db.query("SELECT count(*)::int n FROM fact"))[0].n;
-    const nextAt = "2026-11-06T18:00:00.000Z";
-    const replay = await publishElectionResultBatch({ db, query: db.query, batch: batch(nextAt), ballots: [ballot], state: "MA", now: new Date(nextAt), purge });
-    assert.equal(replay.counts.published, 0, "a lost cursor cannot turn a new check date into changed result values");
-    assert.equal((await db.query("SELECT count(*)::int n FROM fact"))[0].n, before);
-    assert.ok((await db.query("SELECT checked_at FROM checked_fact WHERE status='live'")).every(row => new Date(row.checked_at as string).toISOString() === nextAt),
-      "the actual Slide confirmation keeps Sources current after a replay");
-    assert.ok((await db.query("SELECT value FROM fact")).every(row => !("checkedAt" in (row.value as Record<string, unknown>))),
-      "a source check date belongs to confirmation metadata, outside result values");
-    assert.equal((await db.query("SELECT value->>'statusChangedAt' AS changed FROM fact WHERE entity_id='governor' AND status='live'"))[0].changed,
-      statusDate ?? null, "an unknown source status date stays unknown");
-  } finally { await db.pg.close(); }
+  const first = await publishElectionResultBatch({ db, query: db.query, batch: batch(AT), ballots: [ballot], state: "MA", now: new Date(AT), purge });
+  assert.equal(first.counts.published, 4);
+  const before = (await db.query("SELECT count(*)::int n FROM fact"))[0].n;
+  const nextAt = "2026-11-06T18:00:00.000Z";
+  const replay = await publishElectionResultBatch({ db, query: db.query, batch: batch(nextAt), ballots: [ballot], state: "MA", now: new Date(nextAt), purge });
+  assert.equal(replay.counts.published, 0, "a lost cursor cannot turn a new check date into changed result values");
+  assert.equal((await db.query("SELECT count(*)::int n FROM fact"))[0].n, before);
+  assert.ok((await db.query("SELECT checked_at FROM checked_fact WHERE status='live'")).every(row => new Date(row.checked_at as string).toISOString() === nextAt),
+    "the actual Slide confirmation keeps Sources current after a replay");
+  assert.ok((await db.query("SELECT value FROM fact")).every(row => !("checkedAt" in (row.value as Record<string, unknown>))),
+    "a source check date belongs to confirmation metadata, outside result values");
+  assert.equal((await db.query("SELECT value->>'statusChangedAt' AS changed FROM fact WHERE entity_id='governor' AND status='live'"))[0].changed,
+    statusDate ?? null, "an unknown source status date stays unknown");
 });
 
-test("a race boundary checkpoint resumes without replaying completed facts", async () => {
-  const db = await fixture();
-  try {
-    const batch = parseMultiStateResults(raw(), AT);
-    let remaining = 1;
-    const first = await publishElectionResultBatch({ db, query: db.query, batch, ballots: [ballot], state: "MA", now: new Date(AT), purge,
-      more: () => remaining-- > 0 });
-    assert.equal(first.deferred, true);
-    assert.equal(first.nextCheckAt, AT);
-    assert.deepEqual(Object.keys(first.progress.races), ["multistate:2026-11-03:10"]);
-    assert.equal(first.counts.published, 3);
-    const resumed = await publishElectionResultBatch({ db, query: db.query, batch, ballots: [ballot], state: "MA", now: new Date(AT), purge,
-      prior: first.progress, more: () => true });
-    assert.equal(resumed.deferred, false);
-    assert.equal(Object.keys(resumed.progress.races).length, 4);
-    assert.equal((await db.query("SELECT count(*)::int n FROM fact"))[0].n, 6);
-    assert.equal((await db.query("SELECT count(*)::int n FROM fact WHERE entity_id='adams'"))[0].n, 1,
-      "the completed first race keeps its exact fact versions on resumption");
-  } finally { await db.pg.close(); }
+test("a race boundary checkpoint resumes without replaying completed facts", async context => {
+  const db = await fixture(context);
+  const batch = parseMultiStateResults(raw(), AT);
+  let remaining = 1;
+  const first = await publishElectionResultBatch({ db, query: db.query, batch, ballots: [ballot], state: "MA", now: new Date(AT), purge,
+    more: () => remaining-- > 0 });
+  assert.equal(first.deferred, true);
+  assert.equal(first.nextCheckAt, AT);
+  assert.deepEqual(Object.keys(first.progress.races), ["multistate:2026-11-03:10"]);
+  assert.equal(first.counts.published, 3);
+  const resumed = await publishElectionResultBatch({ db, query: db.query, batch, ballots: [ballot], state: "MA", now: new Date(AT), purge,
+    prior: first.progress, more: () => true });
+  assert.equal(resumed.deferred, false);
+  assert.equal(Object.keys(resumed.progress.races).length, 4);
+  assert.equal((await db.query("SELECT count(*)::int n FROM fact"))[0].n, 6);
+  assert.equal((await db.query("SELECT count(*)::int n FROM fact WHERE entity_id='adams'"))[0].n, 1,
+    "the completed first race keeps its exact fact versions on resumption");
 });
 
-test("independent congressional summaries keep separate fact histories and source references", async () => {
-  const db = await fixture();
+test("independent congressional summaries keep separate fact histories and source references", async context => {
+  const db = await fixture(context);
   const batch = (office: "us_senate" | "us_house", now: string): ElectionResultBatch => {
     const url = `https://ballotpedia.org/${office}_elections,_2026`, quote = "United States D 52 R 48 counting 0";
     return { source: { name: "Ballotpedia", url }, races: [], summaries: [{ state: "US", chambers: [{ name: office,
@@ -156,20 +141,18 @@ test("independent congressional summaries keep separate fact histories and sourc
       creditedSources: [{ name: "Synthetic credited source", url: "https://example.gov/results" }], checkedAt: now, quote }],
       evidence: { text: quote, contentType: "text/plain", contentHash: createHash("sha256").update(quote).digest("hex") } };
   };
-  try {
-    const senate = await publishElectionResultBatch({ db, query: db.query, batch: batch("us_senate", AT), ballots: [], state: "US", now: new Date(AT), purge });
-    const house = await publishElectionResultBatch({ db, query: db.query, batch: batch("us_house", AT), ballots: [], state: "US", prior: senate.progress, now: new Date(AT), purge });
-    assert.equal(senate.counts.published, 1);
-    assert.equal(house.counts.published, 1);
-    assert.deepEqual((await db.query("SELECT field FROM fact WHERE status='live' ORDER BY field")).map(row => row.field),
-      ["election_summary:us_house", "election_summary:us_senate"]);
-    assert.equal(Object.keys(house.progress.summaries).length, 2);
-    assert.equal((await db.query("SELECT count(DISTINCT url)::int n FROM source_copy"))[0].n, 2);
-  } finally { await db.pg.close(); }
+  const senate = await publishElectionResultBatch({ db, query: db.query, batch: batch("us_senate", AT), ballots: [], state: "US", now: new Date(AT), purge });
+  const house = await publishElectionResultBatch({ db, query: db.query, batch: batch("us_house", AT), ballots: [], state: "US", prior: senate.progress, now: new Date(AT), purge });
+  assert.equal(senate.counts.published, 1);
+  assert.equal(house.counts.published, 1);
+  assert.deepEqual((await db.query("SELECT field FROM fact WHERE status='live' ORDER BY field")).map(row => row.field),
+    ["election_summary:us_house", "election_summary:us_senate"]);
+  assert.equal(Object.keys(house.progress.summaries).length, 2);
+  assert.equal((await db.query("SELECT count(DISTINCT url)::int n FROM source_copy"))[0].n, 2);
 });
 
-test("a federal race without a ballot match reaches the map only through a checked Slide fact", async () => {
-  const db = await fixture();
+test("a federal race without a ballot match reaches the map only through a checked Slide fact", async context => {
+  const db = await fixture(context);
   const batch = (checkedAt: string): ElectionResultBatch => {
     const quote = "Synthetic winner (D) defeated incumbent Synthetic incumbent (R) in Massachusetts in 2026 with 120 votes.";
     const url = "https://ballotpedia.org/Synthetic_Massachusetts_House_race_2026";
@@ -179,136 +162,126 @@ test("a federal race without a ballot match reaches the map only through a check
       candidates: [{ name: "Synthetic winner", party: "D", votes: 120, won: true }], checkedAt, quote }], summaries: [],
       evidence: { text: quote, contentType: "text/plain", contentHash: createHash("sha256").update(quote).digest("hex") } };
   };
-  try {
-    const first = await publishElectionResultBatch({ db, query: db.query, batch: batch(AT), ballots: [], state: "MA", now: new Date(AT), purge });
-    assert.equal(first.counts.unmatched, 1);
-    assert.equal(first.counts.published, 1, "an unmatched contest does not suppress the independently checked map result");
-    const [fact] = await db.query("SELECT entity_id,field,value,quote_start FROM fact WHERE status='live'");
-    assert.equal(fact.entity_id, STATE);
-    assert.equal(fact.field, "election_congress:Synthetic_Massachusetts_House_race_2026");
-    assert.notEqual(fact.quote_start, null);
-    assert.equal(summarizeCongressResults(Object.values(first.progress.federalResults!), AT).states.MA.us_house.seatsFlipped, 1);
-    const nextAt = "2026-11-07T12:00:00.000Z";
-    const never = async (): Promise<never> => { throw new Error("Unchanged federal results must not read or write the database"); };
-    const next = await publishElectionResultBatch({ db: { transaction: never }, query: never, batch: batch(nextAt), ballots: [], state: "MA",
-      now: new Date(nextAt), prior: first.progress, purge });
-    assert.equal(next.counts.published, 0);
-    assert.equal(Object.values(next.progress.federalResults!)[0].checkedAt, nextAt);
-    await db.query("UPDATE fact SET provenance_kind='OFFICIAL' WHERE field='election_congress:Synthetic_Massachusetts_House_race_2026'");
-    const corrected = batch("2026-11-08T12:00:00.000Z");
-    corrected.races[0].candidates = [{ name: "Different synthetic winner", party: "R", votes: 121, won: true }];
-    const kept = await publishElectionResultBatch({ db, query: db.query, batch: corrected, ballots: [], state: "MA",
-      now: new Date("2026-11-08T12:00:00.000Z"), prior: next.progress, purge });
-    assert.equal(kept.counts.published, 0, "a reference cannot replace an official value");
-    assert.equal(Object.values(kept.progress.federalResults!)[0].winners[0].party, "D",
-      "the map must retain the value the Slide kept, even when the acquired reference changed");
-  } finally { await db.pg.close(); }
+  const first = await publishElectionResultBatch({ db, query: db.query, batch: batch(AT), ballots: [], state: "MA", now: new Date(AT), purge });
+  assert.equal(first.counts.unmatched, 1);
+  assert.equal(first.counts.published, 1, "an unmatched contest does not suppress the independently checked map result");
+  const [fact] = await db.query("SELECT entity_id,field,value,quote_start FROM fact WHERE status='live'");
+  assert.equal(fact.entity_id, STATE);
+  assert.equal(fact.field, "election_congress:Synthetic_Massachusetts_House_race_2026");
+  assert.notEqual(fact.quote_start, null);
+  assert.equal(summarizeCongressResults(Object.values(first.progress.federalResults!), AT).states.MA.us_house.seatsFlipped, 1);
+  const nextAt = "2026-11-07T12:00:00.000Z";
+  const never = async (): Promise<never> => { throw new Error("Unchanged federal results must not read or write the database"); };
+  const next = await publishElectionResultBatch({ db: { transaction: never }, query: never, batch: batch(nextAt), ballots: [], state: "MA",
+    now: new Date(nextAt), prior: first.progress, purge });
+  assert.equal(next.counts.published, 0);
+  assert.equal(Object.values(next.progress.federalResults!)[0].checkedAt, nextAt);
+  await db.query("UPDATE fact SET provenance_kind='OFFICIAL' WHERE field='election_congress:Synthetic_Massachusetts_House_race_2026'");
+  const corrected = batch("2026-11-08T12:00:00.000Z");
+  corrected.races[0].candidates = [{ name: "Different synthetic winner", party: "R", votes: 121, won: true }];
+  const kept = await publishElectionResultBatch({ db, query: db.query, batch: corrected, ballots: [], state: "MA",
+    now: new Date("2026-11-08T12:00:00.000Z"), prior: next.progress, purge });
+  assert.equal(kept.counts.published, 0, "a reference cannot replace an official value");
+  assert.equal(Object.values(kept.progress.federalResults!)[0].winners[0].party, "D",
+    "the map must retain the value the Slide kept, even when the acquired reference changed");
 });
 
-test("a governor summary checks both separate source fragments and stores no source fragments in its value", async () => {
-  const db = await fixture();
-  try {
-    const document = JSON.parse(raw());
-    document.events = [{ state: "MA", gov_status: { gov_party: "R" } }];
-    document.general_events[0].statewide_races = [];
-    document.general_events[0].races = [];
-    document.general_events[0].ballot_measures = [];
-    document.scorecard.states[0].statewide = [];
-    const batch = parseMultiStateResults(JSON.stringify(document), AT);
-    assert.equal(batch.summaries[0].quotes?.length, 2);
-    const result = await publishElectionResultBatch({ db, query: db.query, batch, ballots: [], state: "MA", now: new Date(AT), purge });
-    assert.equal(result.counts.published, 1);
-    const [fact] = await db.query("SELECT value,quote,quote_start FROM fact WHERE field='election_summary' AND status='live'");
-    const value = fact.value as Record<string, unknown>;
-    assert.deepEqual(value.governor, { before: "R", now: "R" });
-    assert.equal(value.quote, undefined);
-    assert.equal(value.quotes, undefined);
-    assert.notEqual(fact.quote_start, null, "the actual Slide checked each exact fragment");
-    for (const quote of batch.summaries[0].quotes!) assert.ok(String(fact.quote).includes(quote));
-    const invalid = { ...batch, summaries: [{ ...batch.summaries[0], governor: { before: "D", now: "D" },
-      quotes: [batch.summaries[0].quote, "Absent source fragment"] }] };
-    await assert.rejects(publishElectionResultBatch({ db, query: db.query, batch: invalid, ballots: [], state: "MA", now: new Date(AT), purge }),
-      /ELECTION_RESULT_EVIDENCE_MISMATCH/);
-    assert.equal((await db.query("SELECT count(*)::int n FROM fact WHERE field='election_summary'"))[0].n, 1,
-      "a missing fragment preserves the verified summary");
-  } finally { await db.pg.close(); }
+test("a governor summary checks both separate source fragments and stores no source fragments in its value", async context => {
+  const db = await fixture(context);
+  const document = JSON.parse(raw());
+  document.events = [{ state: "MA", gov_status: { gov_party: "R" } }];
+  document.general_events[0].statewide_races = [];
+  document.general_events[0].races = [];
+  document.general_events[0].ballot_measures = [];
+  document.scorecard.states[0].statewide = [];
+  const batch = parseMultiStateResults(JSON.stringify(document), AT);
+  assert.equal(batch.summaries[0].quotes?.length, 2);
+  const result = await publishElectionResultBatch({ db, query: db.query, batch, ballots: [], state: "MA", now: new Date(AT), purge });
+  assert.equal(result.counts.published, 1);
+  const [fact] = await db.query("SELECT value,quote,quote_start FROM fact WHERE field='election_summary' AND status='live'");
+  const value = fact.value as Record<string, unknown>;
+  assert.deepEqual(value.governor, { before: "R", now: "R" });
+  assert.equal(value.quote, undefined);
+  assert.equal(value.quotes, undefined);
+  assert.notEqual(fact.quote_start, null, "the actual Slide checked each exact fragment");
+  for (const quote of batch.summaries[0].quotes!) assert.ok(String(fact.quote).includes(quote));
+  const invalid = { ...batch, summaries: [{ ...batch.summaries[0], governor: { before: "D", now: "D" },
+    quotes: [batch.summaries[0].quote, "Absent source fragment"] }] };
+  await assert.rejects(publishElectionResultBatch({ db, query: db.query, batch: invalid, ballots: [], state: "MA", now: new Date(AT), purge }),
+    /ELECTION_RESULT_EVIDENCE_MISMATCH/);
+  assert.equal((await db.query("SELECT count(*)::int n FROM fact WHERE field='election_summary'"))[0].n, 1,
+    "a missing fragment preserves the verified summary");
 });
 
-test("served contest, candidate and measure aliases publish to their existing survivors without duplicate entities", async () => {
-  const db = await fixture();
-  try {
-    const aliases = [
-      ["governor", "contest:ma:executive-ticket", "contest", "Joint executive election", STATE],
-      ["adams", "candidacy:ma:choice-a", "candidacy", "Reader choice A", "contest:ma:executive-ticket"],
-      ["baker", "candidacy:ma:choice-b", "candidacy", "Reader choice B", "contest:ma:executive-ticket"],
-      ["measure", "contest:ma:public-question", "contest", "Public question contest", STATE],
-      ["question-1", "measure:ma:public-question", "measure", "Reader public question", "contest:ma:public-question"],
-    ];
-    for (const [rawId, id, kind, name, parent] of aliases) {
-      await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,$2,$3,'MA',$4)", [id, kind, name, parent]);
-      await db.query("INSERT INTO entity_external_id(entity_id,scheme,value) VALUES($1,'body-alias',$2)", [id, rawId]);
-    }
-    const batch = parseMultiStateResults(raw(), AT);
-    batch.races = batch.races.filter(race => race.sourceRaceId === "10" || race.sourceRaceId === "20");
-    const result = await publishElectionResultBatch({ db, query: db.query, batch, ballots: [ballot], state: "MA", now: new Date(AT), purge });
-    assert.equal(result.counts.published, 6);
-    assert.deepEqual(await db.query("SELECT id FROM entity WHERE id=ANY($1::text[])", [aliases.map(row => row[0])]), [],
-      "source aliases never become duplicate entities");
-    assert.deepEqual((await db.query("SELECT entity_id FROM fact WHERE field='election_result' AND status='live' ORDER BY entity_id")).map(row => row.entity_id),
-      aliases.map(row => row[1]).sort());
-    assert.equal((await db.query(`SELECT entity_id FROM entity_external_id
-      WHERE scheme='election-results:multistate:MA:contest:10' AND value='10'`))[0].entity_id, "contest:ma:executive-ticket");
-    assert.equal((await db.query(`SELECT entity_id FROM entity_external_id
-      WHERE scheme='election-results:multistate:MA:candidacy:10' AND value='Avery Adams'`))[0].entity_id, "candidacy:ma:choice-a");
-    assert.deepEqual(await db.query("SELECT field,reason FROM blank"), [], "the Slide sees the source identity on the canonical subject");
-  } finally { await db.pg.close(); }
+test("served contest, candidate and measure aliases publish to their existing survivors without duplicate entities", async context => {
+  const db = await fixture(context);
+  const aliases = [
+    ["governor", "contest:ma:executive-ticket", "contest", "Joint executive election", STATE],
+    ["adams", "candidacy:ma:choice-a", "candidacy", "Reader choice A", "contest:ma:executive-ticket"],
+    ["baker", "candidacy:ma:choice-b", "candidacy", "Reader choice B", "contest:ma:executive-ticket"],
+    ["measure", "contest:ma:public-question", "contest", "Public question contest", STATE],
+    ["question-1", "measure:ma:public-question", "measure", "Reader public question", "contest:ma:public-question"],
+  ];
+  for (const [rawId, id, kind, name, parent] of aliases) {
+    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,$2,$3,'MA',$4)", [id, kind, name, parent]);
+    await db.query("INSERT INTO entity_external_id(entity_id,scheme,value) VALUES($1,'body-alias',$2)", [id, rawId]);
+  }
+  const batch = parseMultiStateResults(raw(), AT);
+  batch.races = batch.races.filter(race => race.sourceRaceId === "10" || race.sourceRaceId === "20");
+  const result = await publishElectionResultBatch({ db, query: db.query, batch, ballots: [ballot], state: "MA", now: new Date(AT), purge });
+  assert.equal(result.counts.published, 6);
+  assert.deepEqual(await db.query("SELECT id FROM entity WHERE id=ANY($1::text[])", [aliases.map(row => row[0])]), [],
+    "source aliases never become duplicate entities");
+  assert.deepEqual((await db.query("SELECT entity_id FROM fact WHERE field='election_result' AND status='live' ORDER BY entity_id")).map(row => row.entity_id),
+    aliases.map(row => row[1]).sort());
+  assert.equal((await db.query(`SELECT entity_id FROM entity_external_id
+    WHERE scheme='election-results:multistate:MA:contest:10' AND value='10'`))[0].entity_id, "contest:ma:executive-ticket");
+  assert.equal((await db.query(`SELECT entity_id FROM entity_external_id
+    WHERE scheme='election-results:multistate:MA:candidacy:10' AND value='Avery Adams'`))[0].entity_id, "candidacy:ma:choice-a");
+  assert.deepEqual(await db.query("SELECT field,reason FROM blank"), [], "the Slide sees the source identity on the canonical subject");
 });
 
-test("a newly matched race closes its old fix and standing hunt while unresolved candidate work stays open", async () => {
-  const db = await fixture();
+test("a newly matched race closes its old fix and standing hunt while unresolved candidate work stays open", async context => {
+  const db = await fixture(context);
   const withoutGovernor = { ...ballot, contests: ballot.contests.filter(row => row.id !== "governor"),
     candidacies: ballot.candidacies.filter(row => row.contestId !== "governor") };
   const batch = (at: string) => { const value = parseMultiStateResults(raw(), at);
     return { ...value, races: value.races.filter(row => row.sourceRaceId === "10"), summaries: [] }; };
-  try {
-    const first = await publishElectionResultBatch({ db, query: db.query, batch: batch(AT), ballots: [withoutGovernor], state: "MA", now: new Date(AT), purge });
-    assert.equal(first.counts.unmatched, 1);
-    const [oldFix] = await db.query("SELECT id FROM work WHERE subject_id='election-results:MA:10' AND kind='fix'");
-    assert.ok(oldFix);
-    await ensureOpenElectionResults(db.query, [ballot], new Set());
-    const changed = await publishElectionResultBatch({ db, query: db.query, batch: batch("2026-11-06T18:00:00.000Z"),
-      ballots: [ballot], state: "MA", prior: first.progress, now: new Date("2026-11-06T18:00:00.000Z"), purge });
-    assert.equal(changed.counts.matched, 1);
-    const work = await db.query("SELECT id,subject_id,field,status FROM work WHERE kind IN ('fix','hunt')");
-    assert.equal(work.find(row => row.subject_id === "governor")?.status, "done");
-    assert.equal(work.find(row => row.id === oldFix.id)?.status, "done");
-    assert.equal(work.find(row => row.field === "election_result:Candidate missing from served ballot")?.status, "waiting");
-    assert.equal(work.find(row => row.subject_id === "local")?.status, "waiting");
-  } finally { await db.pg.close(); }
+  const first = await publishElectionResultBatch({ db, query: db.query, batch: batch(AT), ballots: [withoutGovernor], state: "MA", now: new Date(AT), purge });
+  assert.equal(first.counts.unmatched, 1);
+  const [oldFix] = await db.query("SELECT id FROM work WHERE subject_id='election-results:MA:10' AND kind='fix'");
+  assert.ok(oldFix);
+  await ensureOpenElectionResults(db.query, [ballot], new Set());
+  const changed = await publishElectionResultBatch({ db, query: db.query, batch: batch("2026-11-06T18:00:00.000Z"),
+    ballots: [ballot], state: "MA", prior: first.progress, now: new Date("2026-11-06T18:00:00.000Z"), purge });
+  assert.equal(changed.counts.matched, 1);
+  const work = await db.query("SELECT id,subject_id,field,status FROM work WHERE kind IN ('fix','hunt')");
+  assert.equal(work.find(row => row.subject_id === "governor")?.status, "done");
+  assert.equal(work.find(row => row.id === oldFix.id)?.status, "done");
+  assert.equal(work.find(row => row.field === "election_result:Candidate missing from served ballot")?.status, "waiting");
+  assert.equal(work.find(row => row.subject_id === "local")?.status, "waiting");
 });
 
-test("runner obeys persisted race clocks without loading ballots or fetching sources before due or after certification", async () => {
-  const db = await fixture();
-  try {
-    const progress = { races: { "multistate:2026-11-03:10": { fingerprint: "a".repeat(64), status: "counting", statusChangedAt: AT,
-      lastCheckedAt: AT, nextCheckAt: "2026-11-06T18:00:00.000Z" }, "ballotpedia:2026-11-03:held": { fingerprint: "b".repeat(64),
-      status: "certified", statusChangedAt: AT, lastCheckedAt: AT, nextCheckAt: null } }, summaries: {} };
-    await db.query("INSERT INTO pass_cursor(name,position) VALUES('election-results:MA',$1)", [JSON.stringify(progress)]);
-    await db.query("INSERT INTO pass_cursor(name,position) VALUES('election-results:US',$1)", [JSON.stringify({ races: {}, summaries: {},
-      sourceChecks: { "ballotpedia:us_senate": { checkedAt: AT }, "ballotpedia:us_house": { checkedAt: AT } } })]);
-    const forbidden = async (): Promise<never> => { throw new Error("A settled source was reread"); };
-    const result = await runElectionResults({ db, query: db.query, states: ["MA"], now: new Date("2026-11-06T15:00:00.000Z"),
-      ballotsForState: forbidden, fetch: forbidden,
-      feedStore: createElectionResultFeedStore({ read: async () => null, write: async () => {} }) });
-    assert.equal(result.reads, 1, "only the existing persisted clock read runs");
-    assert.equal(result.nextCheckAt, "2026-11-06T18:00:00.000Z");
-    assert.equal((await db.query("SELECT count(*)::int n FROM source_copy"))[0].n, 0);
-    assert.equal((await db.query("SELECT count(*)::int n FROM work"))[0].n, 0);
-  } finally { await db.pg.close(); }
+test("runner obeys persisted race clocks without loading ballots or fetching sources before due or after certification", async context => {
+  const db = await fixture(context);
+  const progress = { races: { "multistate:2026-11-03:10": { fingerprint: "a".repeat(64), status: "counting", statusChangedAt: AT,
+    lastCheckedAt: AT, nextCheckAt: "2026-11-06T18:00:00.000Z" }, "ballotpedia:2026-11-03:held": { fingerprint: "b".repeat(64),
+    status: "certified", statusChangedAt: AT, lastCheckedAt: AT, nextCheckAt: null } }, summaries: {} };
+  await db.query("INSERT INTO pass_cursor(name,position) VALUES('election-results:MA',$1)", [JSON.stringify(progress)]);
+  await db.query("INSERT INTO pass_cursor(name,position) VALUES('election-results:US',$1)", [JSON.stringify({ races: {}, summaries: {},
+    sourceChecks: { "ballotpedia:us_senate": { checkedAt: AT }, "ballotpedia:us_house": { checkedAt: AT } } })]);
+  const forbidden = async (): Promise<never> => { throw new Error("A settled source was reread"); };
+  const result = await runElectionResults({ db, query: db.query, states: ["MA"], now: new Date("2026-11-06T15:00:00.000Z"),
+    ballotsForState: forbidden, fetch: forbidden,
+    feedStore: resultFeedMemory() });
+  assert.equal(result.reads, 1, "only the existing persisted clock read runs");
+  assert.equal(result.nextCheckAt, "2026-11-06T18:00:00.000Z");
+  assert.equal((await db.query("SELECT count(*)::int n FROM source_copy"))[0].n, 0);
+  assert.equal((await db.query("SELECT count(*)::int n FROM work"))[0].n, 0);
 });
 
-test("measure results publish on served contests without wording rows and retain separate existing Measure facts", async () => {
-  const db = await fixture();
+test("measure results publish on served contests without wording rows and retain separate existing Measure facts", async context => {
+  const db = await fixture(context);
   const stateId = "ocd-division/country:us/state:az";
   const azElection = { id: "az-general", state: "AZ", date: "2026-11-03", name: "General election" };
   const held: BallotSet = { election: azElection, contests: [141, 142, 320].map(number => ({
@@ -323,39 +296,37 @@ test("measure results publish on served contests without wording rows and retain
     { id: 503, measure_number: "Proposition 320", short_title: "Third published measure", votes_yes: 50, votes_no: 20,
       yes_percentage: 71.43, result: null, result_status: "Counting" },
   ].map(measure => ({ ...measure, election_date: "2026-11-03", vote_source: "sos" })) }] }), at);
-  try {
-    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Arizona','AZ')", [stateId]);
-    const first = await publishElectionResultBatch({ db, query: db.query, batch: batch(AT), ballots: [held], state: "AZ", now: new Date(AT), purge });
-    assert.equal(first.counts.matched, 3);
-    assert.equal(first.counts.unmatched, 0);
-    assert.equal(first.counts.published, 4);
-    const facts = await db.query("SELECT entity_id,value FROM fact WHERE status='live' AND field='election_result' ORDER BY entity_id");
-    const byId = Object.fromEntries(facts.map(row => [String(row.entity_id), row.value as Record<string, unknown>]));
-    for (const [id, yesVotes, noVotes, yesPercent, outcome] of [["az-prop-141", 120, 80, 60, "passed"],
-      ["az-prop-142", 90, 110, 45, "failed"], ["az-prop-320", 50, 20, 71.43, "counting"], ["az-question-320", 50, 20, 71.43, "counting"]]) {
-      const value = byId[String(id)];
-      assert.deepEqual({ yesVotes: value.yesVotes, noVotes: value.noVotes, yesPercent: value.yesPercent, outcome: value.outcome },
-        { yesVotes, noVotes, yesPercent, outcome });
-    }
-    assert.deepEqual((await db.query("SELECT id FROM entity WHERE kind='measure'")).map(row => row.id), ["az-question-320"],
-      "missing wording rows never cause a new Measure identity to be invented");
-    assert.equal((await db.query("SELECT count(*)::int n FROM work WHERE kind IN ('fix','detect')"))[0].n, 0);
-    const forbidden = async (): Promise<never> => { throw new Error("An unchanged measure result must issue no SQL"); };
-    const nextAt = "2026-11-07T12:00:00.000Z";
-    const unchanged = await publishElectionResultBatch({ db: { transaction: forbidden }, query: forbidden, batch: batch(nextAt),
-      ballots: [held], state: "AZ", prior: first.progress, now: new Date(nextAt), purge });
-    assert.equal(unchanged.counts.published, 0);
-    const changedAt = "2026-11-08T12:00:00.000Z";
-    const changed = await publishElectionResultBatch({ db, query: db.query, batch: batch(changedAt, 121), ballots: [held], state: "AZ",
-      prior: unchanged.progress, now: new Date(changedAt), purge });
-    assert.equal(changed.counts.published, 1);
-    assert.deepEqual((await db.query("SELECT status,value->>'yesVotes' votes FROM fact WHERE entity_id='az-prop-141' ORDER BY id")),
-      [{ status: "superseded", votes: "120" }, { status: "live", votes: "121" }]);
-  } finally { await db.pg.close(); }
+  await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Arizona','AZ')", [stateId]);
+  const first = await publishElectionResultBatch({ db, query: db.query, batch: batch(AT), ballots: [held], state: "AZ", now: new Date(AT), purge });
+  assert.equal(first.counts.matched, 3);
+  assert.equal(first.counts.unmatched, 0);
+  assert.equal(first.counts.published, 4);
+  const facts = await db.query("SELECT entity_id,value FROM fact WHERE status='live' AND field='election_result' ORDER BY entity_id");
+  const byId = Object.fromEntries(facts.map(row => [String(row.entity_id), row.value as Record<string, unknown>]));
+  for (const [id, yesVotes, noVotes, yesPercent, outcome] of [["az-prop-141", 120, 80, 60, "passed"],
+    ["az-prop-142", 90, 110, 45, "failed"], ["az-prop-320", 50, 20, 71.43, "counting"], ["az-question-320", 50, 20, 71.43, "counting"]]) {
+    const value = byId[String(id)];
+    assert.deepEqual({ yesVotes: value.yesVotes, noVotes: value.noVotes, yesPercent: value.yesPercent, outcome: value.outcome },
+      { yesVotes, noVotes, yesPercent, outcome });
+  }
+  assert.deepEqual((await db.query("SELECT id FROM entity WHERE kind='measure'")).map(row => row.id), ["az-question-320"],
+    "missing wording rows never cause a new Measure identity to be invented");
+  assert.equal((await db.query("SELECT count(*)::int n FROM work WHERE kind IN ('fix','detect')"))[0].n, 0);
+  const forbidden = async (): Promise<never> => { throw new Error("An unchanged measure result must issue no SQL"); };
+  const nextAt = "2026-11-07T12:00:00.000Z";
+  const unchanged = await publishElectionResultBatch({ db: { transaction: forbidden }, query: forbidden, batch: batch(nextAt),
+    ballots: [held], state: "AZ", prior: first.progress, now: new Date(nextAt), purge });
+  assert.equal(unchanged.counts.published, 0);
+  const changedAt = "2026-11-08T12:00:00.000Z";
+  const changed = await publishElectionResultBatch({ db, query: db.query, batch: batch(changedAt, 121), ballots: [held], state: "AZ",
+    prior: unchanged.progress, now: new Date(changedAt), purge });
+  assert.equal(changed.counts.published, 1);
+  assert.deepEqual((await db.query("SELECT status,value->>'yesVotes' votes FROM fact WHERE entity_id='az-prop-141' ORDER BY id")),
+    [{ status: "superseded", votes: "120" }, { status: "live", votes: "121" }]);
 });
 
-test("contradictory incumbent flags use the shared fix writer, preserve valid results, and close when corrected", async () => {
-  const db = await fixture();
+test("contradictory incumbent flags use the shared fix writer, preserve valid results, and close when corrected", async context => {
+  const db = await fixture(context);
   const batch = (at: string, incumbentDefeated = false, votes = 100) => {
     const document = JSON.parse(raw(votes));
     const event = document.general_events[0], governor = event.statewide_races[0];
@@ -373,23 +344,21 @@ test("contradictory incumbent flags use the shared fix writer, preserve valid re
     written.push(row.field!);
     await workList(db.query, { owner: "election-results" }).ensure([row]);
   };
-  try {
-    const first = await publishElectionResultBatch({ db, query: db.query, batch: batch(AT), ballots: [ballot], state: "MA",
-      now: new Date(AT), purge, writeFix });
-    assert.equal(first.counts.published, 3, "valid contest and candidate facts publish immediately");
-    assert.deepEqual(written, ["election_result:Source incumbent flags disagree"], "the runner's shared capped writer receives the contradiction");
-    const [fix] = await db.query("SELECT id,status,value FROM work WHERE field='election_result:Source incumbent flags disagree'");
-    assert.equal(fix.status, "waiting", "ordinary successful-match cleanup must preserve the source contradiction");
-    assert.deepEqual((fix.value as Record<string, unknown>).candidateNames, ["Blair Baker"]);
-    const nextAt = "2026-11-07T12:00:00.000Z";
-    const next = await publishElectionResultBatch({ db, query: db.query, batch: batch(nextAt, false, 101), ballots: [ballot], state: "MA",
-      now: new Date(nextAt), prior: first.progress, purge, writeFix });
-    assert.equal(next.counts.published, 1);
-    assert.equal((await db.query("SELECT status FROM work WHERE id=$1", [fix.id]))[0].status, "waiting");
-    const correctedAt = "2026-11-08T12:00:00.000Z";
-    await publishElectionResultBatch({ db, query: db.query, batch: batch(correctedAt, true, 101), ballots: [ballot], state: "MA",
-      now: new Date(correctedAt), prior: next.progress, purge, writeFix });
-    assert.equal((await db.query("SELECT status FROM work WHERE id=$1", [fix.id]))[0].status, "done");
-    assert.equal(written.length, 2, "a corrected source creates no replacement fix");
-  } finally { await db.pg.close(); }
+  const first = await publishElectionResultBatch({ db, query: db.query, batch: batch(AT), ballots: [ballot], state: "MA",
+    now: new Date(AT), purge, writeFix });
+  assert.equal(first.counts.published, 3, "valid contest and candidate facts publish immediately");
+  assert.deepEqual(written, ["election_result:Source incumbent flags disagree"], "the runner's shared capped writer receives the contradiction");
+  const [fix] = await db.query("SELECT id,status,value FROM work WHERE field='election_result:Source incumbent flags disagree'");
+  assert.equal(fix.status, "waiting", "ordinary successful-match cleanup must preserve the source contradiction");
+  assert.deepEqual((fix.value as Record<string, unknown>).candidateNames, ["Blair Baker"]);
+  const nextAt = "2026-11-07T12:00:00.000Z";
+  const next = await publishElectionResultBatch({ db, query: db.query, batch: batch(nextAt, false, 101), ballots: [ballot], state: "MA",
+    now: new Date(nextAt), prior: first.progress, purge, writeFix });
+  assert.equal(next.counts.published, 1);
+  assert.equal((await db.query("SELECT status FROM work WHERE id=$1", [fix.id]))[0].status, "waiting");
+  const correctedAt = "2026-11-08T12:00:00.000Z";
+  await publishElectionResultBatch({ db, query: db.query, batch: batch(correctedAt, true, 101), ballots: [ballot], state: "MA",
+    now: new Date(correctedAt), prior: next.progress, purge, writeFix });
+  assert.equal((await db.query("SELECT status FROM work WHERE id=$1", [fix.id]))[0].status, "done");
+  assert.equal(written.length, 2, "a corrected source creates no replacement fix");
 });

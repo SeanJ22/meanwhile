@@ -20,7 +20,7 @@ type ResultContest = Pick<Contest, "id" | "title" | "ocdId" | "voteFor" | "resul
 type ResultCandidacy = Pick<Candidacy, "id" | "familyName" | "result">;
 const zones = new Map<string, string | null>();
 const zoneOf = (contest: ResultContest) => {
-  const state = ocdStateCode(contest.ocdId) ?? "";
+  const state = (ocdStateCode(contest.ocdId) ?? "").toUpperCase();
   if (!zones.has(state)) {
     const tally = new Map<string, number>();
     for (const row of COUNTY_TIME_ZONES.values()) if (row.stateCode === state && row.timeZones.length === 1) {

@@ -30,7 +30,6 @@ export function CandidateCard({
   filingSources,
   nameSlot,
   battlecardSlot,
-  resultSlot,
   derivedBlurb,
 }: {
 
@@ -44,7 +43,6 @@ export function CandidateCard({
   nameSlot?: React.ReactNode;
 
   battlecardSlot?: React.ReactNode;
-  resultSlot?: React.ReactNode;
 
   partyLine: React.ReactNode;
   card: CandidateCardData | null;
@@ -89,7 +87,6 @@ export function CandidateCard({
           </span>
         </div>
 
-        {resultSlot}
         <CandidatePortraitSources card={card} />
         {holder && <CardSourcesContribution id={`candidate-held-person:${holder.id}`}
           sources={personCardSources(holder)} />}

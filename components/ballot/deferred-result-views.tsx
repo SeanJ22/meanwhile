@@ -5,11 +5,13 @@ import { CardSourcesContribution } from "@/components/ui/card-sources-contributi
 import type { CardSource } from "@/lib/officials/card-sources";
 import type { BallotElectionSummary, CandidateResult, ContestResult, MeasureResult } from "@/lib/ballot/election-results";
 import type { ResultSource } from "@/lib/election-results/types";
-import type { ResultViewProps } from "./deferred-results";
+import { readerText } from "@/lib/text/reader-names";
+import type { ResultViewProps } from "./deferred-result-types";
 import { CandidateResultLine, MeasureResultBody, MeasureSummary, RaceSummary } from "./contest-result";
-import { deferredResultStyles } from "./deferred-result-styles";
 
 type SourcedResult = { checkedAt?: string; sources?: readonly ResultSource[]; source?: ResultSource; creditedSources?: readonly ResultSource[] };
+const chamberLabels: Readonly<Record<string, string>> = { us_senate: "U.S. Senate", us_house: "U.S. House" };
+const chamberName = (name: string) => chamberLabels[name] ?? name;
 function sourcesFor(result: SourcedResult | undefined): CardSource[] {
   if (!result) return [];
   const sources = [...result.sources ?? [], ...result.source ? [result.source] : [], ...result.creditedSources ?? []];
@@ -25,17 +27,21 @@ function Summary({ title, values }: { title: string; values: readonly BallotElec
   const chambers = [...new Map(values.flatMap(summary => summary.chambers.map(chamber => [chamber.name, chamber] as const))).values()];
   return <Card title={title} sources={values.flatMap(sourcesFor)} attrs={{ "data-election-summary": title }} className="mt-6">
     {chambers.map(chamber => <section key={chamber.name} className="er-chamber">
-      <h3 className="t-heading font-semibold">{chamber.name}</h3>
-      <table className="er-seats t-detail"><caption className="sr-only">{chamber.name}: seats by party before and now</caption>
+      <h3 className="t-heading font-semibold">{chamberName(chamber.name)}</h3>
+      <table className="er-seats t-detail"><caption className="sr-only">{chamberName(chamber.name)}: seats by party before and now</caption>
         <thead><tr><th scope="col">Party</th><th scope="col">Before</th><th scope="col">Now</th></tr></thead>
         <tbody>{[...new Set([...Object.keys(chamber.seatsBefore), ...Object.keys(chamber.seatsNow)])].sort().map(party =>
-          <tr key={party}><th scope="row">{party}</th><td>{chamber.seatsBefore[party] ?? "—"}</td><td>{chamber.seatsNow[party] ?? "—"}</td></tr>)}
-          <tr><th scope="row">Still counting</th><td>—</td><td>{chamber.stillCounting}</td></tr></tbody>
+          <tr key={party}><th scope="row">{party}</th><td>{chamber.seatsBefore[party] ?? "Not reported"}</td><td>{chamber.seatsNow[party] ?? "Not reported"}</td></tr>)}
+          <tr><th scope="row">Still counting</th><td>Not applicable</td><td>{chamber.stillCounting}</td></tr></tbody>
       </table>
       <p className="t-detail text-paper-dim">Control: {chamber.controlBefore ?? "not yet reported"} before; {chamber.controlNow ?? "still counting"} now.</p>
+      {typeof chamber.seatsFlipped === "number" && <p className="t-detail text-paper-dim">Seats that flipped: {chamber.seatsFlipped}.</p>}
     </section>)}
-    {values.filter(summary => summary.governor?.before || summary.governor?.now).map((summary, index) => <p key={`governor:${index}`} className="mt-3 t-body">
-      Governor: {summary.governor.before ?? "not yet reported"} before; {summary.governor.now ?? "still counting"} now.
+    {values.filter(summary => summary.governor?.before || summary.governor?.now || summary.governor?.name).map((summary, index) => <p key={`governor:${index}`} className="mt-3 t-body">
+      Governor{summary.governor.name ? ` (${readerText(summary.governor.name, "name")})` : ""}: {summary.governor.before ?? "not yet reported"} before; {summary.governor.now ?? "still counting"} now.
+    </p>)}
+    {values.map((summary, index) => typeof summary.incumbentsLost === "number" && <p key={`incumbents:${index}`} className="mt-2 t-detail">
+      Incumbents who lost{values.length > 1 && summary.chambers.length === 1 ? ` (${chamberName(summary.chambers[0].name)})` : ""}: {summary.incumbentsLost}.
     </p>)}
     {values.flatMap(summary => summary.statewideOfficesFlipped ?? []).map((office, index) => <p key={`${office.office}:${index}`} className="mt-2 t-detail">
       {office.office} flipped: {office.from} to {office.to}.
@@ -52,7 +58,7 @@ export function ResultView(props: ResultViewProps) {
     const state = resultFor<BallotElectionSummary>([`ocd-division/country:us/${area}:${props.feed.state.toLowerCase()}`]);
     const nation = ["ocd-division/country:us", "ocd-division/country:us#election_summary:us_senate", "ocd-division/country:us#election_summary:us_house"]
       .flatMap(id => facts[id] ? [facts[id] as BallotElectionSummary] : []);
-    return <><style data-election-result-styles>{deferredResultStyles}</style><Summary title="State election results" values={state ? [state] : []} /><Summary title="U.S. Congress election results" values={nation} /></>;
+    return <><Summary title="State election results" values={state ? [state] : []} /><Summary title="U.S. Congress election results" values={nation} /></>;
   }
   const result = resultFor<ContestResult>([props.id, ...props.aliases ?? []]);
   if (props.kind === "candidate") {

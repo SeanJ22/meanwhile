@@ -43,13 +43,13 @@ import type { MemberVote, RollCallVote, VotePosition } from "../../lib/votes/typ
 import { provenEdgeEntry } from "./promoted-edge-entry.ts";
 import { rosterFactReader } from "./roster-fact-reader.ts";
 import { installFactReader } from "../../lib/facts/db.ts";
-import { registryJurisdictions, stateRegistryRuntimeContractId, stateRegistryRuntimeScope } from "../../lib/civic-data/state-scopes.ts";
+import { registryJurisdictions, stateBallotContractId, stateRegistryRuntimeContractId, stateRegistryRuntimeScope } from "../../lib/civic-data/state-scopes.ts";
 import { candidateChangeSet, ROW_KEYED_CIVIC_CHANGE_CONTRACT, rowKeyedCivicRecordsFor } from "../../lib/civic-data/changes.ts";
 import { canonicalCivicDataHash } from "../../lib/civic-data/canonical-hash.ts";
 import { trustedLkgCandidateEnvelopeSha256, trustedLkgCandidateId, trustedLkgImportUrl, trustedLkgValidatorIds } from "../../lib/civic-data/trusted-lkg-import.ts";
 import { withStateRecordHashes } from "../../lib/civic-data/state-publication.ts";
 import { STATE_AUTHORITY_FAMILIES, type StateAuthorityFamily } from "../../lib/meetings/edge-artifacts.ts";
-import { stateAuthorityPointers } from "../../lib/civic-data/state-reader.ts";
+import { readStateAuthorityProjection, stateAuthorityPointers } from "../../lib/civic-data/state-reader.ts";
 import { installCanonicalEntries, activateCanonicalFixture } from "./canonical-reader-fixtures.ts";
 
 const ROOT = join(import.meta.dirname, "..", "..");
@@ -496,6 +496,12 @@ export function syntheticOfficeholderStatements(subjects: readonly string[] = Ar
 export async function installOfficeholderStatements(value: StatementCorpus = syntheticOfficeholderStatements()): Promise<StatementCorpus> {
   installManualValue("officeholder-statements", value, "test:officeholder-statements");
   served(await readOfficeholderStatementsProjection(), "Officeholder statements");
+  return value;
+}
+
+export async function installCandidateCorpus(value: CandidateCorpus = syntheticCandidateCorpus(), state = "AZ"): Promise<CandidateCorpus> {
+  installManualValue(stateBallotContractId("candidate-corpus", state), value, `test:candidate-corpus:${state}`);
+  served((await readStateAuthorityProjection("candidate-publications", state)).result, "Candidate publications");
   return value;
 }
 

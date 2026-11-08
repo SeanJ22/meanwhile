@@ -2,35 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { heldFilingSubjects, requestedHeldFilings } from "../lib/ask/held-filing-subjects.ts";
-import type { Contest } from "../lib/ballot/types.ts";
-import type { LineupOutcome } from "../lib/identity/types.ts";
-import type { BallotSet } from "../lib/ballot/types.ts";
-import { readFileSync } from "node:fs";
-
-interface SyntheticLineupNominee {
-  readonly name: string;
-  readonly partyLabel: string;
-  readonly outcome: LineupOutcome;
-  readonly candidacyId?: string;
-  readonly filingParty?: string;
-}
-
-interface SyntheticContest {
-  readonly id: string;
-  readonly title: string;
-  readonly ocdId?: string;
-  readonly type?: Contest["type"];
-  readonly candidacies?: readonly { readonly id: string; readonly givenName: string; readonly familyName: string; readonly partyLabel?: string | null }[];
-  readonly lineup?: readonly SyntheticLineupNominee[];
-}
-
-function syntheticAzBallot(contests?: readonly SyntheticContest[]): BallotSet {
-  const fixtures = JSON.parse(readFileSync(new URL("./fixtures/synthetic-az-ballots.json", import.meta.url), "utf8")) as Record<string, BallotSet>;
-  const ballot = fixtures[JSON.stringify(contests ?? null)];
-  if (!ballot) throw new Error("The synthetic Arizona ballot input has no recorded fixture");
-  return ballot;
-}
-
+import { syntheticAzBallot } from "./helpers/synthetic-ballots.ts";
 
 test("published source-filing profiles retain exact identities outside the mapped ballot without duplicating joined people", () => {
   const provenance = { sourceUrl: "https://azsos.gov/elections/candidates", sourceOrg: "Arizona Secretary of State", collectedAt: "2026-09-26", verifiedAt: null };

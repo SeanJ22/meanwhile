@@ -371,16 +371,6 @@
     color: var(--link);
   }
 
-  .notice-rule {
-    border-top: 1px solid var(--panel-border);
-    border-bottom: 1px solid var(--panel-border);
-    height: 3px;
-  }
-
-  .display-wide {
-    letter-spacing: -0.3px;
-  }
-
   /* The only thing that applies `--font-record`: text quoted from a public record, never text this product wrote. No colour is set here. */
   .t-record {
     font-family: var(--font-record);
@@ -649,25 +639,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   color: var(--text-dim);
   letter-spacing: 0;
   font-weight: 400;
-}
-
-.brand-change {
-  margin-left: 8px;
-  padding: 0;
-  background: none;
-  border: none;
-  border-bottom: 1px solid var(--panel-border);
-  color: var(--text-muted);
-  font-family: inherit;
-  font-size: 10px;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  transition: color var(--dur-fast) var(--ease-move);
-}
-
-.brand-change:hover {
-  color: var(--link);
-  border-color: var(--link);
 }
 
 .view-toggle {
@@ -1127,14 +1098,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   line-height: 1.4;
 }
 
-.rail-section {
-  margin: 10px 22px;
-  padding: 11px 12px;
-  background: var(--surface);
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-}
-
 /* Closed, this reserves nothing: the padding and margin are paid only when a panel is open. */
 .filters-area {
   margin: 10px 22px;
@@ -1402,56 +1365,10 @@ label:has(> input[type="checkbox"]) {
   flex-shrink: 0;
 }
 
-.map-floaters {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
-}
-
-.map-floaters-row {
-  display: flex;
-  align-items: stretch;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
 /* The cluster can never be wider than what holds it, at any placement. */
-.map-floaters {
-  max-width: 100%;
-}
-
-.map-floaters[data-pill-cluster="sidebar"],
-.map-floaters[data-pill-cluster="wgh"] {
-  align-items: stretch;
-}
-
-.map-floaters[data-pill-cluster="sidebar"] .map-floaters-row,
-.map-floaters[data-pill-cluster="wgh"] .map-floaters-row {
-  flex-direction: column;
-  align-items: stretch;
-}
-
-.map-floaters[data-pill-cluster="sidebar"] .ballot-pill,
-.map-floaters[data-pill-cluster="wgh"] .ballot-pill,
-.map-floaters[data-pill-cluster="sidebar"] .ask-pill,
-.map-floaters[data-pill-cluster="wgh"] .ask-pill {
-  width: 100%;
-}
 
 /* The label can wrap now that the pill is as wide as the rail; nowrap would
    make it overflow instead of using the width it was just given. */
-.map-floaters[data-pill-cluster="sidebar"] .ask-pill,
-.map-floaters[data-pill-cluster="wgh"] .ask-pill {
-  justify-content: flex-start;
-}
-
-.map-floaters[data-pill-cluster="sidebar"] .ballot-pill-main,
-.map-floaters[data-pill-cluster="wgh"] .ballot-pill-main {
-  flex: 1 1 auto;
-}
 
 [data-pill-cluster="map"] {
   margin-left: 56px;
@@ -1461,11 +1378,6 @@ label:has(> input[type="checkbox"]) {
 [data-pill-cluster="sidebar"] {
   width: 100%;
   align-items: stretch;
-}
-
-[data-pill-cluster="wgh"] .map-floaters-row,
-[data-pill-cluster="sidebar"] .map-floaters-row {
-  flex-wrap: wrap;
 }
 
 [data-pill-cluster="wgh"] .ask-pill,
@@ -1742,11 +1654,6 @@ a.ballot-pill-main:focus {
   color: var(--signal);
 }
 
-.source-tag {
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
 .card-section {
   margin-top: 10px;
 }
@@ -1861,20 +1768,6 @@ a.ballot-pill-main:focus {
 
 .card-section[data-level="sub"] > .card-section-body {
   padding: 8px 0 2px;
-}
-
-.zip-chevron {
-  transition: transform var(--dur-base) var(--ease-move);
-}
-
-.zip-chevron[data-open] {
-  transform: rotate(180deg);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .zip-chevron {
-    transition: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2244,13 +2137,6 @@ a.ballot-pill-main:focus {
   letter-spacing: 0.01em;
 }
 
-.person-row-office {
-  font-size: 0.6875rem;
-  line-height: 1.3;
-  color: var(--text-dim);
-  overflow-wrap: break-word;
-}
-
 .vote-pill {
   display: inline-flex;
   align-items: center;
@@ -2509,105 +2395,7 @@ a.ballot-pill-main:focus {
   display: none;
 }
 
-.ballot-narrow-link {
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--link);
-  text-decoration: underline;
-  text-decoration-style: dotted;
-  text-underline-offset: 2px;
-  cursor: pointer;
-}
-
-.ballot-narrow-link:hover {
-  text-decoration-style: solid;
-}
-
-.ballot-narrow-form {
-  margin-top: 10px;
-  border: 1px solid var(--panel-border);
-  border-radius: var(--radius);
-  background: var(--panel-bg);
-  padding: 13px 14px;
-}
-
-.ballot-narrow-ask {
-  font-size: 0.8125rem;
-  line-height: 1.55;
-  color: var(--text);
-  font-weight: 500;
-}
-
-.ballot-narrow-fields {
-  margin-top: 9px;
-  display: flex;
-  gap: 7px;
-}
-
-.ballot-narrow-fields input {
-  min-width: 0;
-  border: 1px solid var(--panel-border);
-  background: var(--bg);
-  border-radius: var(--radius-sm);
-  padding: 9px 11px;
-  font-size: 0.875rem;
-  color: var(--text);
-}
-
-.ballot-narrow-fields input:first-child {
-  width: 5.5rem;
-  flex: 0 0 auto;
-  font-family: var(--font-mono);
-}
-
-.ballot-narrow-fields input:nth-child(2) {
-  flex: 1;
-}
-
-.ballot-narrow-fields input:focus {
-  outline: none;
-  border-color: var(--link);
-}
-
-.ballot-narrow-fields button {
-  flex-shrink: 0;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--action);
-  background: var(--action);
-  color: var(--action-on);
-  padding: 0 13px;
-  font-size: 0.8125rem;
-  font-weight: 650;
-  cursor: pointer;
-}
-
-.ballot-narrow-fields button:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-
-.ballot-narrow-error {
-  margin-top: 8px;
-  font-size: 0.75rem;
-  line-height: 1.55;
-  color: var(--danger);
-}
-
 /* Declining stays the effortless default. */
-.ballot-narrow-promise {
-  margin-top: 9px;
-  font-size: 0.6875rem;
-  line-height: 1.6;
-  color: var(--voice);
-}
-
-.ballot-narrow-promise button {
-  color: var(--link);
-  text-decoration: underline;
-  text-decoration-style: dotted;
-  text-underline-offset: 2px;
-  cursor: pointer;
-}
 
 /* Dashed, because dashed means DEVICE-LOCAL in this system and this narrowing
    is exactly that: it lives in one tab and is stored nowhere. */
@@ -2823,45 +2611,7 @@ a.ballot-pill-main:focus {
   background: var(--surface);
 }
 
-.al-row-title {
-  flex: 1;
-  min-width: 0;
-  font-size: 12px;
-  color: var(--text);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.al-row-sub {
-  display: block;
-  font-size: 10px;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-
-.al-row-jurisdiction {
-  display: block;
-  margin-top: 3px;
-  white-space: normal;
-}
-
-.al-row-meta {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--text-dim);
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  row-gap: 0.2rem;
-}
-
 /* Nothing in the meta line may be squeezed to nothing by a long body name. */
-.al-row-meta > * {
-  flex-shrink: 0;
-}
 
 .al-more {
   display: block;
@@ -3349,34 +3099,6 @@ button.jurisdiction-badge-action:focus-visible {
   text-align: left;
 }
 
-.voting-panel-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-bottom: 0.6rem;
-}
-
-.voting-panel-title {
-  font-size: 0.98rem;
-  font-weight: 700;
-  color: var(--text);
-}
-
-.voting-panel-close {
-  border: 0;
-  background: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  padding: 0.2rem;
-  border-radius: var(--radius-sm);
-}
-
-.voting-panel-close:hover,
-.voting-panel-close:focus-visible {
-  color: var(--text);
-}
-
 .voting-panel-form {
   display: flex;
   flex-direction: column;
@@ -3404,7 +3126,6 @@ button.jurisdiction-badge-action:focus-visible {
   outline-offset: 1px;
 }
 
-.voting-panel-note,
 .voting-panel-status {
   font-size: 0.76rem;
   line-height: 1.45;
@@ -3891,44 +3612,6 @@ button.jurisdiction-badge-action:focus-visible {
   color: var(--text-dim);
 }
 
-.copyable {
-  cursor: pointer;
-  position: relative;
-}
-
-.copyable:hover {
-  text-decoration: underline;
-  text-decoration-style: dotted;
-  text-underline-offset: 2px;
-}
-
-.copyable[data-tooltip]::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  left: 50%;
-  bottom: calc(100% + 6px);
-  transform: translateX(-50%);
-  padding: 3px 7px;
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  border: 1px solid var(--panel-border);
-  color: var(--text);
-  font-size: 10px;
-  font-weight: 400;
-  letter-spacing: 0;
-  text-transform: none;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--dur-fast) var(--ease-move);
-  z-index: 5;
-}
-
-.copyable[data-tooltip]:hover::after,
-.copyable[data-tooltip][data-copied="true"]::after {
-  opacity: 1;
-}
-
 @media (pointer: coarse) {
   .wtp-pin::after {
     content: "";
@@ -3942,9 +3625,6 @@ button.jurisdiction-badge-action:focus-visible {
 }
 
 @media (max-width: 639px) {
-  .rail-column {
-    width: min(var(--rail-width), 86vw);
-  }
 
   .sidebar {
     width: min(340px, 86vw);
@@ -4161,13 +3841,6 @@ button.jurisdiction-badge-action:focus-visible {
   border-radius: 26px;
 }
 
-.sidebar-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 990;
-  background: rgba(0, 0, 0, 0.4);
-}
-
 /* When the hamburger shows: explicitly closed at any width, or the phone
    default (hidden) when not explicitly opened. */
 main[data-sidebar="closed"] .sidebar-toggle {
@@ -4191,20 +3864,6 @@ main[data-sidebar="closed"] .map-top-row {
 /* The phone meeting panel: a bottom sheet, not a floating card. Top corners
    rounded, bottom flush, its own internal scroll capped well short of the
    viewport so the map stays visibly behind it. */
-.bottom-sheet {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1150;
-}
-
-.bottom-sheet > .panel {
-  width: 100%;
-  max-height: 55dvh;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  border-bottom: none;
-}
 
 .account-modal-overlay {
   position: fixed;
@@ -4618,10 +4277,6 @@ main[data-sidebar="closed"] .map-top-row {
   color: var(--text);
 }
 
-.address-prompt-kept {
-  color: var(--voice);
-}
-
 .address-prompt-settled {
   border-style: dashed;
   display: flex;
@@ -4739,10 +4394,6 @@ main[data-sidebar="closed"] .map-top-row {
   margin-inline-end: -0.15em;
 }
 
-.trailing-space-trimmed-10 {
-  margin-inline-end: -0.1em;
-}
-
 .trailing-space-trimmed-14 {
   margin-inline-end: -0.14em;
 }
@@ -4753,10 +4404,6 @@ main[data-sidebar="closed"] .map-top-row {
 
 .trailing-space-trimmed-16 {
   margin-inline-end: -0.16em;
-}
-
-.trailing-space-trimmed-18 {
-  margin-inline-end: -0.18em;
 }
 
 .trailing-space-trimmed-6 {
@@ -4775,121 +4422,14 @@ main[data-sidebar="closed"] .map-top-row {
   margin-inline-end: -0.2em;
 }
 
-.rail-column {
-  position: fixed;
-  top: calc(var(--rail-inset) + env(safe-area-inset-top, 0px));
-  left: var(--rail-inset);
-  width: var(--rail-width);
-  height: calc(
-    100dvh - (var(--rail-inset) * 2) - env(safe-area-inset-top, 0px) -
-      env(safe-area-inset-bottom, 0px)
-  );
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 10px;
-  z-index: 1000;
-  /* The map between and beside the cards stays draggable. Each child turns
-     pointer events back on for itself. */
-  pointer-events: none;
-}
-
-.rail-column > * {
-  pointer-events: auto;
-}
-
-.rail-column {
-  width: min(var(--wgh-wide), calc(100vw - (var(--rail-inset) * 2)));
-}
-
 /* The rail inside the column. It keeps every visual property it had; what it
    loses is its own position: fixed, because a fixed child is out of flow
    and out of flow is exactly where overlap comes from. */
-.rail-column > .sidebar {
-  position: relative;
-  top: auto;
-  left: auto;
-  width: 100%;
-  flex: 0 0 auto;
-  min-height: 0;
-  max-height: 100%;
-}
-
-.rail-floaters {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-end;
-  gap: 10px;
-  flex: 1 1 auto;
-  min-height: 0;
-  /* The same gutter `.map-bottom-stack` reserves, for the same reason: the map
-     attribution sits in this corner and the freshness footnote landed on top
-     of it. Computed from the legend's own numbers so a taller legend pushes
-     the text up instead of hiding it. */
-  padding-bottom: calc(var(--map-legend-bottom) + var(--map-legend-height) + 8px);
-  /* Separate cards with the map visible between them — never one panel with
-     three sections in it. */
-  pointer-events: none;
-}
-
-main:not([data-sidebar="closed"]) .rail-column > .sidebar {
-  flex: 0 0 auto;
-}
-
-main:not([data-sidebar="closed"]) .rail-floaters {
-  flex: 1 1 auto;
-}
-
-main[data-sidebar="closed"] .rail-column > .sidebar {
-  flex: 0 0 0;
-}
-
-main[data-sidebar="closed"] .rail-floaters {
-  padding-top: calc(var(--rail-inset) + 44px);
-}
-
-main[data-sidebar="closed"] .rail-floaters {
-  /* The card is alone in the column and takes all of it. */
-  flex: 1 1 auto;
-}
-
-main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
-  flex: 1 1 auto;
-  min-height: 0;
-}
-
-.rail-floaters > * {
-  pointer-events: auto;
-  max-width: 100%;
-}
 
 /* The same bound .map-bottom-stack carries, for the same reason: the card
    shrinks to the space it has and scrolls inside itself rather than growing
    off the top. A child combinator reads the DOM tree, not the box tree, so
    the card must stay an unwrapped child of this region. */
-.rail-floaters > .panel {
-  min-height: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
-
-.rail-floaters > .coverage-notice {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  width: 100%;
-}
-
-.rail-floaters > .coverage-notice > .coverage-notice-head {
-  flex: 0 0 auto;
-}
-
-.rail-floaters > .coverage-notice > .coverage-notice-body {
-  min-height: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
 
 .stat-pill {
   font-size: 0.6875rem;
@@ -5267,8 +4807,7 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
 .account-modal-body,
 .account-modal-foot,
 .phone-modal-body,
-.map-bottom-stack > .panel,
-.rail-floaters > .panel {
+.map-bottom-stack > .panel {
   overflow-x: clip;
   overflow-wrap: break-word;
 }
@@ -5294,14 +4833,6 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   0%, 100% { box-shadow: var(--shadow-panel); }
   50% { box-shadow: var(--shadow-panel), 0 0 12px color-mix(in srgb, var(--link) 28%, transparent); }
 }
-.boundary-info-pill {
-  min-height: 44px;
-  border: 1px solid color-mix(in srgb, var(--link) 60%, var(--panel-border));
-  border-radius: var(--radius-pill);
-  background: var(--panel);
-  color: var(--text);
-  animation: boundaryPillGlow var(--dur-boundary-glow) var(--ease-boundary-glow) infinite;
-}
 .district-info-pill {
   /* Compact action text sits between detail/body, matching the neighboring
      Who Governs Here control. Its inset preserves the reviewed 44px target. */
@@ -5319,17 +4850,6 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-.boundary-info-pill:focus-visible {
-  outline: 2px solid var(--link);
-  outline-offset: 3px;
-}
-@media (max-width: 1023px) {
-  main[data-compact-boundary="true"] .rail-floaters { justify-content: flex-start; }
-  .boundary-details-corner { bottom: calc(var(--map-legend-bottom) + var(--map-legend-height) + 12px); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .boundary-info-pill { animation: none; }
 }
 
 /* READER DESIGN tokens. New token names only, so nothing above and nothing in Admin changes meaning. */

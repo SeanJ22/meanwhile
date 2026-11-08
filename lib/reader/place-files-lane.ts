@@ -15,7 +15,7 @@ import { withPlaceMapReads } from "../place-map/reader.ts";
 import { purgeReaderCacheTags, type ReaderCachePurger } from "./cache.ts";
 import { publicationVersion } from "./canonical.ts";
 import { buildPlaceFile, PLACE_FILE_PAGE_SQL, readChecks } from "./place-file-build.ts";
-import { contentHash, fileHash, type PlaceFile } from "./place-file.ts";
+import { contentHash, fileHash, splitPlace, type PlaceFile } from "./place-file.ts";
 import { getFile, indexPointerKey, putFile, READER_INDEX_TAG, type NationalFile } from "./place-files.ts";
 import { buildMapIndex, buildZipRows, easternDay, localKey, placeMeta, readPublished, readZipPlaces, type BoardsIndex, type IndexPointer, type MapIndex, type PlaceMeta, type ZipPlaces } from "./place-index.ts";
 import { cutState, stateDivisionId } from "./state-share.ts";
@@ -170,10 +170,14 @@ async function syncNational(deps: PlaceFilesDeps, now: number): Promise<string[]
   return tags;
 }
 
-/** Files one place when what it says differs from what is filed; returns whether its file is new. A date-only change waits for `checks`. */
-async function file(deps: PlaceFilesDeps, have: Held, next: PlaceFile, now: number, checks = false): Promise<boolean> {
-  const name = have.files.get(next.id), prior = name ? await getFile<PlaceFile>(deps.store, name, true) : null;
+/**
+ * Files one place when what it says differs from what is filed; returns whether its file is new. A date-only change waits for `checks`. The history and
+ * agenda files it names are filed first.
+ */
+async function file(deps: PlaceFilesDeps, have: Held, whole: PlaceFile, now: number, checks = false): Promise<boolean> {
+  const { answer: next, extras } = splitPlace(whole), name = have.files.get(next.id), prior = name ? await getFile<PlaceFile>(deps.store, name, true) : null;
   if (prior && contentHash(prior) === contentHash(next) && (JSON.stringify(prior.variants) === JSON.stringify(next.variants) || !checks && now - prior.readAt < CHECK_EVERY_MS)) return false;
+  for (const extra of extras) await putFile(deps.store, extra);
   const filed = await putFile(deps.store, { ...next, readAt: now });
   have.files.set(next.id, filed.name);
   return filed.name !== name;

@@ -1,6 +1,6 @@
 import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
 import type { EverydayRoutingProjection } from "../routing/everyday.ts";
-import { fileKey, packFile, unpackFile, fileHash, type PlaceFile, type PlaceFileSource } from "./place-file.ts";
+import { fileKey, packFile, unpackFile, fileHash, withMore, type PlaceAgendas, type PlaceFile, type PlaceFileSource, type PlaceHistory } from "./place-file.ts";
 import { serverReaderValue } from "./memory.ts";
 import { lengthen, type BoardsIndex, type IndexPointer, type MapIndex } from "./place-index.ts";
 import { stateDivisionId } from "./state-share.ts";
@@ -66,7 +66,14 @@ export function openPlaceFiles(store: ReaderArtifactStore) {
     const { at, aliases, national } = await layout(state);
     return {
       has: id => at.has(id),
-      file: async id => { const name = at.get(id); return name ? keptFile<PlaceFile>(store, name) : null; },
+      file: async (id, more) => {
+        const name = at.get(id), found = name ? await keptFile<PlaceFile>(store, name) : null;
+        if (!found || !more) return found;
+        // History is its own file; the agenda of the brief variants is another, and the history file holds its own variants' agenda.
+        const [history, agendas] = await Promise.all([more.history && found.history ? keptFile<PlaceHistory>(store, found.history) : null,
+          more.agenda && !more.history && found.agenda ? keptFile<PlaceAgendas>(store, found.agenda) : null]);
+        return history || agendas ? withMore(found, history, agendas) : found;
+      },
       canonicalBody: id => aliases[id] ?? id,
       routing: async () => national?.routing ?? null,
     };

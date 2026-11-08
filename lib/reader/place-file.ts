@@ -17,9 +17,14 @@ export type PlaceAgenda = Pick<Row, "agenda_texts" | "archived_documents" | "arc
 /** A held meeting that has a pin on the map. */
 export interface PlacePin { readonly id: string; readonly title: string; readonly startsAt: string; readonly lat: number; readonly lng: number; readonly bodyId: string | null }
 
+type PlaceVariant = { readonly row: Row; readonly agenda?: PlaceAgenda; readonly checks?: PlaceChecks };
+
 /**
  * One place's file. It is the same for every reader and holds nothing about any one of them: the saved page with the body identities already
  * applied, the dates its facts were last checked, and (for a place of a state) the place's share of the state's answer.
+ *
+ * The file a ZIP's answer is made from holds only the brief variants, the pins and the check dates. The longer look at a place's history and the agenda
+ * documents are files of their own, named here, which a read opens only when it asks for them.
  */
 export interface PlaceFile {
   readonly v: 1;
@@ -31,7 +36,11 @@ export interface PlaceFile {
   readonly builtAt: number;
   /** When the dates its facts were checked were read, in milliseconds. */
   readonly readAt: number;
-  readonly variants: Readonly<Partial<Record<PlaceFileVariant, { readonly row: Row; readonly agenda?: PlaceAgenda; readonly checks?: PlaceChecks }>>>;
+  readonly variants: Readonly<Partial<Record<PlaceFileVariant, PlaceVariant>>>;
+  /** The name of the file that holds the history variants. */
+  readonly history?: string;
+  /** The name of the file that holds the agenda documents of the brief variants. */
+  readonly agenda?: string;
   /** The held meetings of the place that have a pin, so a map draws them without composing the page. */
   readonly pins?: readonly PlacePin[];
   /** The place's share of its state's answer. */
@@ -59,6 +68,34 @@ const withAgenda = (brief: Row, agenda: PlaceAgenda | undefined): Row => !agenda
     return { ...part, payload: { ...rest, ...(docs === null ? {} : { agendaDocuments: docs }), ...(links === null ? {} : { agendaDocumentLinks: links }) } };
   }) };
 
+const HISTORY: readonly PlaceFileVariant[] = ["history", "emptyHistory"];
+/** The history variants of a place, and the agenda documents of its brief variants. */
+export interface PlaceHistory { readonly v: 1; readonly variants: Readonly<Partial<Record<PlaceFileVariant, PlaceVariant>>> }
+export interface PlaceAgendas { readonly v: 1; readonly agenda: Readonly<Partial<Record<PlaceFileVariant, PlaceAgenda>>> }
+
+/** A place's file as it is published: the file a ZIP reads, and the files it names. A file already split keeps the names it has. */
+export function splitPlace(file: PlaceFile): { readonly answer: PlaceFile; readonly extras: readonly (PlaceHistory | PlaceAgendas)[] } {
+  const brief: Partial<Record<PlaceFileVariant, PlaceVariant>> = {}, history: Partial<Record<PlaceFileVariant, PlaceVariant>> = {}, agenda: Partial<Record<PlaceFileVariant, PlaceAgenda>> = {};
+  for (const [name, held] of Object.entries(file.variants) as [PlaceFileVariant, PlaceVariant][]) {
+    if (HISTORY.includes(name)) { history[name] = held; continue; }
+    const { agenda: documents, ...rest } = held;
+    brief[name] = rest;
+    if (documents) agenda[name] = documents;
+  }
+  const historyFile: PlaceHistory | null = Object.keys(history).length ? { v: 1, variants: history } : null;
+  const agendaFile: PlaceAgendas | null = Object.keys(agenda).length ? { v: 1, agenda } : null;
+  const { history: kept, agenda: held, ...rest } = file;
+  const named = { ...(historyFile ? { history: fileHash(historyFile) } : kept ? { history: kept } : {}), ...(agendaFile ? { agenda: fileHash(agendaFile) } : held ? { agenda: held } : {}) };
+  return { answer: { ...rest, ...named, variants: brief }, extras: [historyFile, agendaFile].filter((extra): extra is PlaceHistory | PlaceAgendas => extra !== null) };
+}
+
+/** The file with the history and agenda files it names laid back in, for a read that asks for them. */
+export function withMore(file: PlaceFile, history: PlaceHistory | null, agendas: PlaceAgendas | null): PlaceFile {
+  const variants: Partial<Record<PlaceFileVariant, PlaceVariant>> = { ...file.variants, ...history?.variants };
+  for (const [name, documents] of Object.entries(agendas?.agenda ?? {}) as [PlaceFileVariant, PlaceAgenda][]) if (variants[name]) variants[name] = { ...variants[name]!, agenda: documents };
+  return { ...file, variants };
+}
+
 /** What a ZIP's places are read as: the shape of a read decides which saved row of the page it takes. */
 export interface PlaceFileRead { readonly history: boolean; readonly empty: boolean; readonly includeAgenda: boolean; readonly bodyFactsOnly: boolean; readonly zip: boolean }
 
@@ -72,7 +109,8 @@ export function placeFileRow(file: PlaceFile, read: PlaceFileRead): Row | null {
 
 /** The files a read of places is made from. */
 export interface PlaceFileSource {
-  readonly file: (id: string) => Promise<PlaceFile | null>;
+  /** A place's file; with `more`, the history and agenda files it names are laid back in. */
+  readonly file: (id: string, more?: { readonly history: boolean; readonly agenda: boolean }) => Promise<PlaceFile | null>;
   /** Whether the place is one of this state's published places: a ZIP crossing a state line names the places of the other side too. */
   readonly has: (id: string) => boolean;
   /** A board folded into another is read as the board it was folded into. */
@@ -95,7 +133,7 @@ export async function loadPlaceFromFiles(input: PlaceInput, source: PlaceFileSou
   const empty = !input.allBodies && !input.divisionIds.length && !input.bodyIds?.length;
   const read: PlaceFileRead = { history: input.includeHistory ?? false, empty, includeAgenda: input.includeAgenda ?? false, bodyFactsOnly: input.bodyFactsOnly ?? false, zip: input.placeId !== undefined };
   const state = input.state.toUpperCase();
-  const pages = (await Promise.all(wanted.map(async id => ({ id, file: await source.file(id) }))))
+  const pages = (await Promise.all(wanted.map(async id => ({ id, file: await source.file(id, { history: read.history, agenda: read.includeAgenda }) }))))
     .filter(({ file }) => file === null || file.state === null || file.state === state);
   const rows = pages.map(({ id, file }) => {
     const row = file && placeFileRow(file, read);

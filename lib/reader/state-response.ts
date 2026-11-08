@@ -30,15 +30,15 @@ async function stateResponse(request: Request) {
     const divisionIds = indexed?.ids ?? [];
     const value = await withReaderRoute("/api/reader/state", () => readStatePackage(state, divisionIds, zip ?? undefined, { earlyDistricts: true }));
     const answer = stateAnswerOf(value, state, zip, indexed);
-    return Response.json(answer, { headers: {
-      ...readerStateCacheHeaders(state),
-      "Netlify-Vary": "query=state|zip",
-      "ETag": `"${value.version}:${zip ?? state}"`,
-    } });
+    return Response.json(answer, { headers: stateResponseHeaders(state, value.version, zip) });
   } catch {
     return Response.json({ error: "The state's information could not be loaded" }, { status: 503, headers: { "Cache-Control": "no-store" } });
   }
 }
+
+/** The headers of a state's answer. */
+export const stateResponseHeaders = (state: string, version: string, zip: string | null): Record<string, string> => ({
+  ...readerStateCacheHeaders(state), "Netlify-Vary": "query=state|zip", "ETag": `"${version}:${zip ?? state}"` });
 
 /** The state's answer for a ZIP, or for the state alone, from its held package. */
 export function stateAnswerOf(value: ReaderStatePackage, state: string, zip: string | null, indexed: PlaceEntry | null) {

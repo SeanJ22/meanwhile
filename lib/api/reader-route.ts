@@ -1,8 +1,11 @@
+import { loadWebsiteSavedKeys } from "../core/keys-entry.ts";
 import { withPlaceMapReads } from "../place-map/reader.ts";
 import { withReaderRoute, withReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 
 export function readerRoute<A extends unknown[], R>(path: string, read: (...args: A) => Promise<R>): (...args: A) => Promise<R> {
   return (...args) => withReaderRoute(path, () => withPlaceMapReads(async () => {
+    // The selection below reads the place map, so the saved keys it needs come first; a published answer never gets here.
+    await loadWebsiteSavedKeys();
     const { selection } = await selectionForReader(args);
     return withReaderSelection(selection, () => read(...args));
   }));

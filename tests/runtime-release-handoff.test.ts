@@ -9,6 +9,7 @@ import {
   applyRuntimeRelease,
   resumeRuntimeReleaseInstall,
   writeRuntimeReleaseHold,
+  fetchDeployedCommit,
   fetchGithubCheckRuns,
   fetchRuntimeProductionDeploys,
   githubRepositoryFromOrigin,
@@ -60,7 +61,7 @@ test("standing runtime resolves saved GitHub credentials in order", () => {
 test("missing saved credentials preserve the release refusal", () => {
   assert.equal(runtimeGithubCredential({}), null);
   const runner = readFileSync("scripts/pilot-runner.mts", "utf8");
-  assert.match(runner, /token: runtimeGithubCredential\(storedKeyEnvironment\(\)\)/);
+  assert.match(runner, /const token = runtimeGithubCredential\(storedKeyEnvironment\(\)\)/);
   assert.equal(inspectRuntimeReleaseEvidence({ runningSha: TARGET, served: { sha: TARGET, how: "fixture", httpStatus: 200 }, checkRuns: null }).code, "SOFTWARE_CI_UNREADABLE");
 });
 
@@ -340,4 +341,20 @@ test("the server launcher recovers installation before importing runner dependen
   const spawn = launch.indexOf("const child = spawn(");
   assert.ok(recover >= 0 && recover < refuse && refuse < spawn);
   assert.equal(launch.slice(0, recover).includes("pilot-runner.mts"), false);
+});
+
+test("the live commit is the newest GitHub production deployment marked successful, and the site is never asked", async () => {
+  const asked: string[] = [];
+  const answer = (statuses: Record<string, string>) => (async (url: string) => {
+    asked.push(url);
+    const body = url.includes("/statuses") ? [{ state: statuses[/deployments\/(\d+)\//.exec(url)![1]] }] : [{ id: 9, sha: RUNNING }, { id: 8, sha: TARGET }];
+    return new Response(JSON.stringify(body), { status: 200 });
+  }) as unknown as typeof fetch;
+  assert.equal((await fetchDeployedCommit({ repository: "o/r", fetchImpl: answer({ 9: "success" }) })).sha, RUNNING);
+  assert.equal((await fetchDeployedCommit({ repository: "o/r", fetchImpl: answer({ 9: "failure", 8: "success" }) })).sha, TARGET, "a deployment that never succeeded is skipped");
+  assert.equal((await fetchDeployedCommit({ repository: "o/r", fetchImpl: answer({}) })).sha, null);
+  assert.ok(asked.every(url => url.startsWith("https://api.github.com/repos/o/r/deployments")));
+  assert.equal((await fetchDeployedCommit({ repository: "o/r", fetchImpl: (async () => new Response("", { status: 403 })) as unknown as typeof fetch })).sha, null);
+  const runner = readFileSync(join(import.meta.dirname, "..", "scripts", "pilot-runner.mts"), "utf8");
+  assert.doesNotMatch(runner.slice(runner.indexOf("async function inspectRuntimeRelease")).split("\nasync function ")[0]!, /fetchServedCommit|PRODUCTION_BASE_URL/);
 });

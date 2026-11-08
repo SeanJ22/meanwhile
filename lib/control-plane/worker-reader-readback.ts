@@ -32,10 +32,10 @@ export type PublishedManualRead =
   | { readonly kind: "everyday-routing"; readonly record: EverydayRoutingContactRecord; readonly zip: string };
 
 
-export async function observePublishedManual(page: Page, input: PublishedManualRead): Promise<{ confirmed: boolean; reason: string; responseSha256: string | null }> {
+export async function observePublishedManual(page: Page, input: PublishedManualRead, origin: string): Promise<{ confirmed: boolean; reason: string; responseSha256: string | null }> {
   try {
     if (input.kind === "ballot-navigation") {
-      const response = await page.goto(`${PUBLIC_SITE_ORIGIN}/ballot?zip=${input.zip}`, { waitUntil: "domcontentloaded", timeout: 15_000 });
+      const response = await page.goto(`${origin}/ballot?zip=${input.zip}`, { waitUntil: "domcontentloaded", timeout: 15_000 });
       if (response?.status() !== 200) throw Error("PUBLIC_HTTP_STATUS");
       const value = input.record.value;
       const label = typeof value.label === "string" ? value.label : null;
@@ -50,7 +50,7 @@ export async function observePublishedManual(page: Page, input: PublishedManualR
     }
     const tour = page.getByRole("button", { name: "Skip the tour", exact: true });
     await page.addLocatorHandler(tour, async () => { await tour.click(); });
-    const response = await page.goto(PUBLIC_SITE_ORIGIN, { waitUntil: "domcontentloaded", timeout: 15_000 });
+    const response = await page.goto(origin, { waitUntil: "domcontentloaded", timeout: 15_000 });
     if (response?.status() !== 200) throw Error("PUBLIC_HTTP_STATUS");
     const coverageResponse = page.waitForResponse(response => {
       const url = new URL(response.url());
@@ -114,9 +114,9 @@ export async function observePublishedManual(page: Page, input: PublishedManualR
   }
 }
 
-export async function observePublishedFilings(page: Page, input: PublishedFilingsRead): Promise<{ confirmed: boolean; reason: string; responseSha256: string | null }> {
+export async function observePublishedFilings(page: Page, input: PublishedFilingsRead, origin: string): Promise<{ confirmed: boolean; reason: string; responseSha256: string | null }> {
   try {
-    const response = await page.goto(`${PUBLIC_SITE_ORIGIN}/ballot?zip=${input.zip}`, { waitUntil: "domcontentloaded", timeout: 15_000 });
+    const response = await page.goto(`${origin}/ballot?zip=${input.zip}`, { waitUntil: "domcontentloaded", timeout: 15_000 });
     if (response?.status() !== 200) throw Error("PUBLIC_HTTP_STATUS");
     const section = page.getByRole("region", { name: "Official filing records", exact: true });
     await section.waitFor({ state: "visible" });
@@ -136,12 +136,12 @@ export async function observePublishedFilings(page: Page, input: PublishedFiling
 }
 /** Real visitor controls, reused from the established roster rendering proof.
  * No API-only or serialized-prop match counts as a public delivery witness. */
-export async function observePublishedRoster(page: Page, input: PublishedRosterRead): Promise<{ confirmed: boolean; reason: string; responseSha256: string | null }> {
+export async function observePublishedRoster(page: Page, input: PublishedRosterRead, origin: string): Promise<{ confirmed: boolean; reason: string; responseSha256: string | null }> {
   let phase = "opening the public map";
   try {
     const tour = page.getByRole("button", { name: "Skip the tour", exact: true });
     await page.addLocatorHandler(tour, async () => { await tour.click(); });
-    const response = await page.goto(PUBLIC_SITE_ORIGIN, { waitUntil: "domcontentloaded", timeout: 15_000 });
+    const response = await page.goto(origin, { waitUntil: "domcontentloaded", timeout: 15_000 });
     if (response?.status() !== 200) throw Error("PUBLIC_HTTP_STATUS");
     phase = `entering ZIP ${input.zip}`;
 

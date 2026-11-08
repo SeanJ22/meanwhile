@@ -124,7 +124,7 @@ interface RenderedSurfaces {
 // Mount one dialog at a time so its normal background protection stays active.
 async function renderSurfaces(meetings: readonly Meeting[]): Promise<RenderedSurfaces> {
   const panels: string[] = [];
-  for (const venue of groupByVenue(meetings)) panels.push(...await renderWithOpenSources(`
+  for (const venue of groupByVenue([...meetings])) panels.push(...await renderWithOpenSources(`
     import React from 'react';
     import { createRoot } from 'react-dom/client';
     import { DataProvider } from './lib/state/data.tsx';

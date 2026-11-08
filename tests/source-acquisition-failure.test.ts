@@ -35,10 +35,11 @@ import {
 import { parseMembers } from "../scripts/nh-gencourt-members.mts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { MemoryRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
-import { sourceProjectionEvidence, type RoutineCandidate } from "../lib/civic-data/types.ts";
-import { fecFundingCandidate, normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+import type { RoutineCandidate } from "../lib/civic-data/types.ts";
+import { fecFundingCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { collectFecCandidate } from "../lib/funding/fec-collector.ts";
 import type { FundingSnapshot } from "../lib/funding/types.ts";
+import { routineCandidateFixture } from "./helpers/routine-candidate-fixture.ts";
 
 const GOOD_AT = "2026-09-08T12:00:00.000Z";
 const FAILED_AT = "2026-09-08T13:00:00.000Z";
@@ -51,31 +52,9 @@ function goodFecCandidate(): RoutineCandidate {
     candidates: [{ fecCandidateId: "H6AZ01001" }],
     absences: [],
   };
-  return {
-    id: "source-boundary-good-fec",
-    sourceId: "fec-open-api",
-    recordClass: "FEC_FUNDING",
-    scope: "federal-supported",
-    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
-    retrieval: {
-      succeeded: true,
-      requestedUrl: "https://api.open.fec.gov/v1/candidates/search/",
-      finalUrl: "https://api.open.fec.gov/v1/candidates/search/",
-      httpStatus: 200,
-      retrievedAt: GOOD_AT,
-      rawHash: HASH,
-    },
-    normalization: {
-      succeeded: true,
-      parserVersion: "fec-funding/4",
-      schemaVersion: "2",
-      normalizedHash: normalizedHash(readModel),
-      normalizedPayloadHash: normalizedHash(normalizedPayload),
-      inputRecords: 1,
-      outputRecords: 1,
-      droppedRecords: 0,
-      missingRequiredFields: [],
-    },
+  return routineCandidateFixture({
+    id: "source-boundary-good-fec", retrievedAt: GOOD_AT, rawHash: HASH,
+    requestedUrl: "https://api.open.fec.gov/v1/candidates/search/",
     identities: [{
       subjectId: "H6AZ01001",
       jurisdiction: "US",
@@ -83,26 +62,12 @@ function goodFecCandidate(): RoutineCandidate {
       matchBasis: "OFFICIAL_ID",
       ambiguous: false,
     }],
-    temporal: {
-      version: "2026",
-      expectedVersion: "2026",
-      sourceThrough: GOOD_AT,
-      staleAtRetrieval: false,
-    },
     semantics: { factKind: "filed campaign-finance total", violations: [] },
-    horizon: {
-      kind: "OPEN_FACT_SET",
-      query: "registered 2026 federal candidates represented in Reader",
-      returnedRecords: 1,
-      declaredTotal: null,
-      paginationComplete: true,
-      claimsComplete: false,
-    },
-    absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
+    horizon: { query: "registered 2026 federal candidates represented in Reader" },
     dependentChecks: [{ consumer: "Reader funding card", passed: true, detail: "accepted" }],
     normalizedPayload,
     readModel,
-  };
+  });
 }
 
 test("a registered source failure is one durable attempt with retry clock and unchanged LKG", async () => {

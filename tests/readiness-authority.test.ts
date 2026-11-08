@@ -8,9 +8,8 @@ import {
   type RoutineCandidateRow,
   type RoutinePromotionRow,
 } from "../lib/civic-data/observability.ts";
-import { VALIDATION_CHECKS, type ValidationReceipt } from "../lib/civic-data/types.ts";
 import { serializeReaderProjectionReadback } from "../lib/civic-data/reader-readback.ts";
-import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+import { routineCandidateFixture, routineReceiptFixture } from "./helpers/routine-candidate-fixture.ts";
 
 const NOW = "2026-09-08T12:00:00.000Z";
 const AT = "2026-09-08T11:00:00.000Z";
@@ -24,17 +23,19 @@ function promotedRows(): {
   readonly promotions: readonly RoutinePromotionRow[];
 } {
   const id = "az-finance-readiness-v1";
-  const receipt: ValidationReceipt = {
-    contractVersion: 2,
-    decision: "GOOD",
-    candidateId: id,
+  const complete = routineCandidateFixture({
+    id,
     sourceId: CONTRACT.sourceId,
     recordClass: CONTRACT.recordClass,
     scope: CONTRACT.scope,
-    validatedAt: AT,
-    checks: VALIDATION_CHECKS.map((check) => ({ check, verdict: "PASS", code: `${check}_PASS`, detail: `${check} passed.` })),
-    excludedFacts: [],
-  };
+    retrievedAt: AT,
+    requestedUrl: "https://azsos.gov/elections/campaign-finance-reporting",
+    parserVersion: "test/readiness-authority",
+    schemaVersion: "test/1",
+    normalizedPayload: { candidateId: id },
+    readModel: { candidateId: id },
+  });
+  const receipt = routineReceiptFixture(complete, { detail: check => `${check} passed.` });
   const candidate: RoutineCandidateRow = {
     id,
     sourceId: CONTRACT.sourceId,
@@ -44,33 +45,17 @@ function promotedRows(): {
     acquisitionSucceeded: true,
     retrievedAt: AT,
     sourceThrough: AT,
+    // This observability case intentionally omits the full candidate's identity and semantic proof fields.
     candidate: {
       id,
       sourceId: CONTRACT.sourceId,
       recordClass: CONTRACT.recordClass,
       scope: CONTRACT.scope,
-      retrieval: {
-        succeeded: true,
-        requestedUrl: "https://azsos.gov/elections/campaign-finance-reporting",
-        finalUrl: "https://azsos.gov/elections/campaign-finance-reporting",
-        httpStatus: 200,
-        retrievedAt: AT,
-        rawHash: "a".repeat(64),
-      },
-      normalization: {
-        succeeded: true,
-        parserVersion: "test/readiness-authority",
-        schemaVersion: "test/1",
-        normalizedHash: normalizedHash({ candidateId: id }),
-        normalizedPayloadHash: normalizedHash({ candidateId: id }),
-        inputRecords: 1,
-        outputRecords: 1,
-        droppedRecords: 0,
-        missingRequiredFields: [],
-      },
-      normalizedPayload: { candidateId: id },
-      temporal: { version: "2026", expectedVersion: "2026", sourceThrough: AT, staleAtRetrieval: false },
-      readModel: { candidateId: id },
+      retrieval: complete.retrieval,
+      normalization: complete.normalization,
+      normalizedPayload: complete.normalizedPayload,
+      temporal: complete.temporal,
+      readModel: complete.readModel,
       changeSet: { outcome: "UNCHANGED", added: [], changed: [], removed: [], held: [] },
     },
     validationReceipt: receipt,

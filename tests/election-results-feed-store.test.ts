@@ -5,6 +5,7 @@ import { join } from "node:path";
 import test from "node:test";
 import { createElectionResultFeedStore, localElectionResultFeedStore, resultFeedScope } from "../lib/election-results/feed-store.ts";
 import type { StateResultFeed } from "../lib/election-results/feed-types.ts";
+import { electionFeedFixture, preserveFeedEnvironment } from "./helpers/election-feed-fixture.ts";
 
 const state: StateResultFeed = { formatVersion: 1, state: "AZ", ballotVersion: "v1", checkedAt: "2026-11-08T02:00:00Z", fingerprint: "f1", facts: {} };
 const nation = { checkedAt: state.checkedAt, states: {}, sources: [] };
@@ -30,32 +31,26 @@ test("a feed publication failure propagates to the job instead of pretending it 
   await assert.rejects(store.writeState("TX", state), /STATE_FEED_INVALID/);
 });
 
-test("feed storage carries only its published contract rather than accidental source or ballot copies", async () => {
-  const values = new Map<string, unknown>();
-  const store = createElectionResultFeedStore({ read: async key => values.get(key) ?? null, write: async (key, value) => { values.set(key, value); } });
+test("feed storage carries only its published contract rather than accidental source or ballot copies", async context => {
+  const { documents, store } = electionFeedFixture(context);
   await store.writeState("AZ", { ...state, sourceBody: "Transient source body", ballot: { contests: [] } } as StateResultFeed);
   assert.deepEqual(await store.readState("AZ"), state);
-  assert.equal(JSON.stringify([...values.values()]).includes("Transient source body"), false);
+  assert.equal(JSON.stringify([...documents.values()]).includes("Transient source body"), false);
 });
 
-test("the native test-copy server uses its own temporary feed directory and refuses production", async () => {
+test("the native test-copy server uses its own temporary feed directory and refuses production", async context => {
   const root = await mkdtemp(join(tmpdir(), "cx-results-feed-test-"));
-  const names = ["CONTEXT", "WTP_BUILD_CONTEXT", "WTP_RUNTIME_MODE", "WTP_DB_ROLE"];
-  const prior = new Map(names.map(name => [name, process.env[name]]));
-  try {
-    process.env.CONTEXT = "deploy-preview";
-    const store = localElectionResultFeedStore(root);
-    await store.writeState("AZ", state); await store.writeNation(nation);
-    assert.deepEqual(await store.readState("AZ"), state);
-    assert.deepEqual(await store.readNation(), nation);
-    assert.equal(await store.readState("TX"), null);
-    process.env.CONTEXT = "production";
-    process.env.WTP_BUILD_CONTEXT = "production";
-    process.env.WTP_RUNTIME_MODE = "production";
-    delete process.env.WTP_DB_ROLE;
-    assert.throws(() => localElectionResultFeedStore(root), /FORBIDDEN_IN_PRODUCTION/);
-  } finally {
-    for (const [name, value] of prior) if (value === undefined) delete process.env[name]; else process.env[name] = value;
-    await rm(root, { recursive: true, force: true });
-  }
+  context.after(() => rm(root, { recursive: true, force: true }));
+  preserveFeedEnvironment(context, ["CONTEXT", "WTP_BUILD_CONTEXT", "WTP_RUNTIME_MODE", "WTP_DB_ROLE"]);
+  process.env.CONTEXT = "deploy-preview";
+  const store = localElectionResultFeedStore(root);
+  await store.writeState("AZ", state); await store.writeNation(nation);
+  assert.deepEqual(await store.readState("AZ"), state);
+  assert.deepEqual(await store.readNation(), nation);
+  assert.equal(await store.readState("TX"), null);
+  process.env.CONTEXT = "production";
+  process.env.WTP_BUILD_CONTEXT = "production";
+  process.env.WTP_RUNTIME_MODE = "production";
+  delete process.env.WTP_DB_ROLE;
+  assert.throws(() => localElectionResultFeedStore(root), /FORBIDDEN_IN_PRODUCTION/);
 });

@@ -36,12 +36,13 @@ import type { RuntimeAuthorityEnvelope } from "../lib/civic-data/runtime-authori
 import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 import { serializeReaderProjectionReadback } from "../lib/civic-data/reader-readback.ts";
 import {
-  VALIDATION_CHECKS,
   sourceProjectionEvidence,
   type CandidateVersionRecord,
   type RoutineCandidate,
   type ValidationReceipt,
 } from "../lib/civic-data/types.ts";
+
+import { routineCandidateFixture, routineReceiptFixture } from "./helpers/routine-candidate-fixture.ts";
 
 const HASH = "a".repeat(64);
 const ROOT = resolve(import.meta.dirname, "..");
@@ -90,80 +91,11 @@ test("Postgres routine-data timestamps have one fail-closed canonical evidence b
 });
 
 function candidate(id: string, retrievedAt = "2026-09-08T12:00:00.000Z", sourceId = "fec-open-api"): RoutineCandidate {
-  const normalizedPayload = { rows: [{ id }] };
-  const readModel = { candidates: [{ id, amount: 1 }] };
-  return {
-    id,
-    sourceId,
-    recordClass: "FEC_FUNDING",
-    scope: "federal-supported",
-    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
-    retrieval: {
-      succeeded: true,
-      requestedUrl: "https://api.open.fec.gov/v1/",
-      finalUrl: "https://api.open.fec.gov/v1/",
-      httpStatus: 200,
-      retrievedAt,
-      rawHash: HASH,
-    },
-    normalization: {
-      succeeded: true,
-      parserVersion: "fec-funding/4",
-      schemaVersion: "2",
-      normalizedHash: normalizedHash(readModel),
-      normalizedPayloadHash: normalizedHash(normalizedPayload),
-      inputRecords: 1,
-      outputRecords: 1,
-      droppedRecords: 0,
-      missingRequiredFields: [],
-    },
-    identities: [{
-      subjectId: "H6AZ01001",
-      jurisdiction: "US",
-      identifiers: { candidate_id: "H6AZ01001" },
-      matchBasis: "OFFICIAL_ID",
-      ambiguous: false,
-    }],
-    temporal: {
-      version: "2026",
-      expectedVersion: "2026",
-      sourceThrough: retrievedAt,
-      staleAtRetrieval: false,
-    },
-    semantics: { factKind: "filed total", violations: [] },
-    horizon: {
-      kind: "OPEN_FACT_SET",
-      query: "supported candidates",
-      returnedRecords: 1,
-      declaredTotal: null,
-      paginationComplete: true,
-      claimsComplete: false,
-    },
-    absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
-    dependentChecks: [{ consumer: "funding reader", passed: true, detail: "accepted" }],
-    normalizedPayload,
-    readModel,
-  };
+  return routineCandidateFixture({ id, retrievedAt, sourceId,
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported") });
 }
 
-function receiptFor(value: RoutineCandidate): ValidationReceipt {
-  return {
-    contractVersion: 2,
-    decision: "GOOD",
-    candidateId: value.id,
-    sourceId: value.sourceId,
-    recordClass: value.recordClass,
-    scope: value.scope,
-    validatedAt: value.retrieval.retrievedAt,
-    checks: VALIDATION_CHECKS.map((check) => ({
-      check,
-      verdict: "PASS",
-      code: `${check}_PASS`,
-      detail: "persisted proof",
-    })),
-    excludedFacts: [],
-  };
-}
+const receiptFor = routineReceiptFixture;
 
 async function seedValidated(
   store: MemoryRoutineDataStore,

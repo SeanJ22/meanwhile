@@ -124,6 +124,20 @@ async function refreshUnchangedAsk(repos: FieldManualRepos, now: string): Promis
   }
 }
 
+/** The measure writer and checker text shipped before the 9th-grade rewrite; a row still holding it exactly gets the current text, with undo. */
+const MEASURE_BEFORE_GRADE_NINE = "ff16a483ac49f37ff26177ce4dc4491fea94d50464d15524142c210369d4c049";
+
+async function refreshUnchangedMeasure(repos: FieldManualRepos, now: string): Promise<void> {
+  for (const role of ["MEASURE_WRITER", "MEASURE_CHECKER"] as const) {
+    const held = await repos.fieldManual.read(fieldManualEntryId("role-playbook", role));
+    const book = rolePlaybook(held ? [held.value] : [], role);
+    if (book.version !== MEASURE_BEFORE_GRADE_NINE) continue;
+    const text = (PLAYBOOK_SEED_ROWS.find(row => row.role === role)!.payload as { text: string }).text;
+    await updateRolePlaybook(repos, { role, text, expectedVersion: book.version, id: `grade9-${role.toLowerCase()}`,
+      at: now, why: "Ballot measure explainers are written at a 9th-grade reading level with no legal wording, and checked for both", factory: "GRADE-9" });
+  }
+}
+
 export interface PlaybookSetupReport { readonly created: number; readonly present: number; readonly retired: boolean }
 
 /**
@@ -135,6 +149,7 @@ export async function ensureRolePlaybooks(repos: FieldManualRepos, now: string):
   const seeded = await seedRolePlaybooks(repos, now);
   await refreshUnchangedDetective(repos, now);
   await refreshUnchangedAsk(repos, now);
+  await refreshUnchangedMeasure(repos, now);
   const retire = repos.fieldManual.retireInstructions;
   if (retire === undefined) return { ...seeded, retired: false };
   if (await repos.fieldManual.read(PLAYBOOK_RETIREMENT_MARKER.id) !== null) return { ...seeded, retired: false };

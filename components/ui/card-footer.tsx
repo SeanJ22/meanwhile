@@ -8,7 +8,7 @@ import type { CardSource } from "@/lib/officials/card-sources";
 export function CardFooter({ sources }: { sources: CardSource[] }) {
   return <div data-card-footer>
     <div data-card-sources="">
-      <CardSection title="Sources" keepMounted meta={sources.length ? String(sources.length) : null}>
+      <CardSection title="Sources" keepMounted={sources.length === 0} meta={sources.length ? String(sources.length) : null}>
         <CardSourcesList sources={sources} />
       </CardSection>
     </div>

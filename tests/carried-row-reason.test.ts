@@ -1,14 +1,15 @@
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
+import { renderWithOpenSources } from "./helpers/render-card.ts";
 
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 import { carryForward } from "../lib/meetings/carry-forward.ts";
+import { groupByVenue } from "../lib/meetings/venues.ts";
 import { CARRIED_ROW_CLAUSE, carriedRowClause, type CarriedReason } from "../lib/meetings/freshness.ts";
 import { meetingBodyIds, searchMeetings } from "../lib/meetings/query.ts";
 import { snapshotSourceFor } from "../lib/meetings/snapshot-source.ts";
@@ -121,38 +122,29 @@ interface RenderedSurfaces {
   readonly panels: readonly string[];
 }
 
-// Components import CSS modules, so the test loader rides along to stub them.
-function renderSurfaces(meetings: readonly Meeting[]): RenderedSurfaces {
-  const output = execFileSync(process.execPath, [
-    "--import", "data:text/javascript,process.geteuid=()=>0",
-    "--import", "tsx",
-    "--import", "./scripts/register-test-loader.mjs",
-    "--input-type=module",
-    "-e", `
-    import { createElement as h } from 'react';
-    import { renderToStaticMarkup } from 'react-dom/server';
+// Mount one dialog at a time so its normal background protection stays active.
+async function renderSurfaces(meetings: readonly Meeting[]): Promise<RenderedSurfaces> {
+  const panels: string[] = [];
+  for (const venue of groupByVenue([...meetings])) panels.push(...await renderWithOpenSources(`
+    import React from 'react';
+    import { createRoot } from 'react-dom/client';
     import { DataProvider } from './lib/state/data.tsx';
     import { UiProvider } from './lib/state/provider.tsx';
     import { MeetingPanel } from './components/map/meeting-panel.tsx';
     import { ReaderCard } from './components/shell/reader-card.tsx';
     import { meetingCardSources } from './lib/officials/card-sources.ts';
-    import { groupByVenue } from './lib/meetings/venues.ts';
-    const meetings = JSON.parse(process.env.CARRIED_ROW_REASON_CASES);
+    const meetings = ${JSON.stringify(meetings)}, venue = ${JSON.stringify(venue)};
     const data = { allMeetings: meetings, meetings, venues: [], result: null, location: null, drawnDistricts: [],
       dropped: 0, searchFailed: false, atAddress: false, governing: null, zipPartial: null, basis: 'ZIP' };
-    const render = (child) => renderToStaticMarkup(h(DataProvider, { value: data }, h(UiProvider, { initial: {} }, child)));
-    const panels = groupByVenue(meetings).map((venue) => render(h(ReaderCard, {
-      viewKey: venue.key, kicker: venue.name, backLabel: null, onBack() {}, onClose() {},
-      sources: venue.meetings.flatMap(meeting => meetingCardSources(meeting, [])),
-    }, h(MeetingPanel, { venue, onClose() {}, onOpenMeeting() {}, embedded: true }))));
-    console.log(JSON.stringify({ panels }));
-  `], {
-    cwd: ROOT,
-    encoding: "utf8",
-    maxBuffer: 8 * 1024 * 1024,
-    env: { ...process.env, CARRIED_ROW_REASON_CASES: JSON.stringify(meetings) },
-  });
-  return JSON.parse(output.trim().split("\n").at(-1)!) as RenderedSurfaces;
+    createRoot(document.getElementById('root')).render(<DataProvider value={data}><UiProvider initial={{}}>
+      <ReaderCard
+        viewKey={venue.key} kicker={venue.name} backLabel={null} onBack={() => {}} onClose={() => {}}
+        sources={venue.meetings.flatMap(meeting => meetingCardSources(meeting, []))}>
+        <MeetingPanel venue={venue} onClose={() => {}} onOpenMeeting={() => {}} embedded />
+      </ReaderCard>
+    </UiProvider></DataProvider>);
+  `, [...new Set(venue.meetings.flatMap(meeting => meeting.provenance.sourceUrl ? [meeting.provenance.sourceUrl] : []))], '[data-reader-card]'));
+  return { panels };
 }
 
 function innerText(markup: string): string {
@@ -296,7 +288,7 @@ test("the reason survives its writer, the body's record, the edge, the wire and 
   assert.equal(carriedRowClause(listed?.carried), "our latest check of this calendar didn't find this listing");
 });
 
-test("the venue card renders the decided clause for every reason, and never calls an answering calendar unreachable", () => {
+test("the venue card renders the decided clause for every reason, and never calls an answering calendar unreachable", async () => {
   const unexplained: Meeting = {
     ...icalListing(LAST_HELD),
     carried: { source: "civicplus", lastFreshAt: LAST_HELD, reason: "UNEXPLAINED_DISAPPEARANCE" },
@@ -334,7 +326,7 @@ test("the venue card renders the decided clause for every reason, and never call
     { meeting: legacy, clause: null },
   ];
 
-  const { panels } = renderSurfaces([unexplained, fresh, refused, partial, legacy]);
+  const { panels } = await renderSurfaces([unexplained, fresh, refused, partial, legacy]);
   const panelFor = (id: string) => {
     const markup = panels.find((candidate) => candidate.includes(`data-meeting-id="${id}"`));
     assert.ok(markup, `no venue card rendered ${id}`);

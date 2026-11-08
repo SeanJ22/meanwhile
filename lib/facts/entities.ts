@@ -497,7 +497,7 @@ export function registeredStates(root: string): readonly string[] {
   return readdirSync(join(root, "data", "derived", "registration")).filter(name => /^[a-z]{2}\.json$/.test(name)).map(name => name.slice(0, 2)).sort();
 }
 
-/** The surviving person or board for an exact saved identity alias; any other id is its own. */
+/** The surviving entity for an exact saved identity alias; any other id is its own. */
 export async function canonicalEntityId(query: Query, id: string): Promise<string> {
   const [alias] = await query(`SELECT entity_id FROM entity_external_id WHERE scheme = '${ID_ALIAS}' AND value = $1`, [id]);
   return alias ? String(alias.entity_id) : id;
@@ -548,6 +548,16 @@ export async function ensureEntity(query: Query, row: EntityRow): Promise<string
   const changedEntities=changed.length?[id,...changed.flatMap(row=>typeof row.old_parent==="string"?[row.old_parent]:[])]:[];
   if (["body","government","meeting"].includes(row.kind)) await fileEntityPlaces(query,id,row.places ?? [],parentId,changedEntities);
   else if(changedEntities.length)await enqueueReaderPlaces({entities:changedEntities},query);
+  return id;
+}
+
+/** File a publisher's exact identifier on an existing reader subject, refusing an identifier already owned by someone else. */
+export async function ensureSourceEntity(query: Query, row: EntityRow, scheme: string, sourceId: string): Promise<string> {
+  const canonical = await canonicalEntityId(query, row.id);
+  const id = await ensureEntity(query, canonical === row.id ? row : { ...row, id: canonical });
+  const [alias] = await query(`INSERT INTO entity_external_id(entity_id,scheme,value) VALUES($1,$2,$3)
+    ON CONFLICT(scheme,value) DO UPDATE SET value=EXCLUDED.value RETURNING entity_id`, [id, scheme, sourceId]);
+  if (alias?.entity_id !== id) throw new Error("SOURCE_IDENTITY_CONFLICT");
   return id;
 }
 

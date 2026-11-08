@@ -11,7 +11,7 @@ import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
 import { ROUTINE_SOURCE_TASKS, routineTaskDue } from "../lib/civic-data/runner.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import type { ModelRequest } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { translationHash } from "../lib/translate/records.ts";
+import { MEASURE_WRITING_VERSION, translationHash } from "../lib/translate/records.ts";
 import { loadPromotedMeasureBallots, runMeasureTranslationPass } from "../lib/translate/provider.ts";
 import { MEASURE_TRANSLATION_ROUTINE_TASKS, measureTranslationRoutineTask } from "../lib/translate/routine-contract.ts";
 import type { TranslationAttempt } from "../lib/translate/standing.ts";
@@ -259,10 +259,10 @@ test("a 5 MB Maryland source is vaulted once, publishes below the limit, and add
   assert.ok(sizes.every(size => size < 1_000_000), "neither publication nor losing-fact evidence puts the full source back into a candidate");
 });
 
-test("an existing Arizona translation is rewritten once through the shared writer", async () => {
-  const f = fixture(), az = "ocd-division/country:us/state:az";
-  const ballot = { ...f.ballot, election: { ...f.ballot.election, state: "AZ" }, contests: f.ballot.contests.map(row => ({ ...row, ocdId: az })) };
-  const input = { ...f.input, states: ["AZ"], loadBallotsForState: async () => [ballot] };
+test("a held explainer written under older rules, in any state, is rewritten once at the 9th-grade level and replaces the old record", async () => {
+  const f = fixture(), az = "ocd-division/country:us/state:ia";
+  const ballot = { ...f.ballot, election: { ...f.ballot.election, state: "IA" }, contests: f.ballot.contests.map(row => ({ ...row, ocdId: az })) };
+  const input = { ...f.input, states: ["IA"], loadBallotsForState: async () => [ballot] };
   assert.equal((await runMeasureTranslationPass(input)).checkedAfter, 2);
   const projection = await f.input.store.readPromotion<{ records: import("../lib/translate/records.ts").MeasureTranslation[] }>("CURATED_READER_RECORD", `US:plain-english-translations:${az}`);
   for (const row of projection!.payload.records) {
@@ -275,6 +275,16 @@ test("an existing Arizona translation is rewritten once through the shared write
   assert.equal(rewrite.checkedAfter, 2, JSON.stringify(rewrite));
   assert.equal(f.calls.length, 8);
   assert.ok(CARD_WRITING_RULES.every(rule => f.calls[4].system[0].text.includes(rule)));
+  const writerAsk = measureRequestContext(f.calls[4]).instruction as string, checkerAsk = measureRequestContext(f.calls[5]).instruction as string;
+  assert.match(writerAsk, /9th-grade reading level/);
+  assert.match(writerAsk, /no legal wording/);
+  assert.doesNotMatch(writerAsk, /high-school/);
+  assert.match(checkerAsk, /legal wording/);
+  assert.match(checkerAsk, /above a 9th-grade level/);
+  assert.match(checkerAsk, /do not support/);
+  const rewritten = await readTranslations([az], { store: f.input.store, now });
+  assert.equal(rewritten.length, 2, "one record per measure; the old wording is replaced, not kept beside the new");
+  assert.ok(rewritten.every(row => row.kind === "MEASURE" && row.writingRulesVersion === MEASURE_WRITING_VERSION));
   await runMeasureTranslationPass({ ...input, now: "2026-10-20T18:15:00.000Z" });
   assert.equal(f.calls.length, 8);
 });
@@ -288,7 +298,7 @@ test("all legacy sources in a division compact together without a model or an ov
   const sentences = ["whatItDoes", "yesMeans", "noMeans"].map(field => ({ field, text: measure[field as "whatItDoes"], quote: measure[field as "whatItDoes"] }));
   const legacy: import("../lib/translate/records.ts").MeasureTranslation = { id: "translation:measure:12", kind: "MEASURE", subjectId: "measure:12", ocdId: md,
     sourceUrl, sourceHash: hash, sourceText: large, sourceTextHash: hash, retrievedAt: now, writtenAt: now,
-    writerModel: "writer", checkerModel: "checker", playbookVersion: translationHash("legacy"), measure, sentences,
+    writerModel: "writer", checkerModel: "checker", playbookVersion: translationHash("legacy"), writingRulesVersion: MEASURE_WRITING_VERSION, measure, sentences,
     checked: sentences.map(({ field, text }) => ({ field, text, supported: true })) };
   const evidence = { artifactId: "held", acquiredByAttemptId: "held", sourceId: "Election office", methodRouteId: "measure-text",
     canonicalUrl: sourceUrl, contentHash: `sha256-${hash}`, retrievedAt: now, text: large };
@@ -329,7 +339,7 @@ test("stale legacy evidence refreshes only from the same official document witho
     const sentences = ["whatItDoes", "yesMeans", "noMeans"].map(field => ({ field, text: measure[field as "whatItDoes"], quote: measure[field as "whatItDoes"] }));
     const legacy: import("../lib/translate/records.ts").MeasureTranslation = { id: "translation:measure:12", kind: "MEASURE", subjectId: "measure:12", ocdId: md,
       sourceUrl, sourceHash: hash, sourceText: large, sourceTextHash: hash, retrievedAt: old, writtenAt: old,
-      writerModel: "writer", checkerModel: "checker", playbookVersion: translationHash("legacy"), measure, sentences,
+      writerModel: "writer", checkerModel: "checker", playbookVersion: translationHash("legacy"), writingRulesVersion: MEASURE_WRITING_VERSION, measure, sentences,
       checked: sentences.map(({ field, text }) => ({ field, text, supported: true })) };
     const evidence = { artifactId: "held", acquiredByAttemptId: "held", sourceId: "Election office", methodRouteId: "measure-text",
       canonicalUrl: sourceUrl, contentHash: `sha256-${hash}`, retrievedAt: old, text: large };

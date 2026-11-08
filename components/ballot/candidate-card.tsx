@@ -30,6 +30,7 @@ export function CandidateCard({
   filingSources,
   nameSlot,
   battlecardSlot,
+  resultSlot,
   derivedBlurb,
 }: {
 
@@ -43,6 +44,8 @@ export function CandidateCard({
   nameSlot?: React.ReactNode;
 
   battlecardSlot?: React.ReactNode;
+
+  resultSlot?: React.ReactNode;
 
   partyLine: React.ReactNode;
   card: CandidateCardData | null;
@@ -86,6 +89,8 @@ export function CandidateCard({
             {partyLine}
           </span>
         </div>
+
+        {resultSlot}
 
         <CandidatePortraitSources card={card} />
         {holder && <CardSourcesContribution id={`candidate-held-person:${holder.id}`}
@@ -144,7 +149,7 @@ export function CandidateCard({
           <p className="mt-1 t-detail text-muted">{card.phoneLabel}</p>
         )}
 
-        {battlecardSlot}
+        {battlecardSlot && <div className="cr-cta">{battlecardSlot}</div>}
       </div>
     </VisibleCard>
   );

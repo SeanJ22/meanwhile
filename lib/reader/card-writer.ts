@@ -3,7 +3,8 @@
  * Structured facts use the same rules without buying a model call on a reader
  * request. This module formats supplied facts and never fills missing ones. */
 export const CARD_WRITING_RULES = [
-  "Write clear, neutral high-school English from the supplied source alone.",
+  "Write clear, neutral English at a 9th-grade reading level (about Flesch-Kincaid grade 9 or lower) from the supplied source alone: short sentences, everyday words and no legal wording.",
+  "Explain any legal term you cannot avoid in familiar words, and keep every material condition, exception, number and date.",
   "Lead with what happened or what changes for the reader, using one short plain sentence per item.",
   "Preserve the exact subject, dates, amounts, scope, material conditions and qualifications; never infer a recipient from a location.",
   "Never invent a fact, judge a person or side, or recommend how to vote.",

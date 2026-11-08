@@ -4616,7 +4616,7 @@ main[data-sidebar="closed"] .map-top-row {
   margin-top: 14px;
 }
 
-.ballot-top-pills .address-prompt {
+.ballot-top-pills > .flex .address-prompt {
   flex: 1 0 100%;
   margin-top: 0;
 }
@@ -4663,10 +4663,6 @@ main[data-sidebar="closed"] .map-top-row {
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-3);
   margin-top: var(--space-4);
-}
-
-.ballot-office-card[data-office-tier-start="true"] {
-  border-top-width: 3px;
 }
 
 .ballot-candidate-grid {
@@ -4956,3 +4952,4 @@ main[data-sidebar="closed"] .map-top-row {
   --cat-credit: #b0457e;
   --cat-bipartisan: #2f8a66;
 }
+

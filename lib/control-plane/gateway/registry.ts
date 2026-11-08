@@ -1,6 +1,7 @@
 import { requestHuntStop } from "../hunt-orders.ts";
 import { REGISTRY_STATES, stateBallotContractId } from "../../civic-data/state-scopes.ts";
 import "../../ask/model.ts";
+import "../../ballot/vote-phase.ts";
 import "../../hunt/settings.ts";
 import "../../design/copy-settings.ts";
 import "../../facts/clocks.ts";

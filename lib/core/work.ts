@@ -409,6 +409,14 @@ export function workList(query: Query, options: { readonly owner: string; readon
     lease_version = NULL, attempts = greatest(attempts - 1, 0) WHERE id = $1 AND lease_owner = $2 AND status = 'taken' RETURNING id`,
   [claim.id, claim.leaseOwner])).length === 1;
   return {
+    /** Close acquisition problems whose verified answer has arrived; independently unresolved fields stay open. */
+    async resolve(input: { readonly subjectId: string; readonly fieldPrefix: string; readonly exceptFields?: readonly string[] }): Promise<void> {
+      if (!input.subjectId.trim() || !input.fieldPrefix.trim()) throw new Error("WORK_INVALID_INPUT");
+      await query(`UPDATE work SET status='done',done_at=$4::timestamptz,repeat_ms=NULL,refusal=NULL
+        WHERE subject_id=$1 AND starts_with(field,$2) AND NOT(field=ANY($3::text[]))
+          AND kind IN('fix','detect','hunt') AND status='waiting'`,
+      [input.subjectId, input.fieldPrefix, input.exceptFields ?? [], timestamp()]);
+    },
     async add(input: WorkInput): Promise<WorkRow> {
       if (input.series !== undefined) throw new Error("WORK_INVALID_INPUT");
       const at = timestamp(), one = prepared(input, at);

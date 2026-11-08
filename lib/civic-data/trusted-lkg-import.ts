@@ -1,5 +1,4 @@
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
-import { createHash } from "node:crypto";
 
 import {
   candidateChangeSet,
@@ -26,6 +25,7 @@ import type {
   TrustedLkgImportEvidence,
   TrustedLkgTransferEvidence,
 } from "./types.ts";
+import { sha256 } from "../sha256.ts";
 
 export const PDC_V2_FROZEN_BASE_SHA = "fc67e8cd34c489590c403f7b4a0d6008fa755296";
 export const TRUSTED_LKG_IMPORT_AUTHORIZATION = "PDC_V2_FROZEN_LKG_CUTOVER" as const;
@@ -36,10 +36,6 @@ export const NH_MEMBERS_V2_TO_V3_SCHEMA = "NhMemberReadModel:1:trusted-v2-to-v3-
 
 const SHA256 = /^[a-f0-9]{64}$/;
 const GIT_SHA = /^[a-f0-9]{40}$/;
-
-function sha256(value: string): string {
-  return createHash("sha256").update(value).digest("hex");
-}
 
 function durableSha256(value: unknown): string | null {
   try {

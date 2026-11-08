@@ -1,7 +1,7 @@
 import { DOTGOV_SCOPE, DOTGOV_PARSER_VERSION, dotGovSnapshotIssues, type DotGovSnapshot } from "./dotgov.ts";
 import { acsSourceContentHash } from "../sources/census-acs-population/source-hash.ts";
 import { mergeStatePeople } from "../state-rollcalls/legislators.ts";
-import { createHash } from "node:crypto";
+import { sha256 } from "../sha256.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
 
 import type { FundingSnapshot } from "../funding/types.ts";
@@ -34,9 +34,7 @@ import {
   type RoutineRecordClass,
 } from "./types.ts";
 
-export function sha256(value: string | Uint8Array): string {
-  return createHash("sha256").update(value).digest("hex");
-}
+export { sha256 };
 
 function canonical(value: unknown): string {
   if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;

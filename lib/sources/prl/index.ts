@@ -1,3 +1,4 @@
+import { parseCsv } from "../../reference/csv.ts";
 import {
   PRL_CATEGORIES,
   PRL_FORBIDDEN_COLUMN_PATTERN,
@@ -21,41 +22,6 @@ import {
  * recomputed. `statementCount` rides with every profile so no share is shown
  * without its base.
  */
-
-/** A minimal CSV reader: quotes, embedded commas, embedded newlines. */
-export function parseCsv(text: string): string[][] {
-  const rows: string[][] = [];
-  let row: string[] = [];
-  let cell = "";
-  let quoted = false;
-  for (let i = 0; i < text.length; i += 1) {
-    const c = text[i];
-    if (quoted) {
-      if (c === '"') {
-        if (text[i + 1] === '"') {
-          cell += '"';
-          i += 1;
-        } else quoted = false;
-      } else cell += c;
-      continue;
-    }
-    if (c === '"') quoted = true;
-    else if (c === ",") {
-      row.push(cell);
-      cell = "";
-    } else if (c === "\n") {
-      row.push(cell);
-      rows.push(row);
-      row = [];
-      cell = "";
-    } else if (c !== "\r") cell += c;
-  }
-  if (cell !== "" || row.length > 0) {
-    row.push(cell);
-    rows.push(row);
-  }
-  return rows;
-}
 
 /**
  * The columns this adapter is allowed to read, derived from the category

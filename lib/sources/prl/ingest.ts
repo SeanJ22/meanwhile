@@ -3,7 +3,8 @@ import { createRequire } from "node:module";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { parseCsv, normalizeProfiles, sourceBioguides } from "./index.ts";
+import { parseCsv } from "../../reference/csv.ts";
+import { normalizeProfiles, sourceBioguides } from "./index.ts";
 import { createPrimaryAggregator, normalizeStateProfiles } from "./precompute.ts";
 import { isVisibleAsOf, parsePrlInstant } from "./future-date.ts";
 import {

@@ -271,7 +271,10 @@ const INTERVAL_MIN = intervalArg ? Number(intervalArg.slice("--interval=".length
 jobRuns.register(RESEARCH_JOB, INTERVAL_MIN * 60_000);
 // What the launcher did before this runner started (removed git locks, a switch undone) rides on the job record.
 jobRuns.register(RELEASE_GUARD_JOB, 24 * 3_600_000);
-for (const { text } of takeRuntimeGuardNotes(ROOT)) { console.log(`  runtime release guard: ${text}`); jobRuns.failed(RELEASE_GUARD_JOB, text); jobRuns.finished(RELEASE_GUARD_JOB); }
+const guardNotes = takeRuntimeGuardNotes(ROOT).map(note => note.text);
+for (const text of guardNotes) console.log(`  runtime release guard: ${text}`);
+if (!guardNotes.length) console.log("  runtime release guard: nothing to clean");
+jobRuns.settled(RELEASE_GUARD_JOB, guardNotes);
 
 const maxArg = argv.find((a) => a.startsWith("--max="));
 const onlyArg = argv.find((a) => a.startsWith("--only="));
@@ -1418,7 +1421,7 @@ const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   placeMapsLane(deadlineMs => runRoutineLane("place-maps", deadlineMs)),
   votingSitesLane(deadlineMs => runRoutineLane("voting-sites", deadlineMs)),
   doorProbesLane(runDoorProbes),
-  { id: RELEASE_INSTALL_JOB, everyMs: 60_000, budgetMs: INSTALL_TIMEOUT_MS + 5 * 60_000, run: runReleaseInstall },
+  { id: RELEASE_INSTALL_JOB, everyMs: 60_000, budgetMs: INSTALL_TIMEOUT_MS + 5 * 60_000, cadenceIsLaunch: true, run: runReleaseInstall },
 ], (outcome) => {
   if (outcome.state === "FAILED") {
     jobRuns.failed(outcome.id, outcome.error);
@@ -1426,7 +1429,7 @@ const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   } else jobRuns.completed(outcome.id);
 }, id => jobRuns.started(id));
 // A lane whose run may outlast its launch interval finishes at most once per run budget.
-for (const lane of standingRuntimeScheduler.lanes) jobRuns.register(lane.id, Math.max(lane.everyMs, lane.budgetMs));
+for (const lane of standingRuntimeScheduler.lanes) jobRuns.registerLane(lane);
 
 async function ownerRepositories(): Promise<ControlPlaneRepositories | null> {
   if (provider !== "postgres") return null;

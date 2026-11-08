@@ -6,6 +6,7 @@ import { holdRawCapture, type RawCaptureRef } from "../../civic-data/raw-capture
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 
 import { votePagesIssue, type VoteMemberPage } from "../../state-rollcalls/vote-page-model.ts";
+import { currentReaderSelection } from "../../db/reader-route.ts";
 
 import { PLURAL_STATES } from "./targets.ts";
 
@@ -116,9 +117,9 @@ export function parsePluralBill(state: string, evidence: PluralBillEvidence): { 
   return { votes: votes.filter(vote => !duplicates.has(vote.id)), held };
 }
 
-export function pluralVotesProjectionIssue(value: PluralVotesProjection): string | null {
+export function pluralVotesProjectionIssue(value: PluralVotesProjection, options: { selected?: boolean } = {}): string | null {
   if (![1, 2].includes(value?.formatVersion) || !PLURAL_STATES.includes(value.state?.toLowerCase()) || !Array.isArray(value.rollCalls)) return "PLURAL_VOTE_PROJECTION_INVALID";
-  if (value.formatVersion === 2) { const issue = votePagesIssue(value); if (issue) return issue; }
+  if (value.formatVersion === 2) { const issue = votePagesIssue(value, options); if (issue) return issue; }
   if (new Set(value.rollCalls.map(vote => vote.id)).size !== value.rollCalls.length) return "PLURAL_VOTE_DUPLICATE";
   for (const vote of value.rollCalls) {
     if (!id(vote.id, "vote") || !id(vote.billId, "bill") || !id(vote.organizationId, "organization") || !vote.session || !day(vote.date) ||
@@ -160,8 +161,11 @@ export function pluralVotesCandidate(input: { projection: PluralVotesProjection;
     excludedFacts: input.held.map(row => ({ ...row, code: "PLURAL_VOTE_UNRESOLVED" })), normalizedPayload: payload, readModel: projection };
 }
 
+/** Strict first; only a place-selected reader read, trimmed to one member, is held to the member-level checks. */
+export const votePlaceSelectedIssue = (_value: unknown, issue: (options: { selected?: boolean }) => string | null): string | null =>
+  { const strict = issue({}); return strict === null || currentReaderSelection() === undefined ? strict : issue({ selected: true }); };
 export async function readPluralVotesProjection(state: string, options: PromotedCivicDataReadOptions = {}) {
   const read = await readPromotedCivicData<PluralVotesProjection>("STATE_ROLL_CALL", pluralVotesScope(state), options);
-  if (read.kind === "PROMOTED" && (read.metadata.sourceId !== PLURAL_VOTES_SOURCE || pluralVotesProjectionIssue(read.value) || read.value.state !== pluralVoteState(state).toUpperCase())) throw new Error("PLURAL_VOTES_READER_INVALID");
+  if (read.kind === "PROMOTED" && (read.metadata.sourceId !== PLURAL_VOTES_SOURCE || votePlaceSelectedIssue(read.value, options => pluralVotesProjectionIssue(read.value, options)) || read.value.state !== pluralVoteState(state).toUpperCase())) throw new Error("PLURAL_VOTES_READER_INVALID");
   return read;
 }

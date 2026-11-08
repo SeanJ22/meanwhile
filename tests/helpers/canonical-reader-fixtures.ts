@@ -22,7 +22,7 @@ import { isCensusPlaceholderDivision } from "../../lib/registry/census-placehold
 import type { RegistrationReadModel } from "../../lib/registration/candidate.ts";
 import { manualEdgeEntry, provenEdgeEntry } from "./promoted-edge-entry.ts";
 import { PLACE_PAGES_SQL } from "../../lib/reader/place.ts";
-import { BALLOT_PLACE_PAGES_SQL } from "../../lib/ballot/place-package-until-nov-4.ts";
+
 import { PLACE_CHECKS_SQL } from "../../lib/reader/place-builder.ts";
 import { placePagesAnswer } from "./place-pages-answer.ts";
 import type { PlaceInput } from "../../lib/reader/place-types.ts";
@@ -264,10 +264,10 @@ export function activateCanonicalFixture(key: string): void {
   };
   const readFacts: Query = async (sql,params=[]) => {
     if(sql===PLACE_CHECKS_SQL)return [];
-    if(sql===PLACE_PAGES_SQL||sql===BALLOT_PLACE_PAGES_SQL) {
+    if(sql===PLACE_PAGES_SQL) {
       const saved=await savedRows({state:String(params[0]),divisionIds:params[1] as string[],bodyIds:params[2] as string[],
         namedDivisionIds:params[3] as string[],neighbors:params[4]===true,allBodies:params[5]===true,includeHistory:params[6]===true});
-      return sql===PLACE_PAGES_SQL?placePagesAnswer(saved as never):saved;
+      return placePagesAnswer(saved as never);
     }
     if(sql.includes("AS registration_held") || sql.includes("WITH RECURSIVE ancestors AS"))return fixturePlaceRow(params);
     const values=[...(held.store as unknown as {promotions:Map<string,PromotedProjection>}).promotions.values()];

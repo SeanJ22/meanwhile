@@ -1,4 +1,4 @@
-import { CuratedReaderContractId, readerStates, validate, storeCuratedReaderProjection } from "./curated-reader-held.ts";
+import { type CuratedReaderContractId, readerStates, validate, storeCuratedReaderProjection } from "./curated-reader-held.ts";
 import { storedKeyValue } from "../core/keys-values.ts";
 import { memberOfficeStateScope, readMemberOfficeRows, type MemberOfficeSlice } from "../officials/member-office-data.ts";
 import { selectedRegistryStates } from "../registry/runtime-read-model.ts";

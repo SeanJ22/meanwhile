@@ -1,7 +1,7 @@
 import { readStateAuthorityProjection } from "../civic-data/state-reader.ts";
 import { requireBallotState, stateBallotScope } from "../civic-data/state-scopes.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
-import { GenericBallotProjection } from "./generic-projection.ts";
+import { type GenericBallotProjection } from "./generic-projection.ts";
 
 export async function readGenericBallotProjection(state: string, options: PromotedCivicDataReadOptions = {}) {
   const key = requireBallotState(state);

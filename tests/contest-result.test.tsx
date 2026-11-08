@@ -32,11 +32,11 @@ test("counting shows the leaders; a runoff shows both names; a contest with no r
   assert.match(text(<RaceSummary contest={contest(undefined)} candidates={[person("a", "Able")]} names={names} />), /Want us to get this sooner\?/);
 });
 
-test("a multi-seat flip says 1 seat flipped, and a Republican flip points right", () => {
+test("a Republican flip points right", () => {
   const html = renderToStaticMarkup(<RaceSummary contest={contest({ status: "called", flipped: true, gainedByParty: "R", seatsToFill: 2, ...source }, 2)}
     candidates={[person("a", "Able", { won: true, ...source })]} names={names} />);
   assert.match(html, /data-flip-to="R"/);
-  assert.match(html, /1 seat flipped<svg/);
+  assert.match(html, /Flipped<svg/);
 });
 
 test("candidate lines carry percent, votes and the lost-incumbent chip; percent keeps one decimal at 10% and up, two below", () => {

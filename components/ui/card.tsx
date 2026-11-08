@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, type ReactNode } from "react";
-import { cardSourceTarget, CardSourceContext, useCardSourceRegistry } from "./card-source-context";
+import { CardSourceContext, useCardSourceRegistry } from "./card-source-context";
 import { X } from "lucide-react";
 import type { CardSource } from "@/lib/officials/card-sources";
 import { CardFooter } from "./card-footer";
@@ -30,7 +30,7 @@ export function Card({
   const titleId = useId();
   const { register, sources: allSources, insideCard } = useCardSourceRegistry(sources, title);
   return (
-    <ReaderNamesProvider names={[title]}><CardSourceContext.Provider value={register}><article {...attrs} ref={attrs?.["data-contest-id"] ? cardSourceTarget(register) : undefined} className={`reader-card ${className}`} aria-labelledby={titleId}>
+    <ReaderNamesProvider names={[title]}><CardSourceContext.Provider value={register}><article {...attrs} className={`reader-card ${className}`} aria-labelledby={titleId}>
       <header className="reader-card-header">
         <div>
           {eyebrow && <div className="t-caption text-label">{typeof eyebrow === "string" ? readerText(eyebrow) : eyebrow}</div>}

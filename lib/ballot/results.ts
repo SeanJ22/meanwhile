@@ -2,12 +2,12 @@ import type { Candidacy } from "./types.ts";
 import type { ContestResult } from "./election-results.ts";
 
 /** Candidates the source marked as winners. */
-export function winnersOf(candidates: readonly Candidacy[]): Candidacy[] {
+export function winnersOf<T extends Pick<Candidacy, "result">>(candidates: readonly T[]): T[] {
   return candidates.filter(c => c.result?.won === true);
 }
 
 /** The top N by votes, where N is the seats up. */
-export function leadersOf(candidates: readonly Candidacy[], seats: number): Candidacy[] {
+export function leadersOf<T extends Pick<Candidacy, "result">>(candidates: readonly T[], seats: number): T[] {
   return candidates.filter(c => typeof c.result?.votes === "number").sort((a, b) => b.result!.votes! - a.result!.votes!).slice(0, Math.max(1, seats));
 }
 

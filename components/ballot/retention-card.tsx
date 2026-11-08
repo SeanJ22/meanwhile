@@ -1,5 +1,5 @@
 import { ResultCard } from "./result-card";
-import { RaceSummary } from "./contest-result";
+import { LiveRaceSummary } from "./live-results";
 import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { PickControl } from "./pick-control";
 import { VoteCastBox } from "./vote-cast";
@@ -14,7 +14,8 @@ export function RetentionCard({ contest, candidates, voteAfter = false, context 
     (/\b(?:shall|should)\b[\s\S]*\?/i.test(text) || /^Vote Yes or No\b/i.test(text))) ?? null;
   const named = candidates.filter(candidate => !`${contest.title} ${wording ?? ""}`.toLowerCase().includes(ballotCandidateDisplayName(candidate).toLowerCase()));
   return <ResultCard id={contest.id} title={readerText(contest.title)} tier={tierForOffice(contest.title, contest.ocdId)} rule="Yes or no"
-    summary={<RaceSummary contest={contest} candidates={candidates} names={new Map(candidates.map(candidate => [candidate.id, ballotCandidateDisplayName(candidate)]))} />}
+    summary={<LiveRaceSummary contest={{ id: contest.id, aliases: contest.aliases, title: contest.title, ocdId: contest.ocdId, voteFor: contest.voteFor }}
+      choices={candidates.map(candidate => ({ id: candidate.id, aliases: [candidate.id, ...candidate.aliases ?? []], name: ballotCandidateDisplayName(candidate) }))} />}
     attrs={{ "data-contest-id": contest.id, "data-contest-type": "RETENTION", "data-ocd-id": contest.ocdId }}
     sources={[{ what: wording ? "Official retention ballot wording" : "Official retention filing", provenance: contest.provenance },
       ...named.map(candidate => ({ what: ballotCandidateDisplayName(candidate), provenance: candidate.provenance }))]}>

@@ -1,5 +1,4 @@
 import type { CardSource } from "../officials/card-sources.ts";
-import type { BallotSet } from "./types.ts";
 import type { BallotElectionSummary } from "./election-results.ts";
 
 export type PartyKey = "D" | "R" | "O";
@@ -14,6 +13,8 @@ export interface ChamberScore {
   controlNow: PartyKey | null;
   /** Seats that changed hands to each party, when the data carries it. */
   flippedTo?: Readonly<Partial<Record<PartyKey, number>>>;
+  /** Seats that changed hands, when the source counts them. */
+  seatsFlipped?: number;
   note?: string;
 }
 export interface OfficeFlip { office: string; to: PartyKey }
@@ -24,7 +25,8 @@ export interface Scorecard {
   chambers: readonly ChamberScore[];
   governor: { name: string | null; party: PartyKey; flipped: boolean; reelected: boolean } | null;
   statewide: { total: number | null; flipped: readonly OfficeFlip[]; won?: Readonly<Partial<Record<PartyKey, number>>> } | null;
-  incumbentsLost?: { D: number; R: number };
+  /** How many incumbents lost, when the source counts them. */
+  incumbentsLostTotal?: number;
   /** Governor's offices that changed party (national scope). */
   governorsFlipped?: readonly OfficeFlip[];
   sources: readonly { what: string; from: string; checked: string; url: string }[];
@@ -45,29 +47,45 @@ function seatCounts(seats: Readonly<Record<string, number>>, counting: number): 
 
 const CHAMBER_NAME: Readonly<Record<string, string>> = { house: "House", senate: "Senate", us_house: "U.S. House", us_senate: "U.S. Senate" };
 
-/** The scorecard each scope shows, built from the result summaries the ballot already carries. */
-export function scorecardsFromResults(results: BallotSet["results"], homeState: string, homeName: string): Readonly<Record<string, Scorecard>> | undefined {
+const areaOf = (state: string) => state === "DC" ? "district" : ["AS", "GU", "MP", "PR", "VI"].includes(state) ? "territory" : "state";
+const NATION = "ocd-division/country:us";
+
+/** The national summaries (Congress as a whole, Senate and House pages) read as one summary with a chamber each. */
+function nationFromFacts(facts: Readonly<Record<string, unknown>>): BallotElectionSummary | undefined {
+  const parts = [NATION, `${NATION}#election_summary:us_senate`, `${NATION}#election_summary:us_house`]
+    .flatMap(id => facts[id] ? [facts[id] as BallotElectionSummary] : []);
+  if (!parts.length) return undefined;
+  const chambers = new Map(parts.flatMap(summary => summary.chambers.map(chamber => [chamber.name, { ...chamber, source: summary.source, creditedSources: summary.creditedSources, checkedAt: summary.checkedAt }] as const)));
+  const sources = new Map(parts.flatMap(summary => [summary.source, ...summary.creditedSources].map(source => [JSON.stringify(source), source] as const)));
+  return { ...parts[0], chambers: [...chambers.values()], sources: [...sources.values()], checkedAt: parts.map(summary => summary.checkedAt).sort().at(-1)! };
+}
+
+/** The scorecard each scope shows, built from the published result summaries. */
+export function scorecardsFromFacts(facts: Readonly<Record<string, unknown>>, homeState: string, homeName: string): Readonly<Record<string, Scorecard>> | undefined {
   const build = (summary: BallotElectionSummary, scope: string, name: string): Scorecard => {
     const chambers = summary.chambers.map(chamber => {
       const key = chamber.name.toLowerCase();
       const before = seatCounts(chamber.seatsBefore, 0), now = seatCounts(chamber.seatsNow, chamber.stillCounting);
       const seats = before.D + before.R + before.O;
-      return { name: scope === "US" ? CHAMBER_NAME[key] ?? chamber.name : `State ${CHAMBER_NAME[key] ?? chamber.name}`,
+      return { name: scope === "US" ? CHAMBER_NAME[key] ?? chamber.name : /^state /i.test(chamber.name) ? chamber.name : `State ${CHAMBER_NAME[key] ?? chamber.name}`,
         seats, toControl: Math.floor(seats / 2) + 1, before, now, controlBefore: partyKey(chamber.controlBefore), controlNow: partyKey(chamber.controlNow),
+        ...(typeof chamber.seatsFlipped === "number" ? { seatsFlipped: chamber.seatsFlipped } : {}),
         ...(key === "us_senate" && now.O > 0 ? { note: "Counts include independents who vote with each party." } : {}) };
     });
-    const before = partyKey(summary.governor.before), now = partyKey(summary.governor.now);
-    const flips = summary.statewideOfficesFlipped.flatMap(row => { const to = partyKey(row.to); return to ? [{ office: row.office, to }] : []; });
+    const before = partyKey(summary.governor?.before), now = partyKey(summary.governor?.now);
+    const flips = (summary.statewideOfficesFlipped ?? []).flatMap(row => { const to = partyKey(row.to); return to ? [{ office: row.office, to }] : []; });
     const credited = [summary.source, ...summary.creditedSources];
     return { scope, name, chambers,
-      governor: scope !== "US" && now ? { name: null, party: now, flipped: before !== null && before !== now, reelected: before === now } : null,
+      governor: scope !== "US" && now ? { name: summary.governor.name ?? null, party: now, flipped: before !== null && before !== now, reelected: before === now } : null,
       statewide: scope !== "US" ? { total: null, flipped: flips } : null,
+      ...(typeof summary.incumbentsLost === "number" ? { incumbentsLostTotal: summary.incumbentsLost } : {}),
       sources: credited.map((source, index) => ({ what: index === 0 ? "Seats and control" : "Credited by the source we read", from: source.name,
         checked: summary.checkedAt, url: source.url ?? "" })) };
   };
   const cards: Record<string, Scorecard> = {};
-  if (results?.state) cards[homeState] = build(results.state, homeState, homeName);
-  if (results?.nation) cards.US = build(results.nation, "US", "Congress");
+  const state = facts[`${NATION}/${areaOf(homeState)}:${homeState.toLowerCase()}`] as BallotElectionSummary | undefined, nation = nationFromFacts(facts);
+  if (state) cards[homeState] = build(state, homeState, homeName);
+  if (nation) cards.US = build(nation, "US", "Congress");
   return Object.keys(cards).length ? cards : undefined;
 }
 
@@ -197,7 +215,6 @@ export function partyLines(card: Scorecard, party: "D" | "R"): PartyLine[] {
   }
   if (!national && statewide) lines.push(flipLine("Statewide offices flipped to this party", statewide.flipped.filter(flip => flip.to === party).length));
   if (card.governorsFlipped) lines.push(flipLine("Governor’s offices flipped to this party", card.governorsFlipped.filter(flip => flip.to === party).length));
-  if (card.incumbentsLost) lines.push(flipLine("Incumbents who lost", card.incumbentsLost[party]));
   return lines;
 }
 

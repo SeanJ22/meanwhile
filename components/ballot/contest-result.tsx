@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import type { Candidacy, Contest, Measure } from "@/lib/ballot/types";
 import type { ContestResult } from "@/lib/ballot/election-results";
 import { barWidth, flippedParty, formatPercent, joinNames, leadersOf, shortDate, winnersOf } from "@/lib/ballot/results";
-import { stateZone } from "@/lib/ballot/vote-phase";
+import { resultStateTimeZone } from "@/lib/time/result-state-time-zones";
 import { ocdStateCode } from "@/lib/ocd/state-of";
 import { NoResultsLine } from "./no-results-line";
 
@@ -11,14 +11,16 @@ const FLIP_RIGHT = "M2 6h7M6.5 3l3 3-3 3";
 
 function FlipPill({ to, seats }: { to: "D" | "R"; seats: number }) {
   const arrow = <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={to === "D" ? FLIP_LEFT : FLIP_RIGHT} /></svg>;
-  const label = seats > 1 ? "1 seat flipped" : "Flipped";
+  const label = seats > 1 ? `${seats} seats flipped` : "Flipped";
   return <span className="rr-flip" data-flip-to={to}>{to === "D" && arrow}{label}{to === "R" && arrow}</span>;
 }
 
 const hasResult = (result: ContestResult | undefined): result is ContestResult => result !== undefined && result.status !== "pending";
-const zoneOf = (contest: Contest) => stateZone(ocdStateCode(contest.ocdId) ?? "");
+type ResultContest = Pick<Contest, "id" | "title" | "ocdId" | "voteFor" | "result">;
+type ResultCandidacy = Pick<Candidacy, "id" | "familyName" | "result">;
+const zoneOf = (contest: ResultContest) => resultStateTimeZone(ocdStateCode(contest.ocdId) ?? "");
 
-function StatusRow({ contest, about }: { contest: Contest; about: string }) {
+function StatusRow({ contest, about }: { contest: ResultContest; about: string }) {
   const result = contest.result;
   if (!hasResult(result)) return <div className="rr-status"><NoResultsLine about={about} /></div>;
   const zone = zoneOf(contest);
@@ -36,7 +38,7 @@ function StatusRow({ contest, about }: { contest: Contest; about: string }) {
     case "certified":
       return <div className="rr-status"><b>Certified by the state</b>{shortDate(result.statusChangedAt, { withYear: true, zone }) && <span> {shortDate(result.statusChangedAt, { withYear: true, zone })}</span>}</div>;
     case "runoff":
-      return <div className="rr-status"><b>Runoff</b><span> no one passed half the votes, so the top two meet again</span></div>;
+      return <div className="rr-status"><b>Runoff</b></div>;
     case "unopposed":
       return <div className="rr-status"><b>One candidate ran</b>{when && <span> Called {when}</span>}</div>;
     default:
@@ -45,11 +47,11 @@ function StatusRow({ contest, about }: { contest: Contest; about: string }) {
 }
 
 /** What sits under a race's title when collapsed: who won or leads, the flip, and where the count stands. */
-export function RaceSummary({ contest, candidates, names }: { contest: Contest; candidates: readonly Candidacy[]; names: ReadonlyMap<string, string> }): ReactNode {
+export function RaceSummary({ contest, candidates, names }: { contest: ResultContest; candidates: readonly ResultCandidacy[]; names: ReadonlyMap<string, string> }): ReactNode {
   const result = contest.result;
   const about = `results for ${contest.title}`;
   if (!hasResult(result)) return <div className="rr-rows"><StatusRow contest={contest} about={about} /></div>;
-  const name = (candidate: Candidacy) => names.get(candidate.id) ?? candidate.familyName;
+  const name = (candidate: ResultCandidacy) => names.get(candidate.id) ?? candidate.familyName;
   const winners = winnersOf(candidates);
   const runoff = candidates.filter(candidate => candidate.result?.runoff === true);
   const seats = result.seatsToFill ?? contest.voteFor ?? 1;
@@ -67,20 +69,21 @@ export function RaceSummary({ contest, candidates, names }: { contest: Contest; 
   return <div className="rr-rows">
     {(outcome || gained) && <div className="rr-outcome">
       {outcome}
-      {gained && <FlipPill to={gained} seats={seats} />}
+      {gained && <FlipPill to={gained} seats={result.seatsFlipped ?? 1} />}
     </div>}
     <StatusRow contest={contest} about={about} />
+    {result.incumbentLost === true && <div className="rr-status">{(result.incumbentsLost ?? 1) > 1 ? `${result.incumbentsLost} incumbents lost` : "An incumbent lost"}</div>}
   </div>;
 }
 
 /** The result under one candidate's name: Won pill, percent, votes, bar, and the lost-incumbent chip. */
-export function CandidateResultLine({ candidate, incumbent, lost }: { candidate: Candidacy; incumbent: boolean; lost: boolean }): ReactNode {
+export function CandidateResultLine({ candidate, incumbent, lost }: { candidate: Pick<Candidacy, "result">; incumbent: boolean; lost: boolean }): ReactNode {
   const result = candidate.result;
   const outcome = result?.won ? "won" : result?.runoff ? "runoff" : null;
   const shows = result && (typeof result.votes === "number" || typeof result.percent === "number");
   return <>
     {incumbent && <span className="rr-chips"><span className="rr-chip">{lost ? "Incumbent · lost" : "Incumbent"}</span></span>}
-    {result && shows && <div className="rr-candidate" data-outcome={outcome ?? undefined}>
+    {result && (shows || outcome) && <div className="rr-candidate" data-outcome={outcome ?? undefined}>
       <div className="rr-candidate-line">
         {outcome === "won" && <span className="rr-pill">Won</span>}
         {outcome === "runoff" && <span className="rr-pill rr-pill--outline">Runoff</span>}
@@ -93,7 +96,7 @@ export function CandidateResultLine({ candidate, incumbent, lost }: { candidate:
 }
 
 /** Yes and No rows with their votes and bars. */
-export function MeasureResultBody({ measure, contest }: { measure: Measure | null; contest: Contest }): ReactNode {
+export function MeasureResultBody({ measure, contest }: { measure: Pick<Measure, "result"> | null; contest: ResultContest }): ReactNode {
   const result = measure?.result;
   if (!result || (result.yesVotes == null && result.noVotes == null && result.yesPercent == null)) return null;
   const yes = result.yesPercent ?? null, no = yes === null ? null : 100 - yes;
@@ -114,7 +117,7 @@ export function MeasureResultBody({ measure, contest }: { measure: Measure | nul
 }
 
 /** The pill and percent shown under a measure's title when collapsed. */
-export function MeasureSummary({ contest, measure }: { contest: Contest; measure: Measure | null }): ReactNode {
+export function MeasureSummary({ contest, measure }: { contest: ResultContest; measure: Pick<Measure, "result"> | null }): ReactNode {
   const result = measure?.result;
   const about = `results for ${contest.title}`;
   if (!result || (!hasResult(contest.result) && result.outcome === "counting")) return <div className="rr-rows"><StatusRow contest={contest} about={about} /></div>;
@@ -126,6 +129,7 @@ export function MeasureSummary({ contest, measure }: { contest: Contest; measure
     <StatusRow contest={contest} about={about} />
   </div>;
 }
+
 
 /** The measure's one explainer, as "What happens now": what each vote meant, the winning side marked. */
 export function WhatHappensNow({ yes, no, outcome, closed }: { yes: string | null; no: string | null; outcome: "passed" | "failed" | "counting" | null; closed: boolean }): ReactNode {

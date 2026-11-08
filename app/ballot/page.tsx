@@ -159,9 +159,9 @@ import {
 } from "@/lib/registry/server";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ResultAccordion, ResultCard } from "@/components/ballot/result-card";
-import { CandidateResultLine, MeasureResultBody, MeasureSummary, RaceSummary, WhatHappensNow } from "@/components/ballot/contest-result";
+import { LiveCandidateResult, LiveMeasureBody, LiveMeasureSummary, LiveRaceSummary } from "@/components/ballot/live-results";
+import { ResultsFeedProvider } from "@/components/ballot/results-feed";
 import { shortDate } from "@/lib/ballot/results";
-import { scorecardsFromResults } from "@/lib/ballot/scorecard-view";
 import { stateName } from "@/lib/facts/entity-read";
 import { ScorecardCard } from "@/components/ballot/scorecard";
 import { VoteCastBox } from "@/components/ballot/vote-cast";
@@ -823,17 +823,13 @@ export default readerRoute("/ballot", async function BallotPage({
     contest.voteFor !== null && contest.voteFor > 1 ? `top ${contest.voteFor} win` : null,
     contest.termYears ? `${contest.termYears}-year term` : null,
   ].filter(Boolean).join(" · ") || null;
-  const candidateNames = (ballot: BallotSet, contest: Contest) => new Map(candidatesOf(ballot, contest).map(choice => [choice.id, ballotCandidateDisplayName(choice)] as const));
-  const resultSource = (contest: Contest) => {
-    const [read, ...credited] = contest.result?.sources ?? [];
-    return contest.result && contest.result.status !== "pending" && read ? [{ what: "Vote counts and the race call",
-      provenance: { sourceUrl: read.url ?? "", sourceOrg: credited.length ? `${read.name}, which credits ${credited.map(source => source.name).join(" and ")}` : read.name,
-        collectedAt: contest.result.checkedAt, verifiedAt: null } }] : [];
-  };
-  const scorecards = scorecardsFromResults(set?.results, set?.election.state ?? "", set ? stateName(set.election.state) ?? set.election.state : "");
+  const choicesOf = (ballot: BallotSet, contest: Contest) => candidatesOf(ballot, contest).map(choice =>
+    ({ id: choice.id, aliases: ballotCandidateAliases(choice), name: ballotCandidateDisplayName(choice) }));
+  const measureIdentity = (contest: Contest, measure: Measure | null) => ({ ...contestIdentity(contest), title: readerText(measureTitle(contest, measure)),
+    ...(measure ? { measureId: measure.id } : {}) });
+  const contestIdentity = (contest: Contest) => ({ id: contest.id, aliases: contest.aliases, title: contest.title, ocdId: contest.ocdId, voteFor: contest.voteFor });
   const contestSources = (contest: Contest, lineup: NonNullable<BallotSet["generalLineup"]>["contests"][number] | undefined) => [
     { what: readerScopeNotes.get(contest.id) ?? "Candidates and voting instructions", provenance: contest.provenance },
-    ...resultSource(contest),
     ...(filingSources.get(contest.id) ?? []).map(provenance => ({ what: "Candidate filings", provenance })),
     ...(lineup && set?.generalLineup ? [{ what: "Primary election canvass", provenance: { sourceUrl: set.generalLineup.canvass.url, sourceOrg: set.generalLineup.canvass.issuedBy, collectedAt: set.generalLineup.canvass.readAt, verifiedAt: null } }] : []),
     ...(lineup ? [...new Map(lineup.nominees.map(nominee => { const provenance = nomineeProvenance(nominee, contest, set!.election.state); return [provenance.sourceUrl, { what: "General-election candidates", provenance }] as const; })).values()] : []),
@@ -1114,8 +1110,9 @@ export default readerRoute("/ballot", async function BallotPage({
       )}
 
       {set && <p className="rc-subline" data-election-day="">Election day {set.election.date < phoenixToday() ? "was" : "is"} {shortDate(set.election.date)}</p>}
+      {set && <ResultsFeedProvider state={set.election.state} contestIds={drawnContests.map(contest => contest.id)}>
       <ResultAccordion>
-      {set && scorecards && <ScorecardCard scorecards={scorecards} homeScope={set.election.state} />}
+      <ScorecardCard homeScope={set.election.state} homeName={stateName(set.election.state) ?? set.election.state} />
       {set && matched && (
       <div className="ballot-office-list">
       {candidacyContests.map((contest) => {
@@ -1128,7 +1125,7 @@ export default readerRoute("/ballot", async function BallotPage({
               tier={tierForOffice(contest.title, contest.ocdId)}
               rule={contestRule(contest)}
               titleAfter={certainty && needsPill(certainty.certaintyOf(contest.ocdId)) ? <JurisdictionMark /> : null}
-              summary={<RaceSummary contest={contest} candidates={candidatesOf(set, contest)} names={candidateNames(set, contest)} />}
+              summary={<LiveRaceSummary contest={contestIdentity(contest)} choices={choicesOf(set, contest)} />}
               attrs={{
                 "data-contest-id": contest.id,
                 "data-ocd-id": contest.ocdId,
@@ -1184,9 +1181,8 @@ export default readerRoute("/ballot", async function BallotPage({
                           filedSiteUrl={candidate.websiteUrl} filingProvenance={candidate.provenance}
                           filingSources={candidate.sources}
                           nameSlot={<IncumbentName holder={holder} name={name} context={context} />}
-                          resultSlot={<CandidateResultLine candidate={candidate}
-                            incumbent={personResolutions.get(candidate.id)?.decisions.get(candidate.id)?.standing === "INCUMBENT"}
-                            lost={contest.result?.incumbentLost === true && candidate.result?.won !== true} />}
+                          resultSlot={<LiveCandidateResult candidate={{ id: candidate.id, aliases: ballotCandidateAliases(candidate) }} contestId={contest.id}
+                            incumbent={personResolutions.get(candidate.id)?.decisions.get(candidate.id)?.standing === "INCUMBENT"} />}
                           battlecardSlot={<BallotBattlecard name={name}
                             partyLine={readerPartyLabel(candidate.partyLabel)} partyLabel={readerPartyLabel(candidate.partyLabel)}
                             card={card} links={links} targetKey={candidate.id} filingSource={candidate.provenance}
@@ -1277,8 +1273,8 @@ export default readerRoute("/ballot", async function BallotPage({
             return (
               <ResultCard key={contest.id} id={contest.id} title={readerText(measureTitle(contest, measure))} tier={tierForOffice(contest.title, contest.ocdId)} rule="Yes or no"
                 titleAfter={certainty && needsPill(certainty.certaintyOf(contest.ocdId)) ? <JurisdictionMark /> : null}
-                summary={<MeasureSummary contest={contest} measure={measure} />} attrs={{"data-contest-id": contest.id}}
-                sources={[{ what: contest.scopeNote ?? "Measure filing", provenance: contest.provenance }, ...resultSource(contest)]}>
+                summary={<LiveMeasureSummary measure={measureIdentity(contest, measure)} />} attrs={{"data-contest-id": contest.id}}
+                sources={[{ what: contest.scopeNote ?? "Measure filing", provenance: contest.provenance }]}>
               <div>
 
                 {summary ? (
@@ -1292,11 +1288,9 @@ export default readerRoute("/ballot", async function BallotPage({
                   )
                 )}
 
-                <MeasureResultBody measure={measure} contest={contest} />
-
-                {summary && (summary.yesMeans || summary.noMeans) && <WhatHappensNow yes={summary.yesMeans ? readerText(summary.yesMeans, "sentence", askSubjects.map(subject => subject.name)) : null}
-                  no={summary.noMeans ? readerText(summary.noMeans, "sentence", askSubjects.map(subject => subject.name)) : null}
-                  outcome={measure?.result?.outcome ?? null} closed={measure?.result !== undefined && measure.result.outcome !== "counting" || contest.result !== undefined && contest.result.status !== "pending" && contest.result.status !== "counting"} />}
+                <LiveMeasureBody measure={measureIdentity(contest, measure)}
+                  yes={summary?.yesMeans ? readerText(summary.yesMeans, "sentence", askSubjects.map(subject => subject.name)) : null}
+                  no={summary?.noMeans ? readerText(summary.noMeans, "sentence", askSubjects.map(subject => subject.name)) : null} />
 
                 {provisionsForContest(contest.id, measureRecords).length > 0 && (
                   <details className="mt-3.5" data-provisions>
@@ -1409,6 +1403,7 @@ export default readerRoute("/ballot", async function BallotPage({
       ))}
 
       </ResultAccordion>
+      </ResultsFeedProvider>}
 
       {/* An office's tier comes from the office (a county-drawn Supreme Court seat is a state race); a measure holds no office, so its electorate is its tier. */}
       {matched && !drawnContests.some((c) => (c.type === "MEASURE" ? tierForOcdId(c.ocdId) : tierForOffice(c.title, c.ocdId)) === "local") && (

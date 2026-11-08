@@ -2,12 +2,13 @@
 
 import { useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";
 import { ResultCard } from "@/components/ballot/result-card";
+import { useResultsFeed } from "@/components/ballot/results-feed";
 import { CardGapContribution, CardGapSection } from "@/components/ui/card-gap-context";
 import { stateName } from "@/lib/facts/entity-read";
 import {
   type PartyKey, type Scorecard,
   chamberFlipped, chamberHeaderRows, controlSummary, governorBlock, partyLines, partyPlural, scorecardSources, scorecardTitle,
-  seatCountParts, seatGrid, statewideFlips, type DotKind,
+  scorecardsFromFacts, seatCountParts, seatGrid, statewideFlips, type DotKind,
 } from "@/lib/ballot/scorecard-view";
 import styles from "./scorecard.module.css";
 
@@ -80,6 +81,7 @@ function ChamberPanel({ chamber }: { chamber: Scorecard["chambers"][number] }) {
       {flipped ? <FlipPill to={flipped} large />
         : <span className={styles.controlNow}>{chamber.controlNow ? `${partyPlural(chamber.controlNow)}, no change` : "Not decided yet"}</span>}
     </div>
+    {typeof chamber.seatsFlipped === "number" && <span className={styles.note}>Seats that flipped: {chamber.seatsFlipped}.</span>}
     {chamber.note && <span className={styles.note}>{chamber.note}</span>}
   </div>;
 }
@@ -110,6 +112,9 @@ function ScorecardBody({ card }: { card: Scorecard }) {
         <ul className={styles.flips}>{flips.rows.map(row => <li key={`${row.office}:${row.to}`}><span>{row.office}</span><FlipPill to={row.to} /></li>)}</ul>
       </div>}
     </div>}
+    {typeof card.incumbentsLostTotal === "number" && <div className={styles.block}>
+      <span className={styles.blockLabel}>Incumbents who lost</span><p className={styles.blockText}>{card.incumbentsLostTotal}</p>
+    </div>}
     <div className={styles.block}>
       <span className={styles.blockLabel}>Party scorecards</span>
       <div className={styles.parties}><PartyPanel card={card} party="D" /><PartyPanel card={card} party="R" /></div>
@@ -120,13 +125,13 @@ function ScorecardBody({ card }: { card: Scorecard }) {
 const tabId = (scope: string) => `scorecard-tab-${scope}`;
 
 /** The party scorecard card on the ballot: the reader's state and the whole country, switchable. */
-export function ScorecardCard({ scorecards, homeScope }: { scorecards: Readonly<Record<string, Scorecard>> | undefined; homeScope: string }) {
+export function ScorecardCard({ homeScope, homeName }: { homeScope: string; homeName: string }) {
+  const feed = useResultsFeed();
+  const scorecards = feed.status === "settled" ? scorecardsFromFacts(feed.facts, homeScope, homeName) ?? {} : undefined;
   const scopes = homeScope === "US" ? ["US"] : [homeScope, "US"];
   const [scope, setScope] = useState(homeScope);
-  if (!scorecards || Object.keys(scorecards).length === 0) return null;
-
-  const card = scorecards[scope];
-  const labelOf = (code: string) => code === "US" ? "United States" : scorecards[code]?.name ?? stateName(code) ?? code;
+  const card = scorecards?.[scope];
+  const labelOf = (code: string) => code === "US" ? "United States" : scorecards?.[code]?.name ?? stateName(code) ?? code;
   const title = scorecardTitle(card, labelOf(scope), scope);
   const moveTab = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
     const step = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
@@ -158,7 +163,7 @@ export function ScorecardCard({ scorecards, homeScope }: { scorecards: Readonly<
       </div>
       <div id="scorecard-panel" role="tabpanel" aria-labelledby={tabId(scope)} className={styles.body}>
         {card ? <ScorecardBody card={card} />
-          : <CardGapSection label={`${labelOf(scope)} results`}><CardGapContribution id={`scorecard:${scope}`} label={`${labelOf(scope)} results`} /></CardGapSection>}
+          : !scorecards ? null : <CardGapSection label={`${labelOf(scope)} results`}><CardGapContribution id={`scorecard:${scope}`} label={`${labelOf(scope)} results`} /></CardGapSection>}
       </div>
     </div>
   </ResultCard>;

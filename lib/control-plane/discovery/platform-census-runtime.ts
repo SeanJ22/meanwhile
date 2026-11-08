@@ -25,7 +25,7 @@ import { platformRegistrationNeed } from "./platform-registration.ts";
 import { knownRecipes, RECIPE_KIND } from "../../hunt/meetings-recipes.ts";
 import { readDiscoveryRouteHints, routeHintEntriesBySubject } from "./route-hints.ts";
 import { platformFetch } from "../../doors/platform-http.ts";
-import { platformCensusWatchdog } from "./platform-census-watchdog.ts";
+import { roundProgressReporter } from "../scheduler/round-progress.ts";
 import { readerFactDb } from "../../facts/db.ts";
 import { withdrawPlatformPublication,confirmPlatformPublication } from "../../facts/portal-publication.ts";
 
@@ -53,9 +53,9 @@ export async function runNationalPlatformCensus() {
   const root = process.env.WTP_PROJECT_ROOT ?? process.cwd();
   const connection = controlPlaneUrlFromEnv(), readerConnection = storedKeyValue("DATABASE_URL");
   if (!connection || !readerConnection) throw new Error("The platform inventory databases are unavailable");
-  // Leave a minute before the parent's no-progress wall, including a blocked database await.
+  // The pass stops its own work a minute before the lane deadline; the lane deadline then records it finished if it printed progress.
   const deadline = Math.min(passDeadlineFromEnv(), Date.now() + CENSUS_LANE_BUDGET_MS - 60_000);
-  const progress = platformCensusWatchdog(deadline);
+  const progress = roundProgressReporter();
   let singleton: Awaited<ReturnType<typeof acquireProcessSingleton>> | undefined;
   try {
   singleton = await acquireProcessSingleton("platform-census", 49_375);
@@ -162,5 +162,5 @@ export async function runNationalPlatformCensus() {
       },
     });
     console.log(`PLATFORM_CENSUS ${JSON.stringify(report)}`);
-  } finally { try { await singleton?.release(); } finally { progress.close(); } }
+  } finally { try { await singleton?.release(); } finally { progress.flush(); } }
 }

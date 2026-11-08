@@ -1,11 +1,11 @@
 # River status
 
 build_state: WIP — RIVER-CX STOPPED; handed to Claude River. Release 173 is live at a8ffb2dca; migration 0082 remains unapplied (82/83), all attempts rolled back on the one-second statement limit. WIP timeout proposal pushed as river-cx173-contract d305e9cd0; do not apply or ship from this session. Exact SQL/rollback evidence and branch inventory below and in PR #892.
-worker: none (RIVER-CX stopped; handed to Claude River)
+worker: CX-WRITES
 provider: Codex
-run_id: river-cx-173-stopped
-lock: none
-heartbeat: 2026-11-02T21:09:28.976Z
+run_id: cx-writes-20261108
+lock: cx-writes-20261108
+heartbeat: 2026-11-08T03:55:03Z
 
 <!-- river-cx-173 -->
 ## RIVER-CX handoff — STOPPED / WIP

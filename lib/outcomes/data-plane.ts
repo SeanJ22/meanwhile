@@ -1,5 +1,4 @@
 import { outcomeSourcePlanHash, type OutcomeSourcePlan } from "./source-plan.ts";
-import { createHash } from "node:crypto";
 
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 import {
@@ -12,6 +11,7 @@ import { sourceProjectionEvidence, type CivicRecordMember, type ManualSourceSetR
 import type { SourceAcquisitionEvidence } from "../sources/acquisition-trace.ts";
 import type { ExecutiveActionStore } from "../officials/executive-actions.ts";
 import type { OutcomeSnapshot, PersistedSittingOutcomes } from "./types.ts";
+import { sha256 } from "../sha256.ts";
 
 export const AZ_OFFICIAL_ACTIONS_CONTRACT = {
   contractId: "az-official-actions",
@@ -74,10 +74,6 @@ export const MESA_OUTCOME_TENANT: OutcomeTenant = {
   requestedUrl: MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT.calendarUrl,
   portalHost: "mesa.legistar.com",
 };
-
-function sha256(value: string | Uint8Array): string {
-  return createHash("sha256").update(value).digest("hex");
-}
 
 function sourceReceiptHash(receipt: ManualSourceSetReceipt): string {
   return sha256(canonicalCivicDataJson(receipt.sources.map((source) => ({

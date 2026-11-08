@@ -2,12 +2,12 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
+import { parseCsv } from "../lib/reference/csv.ts";
 
 import {
   allowedColumns,
   assertNoForbiddenColumns,
   normalizeProfiles,
-  parseCsv,
   shareSentence,
 } from "../lib/sources/prl/index.ts";
 import {

@@ -121,7 +121,7 @@ async function answer(request: Request, published: ZipAnswer | null): Promise<Re
       snapshot: wireSnapshot(place.snapshotHeldAt, place.snapshot.sources),
       nearZip: location.zip, governingOcdIds: ids, partialOcdIds: zipRead.value ? [...partial] : null,
     }, { headers: { ...(stateAnswer && stateAnswer.status>=400 ? {"Cache-Control":"no-store"}
-      : zipRead.value ? withReaderZipTag(stateAnswer ? readerCacheHeaders({states:location.states,places:cachePlaces}) : readerPlaceCacheHeaders(cachePlaces), zipRead.value)
+      : zipRead.value ? withReaderZipTag(stateAnswer ? readerCacheHeaders({states:location.states,places:cachePlaces}) : readerPlaceCacheHeaders(cachePlaces), zipRead.value, true)
       : stateAnswer ? readerCacheHeaders({states:location.states,places:cachePlaces})
       : readerPlaceCacheHeaders(cachePlaces)),
       "Netlify-Vary": "query=lat|lng|radiusKm|zip|include", "Server-Timing": timing.header() } });

@@ -14,8 +14,8 @@ import { installPlaceMapQuery, placeMapQuery } from "../lib/place-map/reader.ts"
 import { factReader, installFactReader } from "../lib/facts/db.ts";
 import { installReaderDatabaseQuery, readerDatabaseQuery } from "../lib/reader/database.ts";
 import { resolveReaderArtifactStore } from "../lib/meetings/edge-store.ts";
-import { buildZipAnswer } from "../lib/reader/zip-answer-build.ts";
-import { packZipAnswer, readZipAnswer, zipAnswerKey, type ZipAnswer } from "../lib/reader/zip-answer.ts";
+import { buildNationalRouting, buildZipAnswer } from "../lib/reader/zip-answer-build.ts";
+import { packZipAnswer, publishNational, readZipAnswer, zipAnswerKey, type ZipAnswer } from "../lib/reader/zip-answer.ts";
 
 await installRegistryAuthority();
 {
@@ -57,6 +57,7 @@ const publish = async (zip: string): Promise<ZipAnswer> => {
   const answer = await buildZipAnswer(zip), store = resolveReaderArtifactStore()!;
   assert.ok(answer, `${zip} has an answer to publish`);
   const packed = packZipAnswer(answer);
+  await publishNational(store, await buildNationalRouting().catch(() => null));
   if (packed.part) await store.writeBytes(packed.part.key, packed.part.bytes);
   await store.writeBytes(zipAnswerKey(zip), packed.file);
   return answer;
@@ -173,4 +174,18 @@ test("a request naming its own point is answered from the file only when the poi
     assert.equal(same.status, 200);
     assert.equal(queries, 0);
   } finally { installFactReader(fact); installReaderDatabaseQuery(reader); installPlaceMapQuery(placeMap); }
+});
+
+test("a change to the national routing record writes one file and no ZIP's, and every ZIP then shows it", async () => {
+  const store = resolveReaderArtifactStore()!, before = await store.readBytes(zipAnswerKey("85701"));
+  const routing = { formatVersion: 1, marker: "a changed national record" } as never;
+  assert.equal(await publishNational(store, routing), true);
+  assert.equal(await publishNational(store, routing), false, "the same record is not written again");
+  assert.deepEqual(Buffer.from((await store.readBytes(zipAnswerKey("85701")))!), Buffer.from(before!), "no ZIP's file moved");
+  for (const zip of ["85701", "07866"]) assert.deepEqual((await readZipAnswer(zip))!.package.everydayRouting, routing, zip);
+  const meetings = await call(meetingsGET, "/api/meetings?zip=85701");
+  assert.equal(meetings.body.everydayRoutingDataState, "PROMOTED");
+  assert.match(meetings.headers["netlify-cache-tag"] ?? "", /(?:^|,)reader-national(?:,|$)/, "one purge of this tag clears every ZIP's meetings answer");
+  await publishNational(store, null);
+  assert.equal((await readZipAnswer("85701"))!.package.everydayRouting, null);
 });

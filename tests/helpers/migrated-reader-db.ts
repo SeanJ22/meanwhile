@@ -1,4 +1,4 @@
-import {readFileSync} from "node:fs";
+import {applyMigrations} from "../../lib/db/apply-migrations.ts";
 import {canonicalCivicDataHash} from "../../lib/civic-data/canonical-hash.ts";
 import {PGlite} from "@electric-sql/pglite";
 import {VALIDATION_CHECKS, type RoutineRecordClass, type ValidationReceipt} from "../../lib/civic-data/types.ts";
@@ -6,9 +6,7 @@ import {VALIDATION_CHECKS, type RoutineRecordClass, type ValidationReceipt} from
 /** Reader SQL runs against every real production migration, including constraints and triggers. */
 export async function migratedReaderDb() {
   const pg = new PGlite();
-  const migrations = new URL("../../lib/db/migrations/",import.meta.url);
-  const journal = JSON.parse(readFileSync(new URL("meta/_journal.json",migrations),"utf8")) as {entries:{tag:string}[]};
-  for (const {tag} of journal.entries) await pg.exec(readFileSync(new URL(`${tag}.sql`,migrations),"utf8"));
+  await applyMigrations(pg);
   const publish = async ({id,value,at,recordClass,scope,sourceId,payloadHash,excludedFacts}: {id:string;value:unknown;at:string;recordClass:RoutineRecordClass;scope:string;sourceId:string;payloadHash?:string;excludedFacts?:ValidationReceipt["excludedFacts"]}) => {
     const key = `${recordClass}:${scope}`, hash = payloadHash ?? canonicalCivicDataHash(value);
     const receipt = {contractVersion:2,decision:"GOOD",candidateId:id,sourceId,recordClass,scope,validatedAt:at,

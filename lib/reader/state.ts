@@ -176,18 +176,8 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
   const idsRead = zip && !divisionIds.length ? readZipPlace(zip).then(value=>[...new Set(value?.ids ?? [])].sort()) : Promise.resolve(divisionIds);
   const load = (ids: readonly string[]) => {
     const statement = statePackageStatement(state, ids, zip);
-    const place = Object.values(FIPS_TO_STATE).find(row => row.postal === state)!;
-    const geography = stateContainersStatement(state);
-    const sources = [...entries, ...zipSourcePointers(state), ...memberContextPointers, ...stateAuthorityPointers("ballot-contests", state),
-      { recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state) },
-      { recordClass: "STATE_LEGISLATOR", scope: jurisdiction },
-      { recordClass: "STATE_LEGISLATOR", scope: `${jurisdiction}:openstates-people:v1` },
-      { recordClass: geography.params[0], scope: geography.params[1] },
-      { recordClass: "REGISTRATION", scope: `${jurisdiction}:registration:v1` }];
-    return readCanonicalPackages([entries], query, { ...statement, ...(zip && ballotOnly ? { sharedSources: {
-      keys: [...new Set(sources.map(row => `${row.recordClass}:${row.scope}`))].sort(),
-      translations: `US:plain-english-translations:ocd-division/country:us/${place.prefix}:${state.toLowerCase()}%`,
-    } } : {}) });
+    const shared = zipStateSources(state);
+    return readCanonicalPackages([entries], query, { ...statement, ...(zip && ballotOnly ? { sharedSources: shared } : {}) });
   };
   const groupsRead = Promise.resolve().then(async () => load(await idsRead));
   const canonicalRead = groupsRead.then(groups => groups.readGroup(0));
@@ -294,6 +284,20 @@ export function statePackageStatement(state: string, divisions: readonly string[
       (SELECT to_jsonb(o) FROM zip_official o) AS zip_official,(SELECT coalesce(jsonb_agg(to_jsonb(s)),'[]'::jsonb) FROM zip_sources s) AS zip_sources,
       (SELECT coalesce(jsonb_agg(to_jsonb(s)),'[]'::jsonb) FROM zip_context s) AS zip_context,
       (SELECT to_jsonb(b) FROM zip_ballot b) AS zip_ballot FROM state_geography g`,params};
+}
+
+/** Every published entry a state's ZIP answers read, and the pattern of the plain-English translations kept for its districts. */
+export function zipStateSources(state: string): { readonly keys: readonly string[]; readonly translations: string } {
+  const jurisdiction = `US-${state}`, geography = stateContainersStatement(state);
+  const place = Object.values(FIPS_TO_STATE).find(row => row.postal === state)!;
+  const sources = [EVERYDAY_ROUTING_POINTER, ...zipSourcePointers(state), ...memberContextPointers, ...stateAuthorityPointers("ballot-contests", state),
+    { recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state) },
+    { recordClass: "STATE_LEGISLATOR", scope: jurisdiction },
+    { recordClass: "STATE_LEGISLATOR", scope: `${jurisdiction}:openstates-people:v1` },
+    { recordClass: geography.params[0], scope: geography.params[1] },
+    { recordClass: "REGISTRATION", scope: `${jurisdiction}:registration:v1` }];
+  return { keys: [...new Set(sources.map(row => `${row.recordClass}:${row.scope}`))].sort(),
+    translations: `US:plain-english-translations:ocd-division/country:us/${place.prefix}:${state.toLowerCase()}%` };
 }
 
 const memberContextPointers = ["US:verified-officeholder-campaign-sites"]

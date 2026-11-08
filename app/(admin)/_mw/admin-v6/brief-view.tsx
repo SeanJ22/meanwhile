@@ -4,12 +4,14 @@ import type { BriefReading, BriefSnapshot } from "@/lib/control-plane/admin-view
 import { plainWords } from "@/lib/control-plane/admin-view/plain-words.ts";
 import { stateName } from "@/lib/facts/entity-read.ts";
 import { countOwner } from "@/lib/counts/hour.ts";
+import { isLineHealthKey } from "@/lib/control-plane/line-keeper/health.ts";
 import { mst } from "./model.ts";
 import { Card, Empty, Failed, Loading, Pill } from "./ui.tsx";
 import { useReading } from "./use-reading.ts";
 import s from "./v6.module.css";
 export function BriefParts({brief}:{readonly brief:BriefSnapshot}){
- const shown=[...brief.problems].sort((a,b)=>Number(!!b.group)-Number(!!a.group)).slice(0,6);
+ const rank=(p:{key:string;group?:unknown})=>isLineHealthKey(p.key)?2:p.group?1:0;
+ const shown=[...brief.problems].sort((a,b)=>rank(b)-rank(a)).slice(0,6);
  return <div className={s.stack}>
   <p className={`${s.meta} ${s.p}`}>Read {mst(brief.createdAt)}</p>
   {brief.unread.length>0&&<p role="status">Could not read: {brief.unread.join(", ")}. Those parts are unknown.</p>}

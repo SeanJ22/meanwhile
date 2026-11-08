@@ -133,6 +133,7 @@ import { fireDueOrders, scheduledWorkDue } from "../lib/control-plane/gateway/sc
 import { runtimeContractRetry, runtimeContractContinues, RUNTIME_CONTRACT_ATTEMPT_MS } from "./apply-migrations.mts";
 import { wakeHintWriterFromEnv } from "../lib/control-plane/gateway/wake-hint.ts";
 import { JOB_BREAKER_INTERVAL_MS, JOB_BREAKER_JOB } from "../lib/control-plane/job-transfer-breaker.ts";
+import { KEEPER_WATCH_JOB, KEEPER_WATCH_MS, watchLineKeeper } from "../lib/control-plane/line-keeper/watch.ts";
 import { admitJobLaunch, JOB_BREAKER_PATH_ENV, JOB_SLOWED_WORDS } from "../lib/control-plane/job-breaker-local.ts";
 import { JobTransferBreaker } from "../lib/control-plane/job-breaker-loop.ts";
 import { withDatabaseJob, processNeonBytes } from "../lib/db/transfer-by-caller.ts";
@@ -225,6 +226,7 @@ const BREAKER_SLOWED = `Slowed by the job transfer breaker: it ${JOB_SLOWED_WORD
 let jobBreaker: JobTransferBreaker | null = null;
 let jobBreakerWork: Promise<void> | null = null;
 let jobBreakerTimer: ReturnType<typeof setInterval> | null = null;
+let keeperWatchTimer: ReturnType<typeof setInterval> | null = null;
 function breakerOwnBytes() {
   return processNeonBytes().map(part => ({ hour: part.hour, counts: Object.entries(part.reads ?? {})
     .filter(([key]) => key.split("\t")[1] === JOB_BREAKER_JOB).map(([,counts]) => counts) }))
@@ -255,6 +257,24 @@ function jobTransferTick(): Promise<void> {
     console.error(`  job transfer breaker check failed; each job keeps its current pace: ${message}`);
   }).finally(() => { jobBreakerWork = null; });
   return jobBreakerWork;
+}
+/** The line keeper runs on Netlify and cannot report its own silence, so the runner, on another host, files that repair. */
+let keeperWatchWork: Promise<void> | null = null;
+async function checkLineKeeper(): Promise<void> {
+  if (provider !== "postgres" || STAGING || canary) return;
+  const controlUrl = controlPlaneUrlFromEnv(), repos = await ownerRepositories();
+  if (!controlUrl || !repos) throw new Error("The line keeper check needs the control plane database");
+  await withDatabaseJob(KEEPER_WATCH_JOB, () => watchLineKeeper(neon(controlUrl), repos, new Date().toISOString()));
+}
+function lineKeeperWatchTick(): Promise<void> {
+  if (keeperWatchWork) return keeperWatchWork;
+  jobRuns.started(KEEPER_WATCH_JOB);
+  keeperWatchWork = checkLineKeeper().then(() => jobRuns.finished(KEEPER_WATCH_JOB)).catch(error => {
+    const message = error instanceof Error ? error.message : String(error);
+    jobRuns.failed(KEEPER_WATCH_JOB, message);
+    console.error(`  line keeper check failed; it tries again at its next turn: ${message}`);
+  }).finally(() => { keeperWatchWork = null; });
+  return keeperWatchWork;
 }
 function jobLaunchAllowed(job: string): boolean {
   const admitted = admitJobLaunch(job);
@@ -2053,6 +2073,7 @@ async function holdWhilePaused(): Promise<{ readonly ownerIntentsUnreadable: boo
 // The breaker's first check writes this release's snapshot before anything can launch, including the standing clock a
 // release handoff reopens below.
 if (provider === "postgres" && !STAGING && !canary) jobRuns.register(JOB_BREAKER_JOB, JOB_BREAKER_INTERVAL_MS);
+if (provider === "postgres" && !STAGING && !canary) jobRuns.register(KEEPER_WATCH_JOB, KEEPER_WATCH_MS);
 await jobTransferTick();
 let handoffExitCode = await reconcileRuntimeReleaseAtBoundary();
 let cycle = 0;
@@ -2194,6 +2215,9 @@ console.log("\npilot-runner · publishing the console before the first cycle (th
 
 jobBreakerTimer = setInterval(() => { void jobTransferTick(); },JOB_BREAKER_INTERVAL_MS);
 jobBreakerTimer.unref();
+keeperWatchTimer = setInterval(() => { void lineKeeperWatchTick(); },KEEPER_WATCH_MS);
+keeperWatchTimer.unref();
+void lineKeeperWatchTick();
 startStandingRuntimeClock();
 startAdminCopyClock();
 await publishConsole();
@@ -2219,7 +2243,9 @@ handoffExitCode = loop.exitCode;
 }
 
 if (jobBreakerTimer !== null) clearInterval(jobBreakerTimer);
+if (keeperWatchTimer !== null) clearInterval(keeperWatchTimer);
 await jobBreakerWork;
+await keeperWatchWork;
 if (standingRuntimeTimer !== null) clearInterval(standingRuntimeTimer);
 if (ownerControlTimer !== null) clearInterval(ownerControlTimer);
 await runtimeContracts.stop();

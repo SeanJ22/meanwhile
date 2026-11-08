@@ -237,14 +237,12 @@
         "lib/core/door.ts"
       ],
       "bypass": [
-        "lib/civic-data/meeting-source-confirmation.ts",
         "lib/facts/entities.ts",
         "lib/facts/owner-flags.ts",
         "lib/facts/portal-publication.ts",
         "lib/funding/state-cycles.ts",
         "lib/funding/state-facts.ts",
-        "lib/funding/state-publication.ts",
-        "lib/funding/state-source-probe.ts"
+        "lib/funding/state-publication.ts"
       ]
     },
     "fact_confirmation": {
@@ -309,9 +307,7 @@
       "bypass": []
     },
     "place_slice": {
-      "writers": [
-        "lib/reader/slices.ts"
-      ],
+      "writers": [],
       "bypass": []
     },
     "questionnaire_invitations": {
@@ -382,7 +378,6 @@
         "lib/facts/source-copy.ts"
       ],
       "bypass": [
-        "lib/control-plane/scheduler/providers/held-subject-copy.ts",
         "lib/facts/linking-copy.ts",
         "lib/facts/owner-flags.ts",
         "lib/funding/state-facts.ts",

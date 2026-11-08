@@ -7,6 +7,7 @@ import {rebuildCampaignCycles} from "./state-cycles.ts";
 import type {ReaderCachePurger} from "../reader/cache.ts";
 import {CAMPAIGN_PEOPLE_SQL,readCampaignMoneyPeople,type CampaignMoneyPerson} from "./state-people.ts";
 import {survivingIds} from "../core/ids.ts";
+import {recordFactConfirmation} from "../facts/confirmation.ts";
 
 const hash=(value:string)=>createHash("sha256").update(value).digest("hex");
 export const campaignResourceCursor=(state:string,id:string)=>`campaign-money:resource:${state}:${hash(id)}`;
@@ -115,12 +116,15 @@ export async function probeCampaignResource(state:string,resource:CampaignFinanc
 export async function confirmCampaignResourceChecks(db:FactDb&{readonly query:Query},state:string,checks:readonly CampaignResourceCheck[],purge?:ReaderCachePurger):Promise<void> {
   const people=new Set<string>();
   for(const check of checks){
-    const rows=await db.query(`UPDATE fact f SET checked_at=$4 FROM source_copy s,entity e WHERE f.source_copy_id=s.id AND f.entity_id=e.id
-      AND e.state=$1 AND f.field LIKE 'campaign-money:%' AND f.status='live' AND f.provenance_kind<>'OWNER'
+    const rows=await db.transaction(async query=>{
+      const rows=await query(`SELECT s.id,e.parent_id,array_agg(f.id) AS ids FROM checked_fact f JOIN source_copy s ON f.source_copy_id=s.id JOIN entity e ON f.entity_id=e.id WHERE e.state=$1 AND f.field LIKE 'campaign-money:%' AND f.status='live' AND f.provenance_kind<>'OWNER'
       AND f.value->>'resource'=$2 AND s.sha256=ANY($3::text[]) AND f.checked_at<$4::timestamptz
       AND NOT EXISTS(SELECT 1 FROM jsonb_array_elements(f.value->'amounts') a(amount)
-        WHERE amount?'provenance' AND NOT $3::text[] @> ARRAY[amount#>>'{provenance,rawHash}']) RETURNING e.parent_id`,
+        WHERE amount?'provenance' AND NOT $3::text[] @> ARRAY[amount#>>'{provenance,rawHash}']) GROUP BY s.id,e.parent_id`,
       [state,check.resourceId,check.rawHashes,check.checkedAt]);
+      for(const row of rows)await recordFactConfirmation(query,{copyId:Number(row.id),scope:`campaign-source:${state}`,at:check.checkedAt,factIds:(row.ids as number[]).map(Number)});
+      return rows;
+    });
     for(const row of rows)if(typeof row.parent_id==="string")people.add(row.parent_id);
     const missing=await db.query(`SELECT DISTINCT e.parent_id FROM entity e JOIN fact f ON f.entity_id=e.id JOIN source_copy s ON s.id=f.source_copy_id
       WHERE e.state=$1 AND e.parent_id IS NOT NULL AND f.field LIKE 'campaign-money:%' AND f.status='live'

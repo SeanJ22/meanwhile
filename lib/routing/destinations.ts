@@ -8,8 +8,6 @@
  * questions that already had a good answer.
  */
 
-import { normalize } from "./match.ts";
-
 /** The in-app surfaces a destination may point at. Closed on purpose. */
 export type DestinationSurface = "BALLOT" | "MEETINGS" | "DISTRICTS" | "CONTACT";
 
@@ -145,6 +143,17 @@ export interface DestinationMatch {
   destination: DestinationRoute;
   /** The phrase that carried it — mechanical evidence, same as a topic's. */
   matchedOn: string[];
+}
+
+function normalize(text: string): string {
+  return ` ${text
+    .toLowerCase()
+    .normalize("NFD")
+    // Combining marks, stripped so "qué" and "que" normalize alike.
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9 ]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()} `;
 }
 
 /**

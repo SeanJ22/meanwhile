@@ -4394,6 +4394,10 @@ main[data-sidebar="closed"] .map-top-row {
   margin-inline-end: -0.15em;
 }
 
+.trailing-space-trimmed-10 {
+  margin-inline-end: -0.1em;
+}
+
 .trailing-space-trimmed-14 {
   margin-inline-end: -0.14em;
 }
@@ -4404,6 +4408,10 @@ main[data-sidebar="closed"] .map-top-row {
 
 .trailing-space-trimmed-16 {
   margin-inline-end: -0.16em;
+}
+
+.trailing-space-trimmed-18 {
+  margin-inline-end: -0.18em;
 }
 
 .trailing-space-trimmed-6 {

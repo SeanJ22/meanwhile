@@ -304,6 +304,12 @@ export function assertRuntimeAuthority(
   return envelope!;
 }
 
+/** A no-drain switch moves children to the staged checkout, so the repository and SHA they are admitted against move with it. */
+export function followReleaseCheckout(env: NodeJS.ProcessEnv, directory: string, sha: string): void {
+  env[RUNTIME_AUTHORITY_ENV.repo] = directory;
+  env[RUNTIME_AUTHORITY_ENV.sha] = sha.toLowerCase();
+}
+
 export function admittedRuntimeChildEnvironment(input: {
   readonly parentEnv?: NodeJS.ProcessEnv;
   readonly capability: RuntimeAuthorityCapability;

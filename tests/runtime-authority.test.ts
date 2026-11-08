@@ -9,6 +9,7 @@ import {
   admittedRuntimeChildEnvironment,
   assertRuntimeAuthority,
   assertRegisteredRuntimeContract,
+  followReleaseCheckout,
   GIT_READ_ATTEMPTS,
   inspectRuntimeCheckout,
   runtimeAuthorityEnvelope,
@@ -287,4 +288,18 @@ test("the federal people split child writes place directories and member positio
   assert.equal(split(null), null);
   assert.match(split("fec-funding") ?? "", /may not carry a source contract/);
   assert.match(issue({ ...envelope(), capability: "FEDERAL_PEOPLE_SPLIT", contract: null }) ?? "", /not one of/, "it never satisfies a source child's expectation");
+});
+
+test("a no-drain switch keeps children admitted: authority follows the staged checkout", () => {
+  const staged = realpathSync(mkdtempSync(join(tmpdir(), "staged-release-")));
+  const facts = (repositoryRoot: string, headSha: string): RuntimeCheckoutFacts => ({ repositoryRoot, headSha, clean: true, detached: true, headOnOriginMain: true, readable: true });
+  const parent: NodeJS.ProcessEnv = { NODE_ENV: "development", WTP_RUNTIME_MODE: "production", WTP_RUNTIME_AUTHORITY_REPO: ROOT, WTP_RUNTIME_AUTHORITY_SHA: SHA };
+  const child = (env: NodeJS.ProcessEnv) => runtimeAuthorityEnvelope(admittedRuntimeChildEnvironment({ parentEnv: env, capability: "RESEARCH_CYCLE", parentPid: PID, nonce: "c".repeat(32) }))!;
+  const expectation = { capabilities: ["RESEARCH_CYCLE"] as const, immediateParentPid: PID };
+  const checkout = facts(staged, "b".repeat(40));
+  assert.match(runtimeAuthorityIssue({ envelope: child(parent), expectation, checkout, cwd: staged })!, /not the same path/);
+  followReleaseCheckout(parent, staged, "B".repeat(40));
+  const envelope = child(parent);
+  assert.equal(runtimeAuthorityIssue({ envelope, expectation, checkout, cwd: staged }), null);
+  rmSync(staged, { recursive: true });
 });

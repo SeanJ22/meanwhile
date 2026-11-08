@@ -123,6 +123,7 @@ import {
 import {
   admittedRuntimeChildEnvironment,
   assertRuntimeAuthority,
+  followReleaseCheckout,
 } from "../lib/civic-data/runtime-authority.ts";
 import { BILLING_SECRET_NAMES, withoutBillingSecrets } from "../lib/control-plane/provider-billing.ts";
 import { installConnectAttemptWindow } from "../lib/ops/connect-attempt-window.ts";
@@ -1103,6 +1104,7 @@ async function advanceStagedRelease(targetSha: string): Promise<StagedReleaseSte
   const previous = RUNNING_CODE_SHA;
   CODE_ROOT = directory;
   RUNNING_CODE_SHA = targetSha;
+  followReleaseCheckout(storedKeyEnvironment(), directory, targetSha);
   runtimeContracts.request(targetSha, directory);
   console.log(`  release ${targetSha.slice(0, 8)} switched without a drain: new children start from it; children already running finish on ${previous?.slice(0, 8) ?? "the code they loaded"}; partition admissions continued`);
   return "SWITCHED";

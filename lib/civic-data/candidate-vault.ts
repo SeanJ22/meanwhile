@@ -69,9 +69,14 @@ export function candidateVaultFormat(candidate:unknown):CandidateVaultFormat|nul
 }
 
 /** Hydrate only when an operation actually needs parser evidence. Reader proofs use the scalar fingerprints. */
-export async function hydrateCandidateFacts(vault:EvidenceStore,stored:unknown):Promise<unknown>{
+export async function hydrateCandidateFacts(vault:EvidenceStore|(()=>EvidenceStore),stored:unknown):Promise<unknown>{
   const format=candidateVaultFormat(stored);if(!format)return stored;
-  const {vault:_vault,...candidate}=stored as VaultCandidate,reader=civicVersionVault(vault);
+  const {vault:_vault,...candidate}=stored as VaultCandidate;
+  // The vault is opened only when a field actually lives there. A candidate that keeps its read model and evidence inline
+  // (the form every reader-served vote candidate is written in) must load where no shared vault is configured: the website.
+  let held:ReturnType<typeof civicVersionVault>|undefined;
+  const reader={read:(ref:CivicVersionVaultRef)=>(held??=civicVersionVault(typeof vault==="function"?vault():vault)).read(ref),
+    path:(ref:CivicVersionVaultRef,path:readonly string[])=>(held??=civicVersionVault(typeof vault==="function"?vault():vault)).path(ref,path)};
   const readModel=Object.hasOwn(candidate,"readModel")?candidate.readModel:format.readModel?await reader.read(format.readModel):null;
   const normalizedPayload=format.inlineEvidence?(stored as RoutineCandidate).normalizedPayload:format.normalizedPayload?format.normalizedPayload.fingerprint===format.readModel?.fingerprint?readModel:
     await reader.read(format.normalizedPayload):null;

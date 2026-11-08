@@ -2178,7 +2178,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const loaded=statePublicationScope(scope)?decodeStateCandidate(await this.ownedPayloadParts.loadOwned(value)):await this.payloadParts.load(value);
     if(loaded&&typeof loaded==="object"&&"vault"in loaded&&"normalization"in loaded){
       const [{hydrateCandidateFacts},{rawCaptureVault}]=await Promise.all([import("./candidate-vault.ts"),import("./raw-capture-remote.ts")]);
-      return hydrateCandidateFacts(this.cacheOptions.vault??rawCaptureVault(),loaded);
+      return hydrateCandidateFacts(()=>this.cacheOptions.vault??rawCaptureVault(),loaded);
     }
     return loaded;
   }

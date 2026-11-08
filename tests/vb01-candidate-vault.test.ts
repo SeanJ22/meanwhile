@@ -50,3 +50,17 @@ test("transition format retains readModel until historical readers switch; faile
   assert.deepEqual((await hydrateCandidateFacts(vault,stored) as RoutineCandidate).readModel,input.readModel);
   assert.deepEqual(await hydrateCandidateFacts(vault,input),input,"legacy rows need no changes or backfill");
 });
+
+test("a candidate that keeps its facts inline never opens the shared vault; one that needs the vault still does",async()=>{
+  const vault=new MemoryEvidenceStore(),input=candidate();
+  const inline=await holdCandidateFacts(vault,input,null,{retainReadModel:true,retainEvidence:true});
+  const refused=()=>{throw new Error("The shared raw-capture evidence vault is unavailable.");};
+  const loaded=await hydrateCandidateFacts(refused,inline) as RoutineCandidate;
+  assert.deepEqual(loaded.readModel,input.readModel);assert.deepEqual(loaded.normalizedPayload,input.normalizedPayload);
+  assert.deepEqual(loaded.excludedFacts,input.excludedFacts);
+  const offloaded=await holdCandidateFacts(vault,input,null,{retainReadModel:false});
+  await assert.rejects(hydrateCandidateFacts(refused,offloaded),/raw-capture evidence vault is unavailable/);
+  let opened=0;
+  const lazy=await hydrateCandidateFacts(()=>{opened++;return vault;},offloaded) as RoutineCandidate;
+  assert.deepEqual(lazy.readModel,input.readModel);assert.ok(opened>=1);
+});

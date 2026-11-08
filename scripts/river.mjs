@@ -1309,8 +1309,6 @@ export const DEVICE_VISITS = Object.freeze({
   tablet: { context: { viewport: { width: 820, height: 1180 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 }, net: [30, 10, 40], cpu: 1 },
   desktop: { context: { viewport: { width: 1440, height: 900 } }, net: [30, 10, 40], cpu: 1 },
 });
-/** TRANSITION, removed after the first release that reports it: the phone check as River ran it before RP-01 (no CPU slowdown, 12 Mbps), reported as a second phone line. Delete this constant, its loop entry in zipTimes and the old-phone line in measureNotes. */
-export const OLD_PHONE_VISIT = Object.freeze({ ...DEVICE_VISITS.phone, cpu: 1 });
 /** Puts a page's network and processor at a device's conditions through the browser's debugging protocol. */
 export async function applyConditions(cdp, { net, cpu }) {
   const [down, up, latency] = net;
@@ -1341,19 +1339,18 @@ async function zipTimes(zips) {
   // One guarded browser per ZIP: three cold visits of about 16 provider requests each.
   process.env.WTP_PROVIDER_REQUEST_CEILING ||= "100";
   const { launchGuarded } = await import("./browser.mts");
-  const visits = { ...DEVICE_VISITS, phoneOld: OLD_PHONE_VISIT };
-  const times = Object.fromEntries(Object.keys(visits).map((device) => [device, []]));
+  const times = Object.fromEntries(Object.keys(DEVICE_VISITS).map((device) => [device, []]));
   for (const { state, zip } of zips) {
     const browser = await launchGuarded({ label: "river-measure", headless: true, blockWrites: true, spendsProviderQuota: "maptiler" });
     try {
-      for (const device of Object.keys(visits)) {
-        const { context: options } = visits[device];
+      for (const device of Object.keys(DEVICE_VISITS)) {
+        const { context: options } = DEVICE_VISITS[device];
         const context = await browser.context(options);
         let ms = null;
         try {
           const page = await context.newPage();
           const cdp = await context.newCDPSession(page);
-          await applyConditions(cdp, visits[device]);
+          await applyConditions(cdp, DEVICE_VISITS[device]);
           await page.goto(`${PUBLIC_SITE_ORIGIN}/?zip=${zip}`, { waitUntil: "commit", timeout: VISIT_LIMIT_MS });
           ms = Math.round(await (await page.waitForFunction(USABLE, undefined, { polling: "raf", timeout: VISIT_LIMIT_MS })).jsonValue());
         } catch {
@@ -1382,12 +1379,6 @@ function measuresOf(record) {
   };
 }
 
-/** TRANSITION (see OLD_PHONE_VISIT): the old phone condition's count beside the real one, for the first release after RP-01. */
-const oldPhoneNote = (record) => {
-  const under3s = (times) => (times ? `${times.filter((ms) => ms !== null && ms < 3000).length}` : "not measured");
-  return `Phone (old, no processor slowdown; River's phone check before this release; same 12 Mbps, 3 up, 70 ms): ZIPs usable in under 3 seconds ${under3s(record.before?.zips?.phoneOld)}→${record.after?.zips?.phoneOld ? under3s(record.after.zips.phoneOld) : "measuring"}, against phone (processor slowed ${DEVICE_VISITS.phone.cpu} times) ${under3s(record.before?.zips?.phone)}→${record.after?.zips?.phone ? under3s(record.after.zips.phone) : "measuring"} in the line above. The old line is shown once and then removed.`;
-};
-
 /** The notes under the four lines: the slowest ZIPs, the ZIPs drawn, and what each number means. */
 export function measureNotes(record) {
   const slowest = (side) => DEVICES.filter((device) => record[side]?.zips?.[device]).map((device) => `${device} ${record.zips
@@ -1400,7 +1391,6 @@ export function measureNotes(record) {
     "",
     "Facts reaching readers: facts that went live in the 24 hours ending at the deploy, then in the first 24 hours on the release, counted once each, and only when the value is new for that thing and field (no earlier shown row holds the same value), is still the current value, and is on a reader's page (a place page built since it went live depends on its thing; a meeting counts when its body is on a place page). Replaced rows and reloads of values already shown don't count. An early read gives facts an hour over the first full hours.",
     `ZIPs usable: one random ZIP in each of the 50 states, the same 50 before and after, each opened cold (new browser context, empty cache) on ${PUBLIC_SITE_ORIGIN} on a phone (390×844, touch, 12 Mbps down, 3 up, 70 ms, processor slowed ${DEVICE_VISITS.phone.cpu} times like a mid-range phone's), a tablet (820×1180, touch) and a desktop (1440×900), both 30 Mbps down, 10 up, 40 ms, no slowdown. Usable means the side panel shows the place with no loading note (with its count badge where the panel is a sheet) and the map, basemap and district lines included, has finished drawing; counted when under 3 seconds, timed from the start of the visit.`,
-    ...(record.after?.zips?.phoneOld || record.before?.zips?.phoneOld ? [oldPhoneNote(record)] : []),
     "Database reads: response bytes (the data Neon bills) in database_transfer_hourly, both databases, in GB an hour, averaged over the 6 full hours before the deploy and the first 6 full hours after the runner switched.",
     "Lines of code: lines in every tracked .ts, .tsx, .mts, .cts, .mjs, .cjs, .js, .jsx, .css and .sql file, except .d.ts, *.min.*, node_modules, .next and public/vendor; river at the release base, then the release head.",
   ];

@@ -23,9 +23,10 @@ export function watchOutputClock(options: {
   const now = options.now ?? Date.now;
   const streams = options.streams ?? [process.stdout as unknown as Writable, process.stderr as unknown as Writable];
   let last = now();
+  const scope = {};
   for (const stream of streams) {
     const write = stream.write.bind(stream);
-    const renews = progressLines();
+    const renews = progressLines(scope);
     stream.write = (chunk: unknown, ...rest: unknown[]) => {
       const text = typeof chunk === "string" ? chunk : chunk instanceof Uint8Array ? Buffer.from(chunk).toString("utf8") : "";
       if (renews(text) > 0) last = now();

@@ -158,9 +158,9 @@ export function registryFixtureForState(state: string, value: RegistryRuntimeRea
       [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
 }
 
-export function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataStore()): MemoryRoutineDataStore {
+export function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataStore(), value?: RegistryRuntimeReadModel): MemoryRoutineDataStore {
   const original = registryTransferImport();
-  const payload = registryFixtureForState(state), scope = stateRegistryRuntimeScope(state), contractId = stateRegistryRuntimeContractId(state);
+  const payload = registryFixtureForState(state, value), scope = stateRegistryRuntimeScope(state), contractId = stateRegistryRuntimeContractId(state);
   const civicRecords = rowKeyedCivicRecordsFor("REGISTRY_RUNTIME_BINDING", payload), digest = canonicalCivicDataHash(payload);
   const candidate = { ...original.record.candidate, scope,
     retrieval: { ...original.record.candidate.retrieval, requestedUrl: trustedLkgImportUrl(contractId) },

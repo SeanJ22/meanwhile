@@ -5,7 +5,7 @@ import { readPlannerMeetingBodies } from "../lib/civic-data/planner-meeting-stat
 import { plannerMeetingOwnership } from "../lib/civic-data/planner-ownership-state-read.ts";
 import { refreshPlannerDoorsForPass } from "../lib/civic-data/planner-door-state-read.ts";
 import { readPlannerRoutineClock } from "../lib/civic-data/planner-clock-state-read.ts";
-import { summarizePlanningRound, mergeStatePlanningPass, STATE_PLANNING_WALK_MS, type StatePlanningSummary, PLANNING_STATES, stateDispatchTarget, planningStateArg, planningStateOf, runStateControlBackfill, runStatePlanningRound } from "../lib/control-plane/scheduler/state-planning.ts";
+import { summarizePlanningRound, mergeStatePlanningPass, STATE_PLANNING_WALK_MS, type StatePlanningSummary, PLANNING_STATES, stateDispatchTarget, planningStateArg, planningStateOf, runStateControlBackfill, runStatePlanningRound, STATE_DEFERRED } from "../lib/control-plane/scheduler/state-planning.ts";
 import { fork } from "node:child_process";
 import { applyHuntOrders, scopeControlKey } from "../lib/control-plane/hunt-orders.ts";
 import { backfillBox } from "../lib/control-plane/box.ts";
@@ -275,7 +275,7 @@ import {
   trackStoreCalls,
   type CycleStallDiagnostic,
 } from "../lib/control-plane/scheduler/cycle-stall.ts";
-import { answerStallProbes, roundProgressReporter } from "../lib/control-plane/scheduler/round-progress.ts";
+import { PLANNER_SCOPE_PREFIX, answerStallProbes, roundProgressReporter } from "../lib/control-plane/scheduler/round-progress.ts";
 import { RUNTIME_NO_PROGRESS_MS } from "./pilot-runtime-child.mts";
 import { POST_CUTOFF_QUIET_LEAD_MS, untilQuietLimit, watchOutputClock } from "../lib/control-plane/scheduler/post-cutoff-bound.ts";
 import { recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
@@ -423,8 +423,10 @@ if(STATE===null) {
   }
   // Why each state failed, for the round digest; a crashed state's own error is in owner-digest:<state>.
   const failureReasons=new Map<string,string>();
-  const runState=(state:string)=>new Promise<boolean>((resolve,reject)=>{
-    if(releaseDrainRequested){failureReasons.set(state,"not started (release handoff)");resolve(false);return;}
+  const runState=(state:string)=>new Promise<boolean|typeof STATE_DEFERRED>((resolve,reject)=>{
+    if(releaseDrainRequested){failureReasons.set(state,"not started (release handoff)");resolve(STATE_DEFERRED);return;}
+    // The runner counts a line as progress once per scope; each planner's own clock starts empty, so a new scope starts here.
+    console.log(`${PLANNER_SCOPE_PREFIX} ${state} ${nowIso()}`);
     const child=fork(new URL(import.meta.url),[...argv,`--state=${state}`,`--round-at=${NOW}`],{cwd:ROOT,env:admittedRuntimeChildEnvironment({capability:"RESEARCH_CYCLE",parentPid:process.pid}),execArgv:[...process.execArgv.filter(arg=>!arg.startsWith("--max-old-space-size")),"--max-old-space-size=1536"],stdio:["ignore","inherit","inherit","ipc"]});
     const forward=(message:unknown)=>{if(child.connected)child.send(message as object);};
     const terminate=()=>{releaseDrainRequested=true;child.kill("SIGTERM");};
@@ -447,15 +449,15 @@ if(STATE===null) {
   const states=await readPlanningStateOrder(parentRepos, IDS?[...new Set([...IDS].map(id=>planningStateOf(id)??"system"))]:PLANNING_STATES);
   let result=await runStatePlanningRound(runState,states);
   if(!releaseDrainRequested && !filteredCycle && parentRepos.planningControls)for(;;) {
-    const pending=(await parentRepos.planningControls.pendingStates()).filter(state=>!result.failed.includes(state));
+    const pending=(await parentRepos.planningControls.pendingStates()).filter(state=>!result.failed.includes(state)&&!result.deferred.includes(state));
     if(!pending.length)break;
     const extra=await runStatePlanningRound(runState,await readPlanningStateOrder(parentRepos,pending));
-    result={...result,failed:[...result.failed,...extra.failed]};
+    result={...result,failed:[...result.failed,...extra.failed],deferred:[...result.deferred,...extra.deferred]};
   }
   if(!dry && !filteredCycle)for(const intent of readIntents(roundIntents).pendingDispatch) {
     const target=parseDispatchTarget(intent.note??"");
     const states=target.states.length?target.states:PLANNING_STATES.filter(state=>state!=="system");
-    if(states.some(state=>result.failed.includes(state)))continue;
+    if(states.some(state=>result.failed.includes(state)||result.deferred.includes(state)))continue;
     let allApplied=true;
     for(const state of states) {
       const applied=await parentRepos.researchIntents.readWhere(RESEARCH_INTENT_LOG_KEY,["honors"],`${intent.intentId}:${state}`);
@@ -467,7 +469,7 @@ if(STATE===null) {
       honors:intent.intentId,action:"DISPATCH",honoredAt:nowIso(),honoredBy:`freshness-shadow@${HOST}`,
       detail:`Planning completed separately for ${states.length} states; each state records its dispatched work.`},nowIso());
   }
-  console.log(`planning round: ${result.completed} states completed; ${result.failed.length} failed${result.failed.length?`: ${result.failed.join(", ")}`:""}`);
+  console.log(`planning round: ${result.completed} states completed; ${result.failed.length} failed${result.failed.length?`: ${result.failed.join(", ")}`:""}${result.deferred.length?`; ${result.deferred.length} left for the next round by the release handoff`:""}`);
   const round = summarizePlanningRound([...summaries.values()]);
   const state = (await parentRepos.researchState.readNarrowed(RESEARCH_STATE_ID, {modelLaneEnabled:true,
     modelLaneDisabledReason:true,workerCredential:true,model:true,spend:true,bounds:true,queue:true,fleetSafety:true}))?.value;
@@ -482,13 +484,14 @@ if(STATE===null) {
     risk:result.failed.length?null:round.risk as unknown as Readonly<Record<string,unknown>>,health:null,promotedToReaderTruth:null,
     stateCycles:round.stateReports.flatMap(({state,cycleIds})=>cycleIds.map(cycleId=>({state,cycleId}))),
     failure:result.failed.length?{code:"STATE_PLANNING_FAILED",detail:`Planning failed in ${result.failed.join(", ")}; each state retains its work.`}:null,
-  },lines:[`Planning round: ${result.completed} states completed, ${result.failed.length} failed.`,
+  },lines:[`Planning round: ${result.completed} states completed, ${result.failed.length} failed${result.deferred.length?`, ${result.deferred.length} left for the next round`:""}.`,
     ...[...Map.groupBy(result.failed,state=>failureReasons.get(state)??"unknown")].map(([reason,states])=>`  failed: ${reason} — ${states.join(", ")}`),
+    ...(result.deferred.length?[`  left for the next round (the release handoff began before they started; their work stays owed): ${result.deferred.join(", ")}`]:[]),
     ...round.digest]});
   const path = writeCycleRecord({...round, startedAt:NOW, finishedAt, testedSha:RUNNING_CODE_SHA,
     failedStates:result.failed, research:{state,scoutCost:round.scoutCost,cacheThisCycle:null}});
   console.log(`  local diagnostic: ${path}`);
-  if (!result.failed.length) countVitalSign([...summaries.values()].some(state=>state.deferredRound)
+  if (!result.failed.length) countVitalSign(result.deferred.length || [...summaries.values()].some(state=>state.deferredRound)
     ? VITAL_COUNTERS.roundsDeferred : VITAL_COUNTERS.roundsFinished);
   process.exit(result.failed.length?1:0);
 }

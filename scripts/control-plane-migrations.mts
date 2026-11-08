@@ -29,6 +29,7 @@ import { addChargeWorkKind, workKindMigrationDefinition } from "../lib/control-p
 import { addWorkRun, workRunMigrationDefinition } from "../lib/control-plane/repository/migrations/SPN-01B-run.ts";
 import { addLeadClaimIndex, leadClaimMigrationDefinition } from "../lib/control-plane/repository/migrations/SPN-01F.ts";
 import { buildPlannedWorkItemIndexes, plannedWorkItemIndexesMigrationDefinition } from "../lib/control-plane/repository/migrations/RC-01.ts";
+import { buildCampaignPublicationIndexes, campaignPublicationIndexesDefinition, SOURCE_CLOCK_CLASS_SOURCE, SOURCE_CLOCK_INDEX_SOURCE } from "../lib/control-plane/repository/migrations/CX-WRITES-02.ts";
 
 const JOURNAL = "lib/control-plane/repository/migrations/meta/_journal.json";
 function withProductionReader(migrate: (control: Sql, reader: Sql) => Promise<string>) {
@@ -81,6 +82,8 @@ const MIGRATIONS = [
     definition: leadClaimMigrationDefinition, apply: addLeadClaimIndex },
   { id: "RC-01_expand", source: "lib/control-plane/repository/migrations/RC-01.ts", declarations: ["lib/control-plane/repository/pg-schema.ts"],
     definition: plannedWorkItemIndexesMigrationDefinition, apply: buildPlannedWorkItemIndexes },
+  { id: "CX-WRITES-02_expand", source: "lib/control-plane/repository/migrations/CX-WRITES-02.ts", declarations: ["lib/control-plane/repository/pg-schema.ts",SOURCE_CLOCK_CLASS_SOURCE,SOURCE_CLOCK_INDEX_SOURCE],
+    definition: campaignPublicationIndexesDefinition, apply: withProductionReader(buildCampaignPublicationIndexes) },
 ] as const;
 interface Entry { readonly id: string; readonly phase: "expand" | "contract"; readonly hash: string }
 interface Dependencies {

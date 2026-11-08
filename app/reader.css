@@ -1279,20 +1279,6 @@
   padding-top: var(--space-4);
   border-top: 1px solid var(--hair);
 }
-.mw-section-title {
-  margin: 0;
-  font-size: var(--text-mw-17);
-  font-weight: 600;
-  color: var(--text);
-  letter-spacing: 0;
-  text-transform: none;
-}
-details.mw-sources > summary {
-  min-height: var(--mw-44);
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
 .mw-link-rows {
   display: flex;
   flex-direction: column;
@@ -1482,14 +1468,6 @@ details.mw-sources > summary {
   font-weight: 650;
   color: var(--text-dim);
 }
-.mw-share-row {
-  display: grid;
-  grid-template-columns: minmax(0, 12rem) minmax(0, 1fr) minmax(0, 12rem);
-  align-items: center;
-  gap: var(--mw-10);
-  min-height: 28px;
-  font-size: var(--text-mw-13);
-}
 .mw-share-value {
   font-family: var(--font-app-mono, var(--font-mono));
 }
@@ -1497,20 +1475,9 @@ details.mw-sources > summary {
   font-family: var(--font-sans);
   color: var(--text-dim);
 }
-.mw-share-note {
-  margin: var(--space-1) 0 0;
-  font-size: var(--text-mw-12);
-  color: var(--text-dim);
-}
 @media (max-width: 639px) {
   .mw-money-tiles {
     grid-template-columns: 1fr;
-  }
-  .mw-share-row {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
-  .mw-share-row .mw-share-value {
-    grid-column: 1 / -1;
   }
 }
 
@@ -1655,23 +1622,11 @@ details.mw-sources > summary {
   font-size: var(--text-mw-13);
   color: var(--text-dim);
 }
-.mw-feed-gap {
-  margin: 0;
-  font-size: var(--text-mw-13);
-  color: var(--text-dim);
-}
 
 .mw-carried-note {
   padding: 0 var(--mw-14);
   font-size: var(--text-mw-12);
   line-height: 1.5;
-  color: var(--text-dim);
-}
-
-.al-group-credit {
-  margin: 0;
-  padding: var(--mw-6) 22px 0;
-  font-size: var(--text-mw-12);
   color: var(--text-dim);
 }
 

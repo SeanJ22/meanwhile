@@ -23,6 +23,7 @@ import { federalDirectoryStateOf } from "../officials/federal-directory-data-pla
 import { decodeStateCandidate, durableStateHash, encodeStateCandidate, statePublicationScope } from "./state-publication.ts";
 
 import { and, desc, eq, getTableColumns, inArray, like, or, sql, type SQL } from "drizzle-orm";
+import { unionAll } from "drizzle-orm/pg-core";
 import { meetingSittingsSql } from "../doors/hot-partitions.ts";
 
 import { getDb } from "../db/index.ts";
@@ -2430,10 +2431,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const [{holdCandidateFacts},{rawCaptureVault}]=await Promise.all([import("./candidate-vault.ts"),import("./raw-capture-remote.ts")]);
     const [previous]=record.lastKnownGoodVersion?await this.db.select({fingerprint:civicDataCandidates.normalizedHash})
       .from(civicDataCandidates).where(eq(civicDataCandidates.id,record.lastKnownGoodVersion)).limit(1):[];
-    // Transitional compatibility: DB-06 must switch the historical model and
-    // source-evidence readers before these two inline copies are removed.
+    // SQL still consumes the current read model; parser evidence and fetched
+    // bodies are read from the existing vault only when an operation needs them.
     const held=await holdCandidateFacts(this.cacheOptions.vault??rawCaptureVault(),record.candidate,previous?.fingerprint??null,
-      {retainReadModel:true,retainEvidence:true});
+      {retainReadModel:true});
     const full=held as RoutineCandidate;
     const stateAuthority = statePublicationScope(record.candidate.scope);
     const meetingDoors = record.candidate.sourceId === "meeting-doors";
@@ -2567,15 +2568,22 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     // Returning the parent field would still ship a whole inline roster for its captures.
     const keys = sql`ARRAY[${sql.join(path.map(key => sql`${key}`), sql`, `)}]::text[]`;
     const [selected] = await this.candidateRows([candidateId], `candidate-path:${JSON.stringify(path)}`, async () => {
-      const result = await this.db.execute(sql`WITH RECURSIVE candidate_path(value,depth) AS (
-        SELECT ${civicDataCandidates.candidate},0 FROM ${civicDataCandidates} WHERE ${civicDataCandidates.id}=${candidateId}
-        UNION ALL
-        SELECT value -> (${keys})[depth+1],depth+1 FROM candidate_path
-        WHERE depth < ${path.length} AND NOT coalesce(value ? '$civicPayloadPart',false)
-      ) SELECT value,depth FROM candidate_path ORDER BY depth DESC LIMIT 1`);
-      const row = result.rows[0] as { value: unknown; depth: number } | undefined;
-      if (!row) return [];
-      const value = await this.payloadParts.load(await this.payloadParts.path(row.value, path.slice(Number(row.depth))));
+      const readLegacy = async () => {
+        const result = await this.db.execute(sql`WITH RECURSIVE candidate_path(value,depth) AS (
+          SELECT ${civicDataCandidates.candidate},0 FROM ${civicDataCandidates} WHERE ${civicDataCandidates.id}=${candidateId}
+          UNION ALL
+          SELECT value -> (${keys})[depth+1],depth+1 FROM candidate_path
+          WHERE depth < ${path.length} AND NOT coalesce(value ? '$civicPayloadPart',false)
+        ) SELECT value,depth FROM candidate_path ORDER BY depth DESC LIMIT 1`);
+        const row = result.rows[0] as { value: unknown; depth: number } | undefined;
+        if (!row) return null;
+        return this.payloadParts.load(await this.payloadParts.path(row.value, path.slice(Number(row.depth))));
+      };
+      let value:unknown;
+      if (["normalizedPayload","excludedFacts","civicRecords","retainedSourceResponses"].includes(path[0])) {
+        const [{readCivicCandidatePath},{rawCaptureVault}] = await Promise.all([import("./candidate-vault.ts"),import("./raw-capture-remote.ts")]);
+        value = await readCivicCandidatePath(this.readerRows.bind(this),()=>this.cacheOptions.vault??rawCaptureVault(),candidateId,path,readLegacy);
+      } else value = await readLegacy();
       return [{ id: candidateId, value: value === undefined ? null : value as T }];
     });
     return selected?.value ?? null;
@@ -2934,13 +2942,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async readCandidateCaptures(candidateId: string, urls: readonly string[], members: readonly string[]): Promise<readonly unknown[]> {
     return (await this.candidateValue(`candidate-captures:${JSON.stringify([urls,members])}`, candidateId, async () => {
-      const list = (values: readonly string[]) => `{${values.map(value => `"${value.replace(/["\\]/g, "\\$&")}"`).join(",")}}`;
-      const [row] = (await this.db.execute(sql`select coalesce((select jsonb_agg(x) from jsonb_array_elements(case when jsonb_typeof(c.candidate#>'{normalizedPayload,captures}') = 'array'
-        then c.candidate#>'{normalizedPayload,captures}' else '[]'::jsonb end) x
-        where x->>'finalUrl' = any(${list(urls)}::text[]) or x->>'requestedUrl' = any(${list(urls)}::text[])
-          or x#>>'{extractedFrom,member}' = any(${list(members)}::text[])), '[]'::jsonb) as captures
-      from civic_data_candidates c where c.id = ${candidateId}`)).rows as { captures: unknown[] }[];
-      return row?.captures ?? [];
+      const captures = await this.readCandidatePath<readonly {finalUrl?:string;requestedUrl?:string;extractedFrom?:{member?:string}}[]>(candidateId,["normalizedPayload","captures"]);
+      return Array.isArray(captures)?captures.filter(row=>row&&typeof row==="object"&&(
+        typeof row.finalUrl==="string"&&urls.includes(row.finalUrl)||typeof row.requestedUrl==="string"&&urls.includes(row.requestedUrl)||
+        typeof row.extractedFrom?.member==="string"&&members.includes(row.extractedFrom.member))):[];
 
     })) ?? [];
   }
@@ -2957,6 +2962,9 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async readCandidateField(candidateId: string, path: readonly string[]): Promise<unknown> {
     return (await this.candidateValue(`candidate-field:${JSON.stringify(path)}`, candidateId, async () => {
+      if (["normalizedPayload","excludedFacts","civicRecords","retainedSourceResponses"].includes(path[0])) {
+        return (await this.readCandidatePath(candidateId,path))??undefined;
+      }
       const [row] = (await this.db.execute(sql`select candidate #> ${`{${path.map(key => `"${key}"`).join(",")}}`}::text[] as value
       from civic_data_candidates where id = ${candidateId}`)).rows as { value: unknown }[];
       return row?.value ?? undefined;
@@ -3455,29 +3463,26 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   private async readClock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
     // Successful retained-byte replay records processing, but no newer provider attempt.
     // These fields occur only on validated promotions; failures keep their local retry clock.
-    const attemptAt = sql`CASE WHEN ${civicDataCandidates.state} = 'PROMOTED'
-      AND ${civicDataCandidates.acquisitionSucceeded} = true
-      AND ${civicDataCandidates.candidate}#>>'{retrieval,sourceCheck,checkedAt}' IS NOT NULL
-      THEN LEAST((${civicDataCandidates.candidate}#>>'{retrieval,sourceCheck,checkedAt}')::timestamptz, ${civicDataCandidateEvents.at})
-      ELSE ${civicDataCandidateEvents.at} END`;
-    const attemptQuery = this.db
-      .select({ attemptedAt: attemptAt, failureCode: civicDataCandidates.failureCode, failureDetail: civicDataCandidates.failureDetail })
-      .from(civicDataCandidates)
-      .innerJoin(civicDataCandidateEvents, and(
-        eq(civicDataCandidateEvents.candidateId, civicDataCandidates.id),
-        or(eq(civicDataCandidateEvents.sequence, 1), sql`left(${civicDataCandidateEvents.detail}, 20) = 'RECHECKED_UNCHANGED:'`),
-      ))
-      .where(and(
-        eq(civicDataCandidates.sourceId, sourceId),
-        eq(civicDataCandidates.recordClass, recordClass),
-        eq(civicDataCandidates.scope, scope),
-        parserVersion === undefined ? undefined : eq(civicDataCandidates.parserVersion, parserVersion),
-                // Transfers retain the reader record without advancing the source clock.
-        sql`coalesce(${civicDataCandidates.candidate}#>>'{bootstrapImport,kind}', '') not in ('TRUSTED_LKG_IMPORT', 'TRUSTED_LKG_REATTESTATION')
-          AND coalesce(${civicDataCandidates.candidate}#>>'{stateRetirement,kind}', '') <> 'STATE_AUTHORITY_RETIREMENT'`,
-      ))
-      .orderBy(desc(attemptAt), desc(civicDataCandidates.id))
-      .limit(16);
+    const attempts = (retained: boolean) => this.db.select({
+      attemptedAt: retained
+        ? sql`CASE WHEN ${civicDataCandidates.state} = 'PROMOTED' AND ${civicDataCandidates.acquisitionSucceeded} = true
+          THEN LEAST((${civicDataCandidates.candidate}#>>'{retrieval,sourceCheck,checkedAt}')::timestamptz,${civicDataCandidateEvents.at})
+          ELSE ${civicDataCandidateEvents.at} END`.as("attempted_at")
+        : sql`${civicDataCandidateEvents.at}`.as("attempted_at"),
+      id:civicDataCandidates.id,failureCode:civicDataCandidates.failureCode,failureDetail:civicDataCandidates.failureDetail,
+    }).from(civicDataCandidates).innerJoin(civicDataCandidateEvents,and(
+      eq(civicDataCandidateEvents.candidateId,civicDataCandidates.id),
+      or(eq(civicDataCandidateEvents.sequence,1),sql`left(${civicDataCandidateEvents.detail},20)='RECHECKED_UNCHANGED:'`),
+    )).where(and(
+      eq(civicDataCandidates.sourceId,sourceId),eq(civicDataCandidates.recordClass,recordClass),eq(civicDataCandidates.scope,scope),
+      parserVersion===undefined?undefined:eq(civicDataCandidates.parserVersion,parserVersion),
+      sql`civic_source_clock_class(${civicDataCandidates.candidate})=${retained?1:0}`,
+    ));
+    // The index classifies ordinary attempts without reopening their source bodies.
+    // Only retained-byte replays need their original provider timestamp.
+    const recent=unionAll(attempts(false),attempts(true)).as("recent_attempts");
+    const attemptQuery=this.db.select({attemptedAt:recent.attemptedAt,failureCode:recent.failureCode,failureDetail:recent.failureDetail})
+      .from(recent).orderBy(desc(recent.attemptedAt),desc(recent.id)).limit(16);
     const pointerQuery = routineClockPointerRead(this.db, recordClass, scope);
     const observedQuery = routineClockPointedObservedRead(this.db, recordClass, scope);
     const confirmationQuery = routineClockConfirmationRead(this.db, recordClass, scope);

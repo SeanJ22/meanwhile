@@ -1,11 +1,12 @@
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 // Plain .mjs, shared with the plain-node scripts that never see tsx.
 import { posixRelative, toPosix } from "../scripts/repo-path.mjs";
+import { walkFiles, hiddenOrVendored } from "./helpers/walk-files.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -22,14 +23,8 @@ const SOURCE = /\.(ts|tsx|mts|mjs|js)$/;
 /** The one sanctioned normalizer, exempt from the literal ban it enforces. */
 const NORMALIZER = "scripts/repo-path.mjs";
 
-function walk(dir: string, out: string[] = []): string[] {
-  for (const entry of readdirSync(dir)) {
-    if (entry === "node_modules" || entry.startsWith(".")) continue;
-    const full = join(dir, entry);
-    if (statSync(full).isDirectory()) walk(full, out);
-    else if (SOURCE.test(entry)) out.push(full);
-  }
-  return out;
+function walk(dir: string): string[] {
+  return walkFiles(dir, (n) => SOURCE.test(n), hiddenOrVendored);
 }
 
 /** Strips comments, which name the banned patterns while explaining them. */

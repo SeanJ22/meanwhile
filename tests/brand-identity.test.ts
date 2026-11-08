@@ -1,22 +1,16 @@
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 import test from "node:test";
+import { walkFiles } from "./helpers/walk-files.ts";
 
 /** The brand identity's guards: the mark stays inside the lockup, no reader's IP reaches a font host, and every var(--token) resolves. */
 
 const ROOT = join(import.meta.dirname, "..");
 const CSS = join(ROOT, "app", "globals.css");
 
-function walk(dir: string, out: string[] = []): string[] {
-  for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    const path = join(dir, entry.name);
-    if (entry.isDirectory()) {
-      if (entry.name === "node_modules" || entry.name === ".next") continue;
-      walk(path, out);
-    } else out.push(path);
-  }
-  return out;
+function walk(dir: string): string[] {
+  return walkFiles(dir, () => true, (n) => n === "node_modules" || n === ".next");
 }
 
 /** Every source file a reader's browser can be served styling or markup from. */

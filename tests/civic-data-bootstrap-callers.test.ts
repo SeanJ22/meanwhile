@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
+import { walkFiles } from "./helpers/walk-files.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const EXPECTED_CALLERS = [
@@ -11,13 +12,7 @@ const EXPECTED_CALLERS = [
 ] as const;
 
 function sourceFiles(directory: string): string[] {
-  const files: string[] = [];
-  for (const entry of readdirSync(directory, { withFileTypes: true })) {
-    const path = join(directory, entry.name);
-    if (entry.isDirectory()) files.push(...sourceFiles(path));
-    else if (/\.(?:ts|tsx|mts)$/.test(entry.name)) files.push(path);
-  }
-  return files;
+  return walkFiles(directory, (n) => /\.(?:ts|tsx|mts)$/.test(n));
 }
 
 function relative(path: string): string {

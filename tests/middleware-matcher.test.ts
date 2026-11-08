@@ -4,13 +4,14 @@
  * Each matcher is compiled by Next's own compiler and used the way Netlify's Next runtime writes it into the edge manifest (pattern only, no host condition).
  */
 import assert from "node:assert/strict";
-import { readdirSync, statSync } from "node:fs";
+
 import { join, relative, sep } from "node:path";
 import test from "node:test";
 
 import * as pageStaticInfo from "next/dist/build/analysis/get-page-static-info.js";
 
 import { config } from "@/middleware.ts";
+import { walkFiles } from "./helpers/walk-files.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 // Next ships no declaration for this internal; it is the function `next build` itself uses to compile `config.matcher`.
@@ -24,10 +25,7 @@ function runs(path: string): boolean {
 }
 
 function files(dir: string): string[] {
-  return readdirSync(dir).flatMap((name) => {
-    const full = join(dir, name);
-    return statSync(full).isDirectory() ? files(full) : [full];
-  });
+  return walkFiles(dir);
 }
 
 test("no file under public/ runs the middleware", () => {

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
@@ -16,6 +16,7 @@ import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { promoteMeetingPartitions } from "../scripts/ingest.ts";
 import { freshEdge, publishPass, readPlace } from "./helpers/meeting-body-fixtures.ts";
+import { walkFiles } from "./helpers/walk-files.ts";
 
 const ROOT = process.cwd();
 
@@ -359,13 +360,8 @@ test("the venue card renders the decided clause for every reason, and never call
   assert.doesNotMatch(innerText(legacyRow), /our latest check/);
 });
 
-function sourceFiles(dir: string, out: string[] = []): string[] {
-  for (const entry of readdirSync(dir)) {
-    const full = join(dir, entry);
-    if (statSync(full).isDirectory()) sourceFiles(full, out);
-    else if (/\.tsx?$/.test(entry)) out.push(full);
-  }
-  return out;
+function sourceFiles(dir: string): string[] {
+  return walkFiles(dir, (n) => /\.tsx?$/.test(n));
 }
 
 // Comments removed, so an explanation is not read as a defect.

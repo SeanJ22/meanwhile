@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
+import { walkFiles, hiddenOrVendored } from "./helpers/walk-files.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -18,17 +19,8 @@ const SWEPT = ["app", "components", "hooks", "lib", "scripts", "tests"];
 
 const SOURCE = /\.(ts|tsx|mts|mjs)$/;
 
-function walk(dir: string, out: string[] = []): string[] {
-  for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    const full = join(dir, entry.name);
-    if (entry.isDirectory()) {
-      if (entry.name === "node_modules" || entry.name.startsWith(".")) continue;
-      walk(full, out);
-    } else if (SOURCE.test(entry.name)) {
-      out.push(full);
-    }
-  }
-  return out;
+function walk(dir: string): string[] {
+  return walkFiles(dir, (n) => SOURCE.test(n), hiddenOrVendored);
 }
 
 test("no first-party file annotates against a Next-generated global type", () => {

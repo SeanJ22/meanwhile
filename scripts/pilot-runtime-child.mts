@@ -88,6 +88,8 @@ export async function runRuntimeChildren(
     readonly noProgressMs?: number;
     /** The lane's deadline: the child's process tree is ended when it passes. */
     readonly deadlineMs?: number;
+    /** A pass cut by that deadline is a finished partial pass when it printed progress within this many ms before it; otherwise it is stopped, naming when and after what it went quiet. */
+    readonly partialWithinMs?: number;
     readonly onStarted?: (id: string, child: ChildProcess) => void },
 ): Promise<readonly BoundedChildResult[]> {
   if (options.noProgressMs !== undefined && (!Number.isSafeInteger(options.noProgressMs) || options.noProgressMs <= 0)) {
@@ -99,6 +101,8 @@ export async function runRuntimeChildren(
     let errorMessage: string | null = null;
     let overflow = false;
     let stopped = false;
+    let progressedAt = 0, lastLine = "";
+    let partial = false;
     let idle: ReturnType<typeof setTimeout> | undefined;
     let probe: ReturnType<typeof setTimeout> | undefined;
     const progressScope = {};
@@ -125,7 +129,9 @@ export async function runRuntimeChildren(
     } };
     ownedChildren.add(owned);
     const wall = options.deadlineMs === undefined ? undefined : setTimeout(() => {
-      void owned.stop(`PASS_TIME_BUDGET: ${command.id} reached its lane deadline; its unfinished work stays owed to the next pass`)
+      partial = options.partialWithinMs !== undefined && progressedAt > Date.now() - options.partialWithinMs;
+      const quiet = options.partialWithinMs === undefined ? "" : progressedAt ? `; stalled since ${new Date(progressedAt).toISOString()} after "${lastLine.slice(0, 100)}"` : "; it printed no progress";
+      void owned.stop(`PASS_TIME_BUDGET: ${command.id} reached its lane deadline${quiet}; its unfinished work stays owed to the next pass`)
         .catch(error => { errorMessage = `${errorMessage}; ${String(error)}`; child.kill("SIGKILL"); });
     }, Math.max(0, options.deadlineMs - Date.now()));
     const renew = () => {
@@ -152,7 +158,10 @@ export async function runRuntimeChildren(
       const saved = bytes[stream] > options.maxBufferBytes ? Buffer.from(chunk).subarray(0, remaining).toString("utf8") : chunk;
       if (stream === "stdout") { stdout += saved; options.onStdout?.(command.id, chunk); }
       else { stderr += saved; options.onStderr?.(command.id, chunk); }
-      if (progress[stream](chunk) > 0) renew();
+      if (progress[stream](chunk) > 0) {
+        progressedAt = Date.now(); lastLine = chunk.split(/\r?\n/).filter(line => line.trim()).at(-1)?.trim() ?? "";
+        renew();
+      }
       if (bytes[stream] > options.maxBufferBytes && !overflow) {
         overflow = true;
         void owned.stop("OUTPUT_LIMIT_EXCEEDED").catch(() => child.kill("SIGKILL"));
@@ -169,6 +178,7 @@ export async function runRuntimeChildren(
       clearTimeout(probe);
       clearTimeout(wall);
       ownedChildren.delete(owned);
+      if (partial && !overflow) { resolve({ id: command.id, status: 0, signal, stdout, stderr, termination: "EXITED", errorMessage: null }); return; }
       resolve({ id: command.id, status: stopped ? null : code,
         signal, stdout, stderr, termination: overflow ? "OUTPUT_LIMIT_EXCEEDED" : stopped ? "TIMED_OUT" : errorMessage ? "SPAWN_FAILED" : "EXITED",
         errorMessage });

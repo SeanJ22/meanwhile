@@ -218,7 +218,7 @@ test("a pending restart drains the standing lane children, and a drained exit 0 
       const context = createContext({ storedKeyEnvironment, provider: "postgres", canary: false, runtimeAdmissionsHeld: false, pendingRestart: new PendingRestart(), jobLaunchAllowed: () => true,
         standingRuntimeScheduler: { inFlightIds: () => [lane] }, researchCycleActive: false, drainHunterLane: () => {}, console: { log: () => {}, error: () => {} }, process,
         LEGISTAR_MEMBER_DATABASE_BYTES: 1, PARSER_LANE_DATABASE_BYTES: 1, TS_CHILD: [], CODE_ROOT: process.cwd(),
-        RUNTIME_NO_PROGRESS_MS: 1, withPassDeadline, standingChildEnvironment: () => ({}), AUTO_RELEASE_HANDOFF: true, censusMemory: { acquire: async () => () => {} },
+        RUNTIME_NO_PROGRESS_MS: 1, CENSUS_PARTIAL_WINDOW_MS: 120_000, withPassDeadline, standingChildEnvironment: () => ({}), AUTO_RELEASE_HANDOFF: true, censusMemory: { acquire: async () => () => {} },
         runRuntimeChildren: async (_commands: unknown, options: { onStarted(id: string, child: unknown): void }) => {
           options.onStarted(lane, { connected: true, send: (message: unknown) => { sent.push(message); } });
           runInContext(`holdForRestart("${"c".repeat(40)}")`, context);
@@ -239,7 +239,7 @@ test("census waits past a minute for memory, reports the wait, observes the chil
   const observed: number[] = [], lines: string[] = [], until = Date.now() + 600_000;
   const slots = reportingWorkerSlots(routineProcessSlots({ availableBytes: () => available }), { write: line => lines.push(line) });
   const context = createContext({ storedKeyEnvironment, provider: "postgres", canary: false, runtimeAdmissionsHeld: false, jobLaunchAllowed: () => true, process, TS_CHILD: [], CODE_ROOT: process.cwd(),
-    RUNTIME_NO_PROGRESS_MS: 600_000, withPassDeadline, standingChildEnvironment: () => ({}), Date,
+    RUNTIME_NO_PROGRESS_MS: 600_000, CENSUS_PARTIAL_WINDOW_MS: 120_000, withPassDeadline, standingChildEnvironment: () => ({}), Date,
     censusMemory: { acquire: async (entry: string, deadline: number) => {
       assert.equal(entry, "platform-census-runner.mts"); assert.equal(deadline, until);
       const release = await slots.acquire(entry, deadline);
@@ -271,7 +271,7 @@ test("a lane child that stops tells the heartbeat why: the runner's kill reason,
   for (const run of ["runParserLane", "runPlatformCensus"]) {
     const stopped = (result: object) => {
       const context = createContext({ storedKeyEnvironment, provider: "postgres", canary: false, runtimeAdmissionsHeld: false, jobLaunchAllowed: () => true, process, TS_CHILD: [], CODE_ROOT: process.cwd(),
-        RUNTIME_NO_PROGRESS_MS: 1, PARSER_LANE_DATABASE_BYTES: 1, censusMemory: { acquire: async () => () => {} }, withPassDeadline, standingChildEnvironment: () => ({}), runRuntimeChildren: async () => [{ status: 1, signal: null, stderr: "", errorMessage: null, ...result }] });
+        RUNTIME_NO_PROGRESS_MS: 1, CENSUS_PARTIAL_WINDOW_MS: 120_000, PARSER_LANE_DATABASE_BYTES: 1, censusMemory: { acquire: async () => () => {} }, withPassDeadline, standingChildEnvironment: () => ({}), runRuntimeChildren: async () => [{ status: 1, signal: null, stderr: "", errorMessage: null, ...result }] });
       runInContext(stripTypeScriptTypes(["runLaneChild", "privateText", run].map(runnerFunction).join("\n") + "\nconst laneChildren = new Map();"), context);
       return (runInContext(`${run}(Date.now() + 60000)`, context) as Promise<void>).then(() => "", (error: Error) => error.message);
     };

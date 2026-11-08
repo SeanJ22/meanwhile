@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import {
@@ -13,6 +13,7 @@ import {
   scopedToAddress,
   type ResolvedLocation,
 } from "../lib/state/resolved-location.ts";
+import { walkFiles } from "./helpers/walk-files.ts";
 
 const SLDL_17 = "ocd-division/country:us/state:az/sldl:17";
 const SLDL_19 = "ocd-division/country:us/state:az/sldl:19";
@@ -72,21 +73,9 @@ test("address scoping does NOT reach a row that was never ruled out", () => {
 
 /** Every `.tsx` under the reader component tree, walked without git so untracked files are swept too. */
 function readerComponents(): { path: string; source: string }[] {
-  const out: { path: string; source: string }[] = [];
-  const walk = (dir: string) => {
-    for (const entry of readdirSync(dir)) {
-      const full = join(dir, entry);
-      if (statSync(full).isDirectory()) {
-        walk(full);
-        continue;
-      }
-      if (!entry.endsWith(".tsx")) continue;
-      out.push({ path: full, source: readFileSync(full, "utf8") });
-    }
-  };
-  walk("components");
-  walk("app");
-  return out;
+  return ["components", "app"]
+    .flatMap((root) => walkFiles(root, (name) => name.endsWith(".tsx")))
+    .map((path) => ({ path, source: readFileSync(path, "utf8") }));
 }
 
 /** Comments are stripped before every copy assertion below, so code may discuss the banned strings. */

@@ -53,7 +53,7 @@ import { PostalZipNotice } from "./postal-zip-notice";
 import { TutorialReplayButton, useTutorialRequested } from "./tutorial-overlay";
 import { useSidebarVisible } from "@/hooks/use-sidebar-visible";
 import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
-import { useResultsScope } from "@/lib/map/results-scope";
+import { openResults, resultsRequestedBy, useResultsScope } from "@/lib/map/results-scope";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
 import { logEvent } from "@/lib/log/client";
@@ -876,6 +876,15 @@ function MapEntryInner() {
   // (lib/state/district-intent.ts).
   const resultsScope = useResultsScope();
   const resultsOpen = resultsScope.open;
+  // `/?results` opens the results map on the reader's own state once it is known.
+  const homeAbbr = stateAbbrFromOcdId(focusState.activeOcdId), homeName = focusState.stateName;
+  useEffect(() => {
+    if (!homeAbbr || !homeName || !resultsRequestedBy(window.location.search)) return;
+    const url = new URL(window.location.href);
+    url.searchParams.delete("results");
+    window.history.replaceState(window.history.state, "", url);
+    openResults({ abbr: homeAbbr, name: homeName });
+  }, [homeAbbr, homeName]);
   const activeDistrictTypes = useMemo(
     () =>
       resultsOpen

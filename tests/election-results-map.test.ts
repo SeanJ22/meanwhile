@@ -163,7 +163,7 @@ test("state badges sit inside the state's largest part", () => {
 
 /* ------------------------------------------------------------- scope sync --- */
 
-import { closeResults, getResultsScope, openResults, setResultsDistricts, setResultsScope, showResultsState } from "../lib/map/results-scope.ts";
+import { closeResults, getResultsScope, openResults, resultsRequestedBy, setResultsDistricts, setResultsScope, showResultsState } from "../lib/map/results-scope.ts";
 
 test("map and scorecard share one scope: drilling in adds the visited tab, going home keeps it", () => {
   const az = { abbr: "AZ", name: "Arizona" }, tx = { abbr: "TX", name: "Texas" };
@@ -298,4 +298,11 @@ test("a state with a primary and a general on file shows the latest election tha
   const primary = ballotOf([race], "2026-07-21"), general = ballotOf([race], "2026-11-03"), upcoming = ballotOf([], "2026-12-01");
   assert.equal(latestResultBallot([primary as BallotSet, upcoming as BallotSet, general as BallotSet])?.election.date, "2026-11-03");
   assert.equal(latestResultBallot([upcoming as BallotSet]), null);
+});
+
+test("a results link opens the map: /?results, with or without a value, and not any other query", () => {
+  assert.equal(resultsRequestedBy("?results"), true);
+  assert.equal(resultsRequestedBy("?zip=85704&results=1"), true);
+  assert.equal(resultsRequestedBy("?zip=85704"), false);
+  assert.equal(resultsRequestedBy(""), false);
 });

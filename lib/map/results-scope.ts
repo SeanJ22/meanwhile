@@ -58,3 +58,6 @@ export function showResultsState(state: ResultsState): void {
 export function setResultsDistricts(districts: boolean): void {
   if (current.open && current.districts !== districts) set({ ...current, districts });
 }
+
+/** `/?results` opens the results map on the reader's own state, the same as "See the map". */
+export const resultsRequestedBy = (search: string): boolean => new URLSearchParams(search).has("results");

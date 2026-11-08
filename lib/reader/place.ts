@@ -100,6 +100,9 @@ const HELD_ROWS = 300;
 const heldRows = serverReaderValue("place-rows", () => new Map<string, unknown>());
 const combined = serverReaderValue("place-combined", () => new Map<string, { readonly print: string; readonly at: number; readonly place: PlacePackage }>());
 
+/** A lane that works one state at a time lets go of the saved pages of the state it has left. */
+export function dropHeldPlaceRows(): void { heldRows.clear(); combined.clear(); }
+
 const requests = serverReaderValue("place-requests", () => new WeakMap<object, Map<string, Promise<PlacePackage>>>());
 const pageIds = serverReaderValue("place-page-ids", () => new WeakMap<PlacePackage, readonly string[]>());
 

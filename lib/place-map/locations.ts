@@ -38,3 +38,9 @@ export async function resolveZipLocation(input: string): Promise<ZipResolution> 
   const centroid = await readZipLocation(input);
   return centroid ? {ok:true,centroid} : {ok:false,reason:"uncovered"};
 }
+
+/** The body `/api/location/zip` returns for a well-formed ZIP. */
+export async function zipLocationAnswer(zip: string): Promise<{ location: ZctaCentroid | null; resolution: ZipResolution }> {
+  const resolution = await resolveZipLocation(zip);
+  return { location: resolution.ok ? resolution.centroid : null, resolution };
+}

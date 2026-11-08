@@ -179,6 +179,7 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "0081_spn01e_page_marks": { phase: "expand", why: "A place page carries its own rebuild mark, lease, priority and the entities it shows, so the rebuild queue and the dependency table can go once readers and writers use them.", lockFirst: ["place_page"] },
   "0082_spn01e4_slice_cards": { phase: "contract", why: "Widens the card names a slice may have to the meetings, history and agenda cards; the rule reads any change to a constraint as narrowing, though no row the live build writes is refused." },
+  "SPN-01E8_place_page_built_at": { phase: "expand", why: "Adds an index so the ZIP answers lane finds the pages saved since it last looked without reading the table." },
   "SPN-01D_place_slice": { phase: "expand", why: "Adds the table that holds one small slice per card per place; nothing reads it until readers switch." },
   "CP-01_source_status": { phase: "expand", why: "Adds source-attempt and current-readback counters maintained by existing writers before Admin reads the small rows.",
     lockFirst: CIVIC_DATA_STATUS_WRITE_TABLES, lockFirstMode: "SHARE ROW EXCLUSIVE" },

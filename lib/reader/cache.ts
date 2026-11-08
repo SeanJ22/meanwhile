@@ -76,6 +76,14 @@ export function readerCacheHeaders(scope: ReaderCacheScope): Record<string, stri
   };
 }
 
+/** A ZIP's published answers carry this tag, so a republished ZIP clears exactly its own copies and nothing else. */
+export const readerZipTag = (zip: string): string => `reader-zip:${zip}`;
+
+/** The headers an answer already has, plus its ZIP's tag. */
+export function withReaderZipTag(headers: Record<string, string>, zip: string): Record<string, string> {
+  return { ...headers, "Netlify-Cache-Tag": [headers["Netlify-Cache-Tag"], readerZipTag(zip)].filter(Boolean).join(",") };
+}
+
 /** Ready place answers are cleared only after their own replacement is committed. */
 export function readerPlaceCacheHeaders(places:readonly string[]):Record<string,string> {
   return {...readerCacheHeaders({places}),

@@ -11,7 +11,9 @@ export interface ReaderArtifactStore {
   readonly kind: "netlify-blobs" | "local-file";
   /** Store complete bytes once, under their digest; never overwrite a serving artifact. */
   putImmutable(bytes: Uint8Array, suffix: "json" | "json.gz"): Promise<string>;
-  readBytes(key: string): Promise<Uint8Array | null>;
+  readBytes(key: string, options?: { readonly strong?: boolean }): Promise<Uint8Array | null>;
+  /** Store bytes under a fixed key, replacing what was there: one file per ZIP is rewritten in place when its answer changes. */
+  writeBytes(key: string, bytes: Uint8Array): Promise<void>;
   readJsonPointer<T>(key: string): Promise<{ value: T; etag: string | null } | null>;
   writeJsonPointer<T>(key: string, value: T, expectedEtag: string | null): Promise<{ modified: boolean; etag: string | null }>;
 }
@@ -59,10 +61,17 @@ export class NetlifyBlobsArtifactStore implements ReaderArtifactStore {
   }
 
 
-  async readBytes(key: string): Promise<Uint8Array | null> {
-    const store = await this.store("eventual");
+  async readBytes(key: string, options?: { readonly strong?: boolean }): Promise<Uint8Array | null> {
+    const store = await this.store(options?.strong ? "strong" : "eventual");
     const buf = (await store.get(key, { type: "arrayBuffer" })) as ArrayBuffer | null;
     return buf ? new Uint8Array(buf) : null;
+  }
+
+  async writeBytes(key: string, bytes: Uint8Array): Promise<void> {
+    const store = await this.store("strong");
+    const buffer = new ArrayBuffer(bytes.byteLength);
+    new Uint8Array(buffer).set(bytes);
+    await store.set(key, buffer);
   }
 
   async putImmutable(bytes: Uint8Array, suffix: "json" | "json.gz"): Promise<string> {
@@ -150,6 +159,14 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
     } catch {
       return null;
     }
+  }
+
+  async writeBytes(key: string, bytes: Uint8Array): Promise<void> {
+    const path = this.path(key);
+    mkdirSync(temporaryPath(dirname(path)), { recursive: true });
+    const temporary = `${path}.${randomUUID()}.tmp`;
+    writeFileSync(temporaryPath(temporary), bytes, { flag: "wx" });
+    renameSync(temporaryPath(temporary), temporaryPath(path));
   }
 
   async putImmutable(bytes: Uint8Array, suffix: "json" | "json.gz"): Promise<string> {

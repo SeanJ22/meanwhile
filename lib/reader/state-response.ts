@@ -8,11 +8,34 @@ import { readStatePackage } from "../reader/state";
 import { requireRegistryState } from "../civic-data/state-scopes";
 import { withReaderRoute } from "../db/reader-route";
 import { stateMemberDirectories, zipMemberDirectories } from "../reader/member-directories";
-import { readerStateCacheHeaders } from "../reader/cache";
+import { readerStateCacheHeaders, withReaderZipTag } from "../reader/cache";
+import { readZipAnswer, type ZipAnswer } from "../reader/zip-answer";
 
-export async function readerStateResponse(request: Request) {
+/** A published ZIP answers from its file, with no database read and no wait on the saved keys. */
+export async function readerStateResponse(request: Request, published?: ZipAnswer | null) {
+  const zip = new URL(request.url).searchParams.get("zip");
+  const held = published !== undefined ? published : zip && /^\d{5}$/.test(zip) ? await readZipAnswer(zip) : null;
+  const answer = held ? publishedStateAnswer(request, held) : null;
+  if (answer) return answer;
+  // This path goes once every ZIP is published.
   await loadWebsiteSavedKeys();
   return withPlaceMapReads(() => stateResponse(request));
+}
+
+function publishedStateAnswer(request: Request, published: ZipAnswer): Response | null {
+  const input = new URL(request.url).searchParams.get("state") ?? published.place.states?.[0] ?? "";
+  let state: string;
+  try { state = requireRegistryState(input.replace(/^US-/i, "")); } catch { return null; }
+  const held = published.states[state];
+  return held ? stateJson(held.body, held.version, state, published.zip) : null;
+}
+
+function stateJson(body: unknown, version: string, state: string, zip: string | null) {
+  return Response.json(body, { headers: {
+    ...(zip ? withReaderZipTag(readerStateCacheHeaders(state), zip) : readerStateCacheHeaders(state)),
+    "Netlify-Vary": "query=state|zip",
+    "ETag": `"${version}:${zip ?? state}"`,
+  } });
 }
 
 async function stateResponse(request: Request) {
@@ -27,37 +50,40 @@ async function stateResponse(request: Request) {
   try { state = requireRegistryState(input.replace(/^US-/i, "")); }
   catch { return Response.json({ error: "A US state or territory is required" }, { status: 400 }); }
   try {
-    const divisionIds = indexed?.ids ?? [];
-    const value = await withReaderRoute("/api/reader/state", () => readStatePackage(state, divisionIds, zip ?? undefined, { earlyDistricts: true }));
-    const versions = value.districts.kind === "HELD" ? value.districts.value.scopes.map(scope => ({ ...scope, key: scope.version })) : [];
-    const selection = currentRepresentationSelection();
-    const selected = new Map((["congressional_district", "state_leg_upper", "state_leg_lower"] as const).map(type => [type, selectGeographyVersion(versions, type, selection, state)]));
-    const extraDivisions: Division[] = [...value.localDivisions ?? [], ...(value.districts.kind === "HELD" ? value.districts.value.containers.flatMap<Division>(container => {
-      const scope = selected.get(container.ref.type as "congressional_district" | "state_leg_upper" | "state_leg_lower");
-      const id = censusWorkDivision(container.ref);
-      if (!id || !scope?.sourceUrls?.[0] || !scope.observedAt || container.ref.version !== scope.key) return [];
-      return [{ ocdId: id, divisionType: container.ref.type === "congressional_district" ? "cd" : container.ref.type === "state_leg_upper" ? "sldu" : "sldl", tier: container.ref.type === "congressional_district" ? "national" : "state", state, label: container.ref.label, parentOcdId: id.slice(0, id.lastIndexOf("/")), lsad: null, funcstat: null, classfp: null, geoid: container.ref.geoid, canonicalOcdId: null, canonicalMatch: "none", canonicalGap: "UNDETERMINED", sourceDataset: "CENSUS_RELATIONSHIPS", provenance: { sourceUrl: scope.sourceUrls[0], sourceOrg: "U.S. Census Bureau", collectedAt: scope.observedAt, verifiedAt: null } }];
-    }) : [])];
-    const ownState = new RegExp(`/(?:state|territory|district):${state.toLowerCase()}(?:/|$)`);
-    // Only a ZIP's own places are sent; a state answer without a ZIP names no ZIP.
-    const own = indexed?.ids.filter(id => ownState.test(id)) ?? [];
-    const zipPlaces: Record<string, PlaceEntry> = zip && indexed ? { [zip]: { ...indexed, ids: own, partial: indexed.partial.filter(id => own.includes(id)) } } : {};
-    const ids = zip ? own
-      : [...new Set([...value.registry.registry.divisions.map(division => division.ocdId), ...extraDivisions.map(division => division.ocdId)])];
-    const divisionsById = new Map(value.registry.registry.divisions.map(division => [division.ocdId, division]));
-    const statewide = { ...value, registry: { ...value.registry, bodyRosters: [],
-      registry: { ...value.registry.registry, bodies: value.registry.registry.bodies.filter(body => body.ocdId && ["national", "state"].includes(divisionsById.get(body.ocdId)?.tier ?? "")) } } };
-    const summary = stateCoverage(statewide, ids, 0, 0, [], [], extraDivisions);
-    const coverage = { ...summary, governments: [], bodies: summary.bodies.filter(body => body.tier !== "local") };
-    return Response.json({ state, version: value.version, coverage, zipPlaces, boundaryUrl: value.boundaryUrl, directory: zip ? null : value.federal?.directory ?? null,
-      memberDirectories: zip ? zipMemberDirectories(value.people, value.memberOffices, value.federal,
-        [...coverage.seats.flatMap(seat => seat.representatives), ...coverage.senators, ...coverage.statewideExecutives])
-        : stateMemberDirectories(value.people, value.memberOffices), ...(zip ? { zip } : {}) }, { headers: {
-      ...readerStateCacheHeaders(state),
-      "Netlify-Vary": "query=state|zip",
-      "ETag": `"${value.version}:${zip ?? state}"`,
-    } });
+    const answer = await composeStateAnswer(state, zip, indexed);
+    return stateJson(answer.body, answer.version, state, zip);
   } catch {
     return Response.json({ error: "The state's information could not be loaded" }, { status: 503, headers: { "Cache-Control": "no-store" } });
   }
+}
+
+/** The state's finished answer for a ZIP, or for the state alone, with the version that names it. */
+export async function composeStateAnswer(state: string, zip: string | null, indexed: PlaceEntry | null): Promise<{ readonly body: Record<string, unknown>; readonly version: string }> {
+  const divisionIds = indexed?.ids ?? [];
+  const value = await withReaderRoute("/api/reader/state", () => readStatePackage(state, divisionIds, zip ?? undefined, { earlyDistricts: true }));
+  const versions = value.districts.kind === "HELD" ? value.districts.value.scopes.map(scope => ({ ...scope, key: scope.version })) : [];
+  const selection = currentRepresentationSelection();
+  const selected = new Map((["congressional_district", "state_leg_upper", "state_leg_lower"] as const).map(type => [type, selectGeographyVersion(versions, type, selection, state)]));
+  const extraDivisions: Division[] = [...value.localDivisions ?? [], ...(value.districts.kind === "HELD" ? value.districts.value.containers.flatMap<Division>(container => {
+    const scope = selected.get(container.ref.type as "congressional_district" | "state_leg_upper" | "state_leg_lower");
+    const id = censusWorkDivision(container.ref);
+    if (!id || !scope?.sourceUrls?.[0] || !scope.observedAt || container.ref.version !== scope.key) return [];
+    return [{ ocdId: id, divisionType: container.ref.type === "congressional_district" ? "cd" : container.ref.type === "state_leg_upper" ? "sldu" : "sldl", tier: container.ref.type === "congressional_district" ? "national" : "state", state, label: container.ref.label, parentOcdId: id.slice(0, id.lastIndexOf("/")), lsad: null, funcstat: null, classfp: null, geoid: container.ref.geoid, canonicalOcdId: null, canonicalMatch: "none", canonicalGap: "UNDETERMINED", sourceDataset: "CENSUS_RELATIONSHIPS", provenance: { sourceUrl: scope.sourceUrls[0], sourceOrg: "U.S. Census Bureau", collectedAt: scope.observedAt, verifiedAt: null } }];
+  }) : [])];
+  const ownState = new RegExp(`/(?:state|territory|district):${state.toLowerCase()}(?:/|$)`);
+  // Only a ZIP's own places are sent; a state answer without a ZIP names no ZIP.
+  const own = indexed?.ids.filter(id => ownState.test(id)) ?? [];
+  const zipPlaces: Record<string, PlaceEntry> = zip && indexed ? { [zip]: { ...indexed, ids: own, partial: indexed.partial.filter(id => own.includes(id)) } } : {};
+  const ids = zip ? own
+    : [...new Set([...value.registry.registry.divisions.map(division => division.ocdId), ...extraDivisions.map(division => division.ocdId)])];
+  const divisionsById = new Map(value.registry.registry.divisions.map(division => [division.ocdId, division]));
+  const statewide = { ...value, registry: { ...value.registry, bodyRosters: [],
+    registry: { ...value.registry.registry, bodies: value.registry.registry.bodies.filter(body => body.ocdId && ["national", "state"].includes(divisionsById.get(body.ocdId)?.tier ?? "")) } } };
+  const summary = stateCoverage(statewide, ids, 0, 0, [], [], extraDivisions);
+  const coverage = { ...summary, governments: [], bodies: summary.bodies.filter(body => body.tier !== "local") };
+  const body = { state, version: value.version, coverage, zipPlaces, boundaryUrl: value.boundaryUrl, directory: zip ? null : value.federal?.directory ?? null,
+    memberDirectories: zip ? zipMemberDirectories(value.people, value.memberOffices, value.federal,
+      [...coverage.seats.flatMap(seat => seat.representatives), ...coverage.senators, ...coverage.statewideExecutives])
+      : stateMemberDirectories(value.people, value.memberOffices), ...(zip ? { zip } : {}) };
+  return { body, version: value.version };
 }

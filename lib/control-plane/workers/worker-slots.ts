@@ -39,6 +39,8 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "legistar-outcomes-ingest.mts": 355,
   "legistar-members-worker.mts": 512,
   "slice-lane.mts": 192,
+  // SPN-01E8: reads a ZIP cold as the place-page rebuild does, one ZIP at a time; held at that measured peak until this lane is measured on production.
+  "zip-answers-lane.mts": 837,
   "parser-worker.mts": 512,
   // RH-01 measured complete native ACS peak: 3,922,288,640 bytes.
   "acs-population-promote.mts": 3928,

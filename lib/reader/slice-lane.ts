@@ -1,4 +1,4 @@
-import { processNeonBytes } from "../db/transfer-by-caller.ts";
+import { databaseBytesSpent, owedMsFor, untilEnd } from "./lane-pace.ts";
 import { readPassCursor, writePassCursor } from "../facts/db.ts";
 import type { Query } from "../facts/publish.ts";
 import type { WorkList } from "../core/work.ts";
@@ -33,15 +33,9 @@ export function slicesLane(run: (deadlineMs: number) => Promise<void>): Independ
 export interface SliceTurn { readonly claimed: number; readonly built: number; readonly written: number; readonly backfilled: number }
 const NOTHING: SliceTurn = { claimed: 0, built: 0, written: 0, backfilled: 0 };
 
-/** Everything the database meter has counted in this process, requests and responses of both databases: the lane owes the time exactly these bytes take. */
-const spent = (): number => processNeonBytes().reduce((sum, hour) => sum + hour.bytes.reader + hour.bytes["control-plane"] + (hour.sent?.reader.bytes ?? 0) + (hour.sent?.["control-plane"].bytes ?? 0), 0);
 /** When the allowance has room again, as a time; 5% over what the meter counts is owed, for the hour's edges and a go that runs past it. */
 const tab = { until: 0, loaded: false };
-export const owedMs = (bytes: number): number => Math.ceil(bytes * 1.05 / SLICE_BYTES_PER_HOUR * 3_600_000);
-
-/** Work that ignores the turn's end cannot hold the turn open past it. */
-const untilEnd = <T,>(end: AbortSignal | undefined, work: Promise<T>): Promise<T> => end ? Promise.race([work, new Promise<never>((_, reject) => {
-  if (end.aborted) reject(end.reason); else end.addEventListener("abort", () => reject(end.reason), { once: true }); })]) : work;
+export const owedMs = (bytes: number): number => owedMsFor(bytes, SLICE_BYTES_PER_HOUR);
 
 /** Builds the cards asked for, leaving those whose inputs, as the database fingerprints them, are those the held card was built from. Writes what differs, then purges once the cached answers of the places written (a board's: of every place it is filed on). */
 async function make(facts: Query, wanted: Map<string, Set<SliceCard>>, purge?: ReaderCachePurger): Promise<number> {
@@ -130,14 +124,14 @@ export async function runSliceLane(input: { readonly list: WorkList; readonly fa
   while (!input.stopRequested()) {
     const start = clock();
     if (start < tab.until) { await sleep(Math.min(tab.until - start, IDLE_MS)); continue; }
-    const before = spent();
+    const before = databaseBytesSpent();
     let turn: Awaited<ReturnType<typeof sliceTurn>> | undefined;
     try { turn = await sliceTurn({ list: input.list, facts: input.facts, turnEnd: input.turnEnd }); }
     catch (error) {
       // The rows it held come back when their lease runs out; the lane looks again after its own pause.
       if (!input.turnEnd?.aborted) input.log(`Slices: a look failed (${error instanceof Error ? error.message : String(error)}); the slices stay marked`);
     }
-    tab.until = start + owedMs(Math.max(0, spent() - before));
+    tab.until = start + owedMs(Math.max(0, databaseBytesSpent() - before));
     if (turn) {
       total.built += turn.built; total.written += turn.written; total.backfilled += turn.backfilled;
       if (turn.claimed || turn.backfilled) input.log(turn.backfilled ? `Slices: ${turn.backfilled} places given their first slices (${turn.written} written)` : `Slices: ${turn.claimed} marked slices rebuilt for ${turn.built} places (${turn.written} had changed)`);

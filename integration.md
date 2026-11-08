@@ -461,3 +461,6 @@ One line per batch folded into river.
 - 2026-11-08T12:27:36Z · river-phone-old-out · RP-02 · ready 7ec98ee676a4 · river 38024964cc23 · GitHub CI passed on release 192
 - 2026-11-08T12:27:36Z · runner-authority · RA-01 · ready 698aacbc9bd4 · river 38024964cc23 · GitHub CI passed on release 192
 - 2026-11-08T12:27:36Z · trim-192 · TR-05 · ready 76ec47c6efdb · river 38024964cc23 · GitHub CI passed on release 192
+- 2026-11-08T14:13:02Z · place-package-retire · PP-01 · ready 8cfcbbea235a · river ddfe674f2f57 · GitHub CI passed on release 193
+- 2026-11-08T14:13:02Z · river-one-sweep · RM-02 · ready 64912c26e269 · river ddfe674f2f57 · GitHub CI passed on release 193
+- 2026-11-08T14:13:02Z · state-votes · STATE-VOTES, CX-WRITES · ready 53cf2c08bf25 · river ddfe674f2f57 · GitHub CI passed on release 193

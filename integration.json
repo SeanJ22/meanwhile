@@ -5192,5 +5192,42 @@
     "release": 192,
     "ci": "pass",
     "at": "2026-11-08T12:27:36Z"
+  },
+  {
+    "lane": "place-package-retire",
+    "steps": [
+      "PP-01"
+    ],
+    "ready_sha": "8cfcbbea235a6ab849b2836e2f5a33672d4acf35",
+    "merge_sha": "25fb9231df4172a42b25cdd78c31359d648848e4",
+    "river_sha": "ddfe674f2f5723f889e3bee8db94e334cbb5df0b",
+    "release": 193,
+    "ci": "pass",
+    "at": "2026-11-08T14:13:02Z"
+  },
+  {
+    "lane": "river-one-sweep",
+    "steps": [
+      "RM-02"
+    ],
+    "ready_sha": "64912c26e2690553d55575a7ef816528b6a1e522",
+    "merge_sha": "72e668290c92f5e162e5fb21eb93550905f9193f",
+    "river_sha": "ddfe674f2f5723f889e3bee8db94e334cbb5df0b",
+    "release": 193,
+    "ci": "pass",
+    "at": "2026-11-08T14:13:02Z"
+  },
+  {
+    "lane": "state-votes",
+    "steps": [
+      "STATE-VOTES",
+      "CX-WRITES"
+    ],
+    "ready_sha": "53cf2c08bf2560da79fd91df802d92beef8bdd5b",
+    "merge_sha": "d50b28d94442e51eb499c32617de8132e1d8d096",
+    "river_sha": "ddfe674f2f5723f889e3bee8db94e334cbb5df0b",
+    "release": 193,
+    "ci": "pass",
+    "at": "2026-11-08T14:13:02Z"
   }
 ]

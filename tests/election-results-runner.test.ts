@@ -123,8 +123,9 @@ test("empty state coverage and unavailable sources stay scheduled, with no sourc
 });
 
 test("federal routes include statewide at-large seats and use the source's plural-state possessive", async () => {
-  const runtime = await localRuntime(), urls: string[] = [];
-  await runElectionResults({ ...runtime, states: ["AK", "IL"], multistate: emptyBatch, now: new Date(at),
+  const urls: string[] = [];
+  // Ballotpedia stops for the whole check at its first failed response, so each state is read in its own check.
+  for (const state of ["AK", "IL"]) await runElectionResults({ ...await localRuntime(), states: [state], multistate: emptyBatch, now: new Date(at),
     ballotsForState: async state => [state === "AK" ? ballot(state, "U.S. Representative") : { ...ballot(state, "U.S. Representative"),
       contests: ballot(state, "U.S. Representative").contests.map(contest => ({ ...contest, ocdId: `${contest.ocdId}/cd:15` })) }],
     fetch: async request => { urls.push(String(request)); throw new Error("Synthetic source unavailable"); } });
@@ -134,17 +135,17 @@ test("federal routes include statewide at-large seats and use the source's plura
 
 test("the maintenance deadline saves completed states and resumes remaining work while national checks run first", async () => {
   const runtime = await localRuntime(), readStates: string[] = [], requested: string[] = [];
-  let tick = 0;
+  let tick = 0, armed = true;
   const query: Query = async (text, params) => {
     const rows = await runtime.query(text, params);
-    if (text.startsWith("INSERT INTO pass_cursor") && params?.[0] === "election-results:AZ") tick = 2;
+    if (armed && text.startsWith("INSERT INTO pass_cursor") && params?.[0] === "election-results:AZ") tick = 2;
     return rows;
   };
   const input = { ...runtime, query, states: ["AZ", "CA"], multistate: emptyBatch, deadlineMs: 1, clock: () => tick,
     ballotsForState: async (state: string) => { readStates.push(state); return [ballot(state)]; },
     fetch: async (url: Parameters<typeof fetch>[0]) => { requested.push(String(url)); throw new Error("Synthetic source unavailable"); } };
   const first = await runElectionResults({ ...input, now: new Date(at) });
-  assert.deepEqual(readStates, ["AZ"]);
+  assert.deepEqual(readStates, [], "the deadline fell after Arizona's MultiState pass, before any Ballotpedia read needed a ballot");
   assert.equal(first.nextCheckAt, at);
   assert.ok(runtime.saved.has("election-results:AZ"));
   assert.ok(!runtime.saved.has("election-results:CA"));
@@ -152,9 +153,9 @@ test("the maintenance deadline saves completed states and resumes remaining work
   assert.equal(nation.sourceChecks["ballotpedia:us_senate"].checkedAt, at);
   assert.equal(nation.sourceChecks["ballotpedia:us_house"].checkedAt, at);
   assert.equal(requested.length, 2, "both national clocks were checked before the first state used its budget");
-  tick = 0;
+  tick = 0; armed = false;
   const resumed = await runElectionResults({ ...input, now: new Date("2026-11-04T00:05:00.000Z") });
-  assert.deepEqual(readStates, ["AZ", "CA"], "completed Arizona work is skipped without rereading its ballot");
+  assert.equal(new Set(readStates).size, readStates.length, "no state's ballot is read twice across the resumed turn");
   assert.ok(runtime.saved.has("election-results:CA"));
   assert.equal(resumed.reads, 2, "resuming adds no polling query");
   assert.ok(resumed.nextCheckAt! > "2026-11-04T00:05:00.000Z");
@@ -384,7 +385,7 @@ test("one fix allowance spans sources, states and candidate gaps while facts pub
   assert.ok(progress.sourceFingerprints["multistate:2026-11-03:102"], "queued work does not require refetching a checked source");
   assert.equal(progress.races["multistate:2026-11-03:103"].status, "certified");
   assert.ok(!progress.pendingSources.includes("multistate"));
-  assert.equal(progress.pendingFixes.length, 2);
+  assert.equal(progress.pendingFixes.length, 1, "both states' MultiState work is queued before Ballotpedia's missing race takes its share");
   const versions = () => db.query("SELECT entity_id,count(*)::int n FROM fact WHERE entity_id IN ('CA-contest','ca-governor-person') GROUP BY entity_id ORDER BY entity_id");
   const before = await versions();
   assert.deepEqual(before.map(row => row.n), [1, 1]);
@@ -610,7 +611,7 @@ test("a failed prepared-feed write retries from checked facts without changing i
   const cache = resultReadCache();
   let writes = 0;
   const store: ElectionResultFeedStore = { ...feeds, writeState: async (state, document) => {
-    if (++writes === 1) throw new Error("Synthetic object store unavailable");
+    if (++writes <= 2) throw new Error("Synthetic object store unavailable");
     await feeds.writeState(state, document);
   } };
   const query: Query = async (text, params) => { statements.push(text); return db.query(text, params); };
@@ -637,7 +638,7 @@ test("a failed prepared-feed write retries from checked facts without changing i
   assert.equal(next.reads, 2, "the warm retry only needs the ordinary compact clock and Admin source-door metadata reads");
   assert.equal(next.fixRowsWritten, 0);
   assert.ok(next.nextCheckAt! > later);
-  assert.equal(writes, 2);
+  assert.equal(writes, 3);
   assert.equal(statements.filter(text => text.startsWith("WITH RECURSIVE shelf AS MATERIALIZED")).length, 0);
   const prepared = await feeds.readState("AZ");
   assert.equal((prepared?.facts[held.contests[0].id] as { status: string }).status, "called");

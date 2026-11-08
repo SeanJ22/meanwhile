@@ -139,7 +139,8 @@ export function parseBallotpediaResults(html: string, race: BallotpediaRace, che
 
 export async function readBallotpediaResults(race: BallotpediaRace, checkedAt: string, fetcher: typeof fetch = fetch): Promise<ElectionResultBatch> {
   const response = await fetcher(race.url.replaceAll("'", "%27"), { headers: { Accept: "text/html" } });
-  if (!response.ok) throw new Error(`Ballotpedia HTTP ${response.status}: ${race.url}`);
+  // A 202 is Ballotpedia's challenge page, not results: it counts as blocked.
+  if (response.status !== 200) throw new Error(`Ballotpedia HTTP ${response.status}: ${race.url}`);
   return parseBallotpediaResults(await response.text(), race, checkedAt);
 }
 

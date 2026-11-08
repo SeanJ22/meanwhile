@@ -109,6 +109,9 @@ export async function runElectionResults(input: {
   if (!Number.isSafeInteger(maxFixRows) || maxFixRows < 1) throw new RangeError("maxFixRows must be a positive integer");
   let fixRowsWritten = 0;
   const now = input.now ?? new Date(), at = now.toISOString(), states = input.states ?? STATES;
+  // Time-limited source reads (a caller's own fetch is used as given); a timeout is that read's ordinary failure.
+  const limited = (ms: number): typeof fetch => (url, init) => fetch(url, { ...init, signal: AbortSignal.timeout(ms) });
+  const multistateFetch = input.fetch ?? limited(120_000), ballotpediaFetch = input.fetch ?? limited(20_000);
   const more = () => (input.clock ?? Date.now)() < (input.deadlineMs ?? Number.POSITIVE_INFINITY);
   const result: ResultCounts = { matched: 0, unmatched: 0, ambiguous: 0, published: 0, unchanged: 0 };
   if (!more()) return { ...result, reads: 0, nextCheckAt: at, fixRowsWritten, pendingFixRows: 0 };
@@ -260,7 +263,7 @@ export async function runElectionResults(input: {
     if (next > at) { due.push(next); continue; }
     try {
       const batch = input.congressSummaries?.find(batch => batch.summaries.some(summary => summary.chambers.some(chamber => chamber.name === office)))
-        ?? await readBallotpediaCongressSummary(office, at, input.fetch, office === "us_house" &&
+        ?? await readBallotpediaCongressSummary(office, at, ballotpediaFetch, office === "us_house" &&
           ((nation.federalRoutes?.filter(race => race.office === "us_house").length ?? 0) < 435 || doors.get("ballotpedia")?.readNow === true));
       if (batch.racePages) nation = { ...nation, federalRoutes: [...new Map([
         ...nation.federalRoutes ?? [], ...batch.racePages,
@@ -314,7 +317,10 @@ export async function runElectionResults(input: {
     await cache.checkpoint("election-results-reader", state, current);
     return { ...prior, readerPending, readerSlice: feed };
   };
-  for (const state of states) {
+  // Every state's MultiState results are published before any Ballotpedia request, so a slow Ballotpedia cannot keep them off the feeds.
+  let ballotpediaBlocked = false; // the first blocked or failed Ballotpedia response ends Ballotpedia for this whole check
+  const ballotsRead = new Map<string, readonly BallotSet[]>();
+  for (const phase of ["multistate", "ballotpedia"] as const) for (const state of states) {
     if (!more()) { unfinished = true; break; }
     let prior: StateProgress = progress.get(state) ?? empty();
     const ballotVersion = ballotVersions.get(state) ?? null;
@@ -327,8 +333,8 @@ export async function runElectionResults(input: {
       prior = pending(prior, "ballotpedia", true);
     }
     const sourceDue = (source: string) => { const next = sourceNext(prior, source); return next !== null && next <= at; };
-    if (!sourceDue("multistate") && !sourceDue("ballotpedia")) {
-      due.push(...["multistate", "ballotpedia"].flatMap(source => sourceNext(prior, source, false) ?? [])); continue;
+    if (!sourceDue(phase)) {
+      due.push(...(phase === "multistate" ? ["multistate"] : ["multistate", "ballotpedia"]).flatMap(source => sourceNext(prior, source, false) ?? [])); continue;
     }
     try {
       await withBatchedReaderInvalidation(async purge => {
@@ -336,7 +342,7 @@ export async function runElectionResults(input: {
       const acceptedFacts: Record<string, unknown> = {};
       const getBallots = async () => {
         if (ballots) return ballots;
-        if (input.ballotsForState) return ballots = await input.ballotsForState(state);
+        if (input.ballotsForState) { ballots = ballotsRead.get(state) ?? await input.ballotsForState(state); ballotsRead.set(state, ballots); return ballots; }
         const held = await getProjection(state);
         return ballots = held ? projectionBallots(held).map(ballot => withCandidateTickets(withCurrentCandidacies(ballot))) : [];
       };
@@ -401,7 +407,7 @@ export async function runElectionResults(input: {
         for (const key of Object.keys(result) as (keyof ResultCounts)[]) result[key] += changed.counts[key];
         return !changed.deferred;
       };
-      if (sourceDue("multistate")) {
+      if (phase === "multistate" && sourceDue("multistate")) {
         if (!more()) { prior = pending(prior, "multistate", true); unfinished = true; }
         else {
         try {
@@ -409,7 +415,7 @@ export async function runElectionResults(input: {
           if (!input.multistate && multistateText === undefined) {
             if (multistateFailure) throw multistateFailure;
             try {
-              firstState = await readMultiStateResults(at, input.fetch, state);
+              firstState = await readMultiStateResults(at, multistateFetch, state);
               multistateText = firstState.evidence.text;
             } catch (error) { multistateFailure = error; throw error; }
           }
@@ -422,8 +428,9 @@ export async function runElectionResults(input: {
         }
         }
       }
-      if (sourceDue("ballotpedia")) {
-        if (!more()) { prior = pending(prior, "ballotpedia", true); unfinished = true; }
+      if (phase === "ballotpedia" && sourceDue("ballotpedia")) {
+        if (ballotpediaBlocked) prior = checked(pending(prior, "ballotpedia", false), "ballotpedia", true);
+        else if (!more()) { prior = pending(prior, "ballotpedia", true); unfinished = true; }
         else {
         const visited = new Set<string>();
         let failed = false, deferred = false;
@@ -436,8 +443,8 @@ export async function runElectionResults(input: {
           const previous = prior.races[raceClockKey({ sourceId: "ballotpedia", sourceRaceId: ballotpediaRaceId(race.url), electionDate: race.electionDate ?? "2026-11-03" })];
           if (previous?.status === "certified" || previous && !doors.get("ballotpedia")?.readNow &&
             (nextElectionResultCheck(previous, doors.get("ballotpedia"), now) ?? "~") > at) continue;
-          try { if (!await publish(await readBallotpediaResults(race, at, input.fetch), "ballotpedia")) deferred = true; }
-          catch (error) { failed = true; await failure(state, race.url, String(error)); }
+          try { if (!await publish(await readBallotpediaResults(race, at, ballotpediaFetch), "ballotpedia")) deferred = true; }
+          catch (error) { failed = ballotpediaBlocked = true; await failure(state, race.url, String(error)); break; }
         }
         prior = checked(pending({ ...prior, federalRoutes: routes }, "ballotpedia", deferred), "ballotpedia", failed);
         unfinished ||= deferred;
@@ -455,7 +462,7 @@ export async function runElectionResults(input: {
       prior = await prepareFeed(state, prior, acceptedFacts);
       await saveProgress(state, prior);
       progress.set(state, prior);
-      due.push(...["multistate", "ballotpedia"].flatMap(source => sourceNext(prior, source, false) ?? []));
+      due.push(...(phase === "multistate" ? ["multistate"] : ["multistate", "ballotpedia"]).flatMap(source => sourceNext(prior, source, false) ?? []));
       }, input.purge);
     } catch (error) { await failure(state, `${PUBLIC_SITE_ORIGIN}/ballot`, String(error)); }
   }

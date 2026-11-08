@@ -14,7 +14,6 @@ export type ContestStatus = "counting" | "called" | "certified" | "runoff" | "un
 
 export interface ResultSeat {
   party: SeatParty;
-  flip: boolean;
 }
 
 export interface ResultCandidate {
@@ -32,8 +31,8 @@ export interface ResultContest {
   status: ContestStatus;
   /** Seats up (vote for N). */
   seats: number;
-  /** The party that gained the seat(s), and how many seats changed hands. */
-  flip: { to: ResultParty; seats: number } | null;
+  /** The party that gained the seat, when the source says the contest flipped. It does not say how many seats. */
+  flip: { to: ResultParty } | null;
   candidates: ResultCandidate[];
 }
 
@@ -41,6 +40,8 @@ export interface DistrictResult {
   ocdId: string;
   status: ContestStatus;
   seats: ResultSeat[];
+  /** The party that gained a seat here, when the source says a seat flipped. */
+  flipTo: ResultParty | null;
   candidates: ResultCandidate[];
 }
 
@@ -49,19 +50,15 @@ export function districtResult(contests: readonly ResultContest[]): DistrictResu
   const seats: ResultSeat[] = [];
   const candidates: ResultCandidate[] = [];
   let status: ContestStatus = contests[0].status;
+  let flipTo: ResultParty | null = null;
   for (const contest of contests) {
     const winners = contest.candidates.filter(candidate => candidate.result === "won");
-    let flips = contest.flip?.seats ?? 0;
-    for (let index = 0; index < contest.seats; index += 1) {
-      const winner = winners[index];
-      const flip = Boolean(winner && flips > 0 && winner.party === contest.flip?.to);
-      if (flip) flips -= 1;
-      seats.push({ party: winner?.party ?? "C", flip });
-    }
+    for (let index = 0; index < contest.seats; index += 1) seats.push({ party: winners[index]?.party ?? "C" });
+    flipTo ??= contest.flip?.to ?? null;
     candidates.push(...contest.candidates);
     if (contest.status === "counting" || contest.status === "pending" || contest.status === "runoff") status = contest.status;
   }
-  return { ocdId: contests[0].ocdId, status, seats, candidates };
+  return { ocdId: contests[0].ocdId, status, seats, flipTo, candidates };
 }
 
 export function resultsByDistrict(contests: readonly ResultContest[]): Record<string, DistrictResult> {
@@ -79,12 +76,8 @@ export function fillClass(result: DistrictResult): FillClass {
   return parties.size > 1 ? "split" : [...parties][0] as ResultParty;
 }
 
-/** The party that gained a seat in this district, when any seat changed hands. */
-export function flipParty(result: DistrictResult): ResultParty | null {
-  return result.seats.find(seat => seat.flip)?.party as ResultParty | undefined ?? null;
-}
-
-export const flipCount = (result: DistrictResult) => result.seats.filter(seat => seat.flip).length;
+/** The party that gained a seat in this district, when the source says a seat changed hands. */
+export const flipParty = (result: DistrictResult): ResultParty | null => result.flipTo;
 
 /** `ocd-division/country:us/state:az/sldu:17` → `{ state: "az", kind: "sldu", number: "17" }`. */
 export function parseDistrictOcd(ocdId: string): { state: string; kind: string; number: string } | null {
@@ -103,7 +96,7 @@ export function houseFlipsByState(results: Readonly<Record<string, DistrictResul
     const party = flipParty(result), parsed = parseDistrictOcd(result.ocdId);
     if (!party || parsed?.kind !== "cd") continue;
     const row = byState[parsed.state] ??= { count: 0, party };
-    row.count += flipCount(result);
+    row.count += 1;
   }
   return byState;
 }
@@ -127,8 +120,7 @@ const drawn = (contest: Contest) => parseDistrictOcd(contest.ocdId) !== null
 
 /**
  * Contests that carry a filed result, read from the ballot's `result` fields. A contest without one is simply absent,
- * so its district reads as "no results yet". The source files how many seats flipped only as a yes or no, so the seats
- * counted as flipped are the gaining party's winners who were not already holding a seat there.
+ * so its district reads as "no results yet". The source says that a contest flipped and to whom, never how many seats.
  */
 export function resultContests(ballot: Pick<BallotSet, "contests" | "candidacies">): ResultContest[] {
   return ballot.contests.flatMap(contest => {
@@ -142,8 +134,7 @@ export function resultContests(ballot: Pick<BallotSet, "contests" | "candidacies
       votes: row.result?.votes ?? null,
     }));
     const gained = filed.flipped && filed.gainedByParty ? partyOf(filed.gainedByParty) : null;
-    const newSeats = candidates.filter(candidate => candidate.result === "won" && candidate.party === gained && !candidate.incumbent).length;
     return [{ ocdId: contest.ocdId, status: filed.status, seats: Math.max(1, filed.seatsToFill ?? contest.voteFor ?? 1),
-      flip: gained ? { to: gained, seats: Math.max(1, newSeats) } : null, candidates }];
+      flip: gained ? { to: gained } : null, candidates }];
   });
 }

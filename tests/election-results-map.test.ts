@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
-  districtTitle, fillClass, flipCount, flipParty, houseFlipsByState, parseDistrictOcd, resultContests, resultsByDistrict,
+  districtTitle, fillClass, flipParty, houseFlipsByState, parseDistrictOcd, resultContests, resultsByDistrict,
   type ContestStatus, type ResultContest, type ResultParty,
 } from "../lib/map/results.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
@@ -59,12 +59,10 @@ test("a seat with one member of each party draws as split", () => {
   assert.equal(split.seats.length, 2);
 });
 
-test("flips follow the contest's flipped field, toward the gaining party, counting only seats that were not already held", () => {
-  const four = results[az("sldl", 4)];
-  assert.equal(flipCount(four), 2);
-  assert.equal(flipParty(four), "D");
-  assert.equal(flipCount(results[az("sldu", 2)]), 1);
-  assert.equal(flipCount(results[az("sldu", 1)]), 0);
+test("a flip carries the gaining party and no seat count, because the source states none", () => {
+  assert.equal(flipParty(results[az("sldl", 4)]), "D");
+  assert.equal(flipParty(results[az("sldu", 2)]), "D");
+  assert.equal(flipParty(results[az("sldu", 1)]), null);
   assert.equal(flipParty(results[az("sldl", 1)]), null);
 });
 
@@ -78,7 +76,7 @@ test("titles and ids", () => {
 
 test("phone House view counts flipped seats by state", () => {
   const cd = (state: string, n: number, flip: boolean, to: ResultParty = "D"): ResultContest => ({
-    ocdId: `ocd-division/country:us/state:${state}/cd:${n}`, status: "called", seats: 1, flip: flip ? { to, seats: 1 } : null,
+    ocdId: `ocd-division/country:us/state:${state}/cd:${n}`, status: "called", seats: 1, flip: flip ? { to } : null,
     candidates: [{ name: "A", party: to, incumbent: false, result: "won", votes: 1 }],
   });
   const byState = houseFlipsByState(resultsByDistrict([cd("oh", 7, true), cd("oh", 10, true), cd("oh", 1, false), cd("pa", 1, true, "R")]));
@@ -139,7 +137,7 @@ test("the national House view draws every state's districts: no state filter", (
 });
 
 test("state shapes draw from the state source, and flip badges are not drawn on districts there", () => {
-  const states = resultsByDistrict([{ ocdId: "ocd-division/country:us/state:tx", status: "called", seats: 1, flip: { to: "D", seats: 1 },
+  const states = resultsByDistrict([{ ocdId: "ocd-division/country:us/state:tx", status: "called", seats: 1, flip: { to: "D" },
     candidates: [{ name: "A", party: "D", incumbent: false, result: "won", votes: 1 }] }]);
   const layers = resultLayers({ kind: "states" }, states, { theme: "light", yours: [] });
   for (const layer of layers) assert.equal((layer as { source: string }).source, RESULTS_STATES_SOURCE);
@@ -200,10 +198,11 @@ test("the map's district request is shared so the one map loads boundaries only 
 import { inRequest, latestResultBallot, mapResults, parseResultsRequest } from "../lib/map/results-read.ts";
 
 test("requests parse to one state, the Senate, or the House; anything else is refused", () => {
-  assert.deepEqual(parseResultsRequest(new URLSearchParams("scope=state&state=az")), { scope: "state", state: "AZ" });
-  assert.deepEqual(parseResultsRequest(new URLSearchParams("scope=us-senate")), { scope: "us-senate" });
-  assert.deepEqual(parseResultsRequest(new URLSearchParams("scope=us-house")), { scope: "us-house" });
-  for (const bad of ["scope=state", "scope=state&state=arizona", "scope=county", ""]) assert.equal(parseResultsRequest(new URLSearchParams(bad)), null);
+  assert.deepEqual(parseResultsRequest({ scope: "state", state: "az" }), { scope: "state", state: "AZ" });
+  assert.deepEqual(parseResultsRequest({ scope: "us-senate", state: null }), { scope: "us-senate" });
+  assert.deepEqual(parseResultsRequest({ scope: "us-house", state: null }), { scope: "us-house" });
+  for (const bad of [{ scope: "state", state: null }, { scope: "state", state: "arizona" }, { scope: "county", state: null }, { scope: null, state: null }])
+    assert.equal(parseResultsRequest(bad), null);
 });
 
 test("a state request returns only that state's districts; Senate returns states; House returns districts only", async () => {
@@ -254,7 +253,7 @@ test("a two-seat district card lists both winners, the incumbent who lost, and a
   const card = districtCard(sldl(4), district, true);
   assert.equal(card.title, "State House, District 4");
   assert.equal(card.meta, "Your district · Top 2 win");
-  assert.deepEqual(card.flip, { party: "D", label: "2 seats flipped" });
+  assert.deepEqual(card.flip, { party: "D", label: "Flipped" });
   assert.deepEqual(card.rows.filter(r => r.note === "Won").map(r => r.name).sort(), ["Caputi Test", "Gresham Test"]);
   assert.deepEqual(card.rows.filter(r => r.note === "Incumbent · lost").map(r => r.name).sort(), ["Carter Test", "Gress Test"]);
 });

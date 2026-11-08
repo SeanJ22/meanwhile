@@ -1,4 +1,4 @@
-import { districtTitle, flipCount, flipParty, type DistrictResult, type ResultParty, type SeatParty } from "./results.ts";
+import { districtTitle, flipParty, type DistrictResult, type ResultParty, type SeatParty } from "./results.ts";
 
 export interface CardRow { name: string; party: SeatParty; note: string }
 export interface CardModel {
@@ -25,9 +25,8 @@ function rowsFor(result: DistrictResult): CardRow[] {
 }
 
 function flipPill(result: DistrictResult) {
-  const party = flipParty(result), count = flipCount(result);
-  if (!party) return null;
-  return { party, label: count > 1 ? `${count} seats flipped` : result.seats.length > 1 ? "1 seat flipped" : "Flipped" };
+  const party = flipParty(result);
+  return party ? { party, label: "Flipped" } : null;
 }
 
 /** A legislative or U.S. House district's card. */

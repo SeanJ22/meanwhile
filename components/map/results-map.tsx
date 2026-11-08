@@ -113,7 +113,7 @@ export default function ResultsMap({ theme, phone, yours, zip, scorecard }: Resu
     if (!results) return {};
     if (!statesFirst) return results;
     return Object.fromEntries(Object.entries(flips).map(([abbr, { party }]) => [stateOcd(abbr),
-      { ocdId: stateOcd(abbr), status: "called" as const, seats: [{ party, flip: false }], candidates: [] }]));
+      { ocdId: stateOcd(abbr), status: "called" as const, seats: [{ party }], flipTo: null, candidates: [] }]));
   }, [results, statesFirst, flips]);
 
   const stateName = useCallback((abbr: string) => outlines?.features.find(f => stateAbbrFromOcdId(f.properties.ocdId) === abbr)?.properties.name ?? abbr, [outlines]);
@@ -126,7 +126,7 @@ export default function ResultsMap({ theme, phone, yours, zip, scorecard }: Resu
     const badges = surface.kind === "states" && outlines
       ? stateBadgePoints(outlines.features, statesFirst
         ? Object.fromEntries(Object.entries(flips).map(([abbr, { party, count }]) => [stateOcd(abbr), { party, count }]))
-        : Object.fromEntries(Object.values(drawn).flatMap(result => { const seat = result.seats.find(s => s.flip); return seat ? [[result.ocdId, { party: seat.party as "D" | "R" | "O" }]] : []; })))
+        : Object.fromEntries(Object.values(drawn).flatMap(result => result.flipTo ? [[result.ocdId, { party: result.flipTo }]] : [])))
       : null;
     return { layers: [...base, ...(badges ? stateBadgeLayers(statesFirst) : []), ...(county && surface.kind === "districts" ? countyOutlineLayers(county.ocdId, theme) : [])], badges };
   }, [surface, drawn, theme, yoursOnSurface, outlines, statesFirst, flips, county]);

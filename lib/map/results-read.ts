@@ -9,10 +9,10 @@ export type ResultsRequest =
   | { scope: "us-senate" }
   | { scope: "us-house" };
 
-export function parseResultsRequest(params: URLSearchParams): ResultsRequest | null {
-  const scope = params.get("scope"), state = params.get("state")?.toUpperCase() ?? "";
-  if (scope === "state") return /^[A-Z]{2}$/.test(state) ? { scope, state } : null;
-  return scope === "us-senate" || scope === "us-house" ? { scope } : null;
+export function parseResultsRequest(params: { scope: string | null; state: string | null }): ResultsRequest | null {
+  const state = params.state?.toUpperCase() ?? "";
+  if (params.scope === "state") return /^[A-Z]{2}$/.test(state) ? { scope: "state", state } : null;
+  return params.scope === "us-senate" || params.scope === "us-house" ? { scope: params.scope } : null;
 }
 
 /** The election that carries filed results: a state with a primary and a general on file shows the latest one that has any. */

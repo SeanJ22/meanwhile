@@ -464,3 +464,9 @@ One line per batch folded into river.
 - 2026-11-08T14:13:02Z · place-package-retire · PP-01 · ready 8cfcbbea235a · river ddfe674f2f57 · GitHub CI passed on release 193
 - 2026-11-08T14:13:02Z · river-one-sweep · RM-02 · ready 64912c26e269 · river ddfe674f2f57 · GitHub CI passed on release 193
 - 2026-11-08T14:13:02Z · state-votes · STATE-VOTES, CX-WRITES · ready 53cf2c08bf25 · river ddfe674f2f57 · GitHub CI passed on release 193
+- 2026-11-08T19:21:33Z · census-deadline · RC-X3, RS-09, CN-02, RS-10 · ready df2eb547308e · river df60bf774fd5 · GitHub CI passed on release 194
+- 2026-11-08T19:21:33Z · lease-orphans · RC-X3, RS-09, RS-10 · ready 067a4c459acd · river df60bf774fd5 · GitHub CI passed on release 194
+- 2026-11-08T19:21:33Z · planning-settle · RC-X3, RS-09 · ready 8e240d3ccd63 · river df60bf774fd5 · GitHub CI passed on release 194
+- 2026-11-08T19:21:33Z · research-cycle-hang · RC-X3 · ready e9fb0e7addd8 · river df60bf774fd5 · GitHub CI passed on release 194
+- 2026-11-08T19:21:33Z · trim-194 · TR-06 · ready f42687b0342f · river df60bf774fd5 · GitHub CI passed on release 194
+- 2026-11-08T19:21:33Z · trim-195 · TR-07 · ready 1159b34cf1d9 · river df60bf774fd5 · GitHub CI passed on release 194

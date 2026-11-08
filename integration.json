@@ -5229,5 +5229,83 @@
     "release": 193,
     "ci": "pass",
     "at": "2026-11-08T14:13:02Z"
+  },
+  {
+    "lane": "census-deadline",
+    "steps": [
+      "RC-X3",
+      "RS-09",
+      "CN-02",
+      "RS-10"
+    ],
+    "ready_sha": "df2eb547308eb73bbe1a7a9d152340b3a2e37d1d",
+    "merge_sha": "e727436d551f3a28b995a13880220ebd6658316e",
+    "river_sha": "df60bf774fd5c1e5bf1f3d6e61b2dcca90f23719",
+    "release": 194,
+    "ci": "pass",
+    "at": "2026-11-08T19:21:33Z"
+  },
+  {
+    "lane": "lease-orphans",
+    "steps": [
+      "RC-X3",
+      "RS-09",
+      "RS-10"
+    ],
+    "ready_sha": "067a4c459acde76c95bc71be25b46d5d63f38137",
+    "merge_sha": "e727436d551f3a28b995a13880220ebd6658316e",
+    "river_sha": "df60bf774fd5c1e5bf1f3d6e61b2dcca90f23719",
+    "release": 194,
+    "ci": "pass",
+    "at": "2026-11-08T19:21:33Z"
+  },
+  {
+    "lane": "planning-settle",
+    "steps": [
+      "RC-X3",
+      "RS-09"
+    ],
+    "ready_sha": "8e240d3ccd633f6b2cd1bef86422670d1b852c87",
+    "merge_sha": "e727436d551f3a28b995a13880220ebd6658316e",
+    "river_sha": "df60bf774fd5c1e5bf1f3d6e61b2dcca90f23719",
+    "release": 194,
+    "ci": "pass",
+    "at": "2026-11-08T19:21:33Z"
+  },
+  {
+    "lane": "research-cycle-hang",
+    "steps": [
+      "RC-X3"
+    ],
+    "ready_sha": "e9fb0e7addd858c067de52d7b7ea1ff17a986032",
+    "merge_sha": "58c38a03e9977c2df277b686b22315e7a7283853",
+    "river_sha": "df60bf774fd5c1e5bf1f3d6e61b2dcca90f23719",
+    "release": 194,
+    "ci": "pass",
+    "at": "2026-11-08T19:21:33Z"
+  },
+  {
+    "lane": "trim-194",
+    "steps": [
+      "TR-06"
+    ],
+    "ready_sha": "f42687b0342f13eab74431cda77eb7db1dbd961e",
+    "merge_sha": "c38d37abab12e9a3728b1be94f11970859235f8c",
+    "river_sha": "df60bf774fd5c1e5bf1f3d6e61b2dcca90f23719",
+    "release": 194,
+    "ci": "pass",
+    "at": "2026-11-08T19:21:33Z"
+  },
+  {
+    "lane": "trim-195",
+    "steps": [
+      "TR-07"
+    ],
+    "ready_sha": "1159b34cf1d99b51763315677a215ecb49316404",
+    "merge_sha": "8bb1a2ae3a7b2401d7c5675f354be7d1693e20b1",
+    "river_sha": "df60bf774fd5c1e5bf1f3d6e61b2dcca90f23719",
+    "release": 194,
+    "ci": "pass",
+    "at": "2026-11-08T19:21:33Z"
   }
 ]

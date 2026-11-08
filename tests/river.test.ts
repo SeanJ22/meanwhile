@@ -18,6 +18,7 @@ import { dirname, join } from "node:path";
 import test from "node:test";
 
 import {
+  APPROVED_GROWTH,
   DEVICE_VISITS,
   FULL_CI_LABEL,
   STALE_LOCK_MS,
@@ -26,6 +27,7 @@ import {
   applyConditions,
   beforeRecord,
   blameLanes,
+  checkGrowth,
   countsAsCode,
   decideCi,
   decideLock,
@@ -96,6 +98,7 @@ test("writing fields replaces them in place, adds new ones to the block and keep
 });
 
 test("plan step ids from R, platform and source lanes count as steps", () => {
+  assert.deepEqual(stepIds("READY: SPN-01PZ"), ["SPN-01PZ"]);
   assert.deepEqual(stepIds("READY: R2"), ["R2"]);
   assert.deepEqual(stepIds("READY: R2B"), ["R2B"]);
   assert.deepEqual(stepIds("READY: R0"), ["R0"]);
@@ -324,6 +327,15 @@ test("lines of code: tracked source, styles and SQL, counted as wc -l counts new
   } finally {
     rmSync(repo, { recursive: true, force: true });
   }
+});
+
+test("a release may grow the code only by what Sean approved for a step that is folded", () => {
+  const { lines } = APPROVED_GROWTH["SPN-01PZ"];
+  const grow = (by: number, steps: string[]) => () => checkGrowth({ before: 1000, after: 1000 + by, steps });
+  assert.equal(checkGrowth({ before: 1000, after: 990, steps: [] }), null, "smaller needs no approval");
+  assert.match(checkGrowth({ before: 1000, after: 1000 + lines, steps: ["SPN-01PZ"] })!, /SPN-01PZ.*approved by Sean, 2026-11-08/, "growth within the approved lines passes and says so");
+  assert.throws(grow(lines + 1, ["SPN-01PZ"]), /\(\+\d+\).*do not cover it/, "growth beyond the approved lines is refused");
+  assert.throws(grow(1, ["DB-09"]), /keeps the code the same size or smaller$/, "growth with the step not folded is refused");
 });
 
 test("ZIP sampling: one random ZIP in each of the 50 states, from the ZIP index", () => {

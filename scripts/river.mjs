@@ -99,7 +99,7 @@ const NEXT = "river-next";
 const MIGRATIONS_DIR = "lib/db/migrations";
 const JOURNAL = `${MIGRATIONS_DIR}/meta/_journal.json`;
 const OBSERVE_WORKFLOW = "post-deploy-integrity.yml";
-const STEP_ID = /\b(?:R\d-[A-Z]+(?:-[A-Z]+)*|[A-Z]{2,4}-[A-Z]?\d{1,3}|[A-Z]{2,}-[A-Z]{2,}|R\d[A-Z]?)\b/g;
+const STEP_ID = /\b(?:R\d-[A-Z]+(?:-[A-Z]+)*|[A-Z]{2,4}-\d{2}[A-Z][A-Z0-9]*|[A-Z]{2,4}-[A-Z]?\d{1,3}|[A-Z]{2,}-[A-Z]{2,}|R\d[A-Z]?)\b/g;
 
 /**
  * The adapter implementation path. An adapter stream that reaches outside it is
@@ -466,6 +466,21 @@ export function planMigrationNumbers({ added, journal, baseCount }) {
 /** Lines of code count these tracked files: source, styles and SQL, not declarations, minified, installed, built or vendored. */
 export const countsAsCode = (path) => /\.(?:[cm]?[jt]s|[jt]sx|css|sql)$/.test(path)
   && !/\.d\.ts$|\.min\.|(?:^|\/)node_modules\/|^\.next\/|^public\/vendor\//.test(path);
+
+/** One-time growth Sean approved for a step: while that step is folded, a release may grow the code by up to its lines. The next phase deletes the entry. */
+export const APPROVED_GROWTH = Object.freeze({ "SPN-01PZ": Object.freeze({ lines: 2700, approved: "Sean, 2026-11-08" }) });
+
+/** Refuses growth beyond what the folded steps were approved for; returns the sentence to print when approved growth was used, else null. */
+export function checkGrowth({ before, after, steps, head = "", approved = APPROVED_GROWTH }) {
+  const grown = after - before;
+  if (grown <= 0) return null;
+  const named = [...new Set(steps)].filter((step) => Object.hasOwn(approved, step));
+  const allowed = named.reduce((sum, step) => sum + approved[step].lines, 0);
+  if (grown > allowed) {
+    throw new Refusal(`river-next ${head} grows the code from ${before} to ${after} lines (+${grown}); a release keeps the code the same size or smaller${allowed ? ` (the approved ${allowed} lines for ${named.join(", ")} do not cover it)` : ""}`);
+  }
+  return `growth of +${grown} lines allowed: ${named.map((step) => `${step}, up to ${approved[step].lines} lines, approved by ${approved[step].approved}`).join("; ")}`;
+}
 
 /** Newlines in every counted file at `ref`, as `wc -l` counts them. */
 export function linesOfCode(ref, cwd = ROOT) {
@@ -944,9 +959,8 @@ function quickCheck({ commands = true } = {}) {
   }
   // The one release number known before ship: the code gets smaller or stays the same.
   const lines = { before: linesOfCode(folded.base_river_sha), after: linesOfCode(head) };
-  if (lines.after > lines.before) {
-    throw new Refusal(`river-next ${short(head)} grows the code from ${lines.before} to ${lines.after} lines (+${lines.after - lines.before}); a release keeps the code the same size or smaller`);
-  }
+  const allowance = checkGrowth({ ...lines, steps: folded.lanes.flatMap((lane) => lane.steps ?? []), head: short(head) });
+  if (allowance) console.log(`river check: ${allowance}`);
   if (commands) {
     const [command, prefix] = whichPnpm() ? ["pnpm", []] : ["corepack", ["pnpm"]];
     // A stale .next feeds tsc route types that may no longer exist, and a warm

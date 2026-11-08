@@ -6,7 +6,7 @@
  */
 
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
@@ -14,6 +14,7 @@ import test from "node:test";
 import { type MethodKnowledge } from "../lib/method/knowledge.ts";
 import { projectMethodFor } from "../lib/method/projection.ts";
 import { METHOD_FIXTURE_PATH } from "./method-store-fixture.ts";
+import { walkFiles } from "./helpers/walk-files.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const AZ = { state: "az", governmentType: "county" };
@@ -48,14 +49,8 @@ test("outcome NOTES never reach a worker — an observation inherits as a tuple"
   }
 });
 
-function sourceFiles(dir: string, out: string[] = []): string[] {
-  for (const entry of readdirSync(dir)) {
-    if (entry === "node_modules" || entry === ".next" || entry.startsWith(".")) continue;
-    const full = join(dir, entry);
-    if (statSync(full).isDirectory()) sourceFiles(full, out);
-    else if (/\.(ts|tsx|mts|mjs|js)$/.test(entry)) out.push(full);
-  }
-  return out;
+function sourceFiles(dir: string): string[] {
+  return walkFiles(dir, (n) => /\.(ts|tsx|mts|mjs|js)$/.test(n), (n) => n === "node_modules" || n === ".next" || n.startsWith("."));
 }
 
 test("the raw applicability primitive has no consumers outside the method layer", () => {

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
@@ -11,17 +11,13 @@ import {
   accountedNormalize,
 } from "../lib/sources/normalize-account.ts";
 import type { Meeting, ReportingMeetingSource } from "../lib/sources/types.ts";
+import { walkFiles } from "./helpers/walk-files.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SOURCES = join(ROOT, "lib", "sources");
 
-function walk(dir: string, out: string[] = []): string[] {
-  for (const entry of readdirSync(dir)) {
-    const full = join(dir, entry);
-    if (statSync(full).isDirectory()) walk(full, out);
-    else if (entry.endsWith(".ts")) out.push(full);
-  }
-  return out;
+function walk(dir: string): string[] {
+  return walkFiles(dir, (n) => n.endsWith(".ts"));
 }
 
 const ZERO = {

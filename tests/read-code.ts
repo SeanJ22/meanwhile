@@ -1,6 +1,7 @@
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { walkFiles } from "./helpers/walk-files.ts";
 
 /** A module's source with comments stripped, so guards measure code rather than prose about it. */
 export function codeOf(...parts: string[]): string {
@@ -20,14 +21,5 @@ export function tsFilesUnder(...parts: string[]): string[] {
 
 /** Every file under a directory relative to `ROOT` whose name ends in one of `extensions`. */
 export function sourceFilesUnder(extensions: string[], ...parts: string[]): string[] {
-  const walk = (dir: string): string[] => {
-    const out: string[] = [];
-    for (const name of readdirSync(dir)) {
-      const path = join(dir, name);
-      if (statSync(path).isDirectory()) out.push(...walk(path));
-      else if (extensions.some((ext) => name.endsWith(ext))) out.push(path);
-    }
-    return out;
-  };
-  return walk(join(ROOT, ...parts));
+  return walkFiles(join(ROOT, ...parts), (name) => extensions.some((ext) => name.endsWith(ext)));
 }

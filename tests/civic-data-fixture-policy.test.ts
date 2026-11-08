@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
@@ -9,6 +9,7 @@ import {
   mayUseTestFixture,
   type CivicDataReadResult,
 } from "../lib/civic-data/read-model.ts";
+import { walkFiles } from "./helpers/walk-files.ts";
 
 const metadata = {
   recordClass: "VOTING_SITE" as const,
@@ -54,10 +55,7 @@ test("tracked fixture seeding requires a test environment and a non-error author
 });
 
 function sourceFiles(directory: string): string[] {
-  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-    const path = join(directory, entry.name);
-    return entry.isDirectory() ? sourceFiles(path) : /\.(?:ts|tsx|mts)$/.test(entry.name) ? [path] : [];
-  });
+  return walkFiles(directory, (n) => /\.(?:ts|tsx|mts)$/.test(n));
 }
 
 test("runtime Readers cannot improvise a NODE_TEST_CONTEXT fixture gate", () => {

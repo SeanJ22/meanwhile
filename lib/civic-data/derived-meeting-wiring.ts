@@ -1,3 +1,4 @@
+import { derivedRequestedUrl } from "./derived-url.ts";
 import { meetingRouteIdentity,meetingSelectorIdentity } from "./meeting-body-crosswalk.ts";
 import { createHash } from "node:crypto";
 
@@ -12,7 +13,7 @@ import {
 } from "./derived-authority.ts";
 import { readPromotedCivicData, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "./read-model.ts";
 import { DATA_DOOR_KINDS, DOOR_KIND_SPECS, dataDoorConfig, isDataDoorKind, type DataDoorKind } from "./derived-door-kinds.ts";
-import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE, derivedRequestedUrl } from "./derived-door.ts";
+import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE } from "./derived-door.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "./types.ts";
 
 export type DerivedWiringKind = "ICAL" | "OFFICIAL_PAGE_EVENTS" | "DILIGENT" | DataDoorKind;

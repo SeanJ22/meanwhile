@@ -1,10 +1,11 @@
+import { derivedRequestedUrl } from "./derived-url.ts";
 import { createHash } from "node:crypto";
 
 import { canonicalCivicDataJson } from "./changes.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import { consumeStatePublicationRecord } from "./state-publication.ts";
 import { derivedRetrieval, type DerivedInputRef } from "./derived-authority.ts";
-import { derivedRequestedUrl } from "./derived-door.ts";
+
 import {
   derivedCampaignSitesContractId,
   DERIVED_CAMPAIGN_SITES_RECORD_CLASS,

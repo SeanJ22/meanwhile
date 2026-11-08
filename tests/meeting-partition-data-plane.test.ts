@@ -1,3 +1,4 @@
+import { readMeetingPartitionProjection } from "../lib/meetings/snapshot-read.ts";
 import { preloadCanonicalMeetingDependencies } from "../lib/meetings/ingest-dependencies.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
@@ -5,7 +6,7 @@ import test, { afterEach, beforeEach } from "node:test";
 import { installFactReader } from "../lib/facts/db.ts";
 
 import { MEETING_PARTITION_CONTRACTS, LEGACY_MEETINGS_AGGREGATE_SCOPE } from "../lib/civic-data/meeting-partitions.ts";
-import { readMeetingPartitionProjection } from "../lib/meetings/snapshot.ts";
+
 import type { AgendaDocument } from "../lib/meetings/agenda-documents.ts";
 import { getMeetingSource } from "../lib/meetings/registry.ts";
 import { routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runner.ts";

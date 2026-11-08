@@ -1,3 +1,4 @@
+import { getFederalOfficeholderSet } from "../officials/federal-directory-held.ts";
 import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { measureRecordsForBallot } from "../ballot/measure-records.ts";
 import { divisionIdsForZipArea } from "../ballot/zip-divisions.ts";
@@ -15,7 +16,7 @@ import { personIdentityKeys, statePeopleScopeForId } from "../officials/people-i
 import type { SeatHolder } from "../officials/lookup.ts";
 import { holdersFor, indexByDivision, indexByOfficeholderId } from "../officials/lookup.ts";
 import { normalizeName } from "../routing/exact-name.ts";
-import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
+
 import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { membersOfBody } from "../registry/body-membership.ts";

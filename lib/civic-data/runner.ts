@@ -1,3 +1,4 @@
+import { derivedRequestedUrl } from "./derived-url.ts";
 import { failureRetryMs } from "./failure-backoff.ts";
 import { factRefreshBounds, timeSensitiveSource } from "./source-change-cadence.ts";
 import { WORKER_PUBLICATION_TASK_IDS } from "./worker-reader-contracts.ts";
@@ -12,7 +13,7 @@ import {
 import { MEETING_PARTITION_CONTRACTS, onMeetingPartitionsRefreshed, sittingWindowSourceIds } from "./meeting-partitions.ts";
 import { sittingWindowHotByConclusion, sittingWindowObligation } from "./sitting-window-admission.ts";
 import { SOURCE_AUTHORITIES, authorityFor, sourceAuthority } from "./source-authority.ts";
-import { derivedRequestedUrl } from "./derived-door.ts";
+
 import {
   parseRoutineRunnerReceipt,
   successfulRoutineRunnerReceiptIssue,

@@ -1,3 +1,4 @@
+import { readRegistryRuntimeProjection } from "../../lib/registry/runtime-read.ts";
 import { gunzipSync } from "node:zlib";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -7,7 +8,7 @@ import type { CivicDataReadResult, PromotedEdgeEntry } from "../../lib/civic-dat
 import type { CandidateVersionRecord, PromotedProjection, RoutineRecordClass } from "../../lib/civic-data/types.ts";
 import { MemoryRoutineDataStore } from "../../lib/civic-data/store.ts";
 import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../../lib/registry/runtime-edge.ts";
-import { readRegistryRuntimeProjection } from "../../lib/registry/runtime-read-model.ts";
+
 import type { RegistryRuntimeReadModel } from "../../lib/registry/runtime-data-plane.ts";
 import {
   FEDERAL_DIRECTORY_SOURCE_ID,

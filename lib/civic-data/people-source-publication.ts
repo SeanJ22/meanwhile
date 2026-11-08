@@ -1,3 +1,4 @@
+import { derivedRequestedUrl } from "./derived-url.ts";
 import { createHash } from "node:crypto";
 import type { Officeholder, OfficeholderSet } from "../officials/types.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
@@ -10,7 +11,7 @@ import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { peopleSourceRecordClass, peopleSourceScope } from "../officials/people-sources.ts";
 import { mergePeopleSets } from "../officials/merge-people.ts";
 import { derivedRetrieval, type DerivedInputRef } from "./derived-authority.ts";
-import { derivedRequestedUrl } from "./derived-door.ts";
+
 import { statewidePageText, verifyStatewideOfficialPage } from "../sources/statewide/parse.ts";
 import { verifiedWhiteHouseOfficial, ADMINISTRATION_URL } from "../sources/white-house/president.ts";
 import { whiteHouseOffice } from "../officials/white-house-offices.ts";

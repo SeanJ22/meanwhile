@@ -1,4 +1,5 @@
-import { getFederalDirectoryFile } from "./federal-directory-read-model.ts";
+import { getFederalDirectoryFile } from "./federal-directory-held.ts";
+
 
 /**
  * The congress-legislators directory, read from the GOOD federal-directory projection. Kept out of the coverage

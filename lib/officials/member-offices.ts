@@ -10,7 +10,7 @@ import type {PublishedOfficePoint} from "./office-points-publication.ts";
 const readerOfficePoint = ({census:_evidence,...point}:PublishedOfficePoint):PublishedOfficePoint => point;
 
 export type MemberOfficeKind = "CAPITOL" | "DISTRICT";
-import { createHash } from "node:crypto";
+import { sha256Text } from "../sha256-text.ts";
 
 export interface MemberOfficeRecord {
   readonly id: string;
@@ -45,7 +45,7 @@ export function officeRecordsForHolder(holder: Officeholder, options:{readonly i
   return (holder.offices ?? []).flatMap(office => {
     if (!office.address && !office.phone && !office.email) return [];
     const kind = /capitol|capital/i.test(office.name ?? "") ? "CAPITOL" : "DISTRICT";
-    const officeKey = office.id ?? createHash("sha256").update(JSON.stringify([office.name ?? "",office.address ?? "",office.phone ?? "",...(office.email ? [office.email] : [])])).digest("hex").slice(0,20);
+    const officeKey = office.id ?? sha256Text(JSON.stringify([office.name ?? "",office.address ?? "",office.phone ?? "",...(office.email ? [office.email] : [])])).slice(0,20);
     if (seen.has(officeKey)) return [];
     seen.add(officeKey);
     const federal = holder.level === "FEDERAL";
@@ -65,7 +65,7 @@ export function federalOfficeRecordsForMember(value: FederalDirectoryReadModel, 
   const holder = value.roster.officeholders.find(row => row.id === officeholderId);
   const source = holder?.fieldSources?.districtOffices;
   const district = (value.directory.byMember[officeholderId.slice(9)]?.districtOffices ?? []).map((office): MemberOfficeRecord => ({
-    id:`member-office:${officeholderId}:${createHash("sha256").update(JSON.stringify(office)).digest("hex").slice(0,20)}`,
+    id:`member-office:${officeholderId}:${sha256Text(JSON.stringify(office)).slice(0,20)}`,
     kind:"MEMBER_OFFICE",officeholderId,officeKind:"DISTRICT",office:{...office,...(office.geocodedPoint?{geocodedPoint:readerOfficePoint(office.geocodedPoint)}:{})},
     sourceUrl:source?.sourceUrl ?? `https://raw.githubusercontent.com/unitedstates/congress-legislators/${value.directory.source.sha}/legislators-district-offices.yaml`,
     sourceOrg:source?.sourceOrg ?? value.directory.source.sourceOrg,official:false,

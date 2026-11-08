@@ -1,3 +1,4 @@
+import { isCivicPayloadPart } from "../civic-data/payload-ref.ts";
 import { storedKeyValue } from "../core/keys-values.ts";
 import { parseUnchangedConfirmation } from "../civic-data/unchanged-confirmation.ts";
 import { canonicalCivicDataHash } from "../civic-data/canonical-hash.ts";
@@ -7,7 +8,7 @@ import { currentReaderRoute, withReaderRoute } from "../db/reader-route.ts";
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import { registerIntegrityCheckedEdgeEntries, type CivicDataReadStore, type PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import type { RoutineRecordClass } from "../civic-data/types.ts";
-import { isCivicPayloadPart } from "../civic-data/payload-codec.ts";
+
 import { serverReaderValue } from "./memory.ts";
 import { createHash } from "node:crypto";
 

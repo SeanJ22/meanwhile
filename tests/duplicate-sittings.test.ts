@@ -1,7 +1,8 @@
+import { collapseDuplicateSittings } from "../lib/meetings/sitting-merge.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { collapseDuplicateSittings } from "../lib/sources/composite/index.ts";
+
 import type { Meeting } from "../lib/sources/types.ts";
 
 /**

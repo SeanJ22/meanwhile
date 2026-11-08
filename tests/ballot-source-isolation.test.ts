@@ -1,3 +1,4 @@
+import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -7,7 +8,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import ts from "typescript";
 import { CardGapContribution } from "../components/ui/card-gap-context.tsx";
 import { ballotPlaceDivisions } from "../lib/ballot/reader-place.ts";
-import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+
 import { currentGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 
 import { getCandidateTargetIds } from "../lib/ballot/candidate-targets.ts";

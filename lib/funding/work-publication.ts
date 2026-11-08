@@ -9,7 +9,7 @@ import {withDerivedSourceContent} from "../civic-data/derived-source-hash.ts";
 const hash=(value:string)=>createHash("sha256").update(value).digest("hex");
 export async function publishCampaignMoneyWork(store:RoutineDataStore,vault:EvidenceStore,scope:string,report:CampaignFinanceWorkCheck,at:string){
   const [{canonicalCivicDataJson},{derivedRetrieval},{derivedRequestedUrl},{processRegisteredRoutineCandidate},{sourceProjectionEvidence},{CAMPAIGN_MONEY_SOURCE_ID,CAMPAIGN_FINANCE_PARSER}]=await Promise.all([
-    import("../civic-data/changes.ts"),import("../civic-data/derived-authority.ts"),import("../civic-data/derived-door.ts"),
+    import("../civic-data/changes.ts"),import("../civic-data/derived-authority.ts"),import("../civic-data/derived-url.ts"),
     import("../civic-data/promotion.ts"),import("../civic-data/types.ts"),import("./state-sources.ts"),
   ]);
   const text=canonicalCivicDataJson(report),body=new TextEncoder().encode(text),rawHash=hash(text),artifactId=`project/meanwhile/campaign-money/work/${rawHash}`;

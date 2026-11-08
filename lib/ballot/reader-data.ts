@@ -1,3 +1,4 @@
+import { getFederalOfficeholderSet } from "../officials/federal-directory-held.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 import { readStatePackage, readStateAuthorities, primeStateDistrictPointers, primeStateReaderPointers } from "../reader/state.ts";
@@ -24,7 +25,7 @@ import {selectedPointerSql,selectedMetadataSql,selectedStateEntry} from "../read
 import {readerDatabaseQuery} from "../reader/database.ts";
 import { ballotCandidateAliases, ballotCandidatePeople } from "./tickets.ts";
 import { settleFederalDirectoryRead } from "../registry/server.ts";
-import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
+
 import { personIdentityKeys } from "../officials/people-identity.ts";
 
 /** The ballot shares the map's state and indexed local records; its own records use canonical batches. */

@@ -1,9 +1,9 @@
+import { type MeetingsProjectionReadResult } from "./snapshot-read.ts";
 import { REGISTRY_STATES } from "../civic-data/state-scopes.ts";
 import { factReader } from "../facts/db.ts";
 import { readPlacePackage, type AgendaDocumentLink } from "../reader/place.ts";
 import { divisionOf, meetingStateOf } from "./body-scope.ts";
-import { MEETINGS_RECORD_CLASS, MEETINGS_SCOPE, MEETINGS_SOURCE_ID, snapshotCounts,
-  type MeetingsProjectionReadResult, type MeetingsSnapshot } from "./snapshot.ts";
+import { MEETINGS_RECORD_CLASS, MEETINGS_SCOPE, MEETINGS_SOURCE_ID, snapshotCounts, type MeetingsSnapshot } from "./snapshot.ts";
 import type { MeetingSettings } from "./settings.ts";
 import { readReaderMeetingSettings } from "./reader-settings.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";

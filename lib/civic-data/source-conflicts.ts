@@ -1,4 +1,4 @@
-import { canonicalCivicDataJson } from "./changes.ts";
+import { canonicalCivicDataJson } from "./canonical-json.ts";
 import type { ManualSourceClass, ManualSourceSetReceipt } from "./types.ts";
 import type { SourceScopedHeldFact } from "./manual-source-isolation.ts";
 import type { Provenance } from "../sources/types.ts";

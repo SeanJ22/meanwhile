@@ -1,12 +1,14 @@
+import { getFederalOfficeholderSet } from "../officials/federal-directory-held.ts";
+import { currentStatePeopleProjection } from "../state-rollcalls/people-held.ts";
 import { fundingAnswerForTarget, type FundingAnswer } from "./display.ts";
 import type { CivicDataReadMetadata } from "../civic-data/read-model.ts";
-import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
+
 import { getRegistryRuntimeReadModel, selectedRegistryStates, currentBodyRosters, currentRosterMemberReaderDisposition, currentStatewideExecutives } from "../registry/runtime-read-model.ts";
 import { officialCandidacySeatMatches, reconcileOfficialCandidacies, type OfficialCandidacyBridgeRow } from "../registry/runtime-data-plane.ts";
 import { currentBallotPeopleProjection } from "../ballot/generic-projection.ts";
 import type { BallotSet } from "../ballot/types.ts";
 import { directFundingTargetPlan } from "./target-authorities.ts";
-import { currentStatePeopleProjection } from "../state-rollcalls/legislators.ts";
+
 import { personIdentityKeys, statePeopleScopeForDivision } from "../officials/people-identity.ts";
 import type { CampaignFinancePlaceRead } from "./state-reader.ts";
 

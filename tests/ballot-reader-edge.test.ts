@@ -1,3 +1,4 @@
+import { federalDirectoryReadState } from "../lib/officials/federal-directory-held.ts";
 import { currentStateAuthorityProjection } from "../lib/civic-data/state-reader.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
@@ -37,7 +38,7 @@ import { readNhMembers } from "../lib/civic-data/state-members.ts";
 import { readOfficialStateLegislatorsProjection } from "../lib/state-rollcalls/legislators.ts";
 import { registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";
 import { withReaderSelection, type ReaderSelection } from "../lib/db/reader-route.ts";
-import { federalDirectoryReadState } from "../lib/officials/federal-directory-read-model.ts";
+
 import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
 import { stateMoneyFixture, syntheticCandidateCorpus, syntheticCandidateProfiles, syntheticFederalDirectory, stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
 import { authorityVersionKey } from "../lib/registry/server.ts";

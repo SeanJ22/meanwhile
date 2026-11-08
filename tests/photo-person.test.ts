@@ -1,10 +1,11 @@
+import { primeStatePeopleProjection } from "../lib/state-rollcalls/people-held.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import {personIdentityKeys,sameNativePerson} from "../lib/officials/people-identity.ts";
 import { photoForPerson } from "../lib/photos/person.ts";
 import { withRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { primeStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts";
+
 import { STATEWIDE_EXECUTIVES, statewideExecutivesFor } from "../lib/officials/statewide-executives.ts";
 import { indexByOfficeholderId } from "../lib/officials/lookup.ts";
 import type { Officeholder, OfficeholderSet } from "../lib/officials/types.ts";

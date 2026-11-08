@@ -1,3 +1,4 @@
+import { collapseDuplicateSittings } from "../lib/meetings/sitting-merge.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -8,7 +9,7 @@ import {
   type MeetingsSnapshot,
   type SnapshotSourceReport,
 } from "../lib/meetings/snapshot.ts";
-import { collapseDuplicateSittings } from "../lib/sources/composite/index.ts";
+
 import type { Meeting } from "../lib/sources/types.ts";
 
 /**

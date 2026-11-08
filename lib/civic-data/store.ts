@@ -1,3 +1,4 @@
+import { isCivicPayloadPart } from "./payload-ref.ts";
 import { storedKeyEnvironment } from "../core/keys-values.ts";
 import { readRegistryPlaceRows, selectRegistryPlaceView, type RegistryPlaceSlice } from "./keyed-registry-place.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
@@ -30,7 +31,7 @@ import { runtimeCivicReadCache } from "../db/civic-read-cache.ts";
 import { civicDataCandidateEvents, civicDataCandidates, civicDataPromotions, civicDataPayloadParts } from "../db/schema.ts";
 import { CivicPayloadParts, type CivicPayloadPartIO } from "./payload-parts.ts";
 import { storeFederalMoneyCheckpoint } from "../federal-money/checkpoint-storage.ts";
-import { isCivicPayloadPart } from "./payload-codec.ts";
+
 import { navigationCandidateIndex, type NavigationPublicationBase, type NavigationRecord } from "./navigation-publication-base.ts";
 import { ballotNavigationState } from "./ballot-navigation-scope.ts";
 import {

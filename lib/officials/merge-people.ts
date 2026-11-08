@@ -1,8 +1,8 @@
-import { createHash } from "node:crypto";
+import { sha256Text } from "../sha256-text.ts";
 import { withoutInvalidStatewidePeople } from "./person-name.ts";
 import type { Provenance } from "../sources/types.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
-import { canonicalCivicDataJson } from "../civic-data/changes.ts";
+import { canonicalCivicDataJson } from "../civic-data/canonical-json.ts";
 import { officeIdentity } from "./office-identity.ts";
 import { nativePersonIdFromUrl, personIdentityKeys } from "./people-identity.ts";
 import { portraitBindingMatches } from "../photos/binding.ts";
@@ -201,8 +201,8 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
         sourceFor(left, field).sourceUrl !== sourceFor(right, field).sourceUrl) {
         const selected = rightWins ? {value: b, source: sourceFor(right, field)} : {value: a, source: sourceFor(left, field)};
         const alternative = rightWins ? {value: a, source: sourceFor(left, field)} : {value: b, source: sourceFor(right, field)};
-        const digest = createHash("sha256").update(canonicalCivicDataJson([personId, field,
-          [selected,alternative].map(row=>({value:row.value,sourceUrl:row.source.sourceUrl})).sort((a,b)=>canonicalCivicDataJson(a).localeCompare(canonicalCivicDataJson(b)))])).digest("hex").slice(0,20);
+        const digest = sha256Text(canonicalCivicDataJson([personId, field,
+          [selected,alternative].map(row=>({value:row.value,sourceUrl:row.source.sourceUrl})).sort((a,b)=>canonicalCivicDataJson(a).localeCompare(canonicalCivicDataJson(b)))])).slice(0,20);
         const key = `${personId}:${field}:${digest}`;
         disagreements.set(key, {key, personId, state: merged.state ?? "", field, selected, alternative, owner: "BL-01", status: "OPEN"});
       }

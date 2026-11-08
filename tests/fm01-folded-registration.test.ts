@@ -1,7 +1,8 @@
+import { isCivicPayloadPart } from "../lib/civic-data/payload-ref.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { BOOTSTRAP_DDL } from "../lib/control-plane/repository/pg-schema.ts";
-import { isCivicPayloadPart, partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
+import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import { buildPlacePackage } from "../lib/reader/place-builder.ts";
 import { registrationRecipientNamesSql } from "../lib/registration/recipient-names.ts";
 import type { RegistrationGovernmentListing } from "../lib/registration/listings.ts";

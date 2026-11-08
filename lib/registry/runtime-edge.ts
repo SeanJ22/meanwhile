@@ -3,7 +3,7 @@ import { ballotNavigationState } from "../civic-data/ballot-navigation-scope.ts"
 import { stateFromRegistryRuntimeScope } from "../civic-data/state-scopes.ts";
 import type { BodyFacts } from "../facts/registry-overlay.ts";
 import type { StateAuthorityFamily, PromotedFamilyArtifactValue } from "../meetings/edge-artifacts.ts";
-import { AsyncLocalStorage } from "node:async_hooks";
+import { scopedValue } from "../scoped-value.ts";
 
 import type { CuratedReaderProjection } from "../civic-data/manual-projections.ts";
 import type { OfficialStateLegislatorReadModel } from "../civic-data/candidate-builders.ts";
@@ -166,7 +166,7 @@ export async function readPromotedEdgeFirst<R>(
   return (result as { readonly value: R } | null)!.value;
 }
 
-const edgeStore = new AsyncLocalStorage<ReaderAuthorityEdgeBundle>();
+const edgeStore = scopedValue<ReaderAuthorityEdgeBundle>();
 const stateReadFailures = new WeakMap<object, Set<string>>();
 
 export function reportReaderStateFailure(family: string, state: string | null, key: string | null, error: unknown,

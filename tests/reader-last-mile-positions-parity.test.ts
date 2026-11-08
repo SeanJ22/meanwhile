@@ -1,3 +1,4 @@
+import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { GET } from "../app/api/positions/[subject]/[topic]/route.ts";
@@ -8,7 +9,7 @@ import { unifiedCorpus, unifiedCorpusFromHoldings } from "../lib/corpus/unified.
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 import { positionsFor as candidatePositionsFor } from "../lib/candidates/positions.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";
-import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+
 import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { statementEvidenceFor } from "../lib/ask/statements.ts";
 import { type CandidateCorpus, type CandidateDocument } from "../lib/candidates/corpus.ts";

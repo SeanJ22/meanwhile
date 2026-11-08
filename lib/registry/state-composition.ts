@@ -1,5 +1,4 @@
 import type { BodyFacts } from "../facts/registry-overlay.ts";
-import { isDeepStrictEqual } from "node:util";
 import type { Provenance } from "../sources/types.ts";
 import type { Body } from "./types.ts";
 import type { BodyRoster, RosterMember } from "./body-rosters.ts";
@@ -55,8 +54,16 @@ export function mergeRosterMemberSources(prior: RosterMember, incoming: RosterMe
   return { ...result, fieldSources };
 }
 
+/** Strict equality of plain JSON values: the same keys, the same arrays, the same primitives. */
+function sameJson(a: unknown, b: unknown): boolean {
+  if (Object.is(a, b)) return true;
+  if (typeof a !== "object" || typeof b !== "object" || !a || !b || Array.isArray(a) !== Array.isArray(b)) return false;
+  const keys = Object.keys(a);
+  return keys.length === Object.keys(b).length && keys.every(key => Object.hasOwn(b, key) && sameJson((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key]));
+}
+
 function mergeRoster(prior: BodyRoster, incoming: BodyRoster): BodyRoster {
-  if (isDeepStrictEqual(prior, incoming)) return prior;
+  if (sameJson(prior, incoming)) return prior;
   const members = new Map(prior.members.map(member => [member.id, membership(member, prior)]));
   for (const row of incoming.members) {
     const old = members.get(row.id);

@@ -444,7 +444,7 @@ export async function verifyRoutineReaderProjection(
           return verifyExactVersion(verifierId, await readRegistrationProjection(state, { store: options.store, now: options.now }), options.expectedVersionId, `${state} registration`);
         }
         if (contract.recordClass === "MEETING") {
-          const { readMeetingPartitionProjection } = await import("../meetings/snapshot.ts");
+          const { readMeetingPartitionProjection } = await import("../meetings/snapshot-read.ts");
           const { meetingPartitionContract } = await import("./meeting-partitions.ts");
           const partition = meetingPartitionContract(contract.id);
           const read = partition === null ? null : await readMeetingPartitionProjection(partition, { store: options.store, now: options.now });

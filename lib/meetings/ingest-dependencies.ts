@@ -1,4 +1,5 @@
-import { refreshRegistryRuntimeFromPromoted } from "../registry/runtime-read-model.ts";
+
+import { refreshRegistryRuntimeFromPromoted } from "../registry/runtime-read.ts";
 import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { refreshVenueResolutionsFromPromoted } from "../civic-data/curated-reader-read-model.ts";
 

@@ -1,3 +1,4 @@
+import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read.ts";
 import assert from "node:assert/strict";
 import test from "./helpers/playbooks.ts";
 import { resolveInterpretation } from "../lib/ask/resolve.ts";
@@ -20,7 +21,7 @@ import type { CandidateProfilesProjection } from "../lib/civic-data/manual-proje
 import { candidateKeysForState } from "../lib/ballot/person-keys.ts";
 import { getCandidateCorpus, positionsFor } from "../lib/candidates/positions.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";
-import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+
 
 async function installCandidateProfiles(value: CandidateProfilesProjection, state = "AZ"): Promise<CandidateProfilesProjection> {
   installManualValue(stateBallotContractId("candidate-profiles", state), value, `test:candidate-profiles:${state}`);

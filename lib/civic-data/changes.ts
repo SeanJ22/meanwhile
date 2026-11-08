@@ -1,5 +1,6 @@
 import type { StatePublicationPrior } from "./state-publication.ts";
 import { createHash } from "node:crypto";
+import { canonicalCivicDataJson } from "./canonical-json.ts";
 import { immutableStateHash, statePublicationRecordHash, statePublicationScope } from "./state-publication.ts";
 
 import { agendaContentGroups, type AgendaContentRow } from "../meetings/agenda-content.ts";
@@ -10,6 +11,8 @@ import type {
   RoutineChangeSet,
   RoutineRecordClass,
 } from "./types.ts";
+
+export { canonicalCivicDataJson };
 
 function object(value: unknown): Record<string, unknown> | null {
   return value !== null && typeof value === "object" && !Array.isArray(value)
@@ -558,15 +561,6 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
       });
     }
   }
-}
-
-export function canonicalCivicDataJson(value: unknown): string {
-  if (value === null || typeof value !== "object") return JSON.stringify(value);
-  if (Array.isArray(value)) return `[${value.map(canonicalCivicDataJson).join(",")}]`;
-  return `{${Object.entries(value as Record<string, unknown>)
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([key, child]) => `${JSON.stringify(key)}:${canonicalCivicDataJson(child)}`)
-    .join(",")}}`;
 }
 
 /** sha256 of canonicalCivicDataJson(value), fed as it walks so no whole string is built. */

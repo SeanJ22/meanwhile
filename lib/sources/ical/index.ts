@@ -18,8 +18,8 @@ import {
 import {
   occurrenceId,
   occurrenceStampFromInstant,
-  weakEventIdentity,
 } from "../event-identity.ts";
+import { weakEventIdentity } from "../weak-event-identity.ts";
 import { politeGetText } from "../http.ts";
 import { fetchFailureKind } from "../composite/failure-kind.ts";
 import { dateOfDay, dayNumber, expandRuleDays, readRule } from "./recurrence.ts";

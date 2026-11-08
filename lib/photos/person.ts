@@ -1,8 +1,10 @@
+import { getFederalOfficeholderSet } from "../officials/federal-directory-held.ts";
+import { currentStatePeopleProjection } from "../state-rollcalls/people-held.ts";
 import { getRegistryRuntimeReadModel, selectedRegistryStates } from "../registry/runtime-read-model.ts";
 import { readerPersonKeys } from "../identity/reader-person.ts";
 import { portraitBindingMatches, type PortraitVerification } from "./binding.ts";
-import { currentStatePeopleProjection } from "../state-rollcalls/legislators.ts";
-import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
+
+
 import { personIdentityKeys, type StatePeopleJurisdiction } from "../officials/people-identity.ts";
 import { currentCandidateProfilesProjection } from "../civic-data/manual-read-models.ts";
 import { currentDerivedCandidatePortraits } from "../civic-data/derived-campaign-sites.ts";

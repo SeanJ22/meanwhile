@@ -1,3 +1,4 @@
+import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read.ts";
 import { registryRuntimeProjectionIssues } from "../lib/registry/runtime-data-plane.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
@@ -47,7 +48,7 @@ import {
 import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 import { installFactReader } from "../lib/facts/db.ts";
-import { getRegistryRuntimeReadModel, readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
 import { CENSUS_PLACEHOLDER_BODY_ISSUE, isCensusPlaceholderDivision, withoutPlaceholderBodies } from "../lib/registry/census-placeholders.ts";
 import { slotsFor } from "../lib/registry/derive.ts";
 import type { Registry } from "../lib/registry/types.ts";

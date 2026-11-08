@@ -1,13 +1,6 @@
-import { AsyncLocalStorage } from "node:async_hooks";
+import { currentFederalDirectoryContext, enterFederalDirectoryContext, type FederalDirectoryRead, type FederalDirectoryContext } from "./federal-directory-held.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
-import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
-import {
-  CivicDataStoreUnavailableError,
-  civicDataReadNotInitialized,
-  readPromotedCivicData,
-  type CivicDataReadResult,
-  type PromotedCivicDataReadOptions,
-} from "../civic-data/read-model.ts";
+import { CivicDataStoreUnavailableError, readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { readStateAuthorityEntry, readStateAuthorityProjection } from "../civic-data/state-reader.ts";
 import { requireRegistryState } from "../civic-data/state-scopes.ts";
 import {
@@ -15,25 +8,9 @@ import {
   federalDirectoryScope,
   type FederalDirectoryReadModel,
 } from "./federal-directory-data-plane.ts";
-import type { DirectoryFile } from "./directory.ts";
 import { peopleSourceScope } from "./people-sources.ts";
 import { federalDirectoryVersion } from "./people-version.ts";
 import type { OfficeholderSet } from "./types.ts";
-
-type Read = CivicDataReadResult<FederalDirectoryReadModel>;
-type Context = { bound?: true; states: readonly string[]; read?: Read; pending?: Promise<Read> };
-const requests = new WeakMap<object, Context>(), jobs = new AsyncLocalStorage<Context>();
-const contextKey = () => currentReaderSelection() ?? currentReaderAuthorityEdge();
-const current = () => { const key = contextKey(); return key ? requests.get(key) : jobs.getStore(); };
-
-/** Compose a cached state answer with its already loaded, portrait-enriched directory. */
-export function withFederalDirectoryProjection<T>(read: Read | undefined, states: readonly string[], compose: () => T): T {
-  if(!read)return compose();
-  const context: Context={bound:true,states:[...new Set(states.map(requireRegistryState))].sort(),read};
-  const key=contextKey();
-  if(key)requests.set(key,context);
-  return jobs.run(context,compose);
-}
 
 function validate(value: FederalDirectoryReadModel, versionId: string): void {
   const issues = federalDirectoryProjectionIssues(value);
@@ -56,13 +33,13 @@ export function withFederalPortraits(roster: OfficeholderSet, portraits: Officeh
 }
 
 /** One place's members of Congress as published, held to the directory's reader contract. */
-export async function readStateFederalDirectory(state: string, options: PromotedCivicDataReadOptions = {}): Promise<Read> {
+export async function readStateFederalDirectory(state: string, options: PromotedCivicDataReadOptions = {}): Promise<FederalDirectoryRead> {
   const result = await readPromotedCivicData<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", federalDirectoryScope(state), options);
   if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") validate(result.value, result.metadata.versionId ?? result.kind);
   return result;
 }
 
-async function readPlace(state: string, options: PromotedCivicDataReadOptions): Promise<Read> {
+async function readPlace(state: string, options: PromotedCivicDataReadOptions): Promise<FederalDirectoryRead> {
   type Portraits = { readonly roster: OfficeholderSet };
   const base = options.store ? await readStateFederalDirectory(state, options)
     : (await readStateAuthorityProjection<FederalDirectoryReadModel>("federal-directory", state)).result;
@@ -76,10 +53,10 @@ async function readPlace(state: string, options: PromotedCivicDataReadOptions): 
   if (roster === base.value.roster) return base;
   const value: FederalDirectoryReadModel = { ...base.value, roster };
   const versionId = federalDirectoryVersion(base.metadata.versionId ?? base.kind, portraits.metadata.versionId ?? portraits.kind);
-  return { ...base, value, metadata: { ...base.metadata, versionId }, ...(base.kind === "PROMOTED" ? { projection: { ...base.projection, versionId, payload: value } } : {}) } as Read;
+  return { ...base, value, metadata: { ...base.metadata, versionId }, ...(base.kind === "PROMOTED" ? { projection: { ...base.projection, versionId, payload: value } } : {}) } as FederalDirectoryRead;
 }
 
-function combine(reads: readonly Read[], states: readonly string[]): Read {
+function combine(reads: readonly FederalDirectoryRead[], states: readonly string[]): FederalDirectoryRead {
   const served = reads.flatMap(read => read.kind === "PROMOTED" || read.kind === "BOOTSTRAP" ? [read] : []);
   if (!served.length) return reads[0];
   if (states.length === 1) return served[0];
@@ -95,7 +72,7 @@ function combine(reads: readonly Read[], states: readonly string[]): Read {
 }
 
 /** The selection's divisions name their members, so records bound to those members are part of what the request may read. */
-function selectMembers(read: Read): Read {
+function selectMembers(read: FederalDirectoryRead): FederalDirectoryRead {
   const selection = currentReaderSelection();
   if (selection && (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP")) for (const division of read.value.roster.divisions) {
     if (selection.keys.has(division.ocdId)) selection.keys.add(division.officeholderId);
@@ -104,15 +81,15 @@ function selectMembers(read: Read): Read {
 }
 
 /** Read the named places canonically, or reuse their state answers supplied by the site. */
-export async function readFederalDirectoryProjection(states: readonly string[], options: PromotedCivicDataReadOptions = {}, loadState?: (state: string) => Promise<Read>): Promise<Read> {
+export async function readFederalDirectoryProjection(states: readonly string[], options: PromotedCivicDataReadOptions = {}, loadState?: (state: string) => Promise<FederalDirectoryRead>): Promise<FederalDirectoryRead> {
   const selected = [...new Set(states.map(requireRegistryState))].sort();
   if (!selected.length) throw new Error("FEDERAL_DIRECTORY_PLACES_NOT_SELECTED");
-  const key = contextKey(), existing = current();
+  const existing = currentFederalDirectoryContext();
   const sameStates = existing && selected.join() === existing.states.join();
   if (!options.store && sameStates && (existing.pending || existing.bound && existing.read))
     return selectMembers(existing.pending ? await existing.pending : existing.read!);
-  const context: Context = sameStates ? existing : { states: selected };
-  if (key) requests.set(key, context); else if (context !== existing) jobs.enterWith(context);
+  const context: FederalDirectoryContext = sameStates ? existing : { states: selected };
+  enterFederalDirectoryContext(context, existing);
   const pending = Promise.all(selected.map(state => loadState ? loadState(state) : readPlace(state, options))).then(reads => context.read = combine(reads, selected));
   context.pending = pending;
   try { return selectMembers(await pending); }
@@ -124,23 +101,4 @@ export async function refreshFederalDirectoryFromPromoted(states: readonly strin
   if (result.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(result);
   if (result.kind === "NOT_RECORDED") throw new Error(result.detail);
   return result.metadata.versionId;
-}
-
-export function federalDirectoryReadState(): Read {
-  return current()?.read ?? civicDataReadNotInitialized("FEDERAL_DIRECTORY", "unselected places",
-    "The named places' members of Congress have not been read in this context.");
-}
-
-export function getFederalDirectoryReadModel(): FederalDirectoryReadModel {
-  const state = federalDirectoryReadState();
-  if (state.kind === "PROMOTED" || state.kind === "BOOTSTRAP") return state.value;
-  throw new Error(`The requested places' members of Congress are ${state.kind}.`);
-}
-
-export function getFederalOfficeholderSet(): OfficeholderSet {
-  return getFederalDirectoryReadModel().roster;
-}
-
-export function getFederalDirectoryFile(): DirectoryFile {
-  return getFederalDirectoryReadModel().directory;
 }

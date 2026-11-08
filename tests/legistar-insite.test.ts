@@ -1,9 +1,10 @@
+import { collapseDuplicateSittings } from "../lib/meetings/sitting-merge.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
-import { collapseDuplicateSittings } from "../lib/sources/composite/index.ts";
+
 import { CAPABILITIES } from "../lib/sources/composite/wiring.ts";
 import {
   reconcileSittings,

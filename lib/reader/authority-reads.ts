@@ -1,13 +1,14 @@
+import { readRegistryRuntimeProjection as readRegistry } from "../registry/runtime-read.ts";
 import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
-import { readRegistryRuntimeProjection as readRegistry } from "../registry/runtime-read-model.ts";
+
 import { readFederalDirectoryProjection as readFederal, refreshFederalDirectoryFromPromoted as refreshFederal } from "../officials/federal-directory-read-model.ts";
 import { readStateDelegation } from "./state.ts";
 import { readCanonicalShelf } from "./canonical.ts";
 import { primeReaderCanonicalStore, readerCanonicalEntry } from "./canonical-context.ts";
 import { stateRegistryRuntimeScope } from "../civic-data/state-scopes.ts";
 
-export { readRegistryRuntimeProjection, refreshRegistryRuntimeFromPromoted } from "../registry/runtime-read-model.ts";
+export { readRegistryRuntimeProjection, refreshRegistryRuntimeFromPromoted } from "../registry/runtime-read.ts";
 
 const readsDatabase = (options: PromotedCivicDataReadOptions) => !options.store && !currentReaderAuthorityEdge();
 

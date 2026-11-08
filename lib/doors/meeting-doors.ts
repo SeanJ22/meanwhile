@@ -8,11 +8,12 @@
  * There is no other list: a process that cannot read the doors has none.
  */
 
+import { derivedRequestedUrl } from "../civic-data/derived-url.ts";
 import { createHash } from "node:crypto";
 
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 import { derivedRetrieval, type DerivedInputRef } from "../civic-data/derived-authority.ts";
-import { derivedRequestedUrl } from "../civic-data/derived-door.ts";
+
 import { refreshMeetingPartitions, type MeetingPartitionRefresh } from "../civic-data/meeting-partitions.ts";
 import { refreshOutcomePartitions, type OutcomePartitionRefresh } from "../civic-data/outcome-partitions.ts";
 import { readPromotedCivicData, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";

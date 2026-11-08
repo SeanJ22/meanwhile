@@ -1,9 +1,10 @@
+import { readRegistryRuntimeProjection } from "../registry/runtime-read.ts";
 import { readCanonicalShelf } from "../reader/canonical.ts";
 import { primeReaderCanonicalStore } from "../reader/canonical-context.ts";
 import { stateRegistryRuntimeScope } from "../civic-data/state-scopes.ts";
 import { federalDirectoryScope } from "../officials/federal-directory-data-plane.ts";
 import { readFederalDirectoryProjection } from "../officials/federal-directory-read-model.ts";
-import { readRegistryRuntimeProjection } from "../registry/runtime-read-model.ts";
+
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 
 /** Office and ballot identity joins use the registry and current delegation, in one shelf read. */

@@ -1,13 +1,13 @@
 import { PLACE_CHECKS_SQL } from "../lib/reader/place-builder.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
-import { mergeDuplicateSittingFields, mergeReaderSittings } from "../lib/meetings/sitting-merge.ts";
+import { mergeDuplicateSittingFields, mergeReaderSittings, collapseDuplicateSittings } from "../lib/meetings/sitting-merge.ts";
 import { PLACE_PAGES_SQL, readPlacePackage } from "../lib/reader/place.ts";
 import { snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { PIMA } from "./helpers/meeting-body-fixtures.ts";
 import { placePagesAnswer } from "./helpers/place-pages-answer.ts";
-import { collapseDuplicateSittings } from "../lib/sources/composite/index.ts";
+
 import { withSittingFacts } from "../lib/facts/meeting-read.ts";
 const at = "2026-10-05T12:00:00Z";
 const meeting = (id: string, extra: Partial<Meeting> = {}): Meeting => ({ id, bodyId: "body", bodyName: "Board", jurisdiction: "County", title: "Meeting", ocdId: "ocd-division/country:us/state:az/county:example", startsAt: "2026-10-06T18:00:00Z", timeZone: "UTC", location: null, agendaUrl: null, status: "SCHEDULED", provenance: { kind: "OFFICIAL", sourceUrl: `https://office.gov/${id}`, sourceOrg: "Clerk", collectedAt: at, verifiedAt: at }, ...extra });

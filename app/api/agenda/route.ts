@@ -1,3 +1,4 @@
+import { readRegistryRuntimeProjection } from "../../../lib/registry/runtime-read.ts";
 import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import { readerRoute } from "@/lib/api/reader-route";
 import { readReaderEdgeMeetings, type ReaderMeetingsContext } from "@/lib/meetings/edge-serving";
@@ -5,7 +6,7 @@ import { settleAgendaSupportingHoldings } from "@/lib/civic-data/agenda-support"
 import { meetingReaderRecords } from "@/lib/meetings/reader-records";
 import { classifyAgendaPublication, observationFromMeetingRecord, publisherAgendaObservationsFor, readerAgendaDocuments } from "@/lib/ask/agenda-publication";
 import { meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
-import { readRegistryRuntimeProjection, withRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model";
+import { withRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model";
 import { statesForRegistryDivisions } from "@/lib/civic-data/state-scopes";
 import { readerCacheHeaders } from "@/lib/reader/cache";
 import { readSelectedMeetingOutcomes } from "@/lib/outcomes/store";

@@ -1,9 +1,9 @@
 /** Per-pass and per-request switches; concurrent readers never share mutable settings. */
-import { AsyncLocalStorage } from "node:async_hooks";
+import { scopedValue } from "../scoped-value.ts";
 import type { AdminConfig } from "./gateway/admin-config.ts";
 import { registerSetting, readSetting, type SettingValue } from "./settings.ts";
 
-const context = new AsyncLocalStorage<Readonly<Record<string, SettingValue>>>();
+const context = scopedValue<Readonly<Record<string, SettingValue>>>();
 export function featureKey(name: string): string { return `features.${name}`; }
 export function registerFeature(name: string, label: string, fallback: boolean, readerFacing = false): void {
   registerSetting({ key: featureKey(name), label, defaultValue: fallback, readerFacing,

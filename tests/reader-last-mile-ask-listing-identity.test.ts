@@ -1,3 +1,4 @@
+import { requireMeetingsProjection } from "../lib/meetings/snapshot-read.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "./helpers/playbooks.ts";
@@ -16,7 +17,7 @@ import { installRegistryAuthority, registryTransferImport } from "./helpers/prom
 import { withRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import { ambiguousListingPairs, dateOnlyListings, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 import { localDate } from "../lib/ask/meeting-time.ts";
-import { requireMeetingsProjection } from "../lib/meetings/snapshot.ts";
+
 import { publishRecordedEdge } from "./helpers/reader-edge-meetings.ts";
 import { readEveryBody } from "./helpers/meeting-body-national.ts";
 import { isAnotherBodysNoticePage } from "../lib/meetings/notice-pages.ts";

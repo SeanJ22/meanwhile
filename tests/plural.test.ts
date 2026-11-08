@@ -1,3 +1,4 @@
+import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read.ts";
 import {sourceHintsOf} from "../lib/control-plane/field-manual-sources.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";
 import assert from "node:assert/strict";
@@ -581,7 +582,7 @@ import { registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
 import { installPromotedValue } from "./helpers/promoted-fixtures.ts";
 import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
-import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+
 
 function served<T>(read: CivicDataReadResult<T>, what: string): T {
   if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(`${what} fixture did not install: ${read.kind} ${"detail" in read ? read.detail : ""}`);

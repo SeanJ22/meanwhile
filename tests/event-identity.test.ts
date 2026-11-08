@@ -5,7 +5,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { weakEventIdentity } from "../lib/sources/event-identity.ts";
+import { weakEventIdentity } from "../lib/sources/weak-event-identity.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
 import type { BodySourceWiring } from "../lib/registry/source-wiring.ts";
 

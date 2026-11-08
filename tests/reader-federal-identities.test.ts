@@ -1,3 +1,4 @@
+import { primeStatePeopleProjection } from "../lib/state-rollcalls/people-held.ts";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { stateCoverage } from "../lib/reader/coverage.ts";
@@ -15,7 +16,7 @@ import { heldPersonSources } from "../lib/officials/held-sources.ts";
 import { personCardSources } from "../lib/officials/card-sources.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { withRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
-import { primeStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts";
+
 
 const ROOT = "ocd-division/country:us/state:fl", AT = "2026-10-12T00:00:00.000Z";
 function person(id: string, name: string, bioguides: string[], source = "https://www.senate.gov/member", collectedAt = AT): Officeholder {

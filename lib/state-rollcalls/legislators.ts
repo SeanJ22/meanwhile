@@ -1,3 +1,4 @@
+import { primeStatePeopleProjection, dropStatePeopleProjection } from "./people-held.ts";
 import { statePeopleVersion } from "../officials/people-version.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 import { type StatePeopleJurisdiction } from "../officials/people-identity.ts";
@@ -6,7 +7,6 @@ import { withPeopleSourceChecks } from "../civic-data/people-source-checks.ts";
 import { PEOPLE_SOURCE_IDS } from "../officials/people-sources.ts";
 import { readPeopleSourceProjection } from "../civic-data/people-source-read.ts";
 import { toSeatHolder, type SeatHolder } from "../officials/lookup.ts";
-import { currentReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../registry/runtime-edge.ts";
 import {
   CivicDataStoreUnavailableError,
   readPromotedCivicData,
@@ -34,23 +34,6 @@ export const NH_COUNTY: Readonly<Record<string, string>> = {
   Strafford: "STR",
   Sullivan: "SUL",
 };
-
-const requestPeople = new WeakMap<ReaderAuthorityEdgeBundle, Map<StatePeopleJurisdiction, OfficialStateLegislatorReadModel>>();
-let standalonePeople: OfficialStateLegislatorReadModel | null = null;
-
-export function primeStatePeopleProjection(value: OfficialStateLegislatorReadModel): void {
-  const request = currentReaderAuthorityEdge();
-  if (!request) { standalonePeople = value; return; }
-  const people = requestPeople.get(request) ?? new Map();
-  people.set(value.jurisdiction, value);
-  requestPeople.set(request, people);
-}
-
-export function currentStatePeopleProjection(scope: StatePeopleJurisdiction): OfficialStateLegislatorReadModel | null {
-  const request = currentReaderAuthorityEdge();
-  return request ? requestPeople.get(request)?.get(scope) ?? null
-    : standalonePeople?.jurisdiction === scope ? standalonePeople : null;
-}
 
 function nhHouseDivision(county: string, district: string): string | null {
   const abbreviation = NH_COUNTY[county.trim()];
@@ -230,9 +213,7 @@ export async function readStatePeopleProjection(jurisdiction: StatePeopleJurisdi
   const results = reads.flatMap(row=>row.status === "fulfilled" && row.value ? [row.value as CivicDataReadResult<OfficialStateLegislatorReadModel>] : []);
   const available = results.filter((row):row is AvailableOfficialStateLegislatorsRead=>row.kind === "PROMOTED" || row.kind === "BOOTSTRAP");
   if (!available.length) {
-    const request = currentReaderAuthorityEdge();
-    if (request) requestPeople.get(request)?.delete(jurisdiction);
-    else if (standalonePeople?.jurisdiction === jurisdiction) standalonePeople = null;
+    dropStatePeopleProjection(jurisdiction);
     const failed = reads.find((row):row is PromiseRejectedResult=>row.status === "rejected");
     if (failed) throw failed.reason;
     return results.find(row=>row.kind === "STORE_UNREACHABLE") ?? results[0];

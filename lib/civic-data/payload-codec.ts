@@ -1,9 +1,8 @@
 import { createHash } from "node:crypto";
+import { isCivicPayloadPart, REF, type Ref } from "./payload-ref.ts";
 
 const INLINE_BYTES = 32 * 1024;
 const PART_BYTES = 256 * 1024;
-const REF = "$civicPayloadPart";
-type Ref = { readonly $civicPayloadPart: string };
 type Part = { readonly hash: string; readonly payload: unknown };
 const OMIT = Symbol("omitted JSON member");
 const ID_KEYS = ["id", "key", "divisionId", "ocdId", "jurisdiction", "state", "subjectId"];
@@ -76,8 +75,6 @@ const digest = (value: unknown): string => {
   });
   return hash.update(buffered).digest("hex");
 };
-export const isCivicPayloadPart = (value: unknown): value is Ref => value !== null && typeof value === "object" &&
-  !Array.isArray(value) && Object.keys(value).length === 1 && typeof (value as Ref)[REF] === "string";
 
 type Encoded = { readonly out: unknown; readonly size: number; readonly territory: string };
 const REF_BYTES = civicPayloadBytes({ [REF]: "0".repeat(64) });

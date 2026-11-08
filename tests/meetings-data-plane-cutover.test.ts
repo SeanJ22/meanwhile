@@ -1,3 +1,4 @@
+import { readMeetingPartitionProjection } from "../lib/meetings/snapshot-read.ts";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -6,7 +7,7 @@ import test from "./helpers/playbooks.ts";
 
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
-import { readMeetingPartitionProjection, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
+import { type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import { candidateForMeetingPartition, promoteMeetingPartition, readPreviousMeetingPartition } from "../scripts/ingest.ts";
 import { captureSourceAcquisitions } from "../lib/sources/acquisition-trace.ts";
 import { readValidatedResponse } from "../lib/sources/http.ts";

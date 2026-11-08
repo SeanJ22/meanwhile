@@ -1,3 +1,4 @@
+import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -13,7 +14,7 @@ import { currentReaderSelection, withReaderSelection } from "../lib/db/reader-ro
 import { fundingHoldingReaders, settleFundingHoldingAnswer } from "../lib/funding/holding-answer.ts";
 import type { FundingCandidate, FundingSnapshot } from "../lib/funding/types.ts";
 import { tierForOffice } from "../lib/ocd/tiers.ts";
-import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+
 import { installManualValue, installPromotedValue, registryTransferImport } from "./helpers/promoted-fixtures.ts";
 
 // The same chamber wording appears on the held Virginia congressional list and on state ballots.

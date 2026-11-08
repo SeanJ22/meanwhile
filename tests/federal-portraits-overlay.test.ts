@@ -1,6 +1,7 @@
+import { withFederalDirectoryProjection } from "../lib/officials/federal-directory-held.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
-import { withFederalPortraits, placePortraitsScope, withFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
+import { withFederalPortraits, placePortraitsScope } from "../lib/officials/federal-directory-read-model.ts";
 import { federalDirectoryVersion } from "../lib/officials/people-version.ts";
 import type { Officeholder, OfficeholderSet } from "../lib/officials/types.ts";
 import type { FederalDirectoryReadModel } from "../lib/officials/federal-directory-data-plane.ts";

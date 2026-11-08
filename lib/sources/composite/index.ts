@@ -1,3 +1,4 @@
+import { collapseDuplicateSittings } from "../../meetings/sitting-merge.ts";
 import { isZeroRowExtraction, totalDropped, type ConservationRecord } from "../normalize-account.ts";
 import { withSourceVendor } from "../host-context.ts";
 import type {
@@ -94,71 +95,6 @@ export interface CompositeOptions {
   timeoutMs?: number;
   /** Batch promotion only: bind exact acquired bytes/final redirects into the candidate. */
   captureAcquisitionEvidence?: boolean;
-}
-
-export function collapseDuplicateSittings(rows: Meeting[],
-  /** Optional field reconciliation inside the existing exact-sitting collapse.
-   * null keeps both rows when their body/source identities cannot safely join. */
-  resolveDuplicate?: (held: Meeting, next: Meeting) => Meeting | null,
-): {
-  rows: Meeting[];
-  collapsed: number;
-
-  dropped: Meeting[];
-} {
-  const informativeness = (m: Meeting): number =>
-    (m.agendaUrl ? 8 : 0) +
-    (m.actingBodies && m.actingBodies.length > 0 ? 4 : 0) +
-    (m.location ? 2 : 0) +
-    (m.carried ? 0 : 1);
-
-  const best = new Map<string, Meeting>();
-  let collapsed = 0;
-
-  /** The source that minted an id, which namespaces it by contract. */
-  const sourceOf = (m: Meeting) => m.id.slice(0, m.id.indexOf(":"));
-
-  const kept: Meeting[] = [];
-  const dropped: Meeting[] = [];
-  for (const m of rows) {
-    // The instant, not the string: sources write the same moment with different offsets.
-    const instant = Date.parse(m.startsAt);
-    const key = [
-      m.ocdId ?? `jurisdiction:${m.jurisdiction}`,
-      m.bodyName,
-      Number.isNaN(instant) ? m.startsAt : String(instant),
-    ].join("|");
-    const held = best.get(key);
-    if (!held) {
-      best.set(key, m);
-      kept.push(m);
-      continue;
-    }
-    if (sourceOf(m) === sourceOf(held)) {
-      // Same source, same instant: its own catalogue, and not ours to merge.
-      kept.push(m);
-      continue;
-    }
-    if (resolveDuplicate) {
-      const resolved = resolveDuplicate(held, m);
-      if (resolved === null) { kept.push(m); continue; }
-      kept[kept.indexOf(held)] = resolved;
-      best.set(key, resolved);
-      dropped.push(resolved.id === m.id ? held : m);
-      collapsed += 1;
-      continue;
-    }
-    collapsed += 1;
-    if (informativeness(m) > informativeness(held)) {
-      kept[kept.indexOf(held)] = m;
-      best.set(key, m);
-      dropped.push(held);
-    } else {
-      dropped.push(m);
-    }
-  }
-
-  return { rows: kept, collapsed, dropped };
 }
 
 export function childFailureMessage(reason: unknown): string {

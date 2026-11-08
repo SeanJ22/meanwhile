@@ -1,3 +1,5 @@
+import { currentStatePeopleProjection, primeStatePeopleProjection } from "../lib/state-rollcalls/people-held.ts";
+import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import type { BallotSet } from "../lib/ballot/types.ts";
@@ -6,8 +8,8 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { ManualSourceSetReceipt } from "../lib/civic-data/types.ts";
 import { officialIdsForCandidacy, resolvedCandidacyForOfficial } from "../lib/funding/campaign-money.ts";
 import { officialCandidacySeatMatches, reconcileOfficialCandidacies, type OfficialCandidacyBridge } from "../lib/registry/runtime-data-plane.ts";
-import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
-import { currentStatePeopleProjection, primeStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts";
+
+
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { selectStatewideExecutives } from "../lib/officials/statewide-selection.ts";
 import { installManualValue, registryTransferImport, syntheticFederalDirectory, installFederalDirectory } from "./helpers/promoted-fixtures.ts";

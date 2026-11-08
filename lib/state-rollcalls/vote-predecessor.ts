@@ -1,7 +1,8 @@
+import { isCivicPayloadPart } from "../civic-data/payload-ref.ts";
 import { createVotePageSink } from "./vote-page-writer.ts";
 import { createHash } from "node:crypto";
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
-import { isCivicPayloadPart } from "../civic-data/payload-codec.ts";
+
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 import { readerQuery } from "../civic-data/promoted-reader-query.ts";
 import { parseValidationReceipt } from "../civic-data/receipt.ts";

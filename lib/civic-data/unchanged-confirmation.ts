@@ -1,5 +1,6 @@
-import { canonicalCivicDataJson } from "./changes.ts";
-import { derivedRequestedUrl } from "./derived-door.ts";
+import { derivedRequestedUrl } from "./derived-url.ts";
+import { canonicalCivicDataJson } from "./canonical-json.ts";
+
 import type { RoutineRecordClass, SourceCheckEvidence } from "./types.ts";
 import { sourceCheckIssue } from "./source-check.ts";
 import { authorityFor } from "./source-authority.ts";

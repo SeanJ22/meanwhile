@@ -1,9 +1,10 @@
+import { isCivicPayloadPart } from "./payload-ref.ts";
 import { createHash } from "node:crypto";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { Query } from "../facts/publish.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import { CivicPayloadParts, type CivicPayloadPartIO } from "./payload-parts.ts";
-import { isCivicPayloadPart, partitionCivicPayload } from "./payload-codec.ts";
+import { partitionCivicPayload } from "./payload-codec.ts";
 
 export interface CivicVersionVaultRef {
   readonly formatVersion: 1;

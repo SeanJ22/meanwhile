@@ -1,12 +1,14 @@
+import { federalDirectoryReadState } from "../../../../lib/officials/federal-directory-held.ts";
+import { currentStatePeopleProjection } from "../../../../lib/state-rollcalls/people-held.ts";
 import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
 import { readerRoute } from "@/lib/api/reader-route";
 import { stageTimer } from "@/lib/api/server-timing";
 import { readerCacheHeaders, readerCacheScopeForPublication } from "@/lib/reader/cache";
 import { rosterGapsForDivision } from "@/lib/registry/body-rosters";
 import { representationDivisionMetadata, seatHoldersForDivision } from "@/lib/registry/server";
-import { federalDirectoryReadState } from "@/lib/officials/federal-directory-read-model";
+
 import { statePeopleScopeForDivision } from "@/lib/officials/people-identity";
-import { currentStatePeopleProjection } from "@/lib/state-rollcalls/legislators";
+
 
 
 

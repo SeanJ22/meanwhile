@@ -1,3 +1,4 @@
+import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { governingRosterHoldersForDivision } from "../lib/registry/body-rosters.ts";
@@ -14,7 +15,7 @@ import { installPromotedValue } from "./helpers/promoted-fixtures.ts";
 import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import { activateCanonicalFixture } from "./helpers/canonical-reader-fixtures.ts";
 import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
-import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+
 
 
 function served<T>(read: CivicDataReadResult<T>, what: string): T {

@@ -1,3 +1,4 @@
+import { readMeetingPartitionProjection } from "../lib/meetings/snapshot-read.ts";
 import { routineTaskFromContract,routineTaskNextDueMs } from "../lib/civic-data/runner.ts";
 import {retainUnwiredDerivedBodyFacts,type DerivedMeetingFamilyProgress} from "../lib/civic-data/derived-meeting-body.ts";
 import { preloadCanonicalMeetingDependencies } from "../lib/meetings/ingest-dependencies.ts";
@@ -37,14 +38,7 @@ import { isAnotherBodysNoticePage, isWiredNoticePage } from "../lib/meetings/not
 import { meetingCarriesRecords } from "../lib/meetings/carries-records.ts";
 import { meetingHistoryRestoreEnabled, restoreRemovedMeetingHistory, withRestoredHistory } from "../lib/civic-data/meeting-history-restore.ts";
 import { meetingHistoryMoveEnabled, movedToHistoryEvidence, moveConcludedMeetingsToHistory, readMeetingHistory, type MeetingHistoryMove, type MeetingHistoryMoveRecord } from "../lib/civic-data/meeting-history.ts";
-import {
-  readMeetingPartitionProjection,
-  snapshotCounts,
-  validateSnapshot,
-  MEETINGS_RECORD_CLASS,
-  MEETINGS_SOURCE_ID,
-  type MeetingsSnapshot,
-} from "../lib/meetings/snapshot.ts";
+import { snapshotCounts, validateSnapshot, MEETINGS_RECORD_CLASS, MEETINGS_SOURCE_ID, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import { meetingsCandidate, sha256 } from "../lib/civic-data/candidate-builders.ts";
 import { failedMeetingAcquisitionCandidate } from "../lib/civic-data/failed-meeting-acquisition.ts";
 import { jobFailureDetail } from "../lib/sources/composite/failure-kind.ts";

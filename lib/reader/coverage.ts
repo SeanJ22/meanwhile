@@ -1,3 +1,5 @@
+import { withFederalDirectoryProjection } from "../officials/federal-directory-held.ts";
+import { primeStatePeopleProjection } from "../state-rollcalls/people-held.ts";
 import type { ReaderStatePackage } from "./state.ts";
 import { withReaderSelection } from "../db/reader-route.ts";
 import { withReaderAuthorityEdge } from "../registry/runtime-edge.ts";
@@ -17,8 +19,8 @@ import type { Meeting } from "../sources/types.ts";
 import type { BodyTerritory } from "../registry/body-territory.ts";
 import { serverReaderValue } from "./memory.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
-import { primeStatePeopleProjection } from "../state-rollcalls/legislators.ts";
-import { withFederalDirectoryProjection } from "../officials/federal-directory-read-model.ts";
+
+
 import { primeStateAuthorityProjection } from "../civic-data/state-reader.ts";
 
 /** Place reads carry canonical local boards; the state still supplies its official people and portraits. */

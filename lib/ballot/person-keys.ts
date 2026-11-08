@@ -1,8 +1,9 @@
+import { currentStatePeopleProjection } from "../state-rollcalls/people-held.ts";
 import { currentBallotPeopleProjection } from "./generic-projection.ts";
 import { ballotCandidateAliases, ballotCandidatePeople } from "./tickets.ts";
 import { verifiedCandidateProfilePerson, type HeldCandidatePerson } from "./held-person.ts";
 import { currentCandidateProfilesProjection } from "../civic-data/manual-read-models.ts";
-import { currentStatePeopleProjection } from "../state-rollcalls/legislators.ts";
+
 import { getRegistryRuntimeReadModel } from "../registry/runtime-read-model.ts";
 
 const indexes = new WeakMap<object, ReadonlyMap<string, readonly string[]>>();

@@ -1,8 +1,8 @@
-import { AsyncLocalStorage } from "node:async_hooks";
+import { scopedValue, type ScopedValue } from "../scoped-value.ts";
 
 const routeSlot = Symbol.for("meanwhile.database.reader-route");
-const host = globalThis as typeof globalThis & { [routeSlot]?: AsyncLocalStorage<string> };
-const route = host[routeSlot] ??= new AsyncLocalStorage<string>();
+const host = globalThis as typeof globalThis & { [routeSlot]?: ScopedValue<string> };
+const route = host[routeSlot] ??= scopedValue<string>();
 
 export function withReaderRoute<T>(path: string, read: () => T): T {
   return route.run(path, read);
@@ -38,7 +38,7 @@ export interface ReaderSelection {
   readonly governmentWindow?: readonly [number, number];
 }
 
-const selected = new AsyncLocalStorage<ReaderSelection | undefined>();
+const selected = scopedValue<ReaderSelection | undefined>();
 
 export const currentReaderSelection = () => selected.getStore();
 

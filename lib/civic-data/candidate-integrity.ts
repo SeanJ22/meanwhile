@@ -1,3 +1,4 @@
+import { readMeetingPartitionProjection } from "../meetings/snapshot-read.ts";
 import { durableCivicDataHash } from "./canonical-hash.ts";
 import { durableStateHash, largePayloadScope } from "./state-publication.ts";
 import { federalMoneySavedSourceIssue } from "../federal-money/verify.ts";
@@ -18,7 +19,7 @@ import { candidateChangeSet } from "./changes.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
 import type { MeetingPartitionContract } from "./meeting-partitions.ts";
-import { readMeetingPartitionProjection } from "../meetings/snapshot.ts";
+
 import { verifyRoutineReaderProjection, type RoutineReaderVerification } from "./reader-verification.ts";
 import {
   candidateVersionSummary,

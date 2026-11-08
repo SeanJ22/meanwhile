@@ -1,8 +1,10 @@
 /** History is promoted before the partition removes the sittings, so no record is ever in neither place. */
+import { readMeetingPartitionProjection } from "../meetings/snapshot-read.ts";
+import { derivedRequestedUrl } from "./derived-url.ts";
 import { createHash } from "node:crypto";
 
 import { canonicalCivicDataJson } from "./changes.ts";
-import { derivedRequestedUrl } from "./derived-door.ts";
+
 import { derivedRetrieval, promotedInputRef, type DerivedInputRef } from "./derived-authority.ts";
 import {
   MEETING_HISTORY_SOURCE_ID,
@@ -17,7 +19,7 @@ import type { RoutineDataStore } from "./store.ts";
 import type { AgendaDocument } from "../meetings/agenda-documents.ts";
 import { meetingCarriesRecords } from "../meetings/carries-records.ts";
 import { meetingHeldWindowAt } from "../meetings/constants.ts";
-import { readMeetingPartitionProjection, type MeetingsSnapshot, type SnapshotSourceReport } from "../meetings/snapshot.ts";
+import { type MeetingsSnapshot, type SnapshotSourceReport } from "../meetings/snapshot.ts";
 import type { Meeting } from "../sources/types.ts";
 import { ocdStateCode } from "../ocd/state-of.ts";
 

@@ -1,3 +1,5 @@
+import { federalDirectoryReadState, getFederalOfficeholderSet } from "../officials/federal-directory-held.ts";
+import { primeStatePeopleProjection } from "../state-rollcalls/people-held.ts";
 import { readPointPlace, readZipDivisions } from "../place-map/reader.ts";
 import { readStatePackage } from "../reader/state.ts";
 import { readPlacePackage } from "../reader/place.ts";
@@ -24,7 +26,7 @@ import { scopedHolders } from "../officials/scoped-holders.ts";
 import { readDivisionRepresentatives } from "./representation-server.ts";
 export { federalDirectoryAppliesToDivision } from "./representation-server.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
-import { federalDirectoryReadState, getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
+
 import { refreshFederalDirectoryFromPromoted, refreshRegistryRuntimeFromPromoted } from "../reader/authority-reads.ts";
 import { personIdentityKeys, statePeopleScopeForDivision, statePeopleScopeForId, type StatePeopleJurisdiction } from "../officials/people-identity.ts";
 
@@ -54,11 +56,7 @@ import jurisdictionLabels from "../../data/reference/us-jurisdiction-labels.json
 import { stateOcdIdFrom } from "../ocd/state-division.ts";
 import { stateOf } from "./wording.ts";
 import type { GeographySelection } from "../census-geography/selection.ts";
-import {
-  heldOfficialStateLegislatorsFromRead,
-  primeStatePeopleProjection,
-  readStatePeopleProjection,
-} from "../state-rollcalls/legislators.ts";
+import { heldOfficialStateLegislatorsFromRead, readStatePeopleProjection } from "../state-rollcalls/legislators.ts";
 
 interface Loaded {
   /** Body territories for governments with no Census division. */

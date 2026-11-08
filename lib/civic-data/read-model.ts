@@ -32,6 +32,9 @@ export { mayUseTestFixture } from "./fixture-policy.ts";
 export type { CivicDataFixtureEnvironment } from "./fixture-policy.ts";
 import type { CandidateVersionReadback, PublishedCandidateMetadata, RoutineDataStore } from "./store.ts";
 import { projectionKey } from "./projection-key.ts";
+import { civicDataReadNotInitialized, emptyMetadata } from "./read-result.ts";
+
+export { civicDataReadNotInitialized };
 
 const SHA256 = /^[a-f0-9]{64}$/;
 const proofRequire=createRequire(import.meta.url);
@@ -322,22 +325,6 @@ function rememberStateProof(
   return { projection, candidate: metadata };
 }
 
-function emptyMetadata(recordClass: RoutineRecordClass, scope: string): CivicDataReadMetadata {
-  return {
-    recordClass,
-    scope,
-    sourceId: null,
-    version: null,
-    versionId: null,
-    lastKnownGoodVersionId: null,
-    sourceThrough: null,
-    retrievedAt: null,
-    promotedAt: null,
-    stale: "UNKNOWN",
-    staleAt: null,
-  };
-}
-
 function temporalState(input: {
   readonly now: string;
   readonly retrievedAt: string | null;
@@ -357,20 +344,6 @@ function temporalState(input: {
   return {
     stale: now > staleAtMs ? "STALE" : "CURRENT",
     staleAt: new Date(staleAtMs).toISOString(),
-  };
-}
-
-export function civicDataReadNotInitialized(
-  recordClass: RoutineRecordClass,
-  scope: string,
-  detail: string,
-): CivicDataReadResult<never> {
-  return {
-    kind: "STORE_UNREACHABLE",
-    value: null,
-    metadata: emptyMetadata(recordClass, scope),
-    code: "READ_NOT_INITIALIZED",
-    detail,
   };
 }
 

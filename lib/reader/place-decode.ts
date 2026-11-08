@@ -1,13 +1,13 @@
 import { federalMoneyGovernmentDivision } from "../federal-money/recipient.ts";
-import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
+import { CivicPayloadReader } from "../civic-data/payload-reader.ts";
 import { stateOcdIdFrom } from "../ocd/state-division.ts";
 import { factCommentAccessFromRows } from "../facts/comment-read.ts";
 import { sittingFactsFromRows, withSittingFacts } from "../facts/meeting-read.ts";
 import { bodyFieldsFromRows, type BodyFacts } from "../facts/registry-overlay.ts";
 import { factRostersFromRows } from "../facts/roster-read.ts";
 import { RETIRED_MEETING_ROUTES } from "../registry/source-wiring.ts";
-import { collapseDuplicateSittings } from "../sources/composite/index.ts";
-import { mergeDuplicateSittingFields, mergeReaderSittings } from "../meetings/sitting-merge.ts";
+
+import { mergeDuplicateSittingFields, mergeReaderSittings, collapseDuplicateSittings } from "../meetings/sitting-merge.ts";
 import { applyPartitionFreshCheck, confirmationCheckedAt, meetingVersionReadsASource } from "../meetings/fresh-checks.ts";
 import { parseUnchangedConfirmation } from "../civic-data/unchanged-confirmation.ts";
 import { stampMeetingDoor } from "../civic-data/fact-door.ts";
@@ -85,7 +85,7 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
         ...(recipient.moneyDivisionId ? { moneyDivisionId: recipient.moneyDivisionId } : {}) } : {}),
       ...(typeof e.government === "string" ? { government: e.government } : {}) };
   });
-  const parts = new CivicPayloadParts({ existing: async () => [], write: async () => {}, read: async () => { throw new Error("PLACE_PACKAGE_PART_MISSING"); } });
+  const parts = new CivicPayloadReader({ existing: async () => [], write: async () => {}, read: async () => { throw new Error("PLACE_PACKAGE_PART_MISSING"); } });
   const decoded = await parts.loadOwned({rows:row.meeting_rows,archived:row.archived_meetings ?? [],documents:row.archived_documents ?? []},row.parts as Record<string, unknown>) as {
     rows:{scope: string; payload: MeetingsSnapshot & {agendaDocumentLinks?: AgendaDocumentLink[]}; current_version_id: string; confirmation: string | null}[];
     archived:Meeting[];documents:MeetingsSnapshot["agendaDocuments"];

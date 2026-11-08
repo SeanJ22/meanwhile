@@ -1,3 +1,4 @@
+import { derivedRequestedUrl } from "./derived-url.ts";
 import type { DerivedInputHead, DerivedWiringRow } from "./derived-input-rows.ts";
 import { derivedRetrieval, type DerivedInputRef } from "./derived-authority.ts";
 import { derivedSourceContentIssue } from "./derived-source-hash.ts";
@@ -14,10 +15,6 @@ import type { RetainedMeetingCandidate } from "./retained-meeting-bytes.ts";
  */
 export const DERIVED_WIRING_RECORD_CLASS = "CURATED_READER_RECORD" as const;
 export const DERIVED_WIRING_SCOPE = "US:meeting-source-wiring" as const;
-
-export function derivedRequestedUrl(sourceId: string, scope: string): string {
-  return `derived:${sourceId}:${scope}`;
-}
 
 const SHA256 = /^[a-f0-9]{64}$/;
 const VAULT_HASH = /^sha256-[a-f0-9]{64}$/;

@@ -4,9 +4,9 @@ lane: cx-writes
 owner: cx-writes
 writer: the cx-writes lane
 check: GitHub CI
-ready: CX-WRITES 413cb58eaf75
+ready: CX-WRITES 413cb58eaf75072b3c033c9b3eeae734a2ddeb6f
 river: 97a693b6948a504d07eb53ea1818d4a17ee7447f
-at: 2026-11-08T04:20:35Z
+at: 2026-11-08T04:24:03Z
 state: returned
 fix_subject: fix:ba7a166d
 fix: River · stream/cx-writes — GitHub CI failed for cx-writes: 2026-11-08T04:14:31.3672825Z   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:

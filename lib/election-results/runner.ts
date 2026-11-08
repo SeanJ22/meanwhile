@@ -1,6 +1,5 @@
 import { createHash } from "node:crypto";
-import { electionResultClockRows, readCanonicalShelf } from "../reader/canonical.ts";
-import { readGenericBallotProjection } from "../ballot/generic-projection.ts";
+import { electionResultClockRows } from "../reader/canonical.ts";
 import { withCandidateTickets } from "../ballot/tickets.ts";
 import { withCurrentCandidacies } from "../ballot/filing-changes.ts";
 import type { BallotSet } from "../ballot/types.ts";
@@ -53,20 +52,6 @@ type CachedClock = { readonly position: string; readonly hashMD5: string };
 const progressHash = (position: string) => createHash("md5").update(position).digest("hex");
 const CLOCK_CACHE_NAMESPACE = "election-results-progress";
 const CLOCK_CACHE_KEY = "source-clocks-v1";
-
-/** Select the same promoted ballot authority readers use, restricted to one state. */
-export async function servedBallots(query: Query, state: string): Promise<readonly BallotSet[]> {
-  const scope = stateBallotScope("ballot-contests", state);
-  const store = await readCanonicalShelf([{ recordClass: "BALLOT_CANDIDACY", scope }], async statements => {
-    const results = [];
-    for (const statement of statements) results.push(await query(statement.text, statement.params));
-    return results;
-  });
-  const read = await readGenericBallotProjection(state, { store });
-  if (read.kind === "NOT_RECORDED") return [];
-  if (read.kind !== "PROMOTED") throw new Error(`Election results cannot read ${state}'s served ballot: ${read.kind}`);
-  return Object.values(read.value.ballots).map(ballot => withCandidateTickets(withCurrentCandidacies(ballot)));
-}
 
 /** Congress page routes are discovered from held source links, with the ordinary national page names as fallback. */
 function federalRace(ballot: BallotSet, contest: BallotSet["contests"][number]): BallotpediaRace | null {

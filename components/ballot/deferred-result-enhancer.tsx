@@ -1,14 +1,11 @@
 "use client";
 
-import { startTransition } from "react";
+import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { createRoot } from "react-dom/client";
 import { CardSourceContext, cardSourceTargetFor, waitForCardSourceTarget, type CardSourceRegister } from "@/components/ui/card-source-context";
 import { ResultView } from "./deferred-result-views";
 import { deferredResultStyles } from "./deferred-result-styles";
 import type { ResultChoice, ResultFeedResponse } from "./deferred-result-types";
-
-let rootSequence = 0;
 
 const aliasesOf = (node: HTMLElement): string[] => {
   try { const value: unknown = JSON.parse(node.dataset.candidateAliases ?? "[]"); return Array.isArray(value) ? value.filter((id): id is string => typeof id === "string") : []; }
@@ -17,9 +14,9 @@ const aliasesOf = (node: HTMLElement): string[] => {
 const statePlace = (state: string) => `ocd-division/country:us/${state === "DC" ? "district" : ["AS", "GU", "MP", "PR", "VI"].includes(state) ? "territory" : "state"}:${state.toLowerCase()}`;
 
 /** Existing identity attributes choose facts; text supplies display labels only. */
-function mountCard(card: HTMLElement, feed: ResultFeedResponse, register: CardSourceRegister): () => void {
+function cardPortals(card: HTMLElement, feed: ResultFeedResponse, register: CardSourceRegister): { node: ReactNode; cleanup: () => void } | null {
   const body = card.querySelector<HTMLElement>(".reader-card-body");
-  if (!body || !card.dataset.contestId) return () => {};
+  if (!body || !card.dataset.contestId) return null;
   const id = card.dataset.contestId, ocdId = card.dataset.ocdId ?? statePlace(feed.state);
   const heading = body.querySelector<HTMLElement>(":scope > .flex > h2");
   const title = card.querySelector(".reader-card-header h2")?.textContent?.trim() ?? "Election results";
@@ -48,13 +45,14 @@ function mountCard(card: HTMLElement, feed: ResultFeedResponse, register: CardSo
     const choice = choices[index], candidate = feed.facts[choice.id] as { incumbent?: unknown } | undefined;
     portals.push(createPortal(<ResultView kind="candidate" id={choice.id} aliases={choice.aliases} contestId={id} incumbent={candidate?.incumbent === true} feed={feed} />, host, `candidate:${choice.id}`));
   }
-  const root = createRoot(document.createElement("div"), { identifierPrefix: `election-result-${++rootSequence}:` });
-  startTransition(() => root.render(<CardSourceContext.Provider value={register}>{portals}</CardSourceContext.Provider>));
-  return () => { queueMicrotask(() => { root.unmount(); hosts.forEach(host => host.remove()); }); };
+  return {
+    node: <CardSourceContext.Provider key={`card:${id}`} value={register}>{portals}</CardSourceContext.Provider>,
+    cleanup: () => { hosts.forEach(host => host.remove()); },
+  };
 }
 
 /** This module and the checked feed are loaded only after the original ballot accepts input. */
-export async function enhanceBallotResults(signal: AbortSignal): Promise<() => void> {
+export async function enhanceBallotResults(signal: AbortSignal, render: (nodes: ReactNode) => void): Promise<() => void> {
   const cards = [...document.querySelectorAll<HTMLElement>("article[data-contest-id]")];
   const main = cards[0]?.closest("main");
   const state = (cards.flatMap(node =>
@@ -69,32 +67,36 @@ export async function enhanceBallotResults(signal: AbortSignal): Promise<() => v
   if (!response.ok || signal.aborted) return () => {};
   const feed = await response.json() as ResultFeedResponse;
   if (signal.aborted || feed.state !== state || !feed.facts || typeof feed.facts !== "object" || Array.isArray(feed.facts)) return () => {};
-  let disposed = false;
+  let disposed = false, collecting = true;
+  const nodes: ReactNode[] = [];
+  const publish = () => { if (!disposed && !collecting) render([...nodes]); };
   const style = document.createElement("style");
   style.dataset.electionResultStyles = ""; style.textContent = deferredResultStyles; document.head.append(style);
   const cleanups: (() => void)[] = [() => style.remove()];
   for (const card of cards) {
-    let mounted = false, unmount: (() => void) | undefined;
+    let mounted = false, cleanup: (() => void) | undefined;
     const ready = () => {
       if (disposed || mounted || !card.isConnected) return;
       const register = cardSourceTargetFor(card);
       if (!register || [...card.querySelectorAll<HTMLButtonElement>("[data-battlecard-pill]")].some(button => button.disabled)) return;
       mounted = true; observer.disconnect(); stopWaiting();
-      unmount = mountCard(card, feed, register);
+      const portals = cardPortals(card, feed, register);
+      if (portals) { nodes.push(portals.node); cleanup = portals.cleanup; publish(); }
     };
     const observer = new MutationObserver(ready);
     const stopWaiting = waitForCardSourceTarget(card, ready);
     observer.observe(card, { subtree: true, attributes: true, attributeFilter: ["disabled"] });
     ready();
-    cleanups.push(() => { observer.disconnect(); stopWaiting(); unmount?.(); });
+    cleanups.push(() => { observer.disconnect(); stopWaiting(); cleanup?.(); });
   }
   let last = cards.at(-1)!;
   while (last.parentElement && last.parentElement !== main && last.parentElement !== document.body) last = last.parentElement;
   const summary = document.createElement("div"); last.after(summary);
-  const root = createRoot(summary, { identifierPrefix: `election-summary-${++rootSequence}:` });
-  startTransition(() => root.render(<ResultView kind="summary" feed={feed} />));
-  cleanups.push(() => queueMicrotask(() => { root.unmount(); summary.remove(); }));
+  nodes.push(createPortal(<ResultView kind="summary" feed={feed} />, summary, `summary:${state}`));
+  cleanups.push(() => { summary.remove(); });
   const dispose = () => { if (disposed) return; disposed = true; signal.removeEventListener("abort", dispose); cleanups.forEach(cleanup => cleanup()); };
   signal.addEventListener("abort", dispose, { once: true });
+  collecting = false;
+  publish();
   return dispose;
 }

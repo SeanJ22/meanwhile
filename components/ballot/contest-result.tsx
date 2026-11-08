@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import type { Candidacy, Contest, Measure } from "@/lib/ballot/types";
 import type { ContestResult } from "@/lib/ballot/election-results";
 import { barWidth, flippedParty, formatPercent, joinNames, leadersOf, shortDate, winnersOf } from "@/lib/ballot/results";
-import { COUNTY_TIME_ZONES, governmentTimeZone } from "@/lib/time/county-time-zones";
+import { resultStateTimeZone } from "@/lib/time/result-state-time-zones";
 import { ocdStateCode } from "@/lib/ocd/state-of";
 import { NoResultsLine } from "./no-results-line";
 
@@ -18,18 +18,7 @@ function FlipPill({ to, seats }: { to: "D" | "R"; seats: number }) {
 const hasResult = (result: ContestResult | undefined): result is ContestResult => result !== undefined && result.status !== "pending";
 type ResultContest = Pick<Contest, "id" | "title" | "ocdId" | "voteFor" | "result">;
 type ResultCandidacy = Pick<Candidacy, "id" | "familyName" | "result">;
-const zones = new Map<string, string | null>();
-const zoneOf = (contest: ResultContest) => {
-  const state = (ocdStateCode(contest.ocdId) ?? "").toUpperCase();
-  if (!zones.has(state)) {
-    const tally = new Map<string, number>();
-    for (const row of COUNTY_TIME_ZONES.values()) if (row.stateCode === state && row.timeZones.length === 1) {
-      tally.set(row.timeZones[0], (tally.get(row.timeZones[0]) ?? 0) + 1);
-    }
-    zones.set(state, governmentTimeZone(state) ?? [...tally].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null);
-  }
-  return zones.get(state) ?? null;
-};
+const zoneOf = (contest: ResultContest) => resultStateTimeZone(ocdStateCode(contest.ocdId) ?? "");
 
 function StatusRow({ contest, about }: { contest: ResultContest; about: string }) {
   const result = contest.result;

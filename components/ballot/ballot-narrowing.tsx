@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { startTransition, useCallback, useEffect, useState, type ReactNode } from "react";
 
 import { AddressPrompt } from "@/components/address/address-prompt";
 
@@ -53,18 +53,21 @@ export function BallotNarrowing({
 }) {
   /** How many contests the address set aside. Null means no narrowing applied. */
   const [setAside, setSetAside] = useState<number | null>(null);
+  const [lateNodes, setLateNodes] = useState<ReactNode>(null);
   useEffect(() => {
     const controller = new AbortController();
     let dispose: (() => void) | undefined;
     const cancel = afterBallotReady(() => {
       void import("./deferred-result-enhancer").then(async module => {
         if (controller.signal.aborted) return;
-        const cleanup = await module.enhanceBallotResults(controller.signal);
+        const cleanup = await module.enhanceBallotResults(controller.signal, nodes => {
+          if (!controller.signal.aborted) startTransition(() => setLateNodes(nodes));
+        });
         if (controller.signal.aborted) cleanup();
         else dispose = cleanup;
       }).catch(() => { /* A result-cache failure never removes the ballot. */ });
     });
-    return () => { controller.abort(); cancel(); dispose?.(); };
+    return () => { controller.abort(); cancel(); dispose?.(); setLateNodes(null); };
   }, [zip, electionDate]);
 
   /** Mark the sections. The page renders every contest; this hides some. */
@@ -96,6 +99,7 @@ export function BallotNarrowing({
 
   return (
     <>
+      {lateNodes}
       {setAside !== null && (
         <div className="ballot-narrowed">
           <p>

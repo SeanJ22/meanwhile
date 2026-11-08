@@ -5083,5 +5083,17 @@
     "release": 189,
     "ci": "pass",
     "at": "2026-11-08T06:26:54Z"
+  },
+  {
+    "lane": "map-error",
+    "steps": [
+      "MP-01"
+    ],
+    "ready_sha": "ebc516a65df3f440a3b108cfa3715356b4de0f56",
+    "merge_sha": "f3196aedebd3635b4f32c531b15df5ca26762912",
+    "river_sha": "326ec16319cfe1c194cbaf027ebc771e11b74429",
+    "release": 190,
+    "ci": "pass",
+    "at": "2026-11-08T08:29:41Z"
   }
 ]

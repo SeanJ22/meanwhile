@@ -4,7 +4,7 @@ import { ensureEntity, learnOfficialHost } from "../../../facts/entities.ts";
 import { readCheckEntity } from "../../../facts/entity-read.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "../../../facts/publish.ts";
 import { nameKey, publishRosterFacts, type RosterFactsReport } from "../../../facts/roster-facts.ts";
-import { saveHeldCaptureCopy } from "./held-subject-copy.ts";
+import { saveCaptureCopy } from "../../../facts/source-copy.ts";
 import { enqueueReaderPlaces, withBatchedReaderInvalidation, type ReaderCachePurger } from "../../../reader/cache.ts";
 import { fingerprint } from "../../ids.ts";
 import type { OfficeholderPhoto } from "../../../officials/types.ts";
@@ -70,7 +70,7 @@ async function publishDetails(input: HeldSubjectPublicationInput): Promise<HeldS
   if (aliases.length || placed.length) await enqueueReaderPlaces({ entities: [id] }, db.query);
   const entity = await readCheckEntity(db.query, id);
   if (!entity) return refuse("HELD_DETAIL_ENTITY_UNAVAILABLE");
-  const copy = await db.transaction(query => saveHeldCaptureCopy(query, capture));
+  const copy = await db.transaction(query => saveCaptureCopy(query, capture));
   const provenance = captureProvenance(capture, entity.hosts);
   const facts: { field: string; outcome: PublishOutcome }[] = [];
   const candidates = heldCommitteeCandidates(subject, capture.evidence.text, capture.evidence.canonicalUrl);

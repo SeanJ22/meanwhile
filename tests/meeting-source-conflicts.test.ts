@@ -1,3 +1,4 @@
+import { PLACE_CHECKS_SQL } from "../lib/reader/place-builder.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mergeDuplicateSittingFields, mergeReaderSittings } from "../lib/meetings/sitting-merge.ts";
@@ -34,6 +35,7 @@ test("CP-18: a body's composition retains both source ids and an agenda belongin
   const report = (source: string) => ({ source, ok: true, error: null, fetched: 1, normalized: 1, drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 } });
   const snapshot: MeetingsSnapshot = { formatVersion: 1, generatedAt: at, sources: [report("calendar"), report("portal")], counts: snapshotCounts([old, fresh], 0), meetings: [old, fresh], agendaDocuments: [{ id: "agenda", meetingId: old.id, ocdId: old.ocdId } as MeetingsSnapshot["agendaDocuments"][number]] };
   const held = await readPlacePackage({state:"AZ",divisionIds:[PIMA.ocdId!],bodyIds:[PIMA.bodyId],includeAgenda:true},async sql=>{
+    if(sql===PLACE_CHECKS_SQL)return [];
     assert.equal(sql,PLACE_PAGES_SQL);
     return placePagesAnswer([{page_id:PIMA.bodyId,page_kind:"body",built_at:at,body_ids:[PIMA.bodyId],row:{
       division_ids:[PIMA.ocdId],entities:[{id:PIMA.bodyId,division:PIMA.ocdId}],fields:[],rosters:[],comments:[],sittings:[],

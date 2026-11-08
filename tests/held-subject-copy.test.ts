@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
-import { heldPageCopy, saveHeldCaptureCopy } from "../lib/control-plane/scheduler/providers/held-subject-copy.ts";
+import { pageCopy as heldPageCopy, saveCaptureCopy as saveHeldCaptureCopy } from "../lib/facts/source-copy.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import { factDb } from "./helpers/fact-db.ts";
+import { saveReleaseCopy } from "../lib/facts/source-copy.ts";
 
 const URL = "https://source.example.gov/directory", AT = "2026-10-20T07:00:00.000Z";
 test("an exact original national capture keeps its immutable receipt while scalar decoding never materializes its records", async () => {
@@ -24,6 +25,11 @@ test("an exact original national capture keeps its immutable receipt while scala
     assert.ok(copy.text.startsWith(body)); assert.ok(copy.text.includes("Ada Sample\nPublic\nOffice\n2\nAnother Person"));
     assert.deepEqual(await db.query("SELECT url,final_url,sha256,blob_key,http_status FROM source_copy"), [{ url: URL, final_url: URL, sha256: hash, blob_key: "artifact:original-national-directory", http_status: 200 }]);
     assert.equal(capture.evidence.text, body);
+    assert.equal((await saveHeldCaptureCopy(db.query,{...capture,observedAt:"2026-10-20T08:00:00.000Z"})).id,copy.id);
+    const release={name:"directory",url:URL,sha256:hash,checkedAt:AT,text:body};
+    assert.equal((await saveReleaseCopy(db.query,release)).id,copy.id,"another job reuses the saved bytes");
+    assert.equal((await saveReleaseCopy(db.query,{...release,checkedAt:"2026-10-21T07:00:00.000Z"})).id,copy.id);
+    assert.equal((await db.query("SELECT count(*)::int AS n FROM source_copy"))[0].n,1);
   } finally { await db.pg.close(); }
 });
 

@@ -1,3 +1,4 @@
+import { PLACE_CHECKS_SQL } from "../lib/reader/place-builder.ts";
 import assert from "node:assert/strict";
 import {createHash} from "node:crypto";
 import test from "node:test";
@@ -64,6 +65,7 @@ test("the real worker transfers only the requested compressed context and keeps 
       expected.set(label,canonical);
       let reads=0;
       const actual=await readPlacePackage(input,async(text,params)=>{
+        if(text===PLACE_CHECKS_SQL)return query(text,params);
         reads++;assert.equal(text,PLACE_PAGES_SQL,"every selection reads only saved context in one query");
         const rows=await query(text,params);
         bytes.set(label,Buffer.byteLength(JSON.stringify(rows)));
@@ -99,6 +101,7 @@ test("the real worker transfers only the requested compressed context and keeps 
     for(const input of cases) {
       const label=labels(input);let reads=0,legacyBytes=0;
       const legacy=await readPlacePackage(input,async(text,params)=>{
+        if(text===PLACE_CHECKS_SQL)return query(text,params);
         reads++;assert.equal(text,PLACE_PAGES_SQL,"legacy raw contexts never query source tables");
         const rows=await query(text,params);legacyBytes=Buffer.byteLength(JSON.stringify(rows));return rows;
       });

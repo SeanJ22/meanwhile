@@ -83,10 +83,10 @@ export async function stateForZip(zip: string): Promise<string | null> {
   return (await readZipPlace(zip))?.states?.[0] ?? null;
 }
 
-/** Enumerate only the requested state's codes; their memberships use the same lookup as a typed ZIP. */
-export async function readStateZipPlaces(input: string, selection: GeographySelection = currentRepresentationSelection()): Promise<ReadonlyMap<string, PlaceEntry>> {
+/** Enumerate only the requested state's codes (those that start with the prefix, when one is given); their memberships use the same lookup as a typed ZIP. */
+export async function readStateZipPlaces(input: string, selection: GeographySelection = currentRepresentationSelection(), prefix = ""): Promise<ReadonlyMap<string, PlaceEntry>> {
   const state = requireRegistryState(input.replace(/^US-/i, "")), query = placeMapQuery();
-  const codes = await query("SELECT DISTINCT m.zip FROM zip_place m JOIN entity e ON e.id=m.place_id WHERE e.state=$1::char(2) AND e.kind='place' ORDER BY m.zip", [state]);
+  const codes = await query("SELECT DISTINCT m.zip FROM zip_place m JOIN entity e ON e.id=m.place_id WHERE e.state=$1::char(2) AND e.kind='place' AND m.zip LIKE $2 ORDER BY m.zip", [state, `${prefix}%`]);
   const out = new Map<string, PlaceEntry>();
   // Read the state in one bounded query, then apply the shared year selection per code.
   if (!codes.length) return out;

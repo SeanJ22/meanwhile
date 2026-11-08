@@ -7,7 +7,6 @@ import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { askOnRelease, laneEnds, laneTurn, slotOrLeave } from "../lib/ops/lane-turn.ts";
 import { nationalEverydayRouting, nationalPresident } from "../lib/reader/national.ts";
 import { runPlaceFilesLane } from "../lib/reader/place-files-lane.ts";
-import { openStateMirror } from "../lib/reader/state-mirror.ts";
 
 const facts = readerFactDb(prepareProductionCivicDataWrite().connection).query;
 // The reader's own functions read through this connection, so a file says what the reader would have read.
@@ -23,7 +22,7 @@ const { claimEnd, stopRequested, turnEnd } = laneEnds(turn);
 const release = await slotOrLeave(turn, "place-files-lane.mts", claimEnd);
 try {
   setInterval(() => turn.beat(), 60_000);
-  await runPlaceFilesLane({ deps: { facts, store, log: console.log, openMirror: state => openStateMirror(facts, state),
+  await runPlaceFilesLane({ deps: { facts, store, log: console.log,
     national: async () => ({ president: await nationalPresident(), routing: await nationalEverydayRouting() }) }, turnEnd, total, stopRequested });
   turn.beat();
 } finally { release(); }

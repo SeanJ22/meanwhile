@@ -2,12 +2,11 @@ import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
 import type { EverydayRoutingProjection } from "../routing/everyday.ts";
 import { fileKey, packFile, unpackFile, fileHash, type PlaceFile, type PlaceFileSource } from "./place-file.ts";
 import { serverReaderValue } from "./memory.ts";
-import { lengthen, type PlaceIndex } from "./place-index.ts";
+import { lengthen, type BoardsIndex, type IndexPointer, type MapIndex, type ZipFile } from "./place-index.ts";
+import { stateDivisionId } from "./state-share.ts";
 
-/** The one mutable file of a state: it names the state's current index and the current national file. Every other file is named by its hash and never changes. */
 export const indexPointerKey = (state: string): string => `reader/index/${state}.json`;
 export const READER_INDEX_TAG = (state: string): string => `reader-index:${state}`;
-export interface IndexPointer { readonly index: string; readonly national: string }
 
 /** The national file: what no place owns. */
 export interface NationalFile { readonly v: 1; readonly president: unknown; readonly routing: EverydayRoutingProjection | null }
@@ -43,28 +42,31 @@ async function keptFile<T>(store: ReaderArtifactStore, name: string): Promise<T 
 
 /** The files of a store, read through the states' pointers: what a reader that has only the store has. */
 export function openPlaceFiles(store: ReaderArtifactStore) {
-  const indexes = new Map<string, Promise<{ pointer: IndexPointer; index: PlaceIndex; etag: string | null } | null>>();
-  const national = new Map<string, Promise<NationalFile | null>>();
-  const index = (state: string) => {
-    let held = indexes.get(state);
-    if (!held) indexes.set(state, held = (async () => {
-      const pointer = await store.readJsonPointer<IndexPointer>(indexPointerKey(state));
-      const found = pointer && await getFile<PlaceIndex>(store, pointer.value.index);
-      return pointer && found ? { pointer: pointer.value, index: found, etag: pointer.etag } : null;
-    })());
+  const pointers = new Map<string, Promise<IndexPointer | null>>();
+  const pointer = (state: string) => {
+    let held = pointers.get(state);
+    if (!held) pointers.set(state, held = store.readJsonPointer<IndexPointer>(indexPointerKey(state)).then(read => read?.value ?? null));
     return held;
   };
+  /** One prefix's ZIP file. */
+  const zipFile = async (state: string, zip: string): Promise<ZipFile | null> => {
+    const name = (await pointer(state))?.zip3[zip.slice(0, 3)];
+    return name ? keptFile<ZipFile>(store, name) : null;
+  };
   const source = async (state: string): Promise<PlaceFileSource> => {
-    const held = await index(state);
+    const held = await pointer(state);
     if (!held) throw new Error(`PLACE_INDEX_MISSING:${state}`);
-    const at = new Map(held.index.places.map(row => [lengthen(held.index.base, row[0]), row[4]]));
-    if (!national.has(held.pointer.national)) national.set(held.pointer.national, keptFile<NationalFile>(store, held.pointer.national));
+    const map = (await keptFile<MapIndex>(store, held.map))!;
+    const boards = (await keptFile<BoardsIndex>(store, held.boards))!;
+    const at = new Map([...map.places.map(row => [lengthen(map.base, row[0]), row.at(-1) as string] as const), ...boards.boards.map(row => [lengthen(boards.base, row[0]), row[2]] as const)]);
+    const national = await keptFile<NationalFile>(store, held.national);
+    const aliases = (at.has(stateDivisionId(state)) ? await keptFile<PlaceFile>(store, at.get(stateDivisionId(state))!) : null)?.aliases ?? {};
     return {
       has: id => at.has(id),
       file: async id => { const name = at.get(id); return name ? keptFile<PlaceFile>(store, name) : null; },
-      canonicalBody: id => held.index.aliases[id] ?? id,
-      routing: async () => (await national.get(held.pointer.national))?.routing ?? null,
+      canonicalBody: id => aliases[id] ?? id,
+      routing: async () => national?.routing ?? null,
     };
   };
-  return { index, source };
+  return { pointer, zipFile, source };
 }

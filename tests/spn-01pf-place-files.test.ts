@@ -7,10 +7,10 @@ import { brotliDecompressSync } from "node:zlib";
 import { writePassCursor, installFactReader } from "../lib/facts/db.ts";
 import { LocalFileArtifactStore, type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
 import { contentHash, fileKey, loadPlaceFromFiles, type PlaceFile } from "../lib/reader/place-file.ts";
-import { getFile, indexPointerKey, openPlaceFiles, putFile, READER_INDEX_TAG, type IndexPointer, type NationalFile } from "../lib/reader/place-files.ts";
+import { getFile, indexPointerKey, openPlaceFiles, putFile, READER_INDEX_TAG, type NationalFile } from "../lib/reader/place-files.ts";
 import { closePlaceFilesLane, placeFilesTurn } from "../lib/reader/place-files-lane.ts";
 import { servePlaceFile, servePlaceIndexPointer } from "../lib/reader/place-files-serve.ts";
-import { answerKey, buildPlaceIndex, type PlaceIndex } from "../lib/reader/place-index.ts";
+import { answerKey, buildMapIndex, buildZipFiles, lengthen, type IndexPointer, type MapIndex, type ZipPlaces } from "../lib/reader/place-index.ts";
 import { packPlaceContext } from "../lib/reader/place-ready.ts";
 import { composeState, cutState, stateDivisionId } from "../lib/reader/state-share.ts";
 import { stateAnswerFromFiles, zipEntry } from "../lib/reader/zip-files.ts";
@@ -20,6 +20,16 @@ import { migratedFactDb } from "./helpers/migrated-reader-db.ts";
 const STATE = stateDivisionId("AZ"), A = `${STATE}/county:pima`, B = `${STATE}/county:cochise`;
 const page = (name: string, checked?: string) => ({ entities: [], fields: [{ entity_id: "e", field: "name", value: name, url: "https://example.gov/", quote: name, checked_at: checked ?? "2026-10-01T00:00:00Z" }],
   rosters: [], comments: [], sittings: [], meeting_rows: [], archived_documents: [], archived_document_links: [], agenda_texts: [], registry: null, governments: [], divisions: [], registration_held: false, division_ids: [] });
+
+/** A state published the way the lane publishes it: the map index, the ZIP files and the pointer. */
+async function publish(store: ReaderArtifactStore, files: Map<string, string>, zips: Record<string, ZipPlaces>, national: string) {
+  const zip3: Record<string, string> = {};
+  for (const [prefix, file] of Object.entries(buildZipFiles("AZ", files, zips, national, "", () => ""))) zip3[prefix] = (await putFile(store, file)).name;
+  const { map, boards } = buildMapIndex("AZ", files, new Map());
+  const pointer: IndexPointer = { map: (await putFile(store, map)).name, boards: (await putFile(store, boards)).name, zip3, national };
+  assert.equal((await store.writeJsonPointer<IndexPointer>(indexPointerKey("AZ"), pointer, null)).modified, true);
+  return pointer;
+}
 
 /** A store that remembers the order of its writes. */
 function recording(root: string) {
@@ -41,16 +51,15 @@ test("SPN-01PF: the lane files only the places that changed, moves the pointer a
     }
     const national = await putFile(store, { v: 1, president: null, routing: null } satisfies NationalFile);
     // The state was filled before: both places are filed under the index the pointer names.
-    const first = new Map<string, string>(), meta = new Map();
+    const first = new Map<string, string>();
     const { buildPlaceFile, PLACE_FILE_PAGE_SQL } = await import("../lib/reader/place-file-build.ts");
     for (const row of await db.query(PLACE_FILE_PAGE_SQL)) first.set(String(row.id), (await putFile(store, { ...await buildPlaceFile(db.query, row), readAt: Date.now() })).name);
-    const index = await putFile(store, buildPlaceIndex("AZ", national.name, first, meta, {}, {}));
-    assert.equal((await store.writeJsonPointer<IndexPointer>(indexPointerKey("AZ"), { index: index.name, national: national.name }, null)).modified, true);
+    await publish(store, first, {}, national.name);
     await writePassCursor(db.query, "place-files:pages", JSON.stringify({ at: "2026-10-02T00:00:00Z", id: "" }));
     log.length = 0;
 
     const purges: string[][] = [];
-    const deps = { facts: db.query, store, national: async () => ({ president: null, routing: null }), openMirror: async () => { throw new Error("no state copy is needed for a changed page"); },
+    const deps = { facts: db.query, store, national: async () => ({ president: null, routing: null }),
       purge: async (tags: readonly string[]) => { purges.push([...tags]); log.push(`purge:${tags.join(",")}`); return { purged: true }; }, now: () => Date.parse("2026-10-03T00:00:00Z") };
 
     // Nothing changed: nothing is written and nothing is cleared.
@@ -70,8 +79,8 @@ test("SPN-01PF: the lane files only the places that changed, moves the pointer a
     assert.ok(log.findIndex(line => line.startsWith("pointer:")) > log.findLastIndex(line => line.startsWith("file:")), "the pointer moves after every file");
     assert.deepEqual(purges, [[READER_INDEX_TAG("AZ")]]);
     const moved = (await store.readJsonPointer<IndexPointer>(indexPointerKey("AZ")))!.value;
-    const filed = (await getFile<PlaceIndex>(store, moved.index))!;
-    const names = new Map(filed.places.map(row => [row[0].startsWith("/") ? filed.base + row[0] : row[0], row[4]]));
+    const filed = (await getFile<MapIndex>(store, moved.map))!;
+    const names = new Map(filed.places.map(row => [lengthen(filed.base, row[0]), row.at(-1) as string]));
     assert.equal(names.get(B), first.get(B), "the place that did not change keeps its file");
     assert.notEqual(names.get(A), first.get(A));
     assert.equal(await store.readBytes(fileKey(first.get(A)!)) !== null, true, "the earlier file is never overwritten or removed");
@@ -116,19 +125,22 @@ test("SPN-01PF: a place is read from its file and the national file alone", asyn
     const file = await putFile(store, { ...await buildPlaceFile(db.query, row!), readAt: 1 });
     const national = await putFile(store, { v: 1, president: null, routing: null } satisfies NationalFile);
     const zips = { "85701": { point: [32.2, -110.9] as const, states: ["AZ"], ids: [A], partial: [], fringe: [], districts: [] } };
-    const index = await putFile(store, buildPlaceIndex("AZ", national.name, new Map([[A, file.name]]), new Map(), {}, zips));
-    await store.writeJsonPointer(indexPointerKey("AZ"), { index: index.name, national: national.name }, null);
-    const keyOf = (name: string) => buildPlaceIndex("AZ", national.name, new Map([[A, name]]), new Map(), {}, zips).zips["85701"]![7];
+    await publish(store, new Map([[A, file.name]]), zips, national.name);
+    const keyOf = (name: string, territory = "") => buildZipFiles("AZ", new Map([[A, name]]), zips, national.name, territory, () => "")["857"]!.zips["85701"]![7];
     assert.equal(keyOf(file.name), keyOf(file.name));
     assert.notEqual(keyOf(file.name), keyOf("f".repeat(32)), "the key moves when a file its answer reads is replaced");
-    assert.notEqual(answerKey(["k"], new Date("2026-11-08T12:00:00Z")), answerKey(["k"], new Date("2026-11-09T12:00:00Z")), "and when the Eastern day does");
-    assert.equal(answerKey(["k"], new Date("2026-11-09T03:00:00Z")), answerKey(["k"], new Date("2026-11-08T23:00:00Z")), "the day is the Eastern one");
+    assert.notEqual(keyOf(file.name), keyOf(file.name, "territory-2"), "and when the Arizona territory file does");
+    assert.notEqual(answerKey("k", new Date("2026-11-08T12:00:00Z")), answerKey("k", new Date("2026-11-09T12:00:00Z")), "and when the Eastern day does");
+    assert.equal(answerKey("k", new Date("2026-11-09T03:00:00Z")), answerKey("k", new Date("2026-11-08T23:00:00Z")), "the day is the Eastern one");
+    const crossing = { "03579": { point: [44.9, -71] as const, states: ["AZ", "NH"], ids: [A], partial: [], fringe: [], districts: [] } };
+    const together = (other: string) => buildZipFiles("AZ", new Map([[A, file.name]]), crossing, national.name, "", () => other)["035"]!.zips["03579"]![7];
+    assert.notEqual(together("a"), together("b"), "a ZIP across a state line has one key, which moves when the other side's files do");
     installFactReader(async () => { throw new Error("a read from files never reads the database"); });
     const place = await loadPlaceFromFiles({ state: "AZ", divisionIds: [A] }, await openPlaceFiles(store).source("AZ"));
     assert.equal(place.registry, null);
     assert.equal(place.everydayRouting, null);
     assert.equal(place.bodies.length, 0);
-    const listed = zipEntry((await openPlaceFiles(store).index("AZ"))!.index, "85701")!;
+    const opened = openPlaceFiles(store), listed = zipEntry((await opened.zipFile("AZ", "85701"))!, "ocd-division/country:us/state:az", "85701")!;
     assert.deepEqual([listed.ids, listed.states, listed.samples], [[A], ["AZ"], 0]);
     await assert.rejects(stateAnswerFromFiles(await openPlaceFiles(store).source("AZ"), "AZ", "85701", listed), /STATE_FILE_MISSING:AZ/, "a state without its statewide part is not answered from a guess");
   } finally { installFactReader(undefined); await db.pg.close(); rmSync(root, { recursive: true, force: true }); }
@@ -152,4 +164,22 @@ test("SPN-01PF: a state's package is cut by division and a ZIP's divisions put i
   assert.deepEqual(zip.registry.registry.bodies.map(body => body.id), ["b1"], "a board reaches every division it serves");
   assert.deepEqual(zip.registry.registry.divisions.map(row => row.ocdId), [STATE, `${STATE}/sldl:1`, `${STATE}/sldl:3`]);
   assert.equal(JSON.stringify(read(`${STATE}/sldl:2`).people!.officeholders.map(holder => holder.id)), '["p2"]');
+});
+
+test("SPN-01PF: a place file lists the pins of its held meetings, and they are part of what makes it new", async () => {
+  const db = await migratedFactDb();
+  try {
+    const meeting = (id: string, location: unknown) => ({ id, title: `Meeting ${id}`, startsAt: "2026-11-10T18:00:00Z", bodyId: "b1", location });
+    const row = (extra: unknown[]) => ({ ...page("Pima"), parts: {}, meeting_rows: [{ scope: "s", current_version_id: "v", confirmation: null, payload: { meetings: [meeting("m1", { name: "Hall", address: null, lat: 32.2, lng: -110.9 }), meeting("m2", null), ...extra] } }] });
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Pima','AZ')", [A]);
+    const { buildPlaceFile, PLACE_FILE_PAGE_SQL } = await import("../lib/reader/place-file-build.ts");
+    const built = async (extra: unknown[]) => {
+      await db.query("INSERT INTO place_page(place_id,version,built_at,context) VALUES($1,1,now(),$2::jsonb) ON CONFLICT(place_id) DO UPDATE SET context=excluded.context", [A, JSON.stringify(packPlaceContext({ formatVersion: 1, current: row(extra) }))]);
+      return buildPlaceFile(db.query, (await db.query(`${PLACE_FILE_PAGE_SQL} AND p.place_id=$1`, [A]))[0]!);
+    };
+    const one = await built([]), two = await built([meeting("m3", { name: "Library", address: null, lat: 32.3, lng: -110.8 })]);
+    assert.deepEqual(one.pins, [{ id: "m1", title: "Meeting m1", startsAt: "2026-11-10T18:00:00Z", lat: 32.2, lng: -110.9, bodyId: "b1" }], "a meeting with no point has no pin");
+    assert.equal(two.pins!.length, 2);
+    assert.notEqual(contentHash(one), contentHash(two), "a new pin makes a new file");
+  } finally { await db.pg.close(); }
 });

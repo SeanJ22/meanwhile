@@ -12,7 +12,7 @@ const MISSING = { "Cache-Control": "no-store" } as const;
 /** One published file by its name, as stored: brotli, which every browser reads, or plain for a client that does not. These read the store and nothing else. */
 export async function servePlaceFile(request: Request, name: string): Promise<Response> {
   const store = resolveReaderArtifactStore();
-  if (!/^[0-9a-f]{32}$/.test(name) || !store) return new Response(null, { status: 404, headers: MISSING });
+  if (!/^[0-9a-f]{16}$/.test(name) || !store) return new Response(null, { status: 404, headers: MISSING });
   const bytes = await store.readBytes(fileKey(name));
   if (!bytes) return new Response(null, { status: 404, headers: MISSING });
   const brotli = /\bbr\b/.test(request.headers.get("accept-encoding") ?? "");

@@ -7,7 +7,6 @@ import { installDatabaseClientAccounting, withCallerSite, withDatabaseQuery } fr
 import { versionedSelect } from "../db/versioned-query.ts";
 import { shareVersionedRows } from "../db/versioned-rows.ts";
 import { currentReaderRoute } from "../db/reader-route.ts";
-import { currentStateSeam } from "./state-seam.ts";
 
 let installed: ReadOnlyQuery | null | undefined;
 
@@ -85,8 +84,6 @@ export function installReaderDatabaseQuery(query: ReadOnlyQuery | null | undefin
 
 /** Foreground ballots use read-only HTTP; other readers reuse their socket transaction. */
 export function readerDatabaseQuery(deadlineMs?: number): ReadOnlyQuery | null {
-  const copy = currentStateSeam();
-  if (copy) return copy.reader;
   if (installed !== undefined) return installed;
   const connectionString = storedKeyValue("DATABASE_URL")?.trim();
   if (!connectionString) return null;

@@ -103,25 +103,7 @@ const REPOSITORIES = "lib/control-plane/repository/pg-store.ts";
 /** Migrations change tables rather than read them; this check names the tables it lists. */
 const listedFile = file => sourceFile(file) && !file.startsWith("lib/db/migrations/") && file !== "scripts/check-rulings.mjs";
 
-/** A throwaway in-process PGlite copy of one state, never the production database (Sean, Nov 8). */
-export const THROWAWAY_COPIES = ["lib/reader/state-mirror.ts"];
-/** What a copy may not import: anything that can write production, and the drivers that reach it. */
-const PRODUCTION_WRITERS = /^(?:lib\/(?:facts|civic-data|control-plane|core)\/|lib\/db\/(?:client|write-guard|transfer)|@neondatabase\/|pg$)/;
-
-/** Why a listed file is not a throwaway copy: it must make its own PGlite and import nothing that reaches production writes (type imports carry no code). */
-export function throwawayCopyProblems(file, text) {
-  const clean = withoutComments(text), problems = [];
-  if (!/(?:from|import\()\s*["']@electric-sql\/pglite["']/.test(clean) || !/new PGlite\(/.test(clean)) problems.push("does not create its own PGlite");
-  for (const [, specifier] of clean.matchAll(/(?:^|\n)\s*import\s+(?!type\b)[^;]*?from\s*["']([^"']+)["']|\bimport\(\s*["']([^"']+)["']\s*\)/g).flatMap(m => [[m[0], m[1] ?? m[2]]])) {
-    const target = specifier.startsWith(".") ? posix.join(posix.dirname(file), specifier) : specifier;
-    if (PRODUCTION_WRITERS.test(target)) problems.push(`imports ${specifier}, which reaches production`);
-  }
-  return problems;
-}
-const throwawayCopy = (file, text) => THROWAWAY_COPIES.includes(file) && throwawayCopyProblems(file, text).length === 0;
-
 export function bundleTables(file, text) {
-  if (throwawayCopy(file, text)) return [];
   const clean = withoutComments(text);
   return BUNDLE_TABLES.filter(table => new RegExp(`\\b${table}\\b`).test(clean)).map(table => ({ file, table }));
 }
@@ -163,7 +145,7 @@ export function coreProblems(core, texts, baseCore = null) {
   const problems = [], at = (what, file) => sentence(what, file, "docs/how-it-works.md section 9");
   const writes = new Map(), dynamic = new Set(), created = new Map(), dynamicTables = new Set(), orm = ormTables(texts.get("lib/db/schema.ts") ?? "");
   for (const [file, text] of texts) {
-    if (writerFile(file) && !throwawayCopy(file, text)) {
+    if (writerFile(file)) {
       const found = tableWrites(text, orm);
       if (found.dynamic) dynamic.add(file);
       for (const table of found.tables) if (core.tables[table]) writes.set(`${file}\t${table}`, { file, table });
@@ -174,7 +156,6 @@ export function coreProblems(core, texts, baseCore = null) {
       if (defined.dynamic) dynamicTables.add(file);
     }
   }
-  for (const file of THROWAWAY_COPIES) if (texts.has(file)) for (const why of throwawayCopyProblems(file, texts.get(file))) problems.push(at(`${file} is listed as a throwaway copy but ${why}`, file));
   const listed = new Set();
   for (const [table, { writers, bypass }] of Object.entries(core.tables)) {
     for (const file of [...writers, ...bypass]) listed.add(`${file}\t${table}`);

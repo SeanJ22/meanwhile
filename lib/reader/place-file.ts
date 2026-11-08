@@ -14,6 +14,9 @@ export const PLACE_FILE_VARIANTS: readonly PlaceFileVariant[] = ["current", "his
 /** The agenda documents and archived texts a first look does not read, kept beside the brief page so a longer look can restore the whole page. */
 export type PlaceAgenda = Pick<Row, "agenda_texts" | "archived_documents" | "archived_document_links"> & { readonly meetingAgenda: readonly (readonly [unknown, unknown])[] };
 
+/** A held meeting that has a pin on the map. */
+export interface PlacePin { readonly id: string; readonly title: string; readonly startsAt: string; readonly lat: number; readonly lng: number; readonly bodyId: string | null }
+
 /**
  * One place's file. It is the same for every reader and holds nothing about any one of them: the saved page with the body identities already
  * applied, the dates its facts were last checked, and (for a place of a state) the place's share of the state's answer.
@@ -29,10 +32,14 @@ export interface PlaceFile {
   /** When the dates its facts were checked were read, in milliseconds. */
   readonly readAt: number;
   readonly variants: Readonly<Partial<Record<PlaceFileVariant, { readonly row: Row; readonly agenda?: PlaceAgenda; readonly checks?: PlaceChecks }>>>;
+  /** The held meetings of the place that have a pin, so a map draws them without composing the page. */
+  readonly pins?: readonly PlacePin[];
   /** The place's share of its state's answer. */
   readonly share?: unknown;
   /** The statewide part of the state's answer, on the state's own file. */
   readonly wide?: unknown;
+  /** The ids of the state's boards that were folded into other boards, on the state's own file. */
+  readonly aliases?: Readonly<Record<string, string>>;
 }
 
 const records = (value: unknown): Row[] => Array.isArray(value) ? value as Row[] : [];
@@ -106,7 +113,7 @@ export async function loadPlaceFromFiles(input: PlaceInput, source: PlaceFileSou
 /** The file as stored: the JSON, brotli compressed. */
 export const packFile = (value: unknown): Uint8Array => brotliCompressSync(JSON.stringify(value), { params: { [constants.BROTLI_PARAM_QUALITY]: 11 } });
 export const unpackFile = <T>(bytes: Uint8Array): T => JSON.parse(brotliDecompressSync(bytes).toString("utf8")) as T;
-const digest = (text: string): string => createHash("sha256").update(text).digest("hex").slice(0, 32);
+const digest = (text: string): string => createHash("sha256").update(text).digest("hex").slice(0, 16);
 /** The file's version stamp, which is its name: the hash of everything it says. */
 export const fileHash = (value: unknown): string => digest(JSON.stringify(value));
 /** What the file says apart from the dates its facts were checked, so a check alone is not a change. */

@@ -7,7 +7,6 @@ import { installDatabaseTransferCounter } from "../db/transfer.ts";
 import { installDatabaseClientAccounting, withCallerSite, withDatabaseQuery } from "../db/transfer-by-caller.ts";
 import { readerDatabaseQuery } from "../reader/database.ts";
 import { serverReaderValue } from "../reader/memory.ts";
-import { currentStateSeam } from "../reader/state-seam.ts";
 
 const pools = new Map<string, Pool>();
 const prepared = new Map<string, string>();
@@ -87,8 +86,6 @@ let installed: Query | null | undefined;
 
 /** Fact reads share the reader's version-checked, read-only connection. */
 export function factReader(): Query | null {
-  const copy = currentStateSeam();
-  if (copy) return copy.facts;
   if (installed !== undefined) return installed;
   const url = storedKeyValue("DATABASE_URL")?.trim();
   if (!url) return null;

@@ -40,6 +40,7 @@ const stateOfficeAliases: Readonly<Record<string, Readonly<Record<string, string
   VT: { "auditor of accounts": "auditor" },
 };
 const officeTitle = (office: string): string => office.replace(/_/g, " ")
+  .replace(/\(\s*(?:unexpired|special|ending|remainder)[^)]*\)/gi, " ")
   .replace(/\bunexpired\s+(?:\d+\s*[- ]?\s*year\s+)?term\b/gi, " ")
   .replace(/\s*[—–-]\s*special\s+election\b/gi, " ")
   .replace(/\b(?:place|seat|position)\s+(?:no\.?\s*)?\d+\b/gi, " ").trim();
@@ -69,12 +70,23 @@ function names(candidate: Candidacy, office: string): ReadonlySet<string> {
   const values = [ballotCandidateDisplayName({ ...person, ticket: undefined }), person.filing?.publishedName,
     ...person.aliases?.flatMap(alias => alias.includes("|") ? [alias.slice(alias.lastIndexOf("|") + 1)] : []) ?? []];
   if (office === "governor") values.push(ballotCandidateDisplayName(person));
-  return new Set(values.filter((value): value is string => !!value?.trim()).map(nameKey));
+  // Filings spell legal names ("Thomas "Jay" Feely IV"); results print how the person is known ("Jay Feely"): first or nickname plus family.
+  const given = (person.givenName ?? "").trim(), family = (person.familyName ?? "").trim();
+  if (given && family) {
+    const nickname = /["“]([^"”]+)["”]/.exec(given)?.[1], first = given.replace(/["“][^"”]*["”]/g, " ").trim().split(/\s+/)[0];
+    for (const alias of [nickname, first]) if (alias) values.push(`${alias} ${family}`);
+  }
+  return new Set(values.filter((value): value is string => !!value?.trim()).flatMap(value => {
+    const known = nameKey(value);
+    return [known, withoutSuffix(known)];
+  }));
 }
+
+const withoutSuffix = (name: string): string => name.replace(/\s+(?:jr|sr|ii|iii|iv)$/, "");
 
 function sourceName(name: string, office: string): string {
   // The source can print the joint choice as two full names. The governor is its lead.
-  return nameKey(office === "governor" ? name.split(/\s*\/\s*|\s+and\s+|\s*&\s*/i)[0] : name);
+  return withoutSuffix(nameKey(office === "governor" ? name.split(/\s*\/\s*|\s+and\s+|\s*&\s*/i)[0] : name));
 }
 
 function districtHint(contest: Contest, hint: string | undefined): boolean {

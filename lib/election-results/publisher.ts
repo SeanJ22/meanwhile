@@ -186,8 +186,10 @@ export async function publishElectionResultBatch(input: {
       };
       const measureValue = race.measure ? { yesVotes: race.measure.yesVotes ?? null, noVotes: race.measure.noVotes ?? null,
         yesPercent: race.measure.yesPercent ?? null, outcome: race.measure.outcome } : undefined;
+      // A captured Ballotpedia page is a substring that never spells its own URL id, so the saved copy can only name this contest by the seat it prints.
+      const congress = race.sourceId === "ballotpedia" && (race.office === "us_house" || race.office === "us_senate");
       await write({ id: match.contest.id, kind: "contest", name: match.contest.title, parentId: match.contest.ocdId,
-        sourceId: race.sourceRaceId, quote: race.quote,
+        sourceId: congress ? `U.S. ${race.office === "us_house" ? "House" : "Senate"} ${stateName(race.state) ?? race.state}` : race.sourceRaceId, quote: race.quote,
         value: { status: race.status, percentCounted: race.percentCounted ?? null, statusChangedAt: raw.statusChangedAt ?? null,
           seatsToFill: race.seatsToFill ?? match.contest.voteFor, flipped: race.flipped ?? null,
           gainedByParty: race.gainedByParty ?? null, incumbentLost: race.incumbentLost ?? null,

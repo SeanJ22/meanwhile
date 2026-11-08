@@ -1,4 +1,4 @@
-import { geometryFiles } from "../lib/holdings/discovery.ts";
+import { loadFeatures } from "./helpers/holdings-features.ts";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
@@ -6,7 +6,7 @@ import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
 import { fixtureZipResolution } from "./helpers/zip-location.ts";
-import { bodiesAt, type GeoFeature } from "../lib/registry/resolve.ts";
+import { bodiesAt } from "../lib/registry/resolve.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
 
 /**
@@ -15,7 +15,6 @@ import type { Division, Registry } from "../lib/registry/types.ts";
  */
 
 const here = dirname(fileURLToPath(import.meta.url));
-const HOLDINGS_ROOT = join(here, "..");
 
 /** What must resolve, per ZIP, as OCD-ID substrings, so the oracle is about which governments resolve, not key shape. */
 const ORACLE: Record<string, { must: string[]; note: string }> = {
@@ -63,16 +62,6 @@ const ORACLE: Record<string, { must: string[]; note: string }> = {
     ],
   },
 };
-
-async function loadFeatures(): Promise<GeoFeature[]> {
-  const names = geometryFiles(HOLDINGS_ROOT);
-  const all: GeoFeature[] = [];
-  for (const name of names) {
-    const parsed = JSON.parse(await readFile(join(HOLDINGS_ROOT, name), "utf8"));
-    all.push(...(parsed.features as GeoFeature[]));
-  }
-  return all;
-}
 
 async function loadRegistry(): Promise<Registry> {
   return JSON.parse(

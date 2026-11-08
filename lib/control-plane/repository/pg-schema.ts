@@ -155,6 +155,13 @@ function onlineIndex(name: string, on: string): OnlineIndex {
   return { name, ddl: `CREATE INDEX CONCURRENTLY IF NOT EXISTS ${name} ON ${on};`, inProgressCode: "CONTROL_PLANE_INDEX_BUILD_IN_PROGRESS" };
 }
 
+/** Publication admission reads only acknowledgements for this state and code. */
+export const CAMPAIGN_PUBLICATION_INDEXES: readonly OnlineIndex[] = [
+  onlineIndex("cp_log_promotion_campaign_state", "cp_log_promotion_pipeline ((upper(record#>>'{campaignSite,identity,stateCode}'))) WHERE record->>'stage'='APPROVED_FOR_PROMOTION'"),
+  onlineIndex("cp_log_owner_campaign_states", "cp_log_owner_digests USING gin ((record#>'{runtimeOutcome,campaignPublicationApprovalsByState}')) WHERE record#>>'{runtimeOutcome,kind}'='ROUTINE_CIVIC_DATA_SUPERVISOR'"),
+  onlineIndex("cp_log_owner_campaign_code", "cp_log_owner_digests ((record#>>'{runtimeOutcome,testedSha}')) WHERE record#>>'{runtimeOutcome,kind}'='ROUTINE_CIVIC_DATA_SUPERVISOR' AND record#>'{runtimeOutcome,campaignPublicationApprovalsByState}' IS NOT NULL"),
+];
+
 /** State membership and revision checks cover both live and retained occurrences. */
 export const RESEARCH_REVISION_INDEXES: readonly OnlineIndex[] = ["cp_occurrences", "cp_occurrences_archive"].map(table =>
   onlineIndex(`${table}_state_revision`, `${table} (cp_control_state(value),id) INCLUDE (revision)`));
@@ -453,7 +460,7 @@ export const FIELD_MANUAL_ENTRIES_KIND_INDEX_DDL =
   "CREATE INDEX IF NOT EXISTS cp_field_manual_entries_kind ON cp_field_manual_entries ((value->>'kind'));";
 
 export const ONLINE_INDEXES: ReadonlyMap<string, OnlineIndex> = new Map(
-  [ARTIFACT_SOURCE_INDEX, ...SCOPED_HISTORY_INDEXES, ...RESEARCH_REVISION_INDEXES, ...PLANNED_WORK_ITEM_INDEXES, ...CHANGED_AT_INDEXES, ...ROUTE_TASK_INDEXES].map(index => [index.ddl, index] as const));
+  [ARTIFACT_SOURCE_INDEX, ...SCOPED_HISTORY_INDEXES, ...RESEARCH_REVISION_INDEXES, ...PLANNED_WORK_ITEM_INDEXES, ...CHANGED_AT_INDEXES, ...ROUTE_TASK_INDEXES, ...CAMPAIGN_PUBLICATION_INDEXES].map(index => [index.ddl, index] as const));
 
 const WORK_ITEM_PUBLICATION_INDEXES = [...SCOPED_HISTORY_INDEXES, ...CHANGED_AT_INDEXES].filter(index =>
   ["cp_work_items_publication_contract", "cp_work_items_publication_body", "cp_work_items_contract_subject", "cp_work_items_changed_at"].includes(index.name));
@@ -700,6 +707,7 @@ FOR EACH ROW EXECUTE FUNCTION cp_admin_action_history_invalidate_readiness();
 END $$;`,
 
   ARTIFACT_SOURCE_INDEX_DDL,
+  ...CAMPAIGN_PUBLICATION_INDEXES.map(index => index.ddl),
   `CREATE INDEX IF NOT EXISTS cp_attempts_lease_id ON cp_attempts ((value->>'leaseId'));`,
   `CREATE INDEX IF NOT EXISTS cp_log_owner_digests_cycle_kind_position
      ON cp_log_owner_digests (log_key, (record #>> '{runtimeOutcome,kind}'), position DESC);`,

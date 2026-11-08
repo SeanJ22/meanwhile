@@ -26,6 +26,11 @@ import { BriefParts } from "../app/(admin)/_mw/admin-v6/brief-view.tsx";
 import { readVitalSigns } from "../lib/control-plane/admin-view/vital-signs-read.ts";
 import { config as schedule } from "../netlify/functions/line-keeper.mts";
 import { JOB_BREAKER_DDL } from "../lib/control-plane/repository/migrations/BB-01.ts";
+import { runnerHealthProblems } from "../lib/control-plane/line-keeper/jobs.ts";
+import { keeperSilentProblem, watchLineKeeper } from "../lib/control-plane/line-keeper/watch.ts";
+import { isLineHealthKey } from "../lib/control-plane/line-keeper/health.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { fixItems } from "../lib/control-plane/fix-list.ts";
 const migration=readFileSync(COUNT_SCHEMA_SOURCE,'utf8');
 const query=(db:PGlite)=>({query:async(text:string,params:readonly unknown[]=[])=> (await db.query<Record<string,unknown>>(text,[...params])).rows});
 async function readerDatabase() {
@@ -73,7 +78,7 @@ test('688 state problems become one brief group, agree with direct state SQL, an
     }
     const at=new Date().toISOString();
     const {hour}=await runLineKeeper(query(control),query(reader),at);
-    assert.equal(hour.problems.length,688);
+    assert.equal(hour.problems.length,689,'688 piles plus the missing runner heartbeat, which now reads as a silent runner');
     const groups=groupCountProblems(hour.problems.filter((problem):problem is CountProblem=>"kind" in problem));
     assert.equal(groups.length,1);
     assert.equal(groups[0].group!.items,1372);
@@ -82,7 +87,7 @@ test('688 state problems become one brief group, agree with direct state SQL, an
       FROM cp_owner_snapshots s CROSS JOIN LATERAL jsonb_array_elements(s.value->'allRowsIndex') r
       WHERE s.id LIKE 'current:%' GROUP BY 1 ORDER BY 1`)).rows;
     for(const row of direct)assert.equal(groups[0].group!.states.find(s=>s.state===row.state)!.items,row.n,row.state);
-    assert.equal((await control.query<{n:number}>('SELECT count(*)::int AS n FROM cp_admin_fix_list')).rows[0].n,688);
+    assert.equal((await control.query<{n:number}>('SELECT count(*)::int AS n FROM cp_admin_fix_list')).rows[0].n,689);
     const config=withKeeperFixes(defaultAdminConfig(at),hour);
     const brief=config.latestBrief!;
     const html=renderToStaticMarkup(createElement(BriefParts,{brief}));
@@ -90,9 +95,11 @@ test('688 state problems become one brief group, agree with direct state SQL, an
     assert.match(html,/Alaska/);assert.match(html,/scope=ak/);assert.doesNotMatch(html,/diggers/);
     const clear=withKeeperFixes(config,{...hour,problems:[]});
     assert.equal(clear.latestBrief!.problems.length,0,'the brief does not retain stale hourly findings');
-    assert.equal(clear.fixList!.length,688,'a quiet hour never closes owned repair work');
+    assert.equal(clear.fixList!.length,689,'a quiet hour never closes owned repair work');
     const old=hour.problems.map(p=>({key:`line-keeper:${p.key}`,what:p.says,owner:'diggers',next:p.next}));
-    assert.deepEqual(compactKeeperProblems(old),groups,'saved snapshots compact immediately too');
+    const compact=compactKeeperProblems(old);
+    assert.deepEqual(compact.filter(p=>p.key!=='line-keeper:runner-silent'),groups,'saved snapshots compact immediately too');
+    assert.equal(compact.filter(p=>p.key==='line-keeper:runner-silent').length,1,'the silent runner stays its own finding beside the group');
   } finally {await Promise.all([control.close(),reader.close()]);}
 });
 
@@ -443,4 +450,78 @@ test('a partial first hour stays unmeasured and unchanged checks never count as 
     assert.equal(rows.find(r=>r.stage==='fact:live')!.incoming,0);
     assert.equal(rows.find(r=>r.stage==='fact:live')!.outgoing,0);
   }finally{await db.close();}
+});
+
+const HOURLY_JOB={everyMs:3_600_000,since:'2026-11-01T06:16:56Z',lastStartedAt:null,lastFinishedAt:null,lastFailedAt:'2026-11-07T22:20:28Z',lastError:'exit 1',heldBy:null};
+
+test('the whole runner going quiet, or reporting no job clocks, is its own problem and never reads as nothing wrong',()=>{
+  const at='2026-11-08T06:05:00.000Z',fresh='2026-11-08T06:04:00.000Z',healthy={'place-pages':{...HOURLY_JOB,lastFinishedAt:'2026-11-08T05:40:00Z',lastFailedAt:null,lastError:null}};
+  assert.deepEqual(runnerHealthProblems({jobs:healthy,beatAt:fresh},at),[]);
+  const silent=runnerHealthProblems({jobs:healthy,beatAt:'2026-11-07T21:05:00.000Z'},at);
+  assert.equal(silent[0].key,'runner-silent');
+  assert.match(silent[0].says,/silent for 9 hours.*last reported November 7, 4:05 PM ET/);
+  assert.equal(runnerHealthProblems({jobs:healthy,beatAt:'2026-11-08T05:56:00.000Z'},at).length,0,'nine minutes between beats is a restart, not silence');
+  assert.equal(runnerHealthProblems({jobs:healthy,beatAt:'2026-11-08T05:54:00.000Z'},at)[0].key,'runner-silent');
+  assert.equal(runnerHealthProblems({jobs:null,beatAt:null},at)[0].key,'runner-silent','a missing heartbeat row is silence');
+  assert.equal(runnerHealthProblems({jobs:null,beatAt:fresh},at)[0].key,'runner-jobs:none');
+  assert.equal(runnerHealthProblems({jobs:{},beatAt:fresh},at)[0].key,'runner-jobs:none');
+  const failing=runnerHealthProblems({jobs:{'research-cycle':HOURLY_JOB},beatAt:fresh},at);
+  assert.deepEqual(failing.map(p=>p.key),['stalled-job:research-cycle'],'a job that has failed every hour is flagged past two intervals');
+});
+
+test('the line keeper is silent after two hourly intervals without a saved run, and never before',()=>{
+  const last='2026-11-08T03:05:16.571Z',hours=(n:number,extra=0)=>new Date(Date.parse(last)+n*3_600_000+extra).toISOString();
+  assert.equal(keeperSilentProblem(last,hours(1,300_000)),null,'a run a few minutes late is not a miss');
+  assert.equal(keeperSilentProblem(last,hours(2)),null);
+  const missed=keeperSilentProblem(last,hours(2,1))!;
+  assert.equal(missed.key,'line-keeper-silent');
+  assert.match(missed.says,/went 2 hours without a saved run, from November 7, 10:05 PM ET/);
+  assert.equal(keeperSilentProblem(null,last),null,'a database that never held a run is new, not silent');
+  assert.ok(['stalled-job:x','runner-silent','line-keeper:runner-jobs:none','line-keeper-silent','counts:unread'].every(isLineHealthKey));
+  assert.ok(!['counts:AZ:MEETING:box:waiting','runner-reads:meetings','group:cache'].some(isLineHealthKey));
+});
+
+test('a slow count read no longer stops the hour: the runner, the keeper gap and the unread counts are all posted, ahead of the piles',async()=>{
+  const [control,reader]=await Promise.all([controlDatabase(),readerDatabase()]);
+  try {
+    const at='2026-11-08T06:05:00.000Z';
+    await control.query(`INSERT INTO cp_runner_heartbeat(id,value) VALUES('pilot-runner',$1::jsonb)`,[JSON.stringify({beatAt:'2026-11-07T21:05:00.000Z',jobs:{'research-cycle':HOURLY_JOB}})]);
+    await control.query(`INSERT INTO line_keeper_run(hour,checked_at,problems,bytes_read,oldest) VALUES('2026-11-08T02:00:00Z','2026-11-08T03:05:16Z',541,1,'{}')`);
+    const timedOut=new Error('CONTROL_PLANE_REQUEST_TIMEOUT: line-keeper.oldest-waiting (PAGE) did not settle within its 25000 ms request bound');
+    const slow={query:async(text:string,params:readonly unknown[]=[])=>{ if(/count_oldest_waiting/.test(text))throw timedOut; return query(control).query(text,params); }};
+    const {hour}=await runLineKeeper(slow,query(reader),at);
+    const keys=hour.problems.map(p=>p.key);
+    for(const key of ['counts:unread','runner-silent','stalled-job:research-cycle','line-keeper-silent'])assert.ok(keys.includes(key),`${key} is posted`);
+    assert.match(hour.problems.find(p=>p.key==='counts:unread')!.says,/oldest-waiting.*25000 ms/);
+    assert.equal(hour.counts,null,'unread counts are unknown, never zero');
+    const fixes=(await control.query<{value:{where:string}}>('SELECT value FROM cp_admin_fix_list')).rows.map(r=>r.value.where);
+    for(const where of ['The runner','Runner job · Paid research rounds','The line keeper','Hourly counts'])assert.ok(fixes.includes(where),`${where} is fix work`);
+    const [config]=(await control.query<{value:{latestBrief:{problems:{key:string}[]}}}>(`SELECT value FROM cp_admin_config WHERE id='current'`)).rows;
+    const briefKeys=config.value.latestBrief.problems.map(p=>p.key);
+    assert.ok(briefKeys.slice(0,3).every(key=>isLineHealthKey(key)),`runner and keeper health lead the brief: ${briefKeys.join(', ')}`);
+    assert.equal((await control.query<{n:number}>('SELECT count(*)::int AS n FROM line_keeper_run WHERE checked_at=$1::timestamptz',[at])).rows[0].n,1,'the run is saved even though counts failed');
+  }finally{await Promise.all([control.close(),reader.close()]);}
+});
+
+test('the runner files the line keeper repair while the keeper is dead, once, and stays quiet while the keeper is on time',async()=>{
+  const repos=createMemoryRepositories();
+  const keeperRan=(checkedAt:string|null)=>({query:async()=>[{checked_at:checkedAt}]});
+  const at='2026-11-08T06:34:00.000Z';
+  assert.equal(await watchLineKeeper(keeperRan('2026-11-08T05:05:16Z'),repos,at),false);
+  assert.equal(await watchLineKeeper(keeperRan('2026-11-08T03:05:16Z'),repos,at),true);
+  assert.equal(await watchLineKeeper(keeperRan('2026-11-08T03:05:16Z'),repos,'2026-11-08T06:44:00.000Z'),true);
+  const held=await repos.adminConfig.read('current',{fixList:{}});
+  const items=fixItems(held!.value as never).filter(item=>item.where==='The line keeper');
+  assert.equal(items.length,1,'ten-minute checks never pile up copies');
+  assert.equal(items[0].state,'OPEN');
+  assert.match(items[0].says,/3.5 hours without a saved run/);
+  assert.equal(items[0].owner,'the runner workers');
+});
+
+test('the brief shows a silent runner or keeper before any count pile',()=>{
+  const group=(n:number)=>({key:`line-keeper:group:${n}`,what:`Pile ${n}`,owner:'diggers',next:'Clear it.',group:{items:n,states:[{state:'AZ',items:n}]}});
+  const brief={createdAt:'2026-11-08T06:05:00.000Z',updates:[],decisions:[],unread:[],
+    problems:[...[1,2,3,4,5,6,7].map(group),{key:'line-keeper:runner-silent',what:'The runner has been silent for 9 hours',owner:'the runner workers',next:'Restart it.'}]};
+  const markup=renderToStaticMarkup(createElement(BriefParts,{brief:brief as never}));
+  assert.ok(markup.indexOf('silent for 9 hours')>=0&&markup.indexOf('silent for 9 hours')<markup.indexOf('Pile 1'));
 });

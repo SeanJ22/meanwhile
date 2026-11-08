@@ -121,10 +121,6 @@
   background: var(--pill-gold-bg);
   color: var(--pill-gold-text);
 }
-.badgeLive {
-  background: var(--pill-teal-bg);
-  color: var(--pill-teal-text);
-}
 
 .search {
   margin-left: auto;
@@ -571,16 +567,6 @@
     width: 22%;
   }
 }
-.thSort {
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  text-transform: inherit;
-  letter-spacing: inherit;
-  cursor: pointer;
-  padding: 0;
-}
 
 .facts {
   display: grid;
@@ -624,14 +610,6 @@
   background: var(--surface);
   box-shadow: inset 0 0 0 1px var(--lumen-rim);
 }
-.noticeSample {
-  background: color-mix(in srgb, var(--pill-gold-bg) 60%, var(--surface));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pill-gold-text) 40%, transparent);
-}
-.noticeMissing {
-  background: color-mix(in srgb, var(--pill-amber-bg) 50%, var(--surface));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pill-amber-text) 45%, transparent);
-}
 .banner {
   border-radius: var(--radius-card);
   padding: 12px 16px;
@@ -666,9 +644,6 @@
   flex-direction: column;
   gap: 4px;
   text-decoration: none;
-}
-.answerWarn {
-  box-shadow: inset 0 0 0 1px var(--pill-amber-text), var(--shadow-app-card);
 }
 .big {
   font-family: var(--v6-mono);
@@ -1006,32 +981,12 @@
   color: var(--text-dim);
   white-space: nowrap;
 }
-
-.donutWrap {
-  display: flex;
-  gap: 18px;
-  flex-wrap: wrap;
-  align-items: center;
-}
 .donut {
   width: 150px;
   height: 150px;
   border-radius: 50%;
   position: relative;
   flex: none;
-}
-.donutHole {
-  position: absolute;
-  inset: 26px;
-  border-radius: 50%;
-  background: var(--panel);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  font-size: 11px;
-  color: var(--text-dim);
 }
 
 .trail {

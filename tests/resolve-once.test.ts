@@ -1,4 +1,4 @@
-import { geometryFiles } from "../lib/holdings/discovery.ts";
+import { loadFeatures } from "./helpers/holdings-features.ts";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 
 import { fixtureZipResolution } from "./helpers/zip-location.ts";
 import { summarizeCoverage, type CoverageSummary } from "../lib/registry/coverage.ts";
-import { divisionsAt, sweepsRun, type GeoFeature } from "../lib/registry/resolve.ts";
+import { divisionsAt, sweepsRun } from "../lib/registry/resolve.ts";
 import { GET as meetingsGET } from "../app/api/meetings/route.ts";
 import { GET as stateGET } from "../app/api/reader/state/route.ts";
 import { GET as directoryGET } from "../app/api/directory/route.ts";
@@ -40,17 +40,6 @@ await installRegistryAuthority();
  */
 
 const here = dirname(fileURLToPath(import.meta.url));
-const HOLDINGS_ROOT = join(here, "..");
-
-async function loadFeatures(): Promise<GeoFeature[]> {
-  const names = geometryFiles(HOLDINGS_ROOT);
-  const all: GeoFeature[] = [];
-  for (const name of names) {
-    const parsed = JSON.parse(await readFile(join(HOLDINGS_ROOT, name), "utf8"));
-    all.push(...(parsed.features as GeoFeature[]));
-  }
-  return all;
-}
 
 const features = await loadFeatures();
 const registry = JSON.parse(

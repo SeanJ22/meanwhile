@@ -1,5 +1,7 @@
 import { EASTERN_ZONE } from "../../../../lib/control-plane/eastern-time.ts";
 import type { LookView } from "../../../../lib/frontend/look-pass.ts";
+import type { WorkCost } from "../../../../lib/control-plane/admin-view/v6-spend-read.ts";
+import type { PublicationRow } from "../../../../lib/control-plane/admin-view/v6-publication-read.ts";
 
 export type {  LookView } from "../../../../lib/frontend/look-pass.ts";
 
@@ -420,15 +422,7 @@ export interface SpendLimit {
   readonly tone: "hunt" | "warn" | "neutral";
 }
 
-export interface WorkCost {
-  readonly work: string;
-  readonly models: string;
-  readonly tries: number;
-  readonly costUsd: number | null;
-  readonly movedUpWhy: string;
-  readonly benefit: string;
-  readonly applies: readonly string[];
-}
+export type { WorkCost };
 
 export interface MoneyView {
   readonly account: readonly AccountReading[];
@@ -468,14 +462,6 @@ export interface SourceReliabilityRow {
   readonly quota?: { readonly checkedAt: string; readonly retryAt: string; readonly active: boolean };
 }
 
-export interface PublicationRow {
-  readonly contract: string;
-  readonly verdict: "READER_VISIBLE" | "READBACK_FAILED" | "PUBLISHED_NOT_READ_BACK" | "PUBLISHED_NO_READER_SURFACE" | "NOT_PUBLISHED";
-  readonly words: string;
-  readonly publishedAt: string | null;
-  readonly readback: { readonly status: "PASS" | "FAIL"; readonly at: string } | null;
-  readonly attempt: { readonly state: string; readonly at: string; readonly failureCode: string | null } | null;
-}
 interface PublicationView {
   readonly ballotPublications?: Readonly<Record<string, import("@/lib/civic-data/ballot-publication").BallotPublicationResult |
     import("@/lib/civic-data/ballot-publication").BallotPublicationSummary>>;

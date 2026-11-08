@@ -9,7 +9,6 @@ import type { BallotSet } from "../lib/ballot/types.ts";
 import type { ElectionResultBatch } from "../lib/election-results/types.ts";
 import { parseMultiStateResults } from "../lib/election-results/multistate.ts";
 import { WORK_DDL, workList } from "../lib/core/work.ts";
-import { markSlicesOn } from "../lib/core/slice-marks.ts";
 import { resultReadCache, resultFeedMemory, resultFactDb, resultBallotDb } from "./helpers/election-results.ts";
 import { ballotForDivisions } from "../lib/ballot/contests.ts";
 import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
@@ -304,7 +303,7 @@ test("the production reader matches every held district before creating a missin
   for (const id of ["ocd-division/country:us", stateId, ...held.contests.map(row => row.ocdId)])
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place',$1,$2) ON CONFLICT DO NOTHING",
       [id, id === "ocd-division/country:us" ? null : "AZ"]);
-  markSlicesOn(() => workList(db.query, { owner: "test-statewide-results" }));
+  workList(db.query, { owner: "test-statewide-results" });
   const result = await runElectionResults({ db, query, cache, states: ["AZ"], now: new Date(at), multistate: batch,
     purge: async () => ({ purged: true }), fetch: async () => { throw new Error("Synthetic overview unavailable"); } });
   assert.equal(canonicalReads.length, 1, "the default production path reads the promoted full-state authority once");
@@ -532,7 +531,7 @@ test("a fresh national overview reaches a prepared state feed while its called a
   for (const [id, name] of [["ocd-division/country:us", "United States"], [stateId, "Arizona"], [held.contests[0].ocdId, "District 1"]])
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place',$2,$3) ON CONFLICT DO NOTHING",
       [id, name, id === "ocd-division/country:us" ? null : "AZ"]);
-  markSlicesOn(() => workList(db.query, { owner: "test-national-ballot-refresh" }));
+  workList(db.query, { owner: "test-national-ballot-refresh" });
   const stateResults = parseMultiStateResults(JSON.stringify({ general_events: [{ state: "AZ", races: [{
     seat_id: 601, office: "State House", district: "1", election_date: "2026-11-03", incumbent_defeated: false,
     general_results: { contests: [{ type: "General", election_id: 1601, result_status: "Called",
@@ -589,7 +588,7 @@ test("a failed prepared-feed write retries from checked facts without changing i
     value: { kind: "ballot-contests", ballots: { [ballotElectionKey(held)]: held } } });
   for (const [id, name] of [["ocd-division/country:us", "United States"], [stateId, "Arizona"]])
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place',$2,$3)", [id, name, id === stateId ? "AZ" : null]);
-  markSlicesOn(() => workList(db.query, { owner: "test-prepared-feed-retry" }));
+  workList(db.query, { owner: "test-prepared-feed-retry" });
   const stateResults = parseMultiStateResults(JSON.stringify({ general_events: [{ state: "AZ", statewide_races: [{ seat_id: 602,
     office: "Governor", election_date: "2026-11-03", incumbent_defeated: false, general_results: { contests: [{ type: "General", election_id: 1602,
       result_status: "Called", candidates: [{ candidate_id: 1, name: "Alex Governor", party: "D", votes: 100, pct: 100, is_incumbent: false, result: "Won" }] }] },

@@ -2,7 +2,6 @@ import type { TestContext } from "node:test";
 import { CivicReadCache } from "../../lib/db/civic-read-cache.ts";
 import { createElectionResultFeedStore } from "../../lib/election-results/feed-store.ts";
 import { WORK_DDL, workList } from "../../lib/core/work.ts";
-import { markSlicesOn } from "../../lib/core/slice-marks.ts";
 import { factDb } from "./fact-db.ts";
 import { migratedFactDb } from "./migrated-reader-db.ts";
 
@@ -24,7 +23,7 @@ export async function resultFactDb(context: TestContext, owner: string, places: 
   context.after(() => db.pg.close());
   for (const statement of WORK_DDL) await db.pg.exec(statement);
   await db.pg.exec("CREATE TABLE civic_data_promotions(scope text,record_class text,current_version_id text)");
-  markSlicesOn(() => workList(db.query, { owner }));
+  workList(db.query, { owner });
   for (const [state, name] of Object.entries({ US: "United States", ...places })) {
     const id = `ocd-division/country:us${state === "US" ? "" : `/state:${state.toLowerCase()}`}`;
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place',$2,$3)", [id, name, state === "US" ? null : state]);

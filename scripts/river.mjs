@@ -1063,8 +1063,7 @@ async function release(n, flags) {
   const saved = readScratch("measure.json");
   const measured = { ...(saved && !saved.after ? saved : { zips: [], before: {} }), lines, release: Number(n) };
   const grew = growth && lines.after > lines.before ? growth : null;
-  const notes = `${body}${measuresBlock(measuresOf(measured), measureNotes(measured))}`
-    .replace(/^- Lines of code: .*$/m, (line) => (grew ? `${line} — new feature: ${grew}` : line));
+  const notes = `${body}${measuresText(measured, grew)}`;
 
   // Never two competing release candidates.
   const open = await github("GET", `repos/${repo}/pulls?state=open&base=main&per_page=100`);
@@ -1377,6 +1376,12 @@ async function zipTimes(zips) {
   return times;
 }
 
+/** The release-measures block, with a recorded growth reason kept on the Lines of code line: one renderer for `release` and every `measure` rerender. */
+export function measuresText(record, growth) {
+  return measuresBlock(measuresOf(record), measureNotes(record))
+    .replace(/^- Lines of code: .*$/m, (line) => (growth ? `${line} — new feature: ${growth}` : line));
+}
+
 /** The four numbers from a saved measurement. */
 function measuresOf(record) {
   const under3s = (times) => (times ? times.filter((ms) => ms !== null && ms < 3000).length : null);
@@ -1482,7 +1487,8 @@ async function measure(flags) {
     record.lines = { before: linesOfCode(remoteRef(RIVER)), after: linesOfCode("HEAD") };
   }
   writeScratch("measure.json", record);
-  const block = measuresBlock(measuresOf(record), measureNotes(record));
+  if (record.release) fetchBranches([BOARD]);
+  const block = measuresText(record, record.release ? readJson(remoteRef(BOARD), `releases/${record.release}.json`, null)?.growth_reason : null);
   console.log(block);
   const sql = measureSql(typeof flags.at === "string" ? flags.at : nowIso(), after);
   if (phase.facts === undefined || phase.reads === undefined) {

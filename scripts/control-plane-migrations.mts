@@ -28,6 +28,7 @@ import { WORK_MIGRATION_DECLARATIONS, contractWork, expandWork, oneWorkListContr
 import { addChargeWorkKind, workKindMigrationDefinition } from "../lib/control-plane/repository/migrations/SPN-01B-cost.ts";
 import { addWorkRun, workRunMigrationDefinition } from "../lib/control-plane/repository/migrations/SPN-01B-run.ts";
 import { addLeadClaimIndex, leadClaimMigrationDefinition } from "../lib/control-plane/repository/migrations/SPN-01F.ts";
+import { buildPlannedWorkItemIndexes, plannedWorkItemIndexesMigrationDefinition } from "../lib/control-plane/repository/migrations/RC-01.ts";
 
 const JOURNAL = "lib/control-plane/repository/migrations/meta/_journal.json";
 function withProductionReader(migrate: (control: Sql, reader: Sql) => Promise<string>) {
@@ -78,6 +79,8 @@ const MIGRATIONS = [
   { id: "SPN-01B_run_expand", source: "lib/control-plane/repository/migrations/SPN-01B-run.ts", declarations: ["lib/core/work.ts"], definition: workRunMigrationDefinition, apply: addWorkRun },
   { id: "SPN-01F_expand", source: "lib/control-plane/repository/migrations/SPN-01F.ts", declarations: ["lib/core/work.ts"],
     definition: leadClaimMigrationDefinition, apply: addLeadClaimIndex },
+  { id: "RC-01_expand", source: "lib/control-plane/repository/migrations/RC-01.ts", declarations: ["lib/control-plane/repository/pg-schema.ts"],
+    definition: plannedWorkItemIndexesMigrationDefinition, apply: buildPlannedWorkItemIndexes },
 ] as const;
 interface Entry { readonly id: string; readonly phase: "expand" | "contract"; readonly hash: string }
 interface Dependencies {

@@ -14,7 +14,7 @@ import { autonomousHarness } from "./helpers/autonomous-fleet.ts";
 import { nextAutonomousOperation, dispatchAutonomousTask } from "../lib/control-plane/workers/coordinator.ts";
 import { readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
 import { readHeldInputs } from "../lib/civic-data/worker-held-elections.ts";
-import { CHANGED_AT_TOUCH_FUNCTION_DDL, changedAtColumnDdl } from "../lib/control-plane/repository/pg-schema.ts";
+import { CHANGED_AT_TOUCH_FUNCTION_DDL, changedAtColumnDdl, PLANNED_WORK_ITEM_INDEXES } from "../lib/control-plane/repository/pg-schema.ts";
 
 const NOW = "2026-10-01T12:00:00.000Z";
 // Keep the Wasm engine alive between tests to avoid Node 24 reclaiming its shared wrappers.
@@ -375,6 +375,46 @@ test("a planner's owed work is decided once, however many pages of values it rea
   await f.db.query("INSERT INTO cp_obligations VALUES ('hunt-obligation',1,$1,$2::jsonb)", [NOW, JSON.stringify({ active: "true" })]);
   await f.db.query("INSERT INTO cp_occurrences (id, revision, updated_at, value) VALUES ('hunt-occurrence',1,$1,$2::jsonb)", [NOW, JSON.stringify({ obligationId: "hunt-obligation", workItemId: hunt.id })]);
   assert.deepEqual((await pgCoordinatorWorkItems(f.sql, false, "system")).map(row => row.id), [...ids, hunt.id].sort());
+});
+
+test("the planner's owed work is found through the planned-items indexes, never by scanning every work item, and the next pass finds what changed", async () => {
+  const f = await fixture();
+  const item = (await autonomousHarness()).item;
+  for (const index of PLANNED_WORK_ITEM_INDEXES) await f.db.exec(index.ddl.replace(" CONCURRENTLY", ""));
+  await f.db.exec("CREATE TABLE cp_obligations (id text PRIMARY KEY, revision bigint NOT NULL, updated_at timestamptz NOT NULL, value jsonb NOT NULL)");
+  const put = async (id: string, state: string, planned: boolean, archived: boolean, task: string | null) => {
+    const value = { ...item, id, subject: `place-${id}`, createdAt: NOW, state, ...(planned ? { autonomousPlan: { ...item.autonomousPlan!, capability: "officials/offices", acquisition: [], sources: [] } } : { autonomousPlan: undefined }) };
+    await f.db.query(`INSERT INTO cp_work_items${archived ? "_archive" : ""} (id, revision, updated_at, value) VALUES ($1,1,$2,$3::jsonb)`, [id, NOW, JSON.stringify(value)]);
+    if (task) await f.db.query("INSERT INTO cp_route_tasks (id, revision, updated_at, value) VALUES ($1,1,$2,$3::jsonb)", [`task-${id}`, NOW, JSON.stringify({ workItemId: id, state: task })]);
+  };
+  // The archive holds mostly work items with no plan, as production's does (11,120 planned of 839,601).
+  for (let n = 0; n < 400; n++) await put(`closed-${n}`, "system", false, true, null);
+  await put("a-open", "system", true, false, "PENDING");
+  await put("b-archived-open", "system", true, true, "RECLAIMABLE");
+  await put("c-settled", "system", true, true, "DISPOSED");
+  await f.db.exec("ANALYZE cp_work_items; ANALYZE cp_work_items_archive; ANALYZE cp_route_tasks");
+  const ids = async (state?: string) => (await pgCoordinatorWorkItems(f.sql, false, state)).map(row => row.id);
+  for (const state of [undefined, "system"]) {
+    f.statements.length = 0;
+    assert.deepEqual(await ids(state), ["a-open", "b-archived-open"]);
+    const read = f.statements.find(text => /FROM cp_log_scout_results pending/.test(text))!;
+    await f.db.exec("VACUUM cp_work_items"); await f.db.exec("VACUUM cp_work_items_archive");
+    await f.db.exec("SET enable_seqscan = off");
+    let plan: string;
+    try { plan = JSON.stringify((await f.db.query(`EXPLAIN (FORMAT JSON) ${read}`, state ? [state] : [])).rows[0]); } finally { await f.db.exec("RESET enable_seqscan"); }
+    const planned = plan.slice(plan.indexOf('"Subplan Name":"CTE planned"'), plan.indexOf('"Subplan Name":"CTE due"'));
+    for (const table of ["cp_work_items", "cp_work_items_archive"])
+      assert.match(planned, new RegExp(`"Index Name":"${table}_planned"`), `${table}'s planned ids come from its planned-items index`);
+    assert.doesNotMatch(planned, /Seq Scan/, "no planned id is found by scanning every work item");
+  }
+  // The next scheduled pass, an hour later: one item settles, another is planned, and the read follows both.
+  const nextPass = new Date(Date.parse(NOW) + 60 * 60_000).toISOString();
+  await f.db.query("UPDATE cp_route_tasks SET value = jsonb_set(value,'{state}','\"DISPOSED\"') WHERE id = 'task-a-open'");
+  await put("d-planned-next-pass", "system", true, false, "PENDING");
+  assert.ok(nextPass > NOW);
+  assert.deepEqual(await ids(), ["b-archived-open", "d-planned-next-pass"]);
+  assert.deepEqual(await ids("system"), ["b-archived-open", "d-planned-next-pass"]);
+  assert.deepEqual(await ids("az"), []);
 });
 
 test("lineage summaries invalidate on writes and retain invalidation that races a refresh",async()=>{

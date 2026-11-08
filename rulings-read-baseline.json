@@ -251,7 +251,7 @@
       "file": "scripts/ingest.ts",
       "kind": "readCandidate",
       "fingerprint": "947160abd2b4fa6a83335f622f9e594279a00a3c7a62c43763d471e57dcedf07",
-      "line": 1305
+      "line": 1278
     },
     {
       "file": "scripts/legistar-insite-minutes-ingest.mts",
@@ -1644,10 +1644,6 @@
     {
       "file": "lib/control-plane/repository/pg-store.ts",
       "table": "cp_work_items"
-    },
-    {
-      "file": "lib/control-plane/repository/pg-store.ts",
-      "table": "cp_work_items_history"
     },
     {
       "file": "lib/control-plane/repository/running-jobs.ts",

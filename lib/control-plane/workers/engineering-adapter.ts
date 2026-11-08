@@ -271,7 +271,7 @@ export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;res
 }
 
 const UNCAPPED_LINK_SOURCE = `/** Read all source links from held HTML; returned links are investigation routes, not verified facts. */
-import { extractLinks } from '../../control-plane/scheduler/scout-tools.ts';
+import { extractLinks } from '../../hunt/page-links.ts';
 export function uncappedSourceLinks(html:string, sourceUrl:string) {
   return extractLinks(html,new URL(sourceUrl),Number.MAX_SAFE_INTEGER).map(link=>({...link,sourceUrl}));
 }

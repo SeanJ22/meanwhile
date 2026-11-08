@@ -1,3 +1,4 @@
+import { platformCensusWatchdog } from "../lib/control-plane/discovery/platform-census-watchdog.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
@@ -125,7 +126,7 @@ test("the round wires its long phases to the reporter and ends a hung worker bef
   assert.ok(RUNTIME_NO_PROGRESS_MS - 60_000 > 8 * 60_000, "a hunter's own 8-minute wall still ends it first");
 });
 
-test("a census blocked on an await is ended by its own wall before the parent limit", async () => {
+test("a census blocked on an await with nothing finished is ended by its own wall as a failure", async () => {
   const watchdog = JSON.stringify(new URL("../lib/control-plane/discovery/platform-census-watchdog.ts", import.meta.url).href);
   const [result] = await runRuntimeChildren([{ id: "platform-census", executable: process.execPath,
     args: ["--experimental-strip-types", "--input-type=module", "-e", `import { platformCensusWatchdog } from ${watchdog};
@@ -134,4 +135,22 @@ test("a census blocked on an await is ended by its own wall before the parent li
   assert.equal(result!.termination, "EXITED");
   assert.equal(result!.status, 1);
   assert.match(result!.stderr, /CENSUS_PASS_TIMEOUT/);
+});
+
+test("a census that reaches its wall having finished work exits cleanly as a partial pass, and the next pass is judged afresh", async () => {
+  const watchdog = JSON.stringify(new URL("../lib/control-plane/discovery/platform-census-watchdog.ts", import.meta.url).href);
+  const [result] = await runRuntimeChildren([{ id: "platform-census", executable: process.execPath,
+    args: ["--experimental-strip-types", "--input-type=module", "-e", `import { platformCensusWatchdog } from ${watchdog};
+      const w = platformCensusWatchdog(Date.now() + 100); w.note("government"); setInterval(() => {}, 1000); await new Promise(() => {});`] }],
+    { cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: 3000 });
+  assert.equal(result!.termination, "EXITED");
+  assert.equal(result!.status, 0);
+  assert.match(result!.stdout, /CENSUS_PASS_PARTIAL: .* 1 finished reads/);
+  assert.doesNotMatch(result!.stderr, /CENSUS_PASS_TIMEOUT/);
+  // The next scheduled pass starts with its own count: a pass that finishes nothing still fails.
+  const outcomes: string[] = [];
+  const next = platformCensusWatchdog(Date.now() + 20, { write: () => {}, partial: d => outcomes.push(d), fail: d => outcomes.push(d) });
+  await new Promise(resolve => setTimeout(resolve, 80));
+  next.close();
+  assert.match(outcomes[0]!, /CENSUS_PASS_TIMEOUT/);
 });

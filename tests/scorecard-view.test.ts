@@ -36,7 +36,6 @@ const nation: Scorecard = {
   ],
   governor: null, statewide: null,
   incumbentsLostTotal: 31,
-  governorsFlipped: [{ office: "Georgia", to: "D" }, { office: "Ohio", to: "D" }, { office: "Maine", to: "R" }],
   sources: [],
 };
 
@@ -76,9 +75,8 @@ test("the governor block says re-elected, won or flipped", () => {
   assert.equal(governorBlock({ ...arizona, governor: null }), null);
 });
 
-test("the national governor block counts offices that changed party, by party", () => {
-  assert.deepEqual(governorBlock(nation), { label: "Governors", text: "3 governor’s offices changed party: 2 to Democrats and 1 to Republicans." });
-  assert.equal(governorBlock({ ...nation, governorsFlipped: [] })?.text, "No governor’s office changed party.");
+test("the national scorecard has no governor block", () => {
+  assert.equal(governorBlock(nation), null);
 });
 
 test("statewide flips carry an exact count and appear only when there are some", () => {
@@ -107,23 +105,10 @@ test("the Arizona party scorecards: seats, governor, flips and incumbents lost, 
   assert.equal(r.find(line => line.label === "Governor")?.kind, "plain");
 });
 
-test("seat flips and statewide wins show when the data carries them", () => {
-  const richer = { ...arizona,
-    chambers: arizona.chambers.map(c => ({ ...c, flippedTo: { D: 6, R: 0 } })),
-    statewide: { ...arizona.statewide!, won: { D: 8, R: 0 } },
-  } as Scorecard;
-  const lines = partyLines(richer, "D");
-  assert.deepEqual(lines.find(line => line.label === "Statewide races won")?.value, "8 of 8");
-  assert.deepEqual(lines.find(line => line.label === "State House seats flipped to this party"), { label: "State House seats flipped to this party", value: "6", kind: "flip", hot: true });
-  assert.equal(partyLines(richer, "R").find(line => line.label === "State Senate seats flipped to this party")?.hot, false);
-});
-
-test("the national party scorecards add governor offices flipped and leave out the state-only lines", () => {
+test("the national party scorecards show the chamber seats and leave out the state-only lines", () => {
   const d = partyLines(nation, "D");
-  assert.deepEqual(d.map(line => line.label), ["U.S. House seats", "U.S. Senate seats", "Governor’s offices flipped to this party"]);
-  assert.equal(d[2].value, "2");
+  assert.deepEqual(d.map(line => line.label), ["U.S. House seats", "U.S. Senate seats"]);
   assert.equal(d[0].value, "215 → 251");
-  assert.equal(partyLines(nation, "R")[2].value, "1");
 });
 
 test("dot size is 6 above 100 seats and 10 otherwise", () => {

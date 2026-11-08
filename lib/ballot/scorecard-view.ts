@@ -11,8 +11,6 @@ export interface ChamberScore {
   now: SeatCounts;
   controlBefore: PartyKey | null;
   controlNow: PartyKey | null;
-  /** Seats that changed hands to each party, when the data carries it. */
-  flippedTo?: Readonly<Partial<Record<PartyKey, number>>>;
   /** Seats that changed hands, when the source counts them. */
   seatsFlipped?: number;
   note?: string;
@@ -24,11 +22,9 @@ export interface Scorecard {
   name: string;
   chambers: readonly ChamberScore[];
   governor: { name: string | null; party: PartyKey; flipped: boolean; reelected: boolean } | null;
-  statewide: { total: number | null; flipped: readonly OfficeFlip[]; won?: Readonly<Partial<Record<PartyKey, number>>> } | null;
+  statewide: { total: number | null; flipped: readonly OfficeFlip[] } | null;
   /** How many incumbents lost, when the source counts them. */
   incumbentsLostTotal?: number;
-  /** Governor's offices that changed party (national scope). */
-  governorsFlipped?: readonly OfficeFlip[];
   sources: readonly { what: string; from: string; checked: string; url: string }[];
 }
 
@@ -139,15 +135,7 @@ export function controlSummary(card: Scorecard): string {
 
 /** The label and body for the governor block under the chambers. */
 export function governorBlock(card: Scorecard): { label: string; text: string } | null {
-  if (card.scope === "US" || card.governorsFlipped) {
-    if (!card.governorsFlipped) return null;
-    const flips = card.governorsFlipped;
-    if (!flips.length) return { label: "Governors", text: "No governor’s office changed party." };
-    const byParty = PARTY_ORDER.map(party => [party, flips.filter(flip => flip.to === party).length] as const).filter(([, count]) => count > 0);
-    const noun = flips.length === 1 ? "governor’s office" : "governor’s offices";
-    const split = byParty.map(([party, count]) => `${count} to ${PARTY_PLURAL[party]}`);
-    return { label: "Governors", text: `${flips.length} ${noun} changed party: ${joinList(split)}.` };
-  }
+  if (card.scope === "US") return null;
   const governor = card.governor;
   if (!governor) return null;
   if (!governor.name) {
@@ -206,15 +194,7 @@ export function partyLines(card: Scorecard, party: "D" | "R"): PartyLine[] {
     lines.push({ label: "Governor", value: card.governor.party === party ? "Held" : "Not held", kind: card.governor.party === party ? "held" : "plain", hot: false });
   }
   const statewide = card.statewide;
-  if (!national && statewide?.won?.[party] !== undefined) {
-    lines.push({ label: "Statewide races won", value: statewide.total === null ? String(statewide.won[party]) : `${statewide.won[party]} of ${statewide.total}`, kind: "plain", hot: false });
-  }
-  for (const chamber of chambers) {
-    const count = chamber.flippedTo?.[party];
-    if (count !== undefined) lines.push(flipLine(`${chamber.name} seats flipped to this party`, count));
-  }
   if (!national && statewide) lines.push(flipLine("Statewide offices flipped to this party", statewide.flipped.filter(flip => flip.to === party).length));
-  if (card.governorsFlipped) lines.push(flipLine("Governor’s offices flipped to this party", card.governorsFlipped.filter(flip => flip.to === party).length));
   return lines;
 }
 

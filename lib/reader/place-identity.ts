@@ -19,11 +19,15 @@ export function placeIdentity(headers:BodyHeaders) {
   return {id,name,meeting,roster,snapshot,aliases};
 }
 
+/** A page keeps the name facts a board is published under in a ZIP; any other place shows only the ones that name the board. */
+export function shownFields(row:Row,zip:boolean):Row {
+  const fields=Array.isArray(row.fields)?row.fields as Row[]:[];
+  return {...row,fields:fields.filter(field=>zip || field.field!=='name' || typeof field.value!=='string' || publishedBodyLabel(field.value).kind==='body')};
+}
+
 /** Only transient identity columns change. Keep original IDs until the ready-row merger assigns ownership. A ZIP keeps the name facts a board is published under. */
 export function currentPlaceRow(row:Row,headers:BodyHeaders,zip=false):Row {
   const identity=placeIdentity(headers),records=(value:unknown)=>Array.isArray(value)?value as Row[]:[];
-  return {...row,body_aliases:identity.aliases,
-    entities:records(row.entities).map(body=>({...body,name:identity.name(String(body.id),body.name as string|null)})),
-    fields:records(row.fields).filter(field=>zip || field.field!=='name' || typeof field.value!=='string'
-      || publishedBodyLabel(field.value).kind==='body')};
+  return shownFields({...row,body_aliases:identity.aliases,
+    entities:records(row.entities).map(body=>({...body,name:identity.name(String(body.id),body.name as string|null)}))},zip);
 }

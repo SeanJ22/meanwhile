@@ -23,6 +23,17 @@ function unpack<T>(page: unknown): T {
 
 type Row = Record<string,unknown>;
 
+
+/** The page without its agenda documents and archived texts, which a first look does not read. */
+export function briefPlaceRow(full: Row): Row {
+  return {...full,agenda_texts:[],archived_documents:[],archived_document_links:[],
+    meeting_rows:(full.meeting_rows as Row[]).map(partition=>({...partition,
+      payload:{...partition.payload as Row,agendaDocuments:[],agendaDocumentLinks:[]}}))};
+}
+
+/** The brief page without the registry, governments and divisions, for a read of boards' facts alone. */
+export const factsPlaceRow = (brief: Row): Row => ({...brief,registry:null,governments:[],divisions:[],registration_held:false});
+
 /** Build each requested transfer shape once; readers select one compressed row. */
 export function packPlaceContext(context: Row): Row {
   const packed:Row={formatVersion:context.formatVersion};
@@ -31,11 +42,8 @@ export function packPlaceContext(context: Row): Row {
     if(!source)continue;
     const full={...source};
     delete full.body_aliases;
-    const brief={...full,agenda_texts:[],archived_documents:[],archived_document_links:[],
-      meeting_rows:(full.meeting_rows as Row[]).map(partition=>({...partition,
-        payload:{...partition.payload as Row,agendaDocuments:[],agendaDocumentLinks:[]}}))};
-    const facts={...brief,registry:null,governments:[],divisions:[],registration_held:false};
-    packed[key]={full:pack(full),brief:pack(brief),facts:pack(facts)};
+    const brief=briefPlaceRow(full);
+    packed[key]={full:pack(full),brief:pack(brief),facts:pack(factsPlaceRow(brief))};
   }
   return packed;
 }

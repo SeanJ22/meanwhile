@@ -11,10 +11,11 @@ import { serverReaderValue } from "./memory.ts";
 import { composePlaceRow } from "./place-decode.ts";
 import { buildPlacePackage, PLACE_CHECKS_SQL } from "./place-builder.ts";
 import { readStoredZipPage } from "./stored-zip-page.ts";
-import { mergePlaceRows } from "./place-compose.ts";
+import { mergeSelectedPages } from "./place-compose.ts";
 import { currentPlaceRow,type BodyHeaders } from "./place-identity.ts";
 import { unpackPlaceContextRow } from "./place-ready.ts";
 import { nationalEverydayRouting } from "./national.ts";
+import { placeCheckRequest, type PlaceChecks } from "./place-checks.ts";
 import type { PlaceInput, PlacePackage } from "./place-types.ts";
 export type { PlaceInput, PlacePackage, AgendaDocumentLink } from "./place-types.ts";
 
@@ -115,10 +116,10 @@ export function readPlacePackageHttp(input:PlaceInput):Promise<PlacePackage> {
 }
 
 /** A ZIP crossing a state line keeps the boards and calendars on both sides. */
-export async function readPlacesForStates(states: readonly string[], input: Omit<PlaceInput,"state">): Promise<PlacePackage> {
+export async function readPlacesForStates(states: readonly string[], input: Omit<PlaceInput,"state">, load: (input: PlaceInput) => Promise<PlacePackage> = readPlacePackageHttp): Promise<PlacePackage> {
   const values = await Promise.all([...new Set(states)].map(state => {
     const own = (id:string) => !ocdStateCode(id) || ocdStateCode(id) === state.toLowerCase();
-    return readPlacePackageHttp({...input,state,divisionIds:input.divisionIds.filter(own),
+    return load({...input,state,divisionIds:input.divisionIds.filter(own),
       bodyIds:input.bodyIds?.filter(own),namedDivisionIds:input.namedDivisionIds?.filter(own)});
   }));
   if (!values.length || values.some(value => !value.registry)) throw new Error("The place's government records could not be loaded");
@@ -182,10 +183,8 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null,remember=false
     heldRows.set(rowKey(row),row.row);
   }
   for(const oldest of heldRows.keys()){ if(heldRows.size<=HELD_ROWS)break; heldRows.delete(oldest); }
-  const empty=!input.allBodies&&!input.divisionIds.length&&!input.bodyIds?.length;
-  const canonical={...input,bodyIds:bodies};
-  const merged=mergePlaceRows(canonical,withRows.map(row=>({...currentPlaceRow(unpackPlaceContextRow(row.row),headers,input.placeId!==undefined),page_id:row.page_id,
-    page_kind:empty?'empty':row.page_kind,built_at:row.built_at})));
+  const {canonical,merged}=mergeSelectedPages(input,bodies,withRows.map(row=>({page_id:row.page_id,page_kind:row.page_kind,built_at:row.built_at,
+    row:currentPlaceRow(unpackPlaceContextRow(row.row),headers,input.placeId!==undefined)})));
   const place={...await composePlaceRow(canonical,await refreshPlaceChecks(merged,query)),everydayRouting:await routing()};
   pageIds.set(place,rows.map(row=>row.page_id));
   return place;
@@ -193,25 +192,8 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null,remember=false
 
 /** A reader asks for current check dates, scoped to the exact facts and calendar versions on this page. Stored content never moves for a clock tick. */
 async function refreshPlaceChecks(row: Record<string,unknown>, query: Query): Promise<Record<string,unknown>> {
-  type Row = Record<string,unknown>;
-  const records = (value: unknown): Row[] => Array.isArray(value) ? value : [];
-  const record = (value: unknown): Row => value && typeof value === "object" ? value as Row : {};
-  const slots: { row: Row; entity: string; field: string; key: string }[] = [];
-  const add = (row: Row, entity: string, field: string, key = "checked_at") => { slots.push({row,entity,field,key}); return row; };
-  const out = {...row};
-  for (const key of ["fields","comments","sittings"]) out[key] = records(row[key]).map(value => add({...value},String(value.entity_id),String(value.field)));
-  out.rosters = records(row.rosters).map(value => {
-    const member = add({...value},String(value.body_id),`member:${value.person_id}`);
-    member.person = Object.fromEntries(Object.entries(record(value.person)).map(([field,value]) =>
-      [field,add({...record(value)},String(member.person_id),field,"checked")]));
-    return member;
-  });
-  const calendars = records(row.meeting_rows).filter(part=>records(record(part.payload).sources).some(source=>source.ok===true));
-  if (!slots.length && !calendars.length) return out;
-  const [checks] = await query(PLACE_CHECKS_SQL,
-  [JSON.stringify(slots.map(({row,entity,field,key},n)=>({n,entity,field,value:row.value,url:row.url,quote:row.quote??null,at:row[key]}))),
-    JSON.stringify(calendars.map(part=>({scope:part.scope,version:part.current_version_id})))]);
-  for (const [n,at] of (checks?.facts ?? []) as [number,string][]) slots[n]!.row[slots[n]!.key] = at;
-  out.meeting_rows = records(row.meeting_rows).map(part=>({...part,confirmation:(checks?.calendars as Row|null)?.[String(part.scope)]??part.confirmation}));
-  return out;
+  const { request, apply } = placeCheckRequest(row);
+  if (!request) return apply();
+  const [checks] = await query(PLACE_CHECKS_SQL, [...request]);
+  return apply(checks as PlaceChecks | undefined);
 }

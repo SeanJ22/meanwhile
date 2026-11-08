@@ -32,6 +32,13 @@ function pageTime(row: Row): number {
 /** The order a place read prints its rows in: by id, then field. */
 const byText = (...keys: string[]) => (a: Row, b: Row) => { for (const key of keys) { const x = String(a[key]), y = String(b[key]); if (x !== y) return x < y ? -1 : 1; } return 0; };
 
+/** The saved rows of one selection, merged as a read does: bodies named through their aliases, and no divisions when the selection names none. */
+export function mergeSelectedPages(input: PlaceInput, bodies: readonly string[], rows: readonly { readonly page_id: string; readonly page_kind: string; readonly built_at: number; readonly row: Row }[]): { readonly canonical: PlaceInput; readonly merged: Row } {
+  const empty = !input.allBodies && !input.divisionIds.length && !input.bodyIds?.length;
+  const canonical = { ...input, bodyIds: bodies };
+  return { canonical, merged: mergePlaceRows(canonical, rows.map(({ row, ...page }) => ({ ...row, ...page, page_kind: empty ? "empty" : page.page_kind }))) };
+}
+
 /** Combine ready division and body rows before the single shared reader decoder runs.
  * Selecting each body's newest complete row also carries deletions: an older overlapping
  * county page cannot put back a member or field removed from its newer city page. */

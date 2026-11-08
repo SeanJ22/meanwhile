@@ -85,7 +85,8 @@ export interface TopicMatch {
   via?: "classifier";
 }
 
-function normalize(text: string): string {
+/** Lower-cased words only, padded with spaces; combining marks are stripped so "qué" and "que" normalize alike. */
+export function normalize(text: string): string {
   return ` ${text
     .toLowerCase()
     .normalize("NFD")

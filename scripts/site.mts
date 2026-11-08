@@ -233,8 +233,9 @@ export function visitBrowsers(options: { label: string; now: string; blockWrites
   };
 }
 
-/** The Admin setting, with its default when the control plane cannot be read. */
+/** The Admin setting, with its default when the row is unset. Without a control plane (not the runner) no check visits the live site. */
 export async function liveVisitsPerDay(repos: Pick<ControlPlaneRepositories, "adminConfig"> | null): Promise<number> {
-  const row = repos ? await repos.adminConfig.read(ADMIN_CONFIG_ID).catch(() => null) : null;
+  if (!repos) return 0;
+  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID).catch(() => null);
   return readSetting(row && isAdminConfig(row.value) ? row.value : null, LIVE_VISITS_SETTING, LIVE_VISITS_DEFAULT);
 }

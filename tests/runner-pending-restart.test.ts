@@ -32,7 +32,7 @@ test("a pending restart stops relaunching routine children and restarts within o
   const log: string[] = [];
   const context = createContext({
     AUTO_RELEASE_HANDOFF: true, ROOT: ".", wantedRelease: null, stagedReleaseIsReady: () => true, CONTROL_WAKE_POLL_MS: 30_000, RUNTIME_NO_PROGRESS_MS: 600_000,
-    pendingRestart: new PendingRestart(), releaseCheck: null, runtimeAdmissionsHeld: false, standingDrainFailed: false,
+    pendingRestart: new PendingRestart(), releaseCheck: null, releaseLookedAt: 0, RELEASE_LOOK_MS: 0, runtimeAdmissionsHeld: false, standingDrainFailed: false,
     canary: false, standingBeat: async () => {},
     standingRuntimeTimer: null, ownerControlTimer: null, adminCopyTimer: null, activeControlRead: null,
     researchCycleActive: false, researchCycleChild: null, ownerWakePending: false, standingRuntimeScheduler: scheduler,
@@ -101,7 +101,7 @@ test("a release is held for restart only after the install job has it ready, and
   let parentChanged = true;
   const context = createContext({
     AUTO_RELEASE_HANDOFF: true, ROOT: ".", CODE_ROOT: ".", PARENT_CODE_SHA: running, RUNNING_CODE_SHA: running, wantedRelease: null,
-    pendingRestart: new PendingRestart(), releaseCheck: null, runtimeAdmissionsHeld: false, parentChangeReported: new Set(),
+    pendingRestart: new PendingRestart(), releaseCheck: null, releaseLookedAt: 0, RELEASE_LOOK_MS: 0, runtimeAdmissionsHeld: false, parentChangeReported: new Set(),
     researchCycleActive: false, researchCycleChild: null, stagedReleaseIsReady: () => ready,
     inspectRuntimeRelease: async () => ({ state: "UPDATE_REQUIRED", targetSha: target }),
     parentCodeChanged: async () => ({ changed: parentChanged, why: ["scripts/pilot-runner.mts"] }), defaultAsyncRunCommand: async () => ({ status: 0, stdout: "", stderr: "" }),
@@ -123,4 +123,17 @@ test("a release is held for restart only after the install job has it ready, and
   assert.equal(context.RUNNING_CODE_SHA, target, "an installed release that leaves the runner's code alone switches without a drain");
   assert.equal(context.CODE_ROOT, "/staged");
   assert.equal(context.pendingRestart.target, null);
+});
+
+test("the live site is asked which release is serving once every five minutes, not once a minute", async () => {
+  let asked = 0, now = 1_000_000;
+  const context = createContext({
+    AUTO_RELEASE_HANDOFF: true, ROOT: ".", wantedRelease: null, stagedReleaseIsReady: () => false, pendingRestart: new PendingRestart(), releaseCheck: null,
+    releaseLookedAt: 0, RELEASE_LOOK_MS: Number(/RELEASE_LOOK_MS = ([\d_]+)/.exec(source)![1].replaceAll("_", "")),
+    inspectRuntimeRelease: async () => { asked += 1; return { state: "CURRENT", targetSha: null }; },
+    console: { log: () => {}, error: () => {} }, Date: { now: () => now },
+  });
+  runInContext(stripTypeScriptTypes(runnerFunction("checkReleaseForRestart")), context);
+  for (let minute = 0; minute < 10; minute++) { now += 60_000; await runInContext("checkReleaseForRestart(); releaseCheck", context); }
+  assert.equal(asked, 2, "ten ticks a minute apart look twice");
 });

@@ -1,0 +1,35 @@
+{
+  "n": 186,
+  "branch": "release/186",
+  "head_sha": "97a693b6948a504d07eb53ea1818d4a17ee7447f",
+  "base_river_sha": "f2469df86d2b2234e2cf9f91ee2aede5f31fbb74",
+  "main_sha": "2a6f59685924df89d90eaf24d1befb316ac619f4",
+  "lanes": [
+    {
+      "lane": "runner-job-records",
+      "steps": [
+        "JR-01"
+      ],
+      "ready_sha": "efc9e7c009e4828de5dcfd62f3e222bed8d0603d",
+      "result_sha": "6ffa30b4e2cb8267933b9934dd896531b7d3afa9"
+    },
+    {
+      "lane": "trim-186",
+      "steps": [
+        "TR-03"
+      ],
+      "ready_sha": "19b672656337ae6c81598e89b825122db0293255",
+      "result_sha": "2c1420c29e9554edea5db5c0fbf011c4b8534408"
+    }
+  ],
+  "steps": [
+    "JR-01",
+    "TR-03"
+  ],
+  "pr": {
+    "number": 905,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/905"
+  },
+  "ci": "running",
+  "at": "2026-11-08T03:23:36Z"
+}

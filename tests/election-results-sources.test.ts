@@ -62,8 +62,30 @@ test("MultiState preserves chamber composition and source-stated measure outcome
 
 test("MultiState supports source election IDs for special races without seat IDs", () => {
   const batch = parseMultiStateResults(multi({ seat_id: undefined, is_special: true }), now);
-  assert.equal(batch.races[0].sourceRaceId, "12");
+  assert.equal(batch.races[0].sourceRaceId, "election:12");
   assert.equal(JSON.parse(batch.races[0].quote).office, "Governor");
+});
+
+test("a seatless special keeps its general identity when primary results follow it", () => {
+  const raw = multi({ seat_id: undefined, is_special: true,
+    primary_results: { contests: [{ election_id: 6818, type: "Primary_R", candidates: [{ ...candidates[0], votes: 5, pct: 100 }] }] } });
+  for (const state of [undefined, "AZ"]) {
+    const race = parseMultiStateResults(raw, now, "2026-11-03", state).races[0];
+    assert.equal(race.sourceRaceId, "election:12");
+    assert.equal(race.candidates[0].name, "Ann María Smith");
+    assert.ok(raw.includes(race.quote));
+    assert.equal(JSON.parse(race.quote).general_results.contests[0].election_id, 12);
+    assert.equal(JSON.parse(race.quote).primary_results.contests[0].election_id, 6818);
+    assert.equal(JSON.parse(race.candidates[0].quote!).votes, 300, "candidate evidence comes from general results, not the later primary");
+  }
+});
+
+test("a seatless special election cannot share the regular seat's race clock or fix-row identity", () => {
+  const document = JSON.parse(multi({ seat_id: undefined, is_special: true }));
+  const event = document.general_events[0];
+  event.statewide_races.push({ ...event.statewide_races[0], seat_id: 12 });
+  const batch = parseMultiStateResults(JSON.stringify(document), now);
+  assert.deepEqual(batch.races.filter(race => race.office === "governor").map(race => race.sourceRaceId), ["election:12", "12"]);
 });
 
 test("MultiState never confuses May or primary results with the November ballot", () => {
@@ -82,6 +104,24 @@ test("a state worker only materializes its state and ignores another state's cha
   assert.deepEqual(batch.summaries.map(summary => summary.state), ["AZ"]);
   assert.equal(batch.evidence.text, raw);
   assert.throws(() => parseMultiStateResults(raw, now, "2026-11-03", "ZZ"), /state is missing/);
+});
+
+test("a state worker reads every matching event when a May event precedes November and keeps each event's evidence", () => {
+  const document = JSON.parse(multi());
+  const november = document.general_events[0];
+  const may = structuredClone(november);
+  may.statewide_races[0].election_date = "2026-05-19";
+  may.statewide_races[0].general_results.contests[0].candidates[0].votes = 7;
+  may.ballot_measures = [];
+  document.general_events = [may, november];
+  const raw = JSON.stringify(document), national = parseMultiStateResults(raw, now), state = parseMultiStateResults(raw, now, "2026-11-03", "AZ");
+  assert.deepEqual(state.races.map(race => race.sourceRaceId).sort(), national.races.map(race => race.sourceRaceId).sort());
+  assert.equal(state.races.length, 2);
+  for (const batch of [national, state]) {
+    assert.equal(batch.races[0].candidates[0].votes, 300);
+    assert.equal(JSON.parse(batch.races[0].quote).election_date, "2026-11-03");
+    assert.equal(JSON.parse(batch.races[0].candidates[0].quote!).votes, 300);
+  }
 });
 
 test("source-held governor party fills a non-election year but cannot call a counting election", () => {
@@ -134,7 +174,14 @@ test("a checkmark alone cannot call a Ballotpedia race and historic defeated tex
 test("Ballotpedia refuses another state and missing or ambiguous current tables", () => {
   assert.throws(() => parseBallotpediaResults(box(2026, "Ann Smith defeated John Doe"), { ...race, state: "AZ" }, now), /ambiguous or missing/);
   assert.throws(() => parseBallotpediaResults(box(2024, "Ann Smith defeated John Doe"), race, now), /ambiguous or missing/);
-  assert.throws(() => parseBallotpediaResults(box(2026, "Candidates ran") + box(2026, "Candidates ran"), race, now), /ambiguous or missing/);
+  assert.throws(() => parseBallotpediaResults(box(2026, "Candidates ran") + box(2026, "Candidates ran").replace("4,125,080", "4,125,081"), race, now), /ambiguous or missing/);
+});
+
+test("an identical current results box repeated in a page's year history is one result", () => {
+  const html = box(2026, "Candidates ran") + box(2026, "Candidates ran");
+  const result = parseBallotpediaResults(html, race, now).races[0];
+  assert.equal(result.candidates[0].votes, 4125080);
+  assert.ok(html.includes(result.quote));
 });
 
 test("special general elections parse and photo submissions never become candidate names", async () => {
@@ -146,6 +193,40 @@ test("special general elections parse and photo submissions never become candida
   await readBallotpediaResults({ ...race, url: "https://ballotpedia.org/Texas'_1st_Congressional_District_election,_2026" }, now,
     (async url => { readUrl = url; return new Response(html); }) as typeof fetch);
   assert.equal(readUrl, "https://ballotpedia.org/Texas%27_1st_Congressional_District_election,_2026");
+});
+
+test("Louisiana's November congressional primary is read by exact election date without treating advancement as a general win", () => {
+  const louisiana = { state: "LA", office: "us_house" as const, districtHint: "6",
+    url: "https://ballotpedia.org/Louisiana%27s_6th_Congressional_District_election,_2026" };
+  const html = box(2026, "The following candidates ran in the primary")
+    .replace("General election for U.S. Senate Texas", "Nonpartisan primary election  for U.S. House Louisiana District 6");
+  const result = parseBallotpediaResults(html, louisiana, now).races[0];
+  assert.equal(result.status, "counting");
+  assert.equal(result.candidates[0].votes, 4125080);
+  assert.equal(result.candidates[0].won, false);
+  assert.equal(result.candidates[0].runoff, true);
+  assert.ok(html.includes(result.quote));
+  const certified = parseBallotpediaResults(html.replace("Ann Smith</a>", "<strong><u>Ann Smith</u></strong></a>")
+    .replace("<strong><u>John Doe</u></strong>", "John Doe")
+    .replace("</table>", "</table><p>The results have been certified.</p>"), louisiana, now).races[0];
+  assert.equal(certified.incumbentLost, false, "an incumbent who advanced has not lost the seat");
+  assert.throws(() => parseBallotpediaResults(html.replace("November 3", "June 2"), louisiana, now), /ambiguous or missing/);
+  assert.throws(() => parseBallotpediaResults(html.replaceAll("2026", "2024"), louisiana, now), /ambiguous or missing/);
+  assert.throws(() => parseBallotpediaResults(html.replaceAll("Louisiana", "Texas"), { ...louisiana, state: "TX" }, now), /ambiguous or missing/);
+});
+
+test("a canceled current general election publishes its source-stated unopposed winner without invented vote totals", () => {
+  const florida = { state: "FL", office: "us_house" as const, districtHint: "10",
+    url: "https://ballotpedia.org/Florida%27s_10th_Congressional_District_election,_2026" };
+  const html = '<h4>General election</h4><p>The general election scheduled for November 3, 2026, was canceled. Incumbent <a href="/Maxwell_Alejandro_Frost">Maxwell Alejandro Frost</a> (D) won election in the general election for U.S. House Florida District 10 without appearing on the ballot.</p>';
+  const result = parseBallotpediaResults(html, florida, now).races[0];
+  assert.equal(result.status, "unopposed");
+  assert.deepEqual(result.candidates.map(({ quote: _quote, ...candidate }) => candidate),
+    [{ name: "Maxwell Alejandro Frost", party: "D", won: true, runoff: false }]);
+  assert.ok(html.includes(result.quote));
+  assert.throws(() => parseBallotpediaResults(html.replace("2026", "2024"), florida, now), /ambiguous or missing/);
+  assert.throws(() => parseBallotpediaResults(html, { ...florida, state: "GA" }, now), /ambiguous or missing/);
+  assert.throws(() => parseBallotpediaResults(html.replace("won election", "advanced"), florida, now), /ambiguous or missing/);
 });
 
 test("Congress summary counts the full chamber, including Senate holdovers and remaining uncalled seats", () => {

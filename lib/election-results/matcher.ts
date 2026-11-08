@@ -26,15 +26,36 @@ const aliases: Readonly<Record<string, string>> = {
   state_legislature: "state_senate",
   governor_and_lieutenant_governor: "governor",
 };
-const officeKey = (office: string): string => {
-  const normalized = officeIdentity(office.replace(/_/g, " ")) ?? office;
+const stateOfficeAliases: Readonly<Record<string, Readonly<Record<string, string>>>> = {
+  AL: { "commissioner of agriculture and industries": "agriculture_commissioner" },
+  DE: { "auditor of accounts": "auditor" },
+  FL: { "chief financial officer": "treasurer" },
+  GA: { "insurance and fire safety commissioner": "insurance_commissioner", "state school superintendent": "superintendent_of_public_instruction" },
+  IN: { "state comptroller auditor of state": "auditor", "treasurer of state": "treasurer" },
+  IA: { "secretary of agriculture": "agriculture_commissioner", "treasurer of state": "treasurer" },
+  NE: { "auditor of public accounts": "auditor" },
+  OH: { "treasurer of state": "treasurer" },
+  SC: { "state superintendent of education": "superintendent_of_public_instruction" },
+  TX: { "comptroller of public accounts": "state_comptroller" },
+  VT: { "auditor of accounts": "auditor" },
+};
+const officeTitle = (office: string): string => office.replace(/_/g, " ")
+  .replace(/\bunexpired\s+(?:\d+\s*[- ]?\s*year\s+)?term\b/gi, " ")
+  .replace(/\s*[—–-]\s*special\s+election\b/gi, " ")
+  .replace(/\b(?:place|seat|position)\s+(?:no\.?\s*)?\d+\b/gi, " ").trim();
+const officeKey = (office: string, state: string): string => {
+  const title = officeTitle(office);
+  const normalized = stateOfficeAliases[state]?.[key(title)] ?? officeIdentity(title) ?? key(title).replaceAll(" ", "_");
   return aliases[normalized] ?? normalized;
 };
 
 function contestOffice(contest: Contest): string | null {
   if (contest.type === "MEASURE") return "measure";
-  const held = officeIdentity(contest.title, contest.ocdId);
-  if (held) return officeKey(held);
+  const state = /\/(?:state|district|territory):([a-z]{2})(?:\/|$)/i.exec(contest.ocdId)?.[1]?.toUpperCase() ?? "";
+  const statewide = /\/(?:state|district|territory):[a-z]{2}$/i.test(contest.ocdId);
+  const held = officeIdentity(officeTitle(contest.title), contest.ocdId);
+  if (statewide) return officeKey(contest.title, state);
+  if (held) return officeKey(held, state);
   // Named legislative districts are ordinary; their names are not office names.
   const district = /\/(sldl|sldu|cd):/.exec(contest.ocdId)?.[1];
   if (district === "cd" && /\b(?:congress|representative|house)\b/i.test(contest.title)) return "us_house";
@@ -89,7 +110,7 @@ function measureMatch(result: ElectionResult, contest: Contest, ballot: ServedBa
 export function matchElectionResult(result: ElectionResult, ballot: ServedBallot): ElectionMatch {
   if (ballot.election.state.toUpperCase() !== result.state.toUpperCase() || ballot.election.date !== result.electionDate)
     return { kind: "unmatched", contestIds: [], reason: "STATE_OR_ELECTION_MISMATCH" };
-  const office = officeKey(result.office);
+  const office = officeKey(result.office, result.state.toUpperCase());
   const eligible = ballot.contests.filter(contest => {
     const state = /\/(?:state|district|territory):([a-z]{2})(?:\/|$)/i.exec(contest.ocdId)?.[1];
     return state?.toUpperCase() === result.state.toUpperCase() && contest.electionId === ballot.election.id &&
@@ -120,4 +141,14 @@ export function matchElectionResult(result: ElectionResult, ballot: ServedBallot
     candidates: first.resolved.flatMap(row => row.found.length === 1 ? [{ resultIndex: row.resultIndex, candidacy: row.found[0] }] : []),
     unmatchedCandidates: first.resolved.filter(row => row.found.length === 0).map(row => row.resultIndex),
     ambiguousCandidates: first.resolved.filter(row => row.found.length > 1).map(row => row.resultIndex) };
+}
+
+/** A missing-race decision considers every promoted ballot for its state and election. */
+export function matchElectionResultAcrossBallots(result: ElectionResult, ballots: readonly ServedBallot[]): ElectionMatch {
+  const matches = ballots.filter(ballot => ballot.election.state.toUpperCase() === result.state.toUpperCase() &&
+    ballot.election.date === result.electionDate).map(ballot => matchElectionResult(result, ballot));
+  const winners = matches.filter((match): match is Extract<ElectionMatch, { kind: "matched" }> => match.kind === "matched");
+  return winners.length === 1 ? winners[0] : winners.length > 1
+    ? { kind: "ambiguous", contestIds: winners.map(row => row.contest.id), reason: "Multiple served ballots match this race" }
+    : matches.find(row => row.kind === "ambiguous") ?? { kind: "unmatched", contestIds: [], reason: "No served contest matches this race" };
 }

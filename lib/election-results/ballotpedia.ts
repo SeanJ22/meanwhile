@@ -28,23 +28,48 @@ function sourceName(url: string): string {
   return /(^|\.)nytimes\.com$/.test(host) ? "The New York Times" : /(^|\.)apnews\.com$/.test(host) ? "Associated Press" : host;
 }
 
-/** Read the current general-election box alone; never a primary or historical box. */
+/** Read the current contest, including Louisiana's November nonpartisan primary, without historical results. */
 export function parseBallotpediaResults(html: string, race: BallotpediaRace, checkedAt: string): ElectionResultBatch {
   const electionDate = race.electionDate ?? "2026-11-03", year = electionDate.slice(0, 4);
   const source = { name: "Ballotpedia", url: race.url };
-  const headings = [...html.matchAll(/<h[1-6]\b[^>]*>\s*(?:Special\s+)?General election for\s+([\s\S]*?)<\/h[1-6]>/gi)];
-  const choices = headings.flatMap(heading => {
+  const dateLabel = new Date(`${electionDate}T12:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
+  const headings = [...html.matchAll(/<h[1-6]\b[^>]*>\s*((?:Special\s+)?General|Nonpartisan primary) election\s+for\s+([\s\S]*?)<\/h[1-6]>/gi)];
+  const sections = headings.flatMap(heading => {
     const start = heading.index!, after = start + heading[0].length;
     const boundary = /<h[1-6]\b/i.exec(html.slice(after));
     const section = html.slice(start, boundary ? after + boundary.index : undefined);
     const narrative = /<p\b[^>]*class=["'][^"']*\bresults_text\b[^"']*["'][^>]*>([\s\S]*?)<\/p>/i.exec(section)?.[1] ?? "";
-    const label = text(heading[1]);
+    const label = text(heading[2]), primary = /primary/i.test(heading[1]);
     const expected = race.office === "us_house" ? /U\.?S\.? House/i : /U\.?S\.? Senate/i;
     const name = stateName(race.state);
-    return expected.test(label) && name && label.includes(name) && new RegExp(`\\b${year}\\b`).test(text(narrative)) ? [{ section, narrative, label }] : [];
+    const eligibleDate = primary ? race.state === "LA" && race.office === "us_house" && text(narrative).includes(dateLabel)
+      : new RegExp(`\\b${year}\\b`).test(text(narrative));
+    return expected.test(label) && name && label.includes(name) && eligibleDate ? [{ section, narrative, label, primary }] : [];
   });
+  const selected = sections.some(section => !section.primary) ? sections.filter(section => !section.primary) : sections;
+  // Some pages embed the exact current box both in the summary and the year history.
+  const choices = [...new Map(selected.map(section => [section.section, section])).values()];
+  if (choices.length === 0) {
+    const expected = race.office === "us_house" ? /U\.?S\.? House/i : /U\.?S\.? Senate/i;
+    const unopposed = [...html.matchAll(/<p\b[^>]*>[\s\S]*?<\/p>/gi)].filter(paragraph => {
+      const content = text(paragraph[0]);
+      return content.includes(dateLabel) && content.includes(stateName(race.state) ?? "\0") && expected.test(content)
+        && /general election.*was canceled\./i.test(content) && /won election.*without appearing on the ballot/i.test(content);
+    });
+    if (unopposed.length === 1) {
+      const quote = unopposed[0][0], candidate = /<a\b[^>]*>([\s\S]*?)<\/a>/i.exec(quote);
+      const name = text(candidate?.[1] ?? ""), party = /\(([^)]+)\)/.exec(text(quote.slice((candidate?.index ?? 0) + (candidate?.[0].length ?? 0))))?.[1];
+      if (!name) throw new Error(`Ballotpedia unopposed general-election candidate is missing: ${race.url}`);
+      return { source, races: [{ sourceId: "ballotpedia", sourceName: source.name, sourceUrl: race.url, creditedSources: [],
+        sourceRaceId: ballotpediaRaceId(race.url), state: race.state.toUpperCase(), office: race.office,
+        officeName: `${race.office === "us_house" ? "U.S. House" : "U.S. Senate"} ${stateName(race.state)}`,
+        ...(race.districtHint === undefined ? {} : { districtHint: race.districtHint }), electionDate, status: "unopposed", seatsToFill: 1,
+        candidates: [{ name, ...(party ? { party } : {}), won: true, runoff: false, quote }], checkedAt, quote }], summaries: [],
+        evidence: { text: html, contentType: "text/html", contentHash: createHash("sha256").update(html).digest("hex") } };
+    }
+  }
   if (choices.length !== 1) throw new Error(`Ballotpedia current general-election table is ambiguous or missing: ${race.url}`);
-  const { section, narrative, label } = choices[0];
+  const { section, narrative, label, primary } = choices[0];
   const table = /<table\b[^>]*class=["'][^"']*\bresults_table\b[^"']*["'][^>]*>[\s\S]*?<\/table>/i.exec(section)?.[0];
   if (!table) throw new Error(`Ballotpedia results table is missing: ${race.url}`);
   const candidates: ResultCandidate[] = [];
@@ -62,10 +87,11 @@ export function parseBallotpediaResults(html: string, race: BallotpediaRace, che
     const percent = number(text(percentHtml ?? cells[cells.length - 2]));
     const votes = number(text(cells[cells.length - 1]));
     const party = /\(([^)]+)\)/.exec(text(nameCell.slice((nameLink?.index ?? 0) + (nameLink?.[0].length ?? 0))))?.[1];
-    const won = /[✔✓]/.test(text(cells[0]));
-    if (/<(?:strong|b)\b[^>]*>[\s\S]*?<u\b/i.test(nameCell) && !won) incumbentLost = true;
+    const selected = /[✔✓]/.test(text(cells[0]));
+    const won = selected && (!primary || /won election outright|\bdefeated\b/i.test(text(narrative)));
+    if (/<(?:strong|b)\b[^>]*>[\s\S]*?<u\b/i.test(nameCell) && !selected) incumbentLost = true;
     candidates.push({ name, ...(party ? { party } : {}), ...(votes === undefined ? {} : { votes }),
-      ...(percent === undefined ? {} : { percent }), won, runoff: false, quote: row[0] });
+      ...(percent === undefined ? {} : { percent }), won, runoff: primary && selected && !won, quote: row[0] });
   }
   if (!candidates.length) throw new Error(`Ballotpedia general-election candidates are missing: ${race.url}`);
   const creditedSources: ResultSource[] = [];

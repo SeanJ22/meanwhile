@@ -8,10 +8,15 @@ export interface SourceWorkClock {
 const object=(value:unknown):Record<string,unknown>=>value!==null&&typeof value==="object"&&!Array.isArray(value)?value as Record<string,unknown>:{};
 const nextKeys=["nextTermAt","nextDueAt","nextWorkAt"]as const;
 
+/** These records are scheduling inputs; the remaining held evidence is read from the vault. */
+export function sourceWorkClockFacts(candidate:Pick<RoutineCandidate,"excludedFacts">){
+  return(candidate.excludedFacts??[]).filter(fact=>fact.code==="PEOPLE_PORTRAIT_SCHEDULE"||/^(STATE|CONGRESS)_PORTRAIT_WORK_REMAINS$/.test(fact.code));
+}
+
 /** Source plans retain their own term/blank retry boundaries even when unchanged hashes learn a slower cadence. */
 export function sourceWorkClock(candidate:RoutineCandidate):SourceWorkClock{
   const payload=object(candidate.normalizedPayload),probe=object(payload.sourceProbe);
-  const facts=candidate.excludedFacts??[];
+  const facts=sourceWorkClockFacts(candidate);
   const next=[...nextKeys.flatMap(key=>[probe[key],payload[key]]),
     ...facts.filter(fact=>fact.code==="PEOPLE_PORTRAIT_SCHEDULE").map(fact=>object(fact.record).nextDueAt)]
     .flatMap(value=>typeof value==="string"&&Number.isFinite(Date.parse(value))?[new Date(value).toISOString()]:[]).sort()[0];
@@ -20,7 +25,7 @@ export function sourceWorkClock(candidate:RoutineCandidate):SourceWorkClock{
   return{...(next?{nextWorkAt:next}:{}),...(workPending?{workPending:true}:{})};
 }
 
-/** The Postgres twin selects only scalar work metadata; source plans and evidence remain in the database. */
+/** The Postgres twin selects only work metadata; source evidence stays in the vault. */
 export function sourceWorkClockSql(column:SQLWrapper){
   const payload=sql`reader_payload_node(${column}->'normalizedPayload')`;
   const probe=sql`reader_payload_node(${payload}->'sourceProbe')`;

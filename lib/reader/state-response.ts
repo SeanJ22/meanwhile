@@ -11,8 +11,10 @@ import { stateMemberDirectories, zipMemberDirectories } from "../reader/member-d
 import { readerStateCacheHeaders, withReaderZipTag } from "../reader/cache";
 import { readZipAnswer, type ZipAnswer } from "../reader/zip-answer";
 
-/** A published ZIP answers from its file, with no database read and no wait on the saved keys. */
-export async function readerStateResponse(request: Request, published?: ZipAnswer | null) {
+export const readerStateResponse = (request: Request) => readerStateResponseFor(request);
+
+/** A published ZIP answers from its file, with no database read and no wait on the saved keys. A caller that has read the ZIP's file passes it (null when none is held). */
+export async function readerStateResponseFor(request: Request, published?: ZipAnswer | null) {
   const zip = new URL(request.url).searchParams.get("zip");
   const held = published !== undefined ? published : zip && /^\d{5}$/.test(zip) ? await readZipAnswer(zip) : null;
   const answer = held ? publishedStateAnswer(request, held) : null;

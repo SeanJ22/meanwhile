@@ -19,7 +19,7 @@ import { bindGovernmentBodies } from "@/lib/registration/listings";
 import { readerCacheHeaders,readerPlaceCacheHeaders,withReaderZipTag } from "@/lib/reader/cache";
 import { readZipAnswer, type ZipAnswer } from "@/lib/reader/zip-answer";
 import { attemptsByFamily } from "@/lib/registry/attempt-families";
-import {readerStateResponse} from "@/lib/reader/state-response";
+import {readerStateResponseFor} from "@/lib/reader/state-response";
 import { readZipLocation } from "@/lib/place-map/locations";
 import type { ReaderStateResponse } from "@/lib/reader/client";
 
@@ -69,7 +69,7 @@ async function answer(request: Request, published: ZipAnswer | null): Promise<Re
   if (!radiusRead.ok) return refuse(radiusRead.error);
   if (radiusRead.value <= 0) return refuse(`radiusKm must be greater than 0, received ${radiusRead.value}`);
   const lat = latRead.value, lng = lngRead.value, radiusKm = Math.min(radiusRead.value, MAX_RADIUS_KM);
-  const stateAnswerRead = params.get("include")==="state" && zipRead.value ? readerStateResponse(request, published).then(async response=>{
+  const stateAnswerRead = params.get("include")==="state" && zipRead.value ? readerStateResponseFor(request, published).then(async response=>{
     const value=await response.json() as ReaderStateResponse;
     return {status:response.status,headers:[...response.headers],value};
   }).catch(()=>

@@ -81,13 +81,15 @@ export function slimAnswer(full: Row, detail: (bodyId: string) => string | null)
     const url = detail(body.bodyId);
     if (!url || !body.readerRoster) return body;
     const { readerRoster, fieldSources: _sources, ...rest } = body;
-    return { ...rest, readerRoster: { count: readerRoster.members.length, detail: url } };
+    // A governing board's roster is the first thing its place shows, so it stays; its sources are at the board.
+    return body.bodyClass === "GOVERNING" ? { ...rest, readerRoster, detail: url } : { ...rest, readerRoster: { count: readerRoster.members.length, detail: url } };
   });
   const meetings = (list: readonly Row[]) => list.map(meeting => {
     const url = meeting.bodyId ? detail(meeting.bodyId) : null;
     if (!url) return meeting;
-    const { fieldSources: _a, publicationConflicts: _b, provenance: _c, ...rest } = meeting;
-    return { ...rest, detail: url };
+    const { fieldSources: _a, publicationConflicts: _b, provenance, ...rest } = meeting;
+    // The page of the meeting is what a row links to when it has no agenda.
+    return { ...rest, ...(provenance?.sourceUrl ? { sourceUrl: provenance.sourceUrl } : {}), detail: url };
   });
   const state = full.stateResponse?.value;
   return { ...full, meetings: meetings(full.meetings), coverage: { ...full.coverage, bodies: bodies(full.coverage.bodies) },

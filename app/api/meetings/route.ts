@@ -15,6 +15,7 @@ import type { ReaderStateResponse } from "@/lib/reader/client";
 
 export const runtime = "nodejs";
 
+// A ZIP is answered by /api/answer once its state is published; this route then serves only a map view (a point and a radius), and a ZIP whose state is not published yet.
 export const GET = readerRoute("/api/meetings", async function GET(request: Request) {
   await loadWebsiteSavedKeys();
   const timing = stageTimer(), params = new URL(request.url).searchParams;

@@ -137,16 +137,18 @@ test("SPN-01PC1: the heavy parts of an answer stay at their boards, and a board 
   const full = {
     meetings: [{ id: "m1", bodyId: "body:with", title: "T", fieldSources: sources, publicationConflicts: [1], provenance: { sourceUrl: "u" } },
       { id: "m2", bodyId: "body:without", title: "U", fieldSources: sources, provenance: { sourceUrl: "u" } }, { id: "m3", bodyId: null, title: "V", provenance: { sourceUrl: "u" } }],
-    coverage: { bodies: [{ bodyId: "body:with", name: "W", readerRoster: roster, fieldSources: sources }, { bodyId: "body:without", name: "X", readerRoster: roster, fieldSources: sources }] },
+    coverage: { bodies: [{ bodyId: "body:with", name: "W", readerRoster: roster, fieldSources: sources }, { bodyId: "body:without", name: "X", readerRoster: roster, fieldSources: sources },
+      { bodyId: "body:with", bodyClass: "GOVERNING", name: "G", readerRoster: roster, fieldSources: sources }] },
     stateResponse: { status: 200, headers: [], value: { coverage: { bodies: [{ bodyId: "body:with", readerRoster: roster }] }, zip: "85701" } },
     tier: "exact",
   };
   const slim = slimAnswer(full, id => id === "body:with" ? url : null) as typeof full & { meetings: Record<string, unknown>[] };
-  assert.deepEqual(slim.meetings[0], { id: "m1", bodyId: "body:with", title: "T", detail: url });
+  assert.deepEqual(slim.meetings[0], { id: "m1", bodyId: "body:with", title: "T", sourceUrl: "u", detail: url }, "the page of the meeting stays for a row with no agenda");
   assert.deepEqual(slim.meetings[1], full.meetings[1]);
   assert.deepEqual(slim.meetings[2], full.meetings[2]);
   assert.deepEqual(slim.coverage.bodies[0], { bodyId: "body:with", name: "W", readerRoster: { count: 2, detail: url } });
   assert.deepEqual(slim.coverage.bodies[1], full.coverage.bodies[1]);
+  assert.deepEqual(slim.coverage.bodies[2], { bodyId: "body:with", bodyClass: "GOVERNING", name: "G", readerRoster: roster, detail: url }, "a governing board keeps its roster; its sources are at the board");
   assert.deepEqual(slim.stateResponse.value.coverage.bodies[0], { bodyId: "body:with", readerRoster: { count: 2, detail: url } });
   assert.equal(slim.tier, "exact");
   assert.ok(full.meetings[0]!.fieldSources, "the answer it was made from is not changed");

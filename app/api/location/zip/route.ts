@@ -4,6 +4,7 @@ import { resolveZipLocation } from "@/lib/place-map/locations";
 
 export const runtime = "nodejs";
 
+// Only for a ZIP whose state has no published files yet (reader/zip3 and /api/answer answer the rest); this route goes when every state is published.
 export async function GET(request: Request): Promise<Response> {
   await loadWebsiteSavedKeys();
   const params = new URL(request.url).searchParams;

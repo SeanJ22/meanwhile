@@ -15,6 +15,8 @@ export interface ZipRow {
   readonly partial: readonly string[];
   readonly fringe: readonly string[];
   readonly districts: readonly string[];
+  /** What the postal service says of the ZIP, as /api/location/zip gave it: its type, place and county. */
+  readonly postal?: unknown;
 }
 export interface Zip3File { readonly v: 1; readonly zips: Readonly<Record<string, ZipRow>> }
 

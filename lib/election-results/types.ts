@@ -8,6 +8,7 @@ export interface ResultCandidate {
   percent?: number;
   won?: boolean;
   runoff?: boolean;
+  incumbent?: boolean;
   quote?: string;
 }
 export interface ElectionResult {
@@ -26,8 +27,11 @@ export interface ElectionResult {
   statusChangedAt?: string;
   seatsToFill?: number;
   flipped?: boolean;
+  /** Source-stated or candidate-counted seats, including multi-seat races. */
+  seatsFlipped?: number;
   gainedByParty?: string;
   incumbentLost?: boolean;
+  incumbentsLost?: number;
   candidates: ResultCandidate[];
   measure?: {
     name: string;
@@ -51,8 +55,10 @@ export interface ElectionSummary {
     stillCounting: number;
     controlBefore: string | null;
     controlNow: string | null;
+    seatsFlipped?: number;
   }[];
-  governor: { before: string | null; now: string | null };
+  governor: { before: string | null; now: string | null; name?: string | null };
+  incumbentsLost?: number;
   statewideOfficesFlipped: { office: string; from: string; to: string }[];
   source: ResultSource;
   creditedSources: ResultSource[];

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test, { beforeEach } from "node:test";
 import { createHash } from "node:crypto";
 import { runElectionResults } from "../lib/election-results/runner.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -16,6 +16,20 @@ import { migratedFactDb } from "./helpers/migrated-reader-db.ts";
 import { ballotForDivisions } from "../lib/ballot/contests.ts";
 import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
 import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
+import { selectedBallotStatement } from "../lib/reader/selected-ballot.ts";
+import { selectedStateEntry } from "../lib/reader/selected-entry.ts";
+import type { GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+import { readNationalElectionResults, readStateElectionResults } from "../lib/reader/election-results.ts";
+import { publicationVersion, readCanonicalShelf } from "../lib/reader/canonical.ts";
+import { createElectionResultFeedStore, installElectionResultFeedStore, type ElectionResultFeedStore } from "../lib/election-results/feed-store.ts";
+
+let feeds: ElectionResultFeedStore;
+beforeEach(() => {
+  const values = new Map<string, unknown>();
+  feeds = createElectionResultFeedStore({ read: async key => values.get(key) ?? null,
+    write: async (key, value) => { values.set(key, structuredClone(value)); } });
+  installElectionResultFeedStore(feeds);
+});
 
 const at = "2026-11-04T00:00:00.000Z";
 const emptyBatch: ElectionResultBatch = { source: { name: "Synthetic result feed", url: "https://example.org/results" },
@@ -244,7 +258,11 @@ test("the source catalog fetches a race missing from the served ballot and gives
     const result = await runElectionResults({ ...input, now: new Date("2026-11-04T00:05:00.000Z") });
     assert.deepEqual(requested, [url], "a newly cataloged race runs even though the state's prior source clock is not due");
     assert.equal(result.unmatched, 1);
-    assert.equal(result.published, 2, "valid national summaries publish despite a partial catalog index failure");
+    assert.equal(result.published, 3, "national summaries and the unmatched race's map fact publish despite a partial catalog index failure");
+    const summary = await readNationalElectionResults(feeds);
+    assert.equal(summary?.states.AZ.us_house.reportedRaces, 1, "an unmatched race still reaches the national map through its Slide fact");
+    assert.equal(summary?.states.AZ.us_house.totalRaces, 1);
+    assert.equal((await db.query("SELECT count(*)::int AS n FROM fact WHERE field LIKE 'election_congress:%' AND status='live'"))[0].n, 1);
     const fixes = await db.query("SELECT state,subject_id,field FROM work WHERE kind='fix' AND status='waiting'");
     assert.ok(fixes.some(row => row.state === "AZ" && String(row.subject_id).includes("Arizona's_7th_Congressional_District_election,_2026")
       && String(row.field).startsWith("election_result:")), "the source-known missing contest has its own fix row");
@@ -302,7 +320,7 @@ test("the production reader matches every held district before creating a missin
   const query: Query = async (sql, params = []) => {
     if (sql.startsWith("WITH RECURSIVE shelf AS MATERIALIZED")) {
       canonicalReads.push([...params]);
-      assert.deepEqual(params, [[key]], "the authority read names the whole state, with no ZIP or selected district");
+      assert.deepEqual(params, [[key], key], "authority and fact bootstrap name the whole state, with no ZIP or selected district");
     }
     return db.query(sql, params);
   };
@@ -325,6 +343,30 @@ test("the production reader matches every held district before creating a missin
       "a withdrawn filing cannot match a race after it leaves the reader's choices");
     const fixes = await db.query("SELECT subject_id FROM work WHERE kind='fix' AND status='waiting' AND field LIKE 'election_result:%'");
     assert.deepEqual(fixes.map(row => row.subject_id), ["election-results:AZ:803"], "only the race absent everywhere in the held state ballot becomes a fix");
+    const selected = selectedBallotStatement("AZ", [stateId, `${stateId}/sldl:1`]);
+    assert.doesNotMatch(selected.text, /\b(?:fact|checked_fact|fact_confirmation|pass_cursor)\b/, "a ballot visit never looks up result facts or clocks");
+    const readBallot = async () => {
+      const rows = await db.query(selected.text, selected.params);
+      const entry = selectedStateEntry("BALLOT_CANDIDACY", scope, rows[0]);
+      assert.equal(entry.kind, "PROMOTED");
+      return (entry as Extract<typeof entry, { kind: "PROMOTED" }>).projection.payload as GenericBallotProjection;
+    };
+    const first = await readBallot();
+    assert.equal(Object.values(first.ballots)[0].contests[0].result, undefined, "the initial ballot remains the original source projection");
+    const feed = await readStateElectionResults("AZ", undefined, feeds);
+    assert.equal((feed?.facts[held.contests[0].id] as { status: string }).status, "counting");
+    const later = "2026-11-04T06:00:00.000Z";
+    const next = await runElectionResults({ db, query, cache, states: ["AZ"], now: new Date(later), multistate: { ...batch,
+      races: batch.races.map(race => ({ ...race, checkedAt: later })) },
+      congressSummaries: [overview("us_house"), overview("us_senate")],
+      purge: async () => ({ purged: true }), fetch: async () => { throw new Error("Synthetic overview unavailable"); } });
+    assert.equal(next.published, 0, "an unchanged scheduled run makes no new fact versions");
+    assert.equal(canonicalReads.length, 1, "the next scheduled run reuses the freshly versioned held ballot");
+    const second = await readBallot();
+    assert.deepEqual(second, first, "results never change the initial ballot payload");
+    const refreshed = await readStateElectionResults("AZ", undefined, feeds);
+    assert.equal((refreshed?.facts[held.contests[0].id] as { checkedAt: string }).checkedAt, later,
+      "the prepared result feed carries the job's successful check date");
   } finally { await db.pg.close(); }
 });
 
@@ -464,5 +506,212 @@ test("source failures share the fix cap and deduplicated national work survives 
     assert.equal((await db.query("SELECT count(*)::int n FROM work WHERE kind='fix'"))[0].n, 2);
     const saved = JSON.parse(String((await db.query("SELECT position FROM pass_cursor WHERE name='election-results:US'"))[0].position));
     assert.deepEqual(saved.pendingFixes, []);
+  } finally { await db.pg.close(); }
+});
+
+test("a queued incumbent contradiction retires on correction before the capped writer can flush it", async () => {
+  const db = await factDb();
+  try {
+    for (const sql of WORK_DDL) await db.pg.exec(sql);
+    await db.pg.exec("CREATE TABLE civic_data_promotions(scope text,record_class text,current_version_id text)");
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES('ocd-division/country:us','place','United States',NULL),('ocd-division/country:us/state:az','place','Arizona','AZ')");
+    markSlicesOn(() => workList(db.query, { owner: "test-queued-incumbent-correction" }));
+    const held = ballot("AZ", "Governor");
+    held.candidacies = ["Alpha Governor", "Beta Governor"].map((familyName, index) => ({
+      id: `az-governor-${index}`, contestId: held.contests[0].id, givenName: "", familyName,
+      partyLabel: index ? "R" : "D", slogan: null, incumbent: Boolean(index), websiteUrl: null, provenance,
+    }));
+    const batch = (checkedAt: string, incumbentDefeated: boolean) => {
+      const parsed = parseMultiStateResults(JSON.stringify({ general_events: [{ state: "AZ", statewide_races: [{
+        seat_id: 901, office: "Governor", election_date: "2026-11-03", incumbent_defeated: incumbentDefeated,
+        general_results: { contests: [{ type: "General", election_id: 1901, result_status: "Called",
+          candidates: held.candidacies.map((candidate, index) => ({ candidate_id: index + 1, name: candidate.familyName,
+            party: candidate.partyLabel, votes: index ? 80 : 120, pct: index ? 40 : 60,
+            is_incumbent: Boolean(index), result: index ? "Lost" : "Won" })) }] },
+      }] }] }), checkedAt);
+      return { ...parsed, summaries: [] };
+    };
+    const statements: { text: string; params: readonly unknown[] }[] = [];
+    const traced = (query: Query): Query => async (text, params = []) => {
+      statements.push({ text, params });
+      const rows = await query(text, params);
+      // The metadata query has no ordering guarantee. Exercise the valid order where national work spends the allowance first.
+      return text.includes("requested(name,scope,hash)")
+        ? [...rows].sort((a, b) => Number(b.name === "election-results:US") - Number(a.name === "election-results:US")) : rows;
+    };
+    const cacheValues = new Map<string, string>();
+    const cache = new CivicReadCache({ read: async key => cacheValues.get(key) ?? null,
+      write: async (key, value) => { cacheValues.set(key, value); } });
+    const input = { query: traced(db.query), db: { transaction: async <T,>(work: (query: Query) => Promise<T>) => db.transaction(query => work(traced(query))) },
+      cache, states: ["AZ"], maxFixRows: 1, ballotsForState: async () => [held], purge: async () => ({ purged: true }),
+      fetch: async () => { throw new Error("Synthetic Ballotpedia overview unavailable"); } };
+    const writtenFixes = () => statements.filter(row => row.text.startsWith("INSERT INTO work"))
+      .flatMap(row => JSON.parse(String(row.params[0])) as { kind: string; field: string }[]).filter(row => row.kind === "fix");
+    const first = await runElectionResults({ ...input, now: new Date(at), multistate: batch(at, false) });
+    assert.equal(first.fixRowsWritten, 1);
+    assert.equal(writtenFixes().length, 1);
+    assert.equal(first.pendingFixRows, 2, "the second overview failure and the contradictory source flag wait behind the cap");
+    const firstAZ = JSON.parse(String((await db.query("SELECT position FROM pass_cursor WHERE name='election-results:AZ'"))[0].position));
+    assert.ok(firstAZ.summaries["incumbent-conflict:multistate:2026-11-03:901"]);
+    assert.deepEqual(firstAZ.pendingFixes.map((row: { field: string }) => row.field), ["election_result:Source incumbent flags disagree"]);
+    assert.equal((await db.query("SELECT count(*)::int n FROM work WHERE field='election_result:Source incumbent flags disagree'"))[0].n, 0);
+    statements.length = 0;
+    const later = "2026-11-05T00:00:00.000Z";
+    const next = await runElectionResults({ ...input, now: new Date(later), multistate: batch(later, true) });
+    assert.equal(next.fixRowsWritten, 1);
+    assert.equal(writtenFixes().length, 1);
+    assert.ok(writtenFixes().every(row => row.field.startsWith("source:")), "the queued source failure spends this turn's only fix write");
+    assert.equal(next.pendingFixRows, 1, "only a current source failure remains queued after the source corrects its incumbent flag");
+    const nextAZ = JSON.parse(String((await db.query("SELECT position FROM pass_cursor WHERE name='election-results:AZ'"))[0].position));
+    assert.equal(nextAZ.summaries["incumbent-conflict:multistate:2026-11-03:901"], undefined);
+    assert.deepEqual(nextAZ.pendingFixes, [], "saving progress prunes the unwritten contradiction instead of recreating it next turn");
+    const nation = JSON.parse(String((await db.query("SELECT position FROM pass_cursor WHERE name='election-results:US'"))[0].position));
+    assert.ok(nation.pendingFixes.every((row: { field: string }) => row.field.startsWith("source:")));
+    assert.equal((await db.query("SELECT count(*)::int n FROM work WHERE field='election_result:Source incumbent flags disagree'"))[0].n, 0);
+    assert.equal(statements.filter(row => /^\s*SELECT\b[\s\S]*\bFROM\s+work\b/i.test(row.text)).length, 0,
+      "retiring queued work uses the already read progress and adds no work-list read");
+    assert.equal((await db.query("SELECT value->>'incumbentLost' lost FROM fact WHERE entity_id='AZ-contest' AND field='election_result' AND status='live'"))[0].lost,
+      "true", "the corrected source value still publishes while fix work is capped");
+  } finally { await db.pg.close(); }
+});
+
+test("a fresh national overview reaches a prepared state feed while its called and certified races are not due", async () => {
+  const db = await migratedFactDb();
+  try {
+    for (const sql of WORK_DDL) await db.pg.exec(sql);
+    const stateId = "ocd-division/country:us/state:az", scope = stateBallotScope("ballot-contests", "AZ");
+    const held = ballot("AZ", "State Representative District 1");
+    held.contests[0].ocdId = `${stateId}/sldl:1`;
+    held.candidacies.push({ id: "az-called-legislator", contestId: held.contests[0].id, givenName: "", familyName: "Alex Legislator",
+      partyLabel: "D", slogan: null, incumbent: false, websiteUrl: null, provenance });
+    await db.publish({ id: "az-national-refresh-authority", recordClass: "BALLOT_CANDIDACY", scope, at,
+      sourceId: "synthetic-ballot-authority", value: { kind: "ballot-contests", ballots: { [ballotElectionKey(held)]: held } } });
+    for (const [id, name] of [["ocd-division/country:us", "United States"], [stateId, "Arizona"], [held.contests[0].ocdId, "District 1"]])
+      await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place',$2,$3) ON CONFLICT DO NOTHING",
+        [id, name, id === "ocd-division/country:us" ? null : "AZ"]);
+    markSlicesOn(() => workList(db.query, { owner: "test-national-ballot-refresh" }));
+    const stateResults = parseMultiStateResults(JSON.stringify({ general_events: [{ state: "AZ", races: [{
+      seat_id: 601, office: "State House", district: "1", election_date: "2026-11-03", incumbent_defeated: false,
+      general_results: { contests: [{ type: "General", election_id: 1601, result_status: "Called",
+        candidates: [{ candidate_id: 1, name: "Alex Legislator", party: "D", votes: 100, pct: 100, is_incumbent: false, result: "Won" }] }] },
+    }] }] }), at);
+    const url = "https://ballotpedia.org/Arizona%27s_7th_Congressional_District_election,_2026";
+    const house = overview("us_house", [{ state: "AZ", office: "us_house", districtHint: "7", electionDate: "2026-11-03", url }]);
+    const senate = (democrats: number, checkedAt: string): ElectionResultBatch => {
+      const batch = overview("us_senate"), quote = `United States D ${democrats} R ${100 - democrats} counting 0`;
+      return { ...batch, summaries: batch.summaries.map(summary => ({ ...summary, quote, checkedAt,
+        chambers: summary.chambers.map(chamber => ({ ...chamber, seatsNow: { D: democrats, R: 100 - democrats } })) })),
+        evidence: { text: quote, contentType: "text/plain", contentHash: createHash("sha256").update(quote).digest("hex") } };
+    };
+    const cacheValues = new Map<string, string>(), jobStatements: string[] = [], requests: string[] = [];
+    const cache = new CivicReadCache({ read: async key => cacheValues.get(key) ?? null,
+      write: async (key, value) => { cacheValues.set(key, value); } });
+    const query: Query = async (text, params) => { jobStatements.push(text); return db.query(text, params); };
+    const input = { db, query, cache, states: ["AZ"], multistate: { ...stateResults, summaries: [] }, purge: async () => ({ purged: true }),
+      fetch: async (request: Parameters<typeof fetch>[0]) => { requests.push(String(request)); return new Response(federalBox("Arizona", "House")); } };
+    const first = await runElectionResults({ ...input, now: new Date(at), congressSummaries: [senate(52, at), house] });
+    assert.equal(first.matched, 1);
+    assert.equal(first.unmatched, 1);
+    assert.deepEqual(requests, [url]);
+    const senateSeats = async () => {
+      const feed = await readStateElectionResults("AZ", undefined, feeds);
+      return (feed?.facts["ocd-division/country:us#election_summary:us_senate"] as { chambers: { seatsNow: { D: number } }[] })?.chambers[0].seatsNow.D;
+    };
+    assert.equal(await senateSeats(), 52);
+    const before = JSON.parse(String((await db.query("SELECT position FROM pass_cursor WHERE name='election-results:AZ'"))[0].position));
+    assert.equal(before.races["multistate:2026-11-03:601"].nextCheckAt, "2026-11-05T00:00:00.000Z");
+    assert.ok(Object.entries(before.races).some(([key, value]) => key.startsWith("ballotpedia:") && (value as { status: string }).status === "certified"));
+    jobStatements.length = 0;
+    const later = "2026-11-04T06:00:00.000Z";
+    const next = await runElectionResults({ ...input, now: new Date(later), congressSummaries: [senate(53, later), house],
+      fetch: async (): Promise<never> => { throw new Error("The state's certified race and cached ballot are not due to be fetched"); } });
+    assert.equal(next.matched, 0, "the called state race remains on its daily clock");
+    assert.equal(next.unmatched, 0, "the certified federal race remains stopped");
+    assert.equal(await senateSeats(), 53, "the new national count reaches the prepared state feed at the national clock");
+    assert.equal(jobStatements.filter(text => text.includes("requested(name,scope,hash)")).length, 1,
+      "the ordinary compact metadata read discovers national and state work together");
+    assert.equal(jobStatements.filter(text => text.startsWith("WITH RECURSIVE shelf AS MATERIALIZED")).length, 0,
+      "the job reuses its verified state projection rather than rereading ballot or fact records");
+    assert.deepEqual(requests, [url]);
+    const after = JSON.parse(String((await db.query("SELECT position FROM pass_cursor WHERE name='election-results:AZ'"))[0].position));
+    assert.equal(after.races["multistate:2026-11-03:601"].lastCheckedAt, at, "national propagation does not claim a new state-source check");
+  } finally { await db.pg.close(); }
+});
+
+test("a failed prepared-feed write retries from checked facts without changing initial ballots or rereading sources", async () => {
+  const db = await migratedFactDb();
+  try {
+    for (const sql of WORK_DDL) await db.pg.exec(sql);
+    const stateId = "ocd-division/country:us/state:az", scope = stateBallotScope("ballot-contests", "AZ");
+    const held = ballot("AZ", "Governor");
+    held.candidacies.push({ id: "az-feed-governor", contestId: held.contests[0].id, givenName: "", familyName: "Alex Governor",
+      partyLabel: "D", slogan: null, incumbent: false, websiteUrl: null, provenance });
+    await db.publish({ id: "az-feed-authority", recordClass: "BALLOT_CANDIDACY", scope, at, sourceId: "synthetic-ballot-authority",
+      value: { kind: "ballot-contests", ballots: { [ballotElectionKey(held)]: held } } });
+    for (const [id, name] of [["ocd-division/country:us", "United States"], [stateId, "Arizona"]])
+      await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place',$2,$3)", [id, name, id === stateId ? "AZ" : null]);
+    markSlicesOn(() => workList(db.query, { owner: "test-prepared-feed-retry" }));
+    const stateResults = parseMultiStateResults(JSON.stringify({ general_events: [{ state: "AZ", statewide_races: [{ seat_id: 602,
+      office: "Governor", election_date: "2026-11-03", incumbent_defeated: false, general_results: { contests: [{ type: "General", election_id: 1602,
+        result_status: "Called", candidates: [{ candidate_id: 1, name: "Alex Governor", party: "D", votes: 100, pct: 100, is_incumbent: false, result: "Won" }] }] },
+    }] }] }), at);
+    const initial = () => db.query("SELECT xmin::text AS version,payload FROM civic_data_promotions WHERE record_class='BALLOT_CANDIDACY' AND scope=$1", [scope]);
+    const original = await initial(), cacheValues = new Map<string, string>(), statements: string[] = [];
+    const key = `BALLOT_CANDIDACY:${scope}`;
+    const reader = async (queries: readonly { text: string; params: readonly unknown[] }[]) =>
+      Promise.all(queries.map(statement => db.query(statement.text, statement.params)));
+    const versionBefore = await publicationVersion([key], reader);
+    const selectedStatement = selectedBallotStatement("AZ", [stateId]);
+    const initialSelected = async () => {
+      const rows = await db.query(selectedStatement.text, selectedStatement.params);
+      return selectedStateEntry("BALLOT_CANDIDACY", scope, rows[0]);
+    };
+    const initialFull = async () => (await readCanonicalShelf([{ recordClass: "BALLOT_CANDIDACY", scope }], reader)).readPromotedEntry!("BALLOT_CANDIDACY", scope);
+    const selectedBefore = await initialSelected(), fullBefore = await initialFull();
+    const { doors } = await localRuntime();
+    const cache = new CivicReadCache({ read: async key => cacheValues.get(key) ?? null,
+      write: async (key, value) => { cacheValues.set(key, value); } });
+    let writes = 0;
+    const store: ElectionResultFeedStore = { ...feeds, writeState: async (state, document) => {
+      if (++writes === 1) throw new Error("Synthetic object store unavailable");
+      await feeds.writeState(state, document);
+    } };
+    const query: Query = async (text, params) => { statements.push(text); return db.query(text, params); };
+    const forbidden = async (): Promise<never> => { throw new Error("Feed retries must not reacquire source pages"); };
+    const input = { db, query, cache, doors, states: ["AZ"], maxFixRows: 1, feedStore: store, multistate: { ...stateResults, summaries: [] },
+      congressSummaries: [overview("us_senate"), overview("us_house")], purge: async () => ({ purged: true }), fetch: forbidden };
+    const first = await runElectionResults({ ...input, now: new Date(at) });
+    assert.equal(first.fixRowsWritten, 1);
+    assert.equal(first.nextCheckAt, at, "a failed feed write schedules an immediate job continuation");
+    assert.equal(await feeds.readState("AZ"), null);
+    assert.deepEqual(await initial(), original);
+    assert.equal(await publicationVersion([key], reader), versionBefore, "the first results run cannot invalidate the source ballot publication");
+    assert.deepEqual(await initialSelected(), selectedBefore);
+    assert.deepEqual(await initialFull(), fullBefore);
+    const progress = JSON.parse(String((await db.query("SELECT position FROM pass_cursor WHERE name='election-results:AZ'"))[0].position));
+    assert.equal(progress.readerPending, true);
+    assert.ok(!progress.pendingSources.length, "checked sources keep their existing clocks");
+    assert.equal((await db.query("SELECT count(*)::int n FROM fact WHERE field='election_result' AND status='live'"))[0].n, 2,
+      "valid contest and candidate facts reached the Slide before the object store failed");
+    statements.length = 0;
+    const later = "2026-11-04T00:05:00.000Z";
+    const next = await runElectionResults({ ...input, now: new Date(later), multistate: undefined, congressSummaries: undefined });
+    assert.equal(next.published, 0);
+    assert.equal(next.reads, 2, "the warm retry only needs the ordinary compact clock and Admin source-door metadata reads");
+    assert.equal(next.fixRowsWritten, 0);
+    assert.ok(next.nextCheckAt! > later);
+    assert.equal(writes, 2);
+    assert.equal(statements.filter(text => text.startsWith("WITH RECURSIVE shelf AS MATERIALIZED")).length, 0);
+    const prepared = await feeds.readState("AZ");
+    assert.equal((prepared?.facts[held.contests[0].id] as { status: string }).status, "called");
+    assert.equal(Object.hasOwn(prepared!, "ballots"), false);
+    assert.equal(JSON.stringify(prepared).includes("Synthetic election office"), false, "the feed holds result citations rather than a source ballot copy");
+    assert.deepEqual(await initial(), original, "neither feed preparation nor retry changes the foreground promotion payload or version");
+    assert.equal(await publicationVersion([key], reader), versionBefore);
+    assert.deepEqual(await initialSelected(), selectedBefore);
+    assert.deepEqual(await initialFull(), fullBefore);
+    assert.doesNotMatch(JSON.stringify(await initialFull()), /"(?:result|results)"\s*:/, "the full initial ballot carries no result fields");
+    assert.equal((await db.query("SELECT count(*)::int n FROM work WHERE kind='fix' AND field LIKE 'source:%' AND status='waiting'"))[0].n, 0,
+      "successful publication closes the earlier object-store failure");
   } finally { await db.pg.close(); }
 });

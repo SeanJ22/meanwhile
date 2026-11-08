@@ -6,6 +6,8 @@ import { parseMultiStateResults } from "../lib/election-results/multistate.ts";
 import { ensureOpenElectionResults, publishElectionResultBatch } from "../lib/election-results/publisher.ts";
 import { runElectionResults } from "../lib/election-results/runner.ts";
 import type { ElectionResultBatch } from "../lib/election-results/types.ts";
+import { summarizeCongressResults } from "../lib/election-results/summary.ts";
+import { createElectionResultFeedStore } from "../lib/election-results/feed-store.ts";
 import { WORK_DDL, workList } from "../lib/core/work.ts";
 import { markSlicesOn } from "../lib/core/slice-marks.ts";
 import { factDb } from "./helpers/fact-db.ts";
@@ -166,6 +168,43 @@ test("independent congressional summaries keep separate fact histories and sourc
   } finally { await db.pg.close(); }
 });
 
+test("a federal race without a ballot match reaches the map only through a checked Slide fact", async () => {
+  const db = await fixture();
+  const batch = (checkedAt: string): ElectionResultBatch => {
+    const quote = "Synthetic winner (D) defeated incumbent Synthetic incumbent (R) in Massachusetts in 2026 with 120 votes.";
+    const url = "https://ballotpedia.org/Synthetic_Massachusetts_House_race_2026";
+    return { source: { name: "Ballotpedia", url }, races: [{ sourceId: "ballotpedia", sourceName: "Ballotpedia", sourceUrl: url,
+      creditedSources: [], sourceRaceId: "Synthetic_Massachusetts_House_race_2026", state: "MA", office: "us_house", officeName: "U.S. House Massachusetts",
+      electionDate: "2026-11-03", status: "called", seatsFlipped: 1, incumbentsLost: 1,
+      candidates: [{ name: "Synthetic winner", party: "D", votes: 120, won: true }], checkedAt, quote }], summaries: [],
+      evidence: { text: quote, contentType: "text/plain", contentHash: createHash("sha256").update(quote).digest("hex") } };
+  };
+  try {
+    const first = await publishElectionResultBatch({ db, query: db.query, batch: batch(AT), ballots: [], state: "MA", now: new Date(AT), purge });
+    assert.equal(first.counts.unmatched, 1);
+    assert.equal(first.counts.published, 1, "an unmatched contest does not suppress the independently checked map result");
+    const [fact] = await db.query("SELECT entity_id,field,value,quote_start FROM fact WHERE status='live'");
+    assert.equal(fact.entity_id, STATE);
+    assert.equal(fact.field, "election_congress:Synthetic_Massachusetts_House_race_2026");
+    assert.notEqual(fact.quote_start, null);
+    assert.equal(summarizeCongressResults(Object.values(first.progress.federalResults!), AT).states.MA.us_house.seatsFlipped, 1);
+    const nextAt = "2026-11-07T12:00:00.000Z";
+    const never = async (): Promise<never> => { throw new Error("Unchanged federal results must not read or write the database"); };
+    const next = await publishElectionResultBatch({ db: { transaction: never }, query: never, batch: batch(nextAt), ballots: [], state: "MA",
+      now: new Date(nextAt), prior: first.progress, purge });
+    assert.equal(next.counts.published, 0);
+    assert.equal(Object.values(next.progress.federalResults!)[0].checkedAt, nextAt);
+    await db.query("UPDATE fact SET provenance_kind='OFFICIAL' WHERE field='election_congress:Synthetic_Massachusetts_House_race_2026'");
+    const corrected = batch("2026-11-08T12:00:00.000Z");
+    corrected.races[0].candidates = [{ name: "Different synthetic winner", party: "R", votes: 121, won: true }];
+    const kept = await publishElectionResultBatch({ db, query: db.query, batch: corrected, ballots: [], state: "MA",
+      now: new Date("2026-11-08T12:00:00.000Z"), prior: next.progress, purge });
+    assert.equal(kept.counts.published, 0, "a reference cannot replace an official value");
+    assert.equal(Object.values(kept.progress.federalResults!)[0].winners[0].party, "D",
+      "the map must retain the value the Slide kept, even when the acquired reference changed");
+  } finally { await db.pg.close(); }
+});
+
 test("a governor summary checks both separate source fragments and stores no source fragments in its value", async () => {
   const db = await fixture();
   try {
@@ -259,10 +298,98 @@ test("runner obeys persisted race clocks without loading ballots or fetching sou
       sourceChecks: { "ballotpedia:us_senate": { checkedAt: AT }, "ballotpedia:us_house": { checkedAt: AT } } })]);
     const forbidden = async (): Promise<never> => { throw new Error("A settled source was reread"); };
     const result = await runElectionResults({ db, query: db.query, states: ["MA"], now: new Date("2026-11-06T15:00:00.000Z"),
-      ballotsForState: forbidden, fetch: forbidden });
+      ballotsForState: forbidden, fetch: forbidden,
+      feedStore: createElectionResultFeedStore({ read: async () => null, write: async () => {} }) });
     assert.equal(result.reads, 1, "only the existing persisted clock read runs");
     assert.equal(result.nextCheckAt, "2026-11-06T18:00:00.000Z");
     assert.equal((await db.query("SELECT count(*)::int n FROM source_copy"))[0].n, 0);
     assert.equal((await db.query("SELECT count(*)::int n FROM work"))[0].n, 0);
+  } finally { await db.pg.close(); }
+});
+
+test("measure results publish on served contests without wording rows and retain separate existing Measure facts", async () => {
+  const db = await fixture();
+  const stateId = "ocd-division/country:us/state:az";
+  const azElection = { id: "az-general", state: "AZ", date: "2026-11-03", name: "General election" };
+  const held: BallotSet = { election: azElection, contests: [141, 142, 320].map(number => ({
+    ...contest(`az-prop-${number}`, `Proposition ${number}`, stateId), electionId: azElection.id, type: "MEASURE",
+  })), candidacies: [], measures: [{ id: "az-question-320", contestId: "az-prop-320", officialNumber: "Proposition 320",
+    questionText: "The existing published question wording.", officialStatement: null, provenance: source }], absences: [] };
+  const batch = (at: string, yesVotes = 120) => parseMultiStateResults(JSON.stringify({ general_events: [{ state: "AZ", ballot_measures: [
+    { id: 501, measure_number: "Proposition 141", short_title: "First published measure", votes_yes: yesVotes, votes_no: 80,
+      yes_percentage: yesVotes === 120 ? 60 : 60.2, result: "Passed", result_status: "Called" },
+    { id: 502, measure_number: "Proposition 142", short_title: "Second published measure", votes_yes: 90, votes_no: 110,
+      yes_percentage: 45, result: "Failed", result_status: "Called" },
+    { id: 503, measure_number: "Proposition 320", short_title: "Third published measure", votes_yes: 50, votes_no: 20,
+      yes_percentage: 71.43, result: null, result_status: "Counting" },
+  ].map(measure => ({ ...measure, election_date: "2026-11-03", vote_source: "sos" })) }] }), at);
+  try {
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Arizona','AZ')", [stateId]);
+    const first = await publishElectionResultBatch({ db, query: db.query, batch: batch(AT), ballots: [held], state: "AZ", now: new Date(AT), purge });
+    assert.equal(first.counts.matched, 3);
+    assert.equal(first.counts.unmatched, 0);
+    assert.equal(first.counts.published, 4);
+    const facts = await db.query("SELECT entity_id,value FROM fact WHERE status='live' AND field='election_result' ORDER BY entity_id");
+    const byId = Object.fromEntries(facts.map(row => [String(row.entity_id), row.value as Record<string, unknown>]));
+    for (const [id, yesVotes, noVotes, yesPercent, outcome] of [["az-prop-141", 120, 80, 60, "passed"],
+      ["az-prop-142", 90, 110, 45, "failed"], ["az-prop-320", 50, 20, 71.43, "counting"], ["az-question-320", 50, 20, 71.43, "counting"]]) {
+      const value = byId[String(id)];
+      assert.deepEqual({ yesVotes: value.yesVotes, noVotes: value.noVotes, yesPercent: value.yesPercent, outcome: value.outcome },
+        { yesVotes, noVotes, yesPercent, outcome });
+    }
+    assert.deepEqual((await db.query("SELECT id FROM entity WHERE kind='measure'")).map(row => row.id), ["az-question-320"],
+      "missing wording rows never cause a new Measure identity to be invented");
+    assert.equal((await db.query("SELECT count(*)::int n FROM work WHERE kind IN ('fix','detect')"))[0].n, 0);
+    const forbidden = async (): Promise<never> => { throw new Error("An unchanged measure result must issue no SQL"); };
+    const nextAt = "2026-11-07T12:00:00.000Z";
+    const unchanged = await publishElectionResultBatch({ db: { transaction: forbidden }, query: forbidden, batch: batch(nextAt),
+      ballots: [held], state: "AZ", prior: first.progress, now: new Date(nextAt), purge });
+    assert.equal(unchanged.counts.published, 0);
+    const changedAt = "2026-11-08T12:00:00.000Z";
+    const changed = await publishElectionResultBatch({ db, query: db.query, batch: batch(changedAt, 121), ballots: [held], state: "AZ",
+      prior: unchanged.progress, now: new Date(changedAt), purge });
+    assert.equal(changed.counts.published, 1);
+    assert.deepEqual((await db.query("SELECT status,value->>'yesVotes' votes FROM fact WHERE entity_id='az-prop-141' ORDER BY id")),
+      [{ status: "superseded", votes: "120" }, { status: "live", votes: "121" }]);
+  } finally { await db.pg.close(); }
+});
+
+test("contradictory incumbent flags use the shared fix writer, preserve valid results, and close when corrected", async () => {
+  const db = await fixture();
+  const batch = (at: string, incumbentDefeated = false, votes = 100) => {
+    const document = JSON.parse(raw(votes));
+    const event = document.general_events[0], governor = event.statewide_races[0];
+    event.statewide_races = [governor]; event.races = []; event.ballot_measures = []; document.scorecard.states = [];
+    governor.incumbent_defeated = incumbentDefeated;
+    const general = governor.general_results.contests[0];
+    general.result_status = "Called";
+    general.candidates = general.candidates.slice(0, 2).map((candidate: Record<string, unknown>, index: number) => ({
+      ...candidate, is_incumbent: index === 1, result: index === 0 ? "Won" : "Lost",
+    }));
+    return parseMultiStateResults(JSON.stringify(document), at);
+  };
+  const written: string[] = [];
+  const writeFix: NonNullable<Parameters<typeof publishElectionResultBatch>[0]["writeFix"]> = async row => {
+    written.push(row.field!);
+    await workList(db.query, { owner: "election-results" }).ensure([row]);
+  };
+  try {
+    const first = await publishElectionResultBatch({ db, query: db.query, batch: batch(AT), ballots: [ballot], state: "MA",
+      now: new Date(AT), purge, writeFix });
+    assert.equal(first.counts.published, 3, "valid contest and candidate facts publish immediately");
+    assert.deepEqual(written, ["election_result:Source incumbent flags disagree"], "the runner's shared capped writer receives the contradiction");
+    const [fix] = await db.query("SELECT id,status,value FROM work WHERE field='election_result:Source incumbent flags disagree'");
+    assert.equal(fix.status, "waiting", "ordinary successful-match cleanup must preserve the source contradiction");
+    assert.deepEqual((fix.value as Record<string, unknown>).candidateNames, ["Blair Baker"]);
+    const nextAt = "2026-11-07T12:00:00.000Z";
+    const next = await publishElectionResultBatch({ db, query: db.query, batch: batch(nextAt, false, 101), ballots: [ballot], state: "MA",
+      now: new Date(nextAt), prior: first.progress, purge, writeFix });
+    assert.equal(next.counts.published, 1);
+    assert.equal((await db.query("SELECT status FROM work WHERE id=$1", [fix.id]))[0].status, "waiting");
+    const correctedAt = "2026-11-08T12:00:00.000Z";
+    await publishElectionResultBatch({ db, query: db.query, batch: batch(correctedAt, true, 101), ballots: [ballot], state: "MA",
+      now: new Date(correctedAt), prior: next.progress, purge, writeFix });
+    assert.equal((await db.query("SELECT status FROM work WHERE id=$1", [fix.id]))[0].status, "done");
+    assert.equal(written.length, 2, "a corrected source creates no replacement fix");
   } finally { await db.pg.close(); }
 });

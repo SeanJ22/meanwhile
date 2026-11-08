@@ -155,9 +155,11 @@ test("Ballotpedia selects current general election, exact displayed percentage, 
   const batch = parseBallotpediaResults(html, race, now), result = batch.races[0];
   assert.equal(result.status, "called");
   assert.deepEqual(result.candidates.map(({ quote: _, ...candidate }) => candidate), [
-    { name: "Ann Smith", party: "D", votes: 4125080, percent: 59.2, won: true, runoff: false },
-    { name: "John Doe", party: "R", votes: 0, percent: 0, won: false, runoff: false }]);
+    { name: "Ann Smith", party: "D", votes: 4125080, percent: 59.2, won: true, runoff: false, incumbent: false },
+    { name: "John Doe", party: "R", votes: 0, percent: 0, won: false, runoff: false, incumbent: true }]);
   assert.equal(result.incumbentLost, true);
+  assert.equal(result.incumbentsLost, 1);
+  assert.equal(result.seatsFlipped, 1);
   assert.deepEqual(result.creditedSources, [{ name: "The New York Times", url: "https://www.nytimes.com/election-results" }]);
   assert.ok(html.includes(result.quote));
   assert.ok(result.candidates.every(candidate => candidate.quote && result.quote.includes(candidate.quote)));
@@ -300,4 +302,59 @@ test("House discovery follows source-linked state indexes only when requested an
   assert.equal(discovered.catalogErrors?.length, 1);
   assert.match(discovered.catalogErrors![0].reason, /503.*Retry-After: 60/);
   assert.equal(discovered.evidence.text, main);
+});
+
+test("MultiState summary retains multiple flipped seats, the governor's name and each defeated incumbent", () => {
+  const document = JSON.parse(multi());
+  document.scorecard.states[0].statewide[0].wN = "Ann María Smith";
+  document.scorecard.states[0].chambers[0].flips_from = { D: 2, R: 7, O: 1 };
+  document.general_events[0].statewide_races[0].general_results.contests[0].candidates = [
+    { ...candidates[0], is_incumbent: false }, { ...candidates[1], is_incumbent: true },
+    { ...candidates[1], candidate_id: 12, name: "Another incumbent", is_incumbent: true },
+  ];
+  const raw = JSON.stringify(document), batch = parseMultiStateResults(raw, now), summary = batch.summaries[0];
+  assert.equal(summary.governor.name, "Ann María Smith");
+  assert.equal(summary.chambers[0].seatsFlipped, 10);
+  assert.equal(summary.incumbentsLost, 2);
+  assert.equal(batch.races[0].incumbentsLost, 2, "a multi-seat race can defeat more than one incumbent");
+  assert.ok(summary.quotes?.every(quote => raw.includes(quote)));
+  assert.ok(summary.quotes?.some(quote => quote.includes('"name":"Another incumbent"')));
+});
+
+test("the general-election incumbent count deduplicates source IDs and follows the general table's own incumbent flags", () => {
+  const document = JSON.parse(multi());
+  const governor = document.general_events[0].statewide_races[0];
+  governor.general_results.contests[0].candidates = [
+    { ...candidates[0], is_incumbent: false }, { ...candidates[1], is_incumbent: true },
+    { ...candidates[1], candidate_id: 12, name: "Prior primary loser", party: "W", is_incumbent: true },
+  ];
+  governor.primary_results = { contests: [{ type: "Primary_R", candidates: [
+    { candidate_id: 12, name: "Prior primary loser", is_incumbent: true, result: "Lost" },
+  ] }] };
+  const second = structuredClone(governor);
+  second.seat_id = 9;
+  document.general_events[0].races = [second];
+  const summary = parseMultiStateResults(JSON.stringify(document), now).summaries[0];
+  assert.equal(summary.incumbentsLost, 2, "each general-election incumbent ID is counted once, even if it appears in another contest or a primary");
+});
+
+test("an explicit source race flag overrides general candidate incumbent-loss markers", () => {
+  const document = JSON.parse(multi({ incumbent_defeated: false }));
+  document.general_events[0].statewide_races[0].general_results.contests[0].candidates = [
+    { ...candidates[0], is_incumbent: false }, { ...candidates[1], is_incumbent: true },
+  ];
+  const batch = parseMultiStateResults(JSON.stringify(document), now);
+  assert.equal(batch.races[0].incumbentLost, false);
+  assert.equal(batch.races[0].incumbentsLost, 0);
+  assert.equal(batch.summaries[0].incumbentsLost, 0);
+});
+
+test("Congress summary keeps the source's flip count and general-election incumbent losses without counting primary losses", () => {
+  const html = houseOverview("").replace("Republicans held", "Forty-five changed party control (43 to Democrats, two to Republicans). Republicans held")
+    + "<p>Eleven incumbents — four Democrats and seven Republicans — lost re-election in the general elections. Additionally, four incumbents lost in primaries.</p>";
+  const summary = parseBallotpediaCongressSummary(html, "us_house", now).summaries[0];
+  assert.equal(summary.chambers[0].seatsFlipped, 45);
+  assert.equal(summary.incumbentsLost, 11);
+  assert.ok(summary.quotes?.every(quote => html.includes(quote)));
+  assert.ok(summary.quotes?.some(quote => quote.startsWith("<p>Eleven incumbents")));
 });

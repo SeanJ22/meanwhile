@@ -62,6 +62,7 @@ import {
 } from "@/lib/ballot/candidate-cards";
 import { BallotAskPill } from "@/components/ballot/ballot-ask-pill";
 import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
+import { DeferredBallotResults, DeferredResult } from "@/components/ballot/deferred-results";
 import { JurisdictionMark, JurisdictionNote } from "@/components/ballot/jurisdiction-note";
 import { CandidateBattlecard } from "@/components/ballot/candidate-battlecard";
 import { officeCardSections, officeHasActions } from "@/lib/officials/office-sections";
@@ -1082,6 +1083,7 @@ export default readerRoute("/ballot", async function BallotPage({
         </Card>
       )}
 
+      <DeferredBallotResults state={set?.election.state ?? ""} contestIds={drawnContests.map(contest => contest.id)}>
       {set && matched && (
       <div className="ballot-office-list">
       {candidacyContests.map((contest, contestIndex) => {
@@ -1118,6 +1120,9 @@ export default readerRoute("/ballot", async function BallotPage({
                   {[contest.voteFor !== null ? `Vote for ${contest.voteFor}` : null, contest.termYears ? `${contest.termYears}-year term` : null].filter(Boolean).join(" · ")}
                 </p>}
               </div>
+              <DeferredResult kind="contest" id={contest.id} aliases={contest.aliases} title={contest.title} ocdId={contest.ocdId} voteFor={contest.voteFor}
+                choices={candidatesOf(set, contest).map(candidate => ({ id: candidate.id, aliases: candidate.aliases,
+                  name: ballotCandidatePeople(candidate).map(ballotCandidateDisplayName).join(" / ") }))} />
 
               {contest.voteFor === null && <CardSection title="Voting instructions"><CardGapContribution id={`contest-voting:${contest.id}`} label="voting instructions" /></CardSection>}
 
@@ -1146,7 +1151,7 @@ export default readerRoute("/ballot", async function BallotPage({
                     {choice.ticket && <h3 className="mb-2 t-heading font-semibold" data-ticket-label>
                       {ballotCandidateDisplayName(choice)}
                     </h3>}
-                    {membersOf(choice, contest).map(({ candidate, office }) => {
+                    {membersOf(choice, contest).map(({ candidate, office }, memberIndex) => {
                       const name = ballotCandidateDisplayName(candidate);
                       const holder = resolvedHolder(candidate.id);
                       const card = availableCardForCandidacy(candidate.id);
@@ -1167,6 +1172,7 @@ export default readerRoute("/ballot", async function BallotPage({
                           filedSiteUrl={candidate.websiteUrl} filingProvenance={candidate.provenance}
                           filingSources={candidate.sources}
                           nameSlot={<IncumbentName holder={holder} name={name} context={context} />}
+                          resultSlot={memberIndex === 0 ? <DeferredResult kind="candidate" id={choice.id} aliases={choice.aliases} contestId={contest.id} incumbent={candidate.incumbent === true} /> : null}
                           battlecardSlot={<BallotBattlecard name={name}
                             partyLine={readerPartyLabel(candidate.partyLabel)} partyLabel={readerPartyLabel(candidate.partyLabel)}
                             card={card} links={links} targetKey={candidate.id} filingSource={candidate.provenance}
@@ -1223,7 +1229,9 @@ export default readerRoute("/ballot", async function BallotPage({
           <h2 className="t-structure level-heading">Judicial retention votes</h2>
           {/* A retention vote is a judge's seat: like every office it reads top to bottom, never in measure columns. */}
           <div className="mt-4 grid grid-cols-1 gap-3">
-            {retentionContests.map(contest => <RetentionCard key={contest.id} contest={contest} candidates={candidatesOf(set!, contest)} />)}
+            {retentionContests.map(contest => <RetentionCard key={contest.id} contest={contest} candidates={candidatesOf(set!, contest)}
+              resultSlot={<DeferredResult kind="contest" id={contest.id} aliases={contest.aliases} title={contest.title} ocdId={contest.ocdId} voteFor={contest.voteFor}
+                choices={candidatesOf(set!, contest).map(candidate => ({ id: candidate.id, aliases: candidate.aliases, name: ballotCandidateDisplayName(candidate) }))} />} />)}
           </div>
         </section>
       )}
@@ -1254,6 +1262,7 @@ export default readerRoute("/ballot", async function BallotPage({
             return (
               <Card key={contest.id} attrs={{"data-contest-id": contest.id}} title={readerText(measureTitle(contest, measure))} titleAfter={certainty && needsPill(certainty.certaintyOf(contest.ocdId)) ? <JurisdictionMark /> : null} eyebrow={<LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />} sources={[{ what: contest.scopeNote ?? "Measure filing", provenance: contest.provenance }]}>
               <div>
+                <DeferredResult kind="measure" id={contest.id} aliases={contest.aliases} measureId={measure?.id} title={contest.title} ocdId={contest.ocdId} />
 
                 {summary ? (
                   <div
@@ -1384,6 +1393,8 @@ export default readerRoute("/ballot", async function BallotPage({
           </div>
         </section>
       ))}
+      <DeferredResult kind="summary" />
+      </DeferredBallotResults>
 
       {/* An office's tier comes from the office (a county-drawn Supreme Court seat is a state race); a measure holds no office, so its electorate is its tier. */}
       {matched && !drawnContests.some((c) => (c.type === "MEASURE" ? tierForOcdId(c.ocdId) : tierForOffice(c.title, c.ocdId)) === "local") && (

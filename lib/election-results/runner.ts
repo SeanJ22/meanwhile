@@ -23,6 +23,11 @@ import type { Persisted } from "../control-plane/repository/types.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { runtimeCivicReadCache, type CivicReadCache } from "../db/civic-read-cache.ts";
 import type { ElectionResult, ElectionResultBatch } from "./types.ts";
+import type { BallotResultFacts, BallotElectionSummary } from "../ballot/election-results.ts";
+import { readResultProjection, refreshedResultFacts, preparedStateResultFeed, projectionBallots, type ResultProjection } from "./materialize.ts";
+import { resultFeedStore, type ElectionResultFeedStore } from "./feed-store.ts";
+import type { StateResultFeed } from "./feed-types.ts";
+import { summarizeCongressResults, type NationalCongressSummary } from "./summary.ts";
 
 const STATES = "AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY".split(" ");
 const cursorName = (state: string) => `election-results:${state}`;
@@ -36,6 +41,13 @@ interface StateProgress extends ResultProgress {
   readonly ballotVersion?: string | null;
   readonly pendingSources?: readonly string[];
   readonly pendingFixes?: readonly WorkInput[];
+  readonly readerFacts?: BallotResultFacts;
+  readonly nationalSummary?: NationalCongressSummary;
+  readonly stateSummary?: BallotElectionSummary;
+  readonly readerPending?: boolean;
+  readonly readerSlice?: StateResultFeed;
+  readonly nationalFeedFingerprint?: string;
+  readonly nationalFeedPending?: boolean;
 }
 type CachedClock = { readonly position: string; readonly hashMD5: string };
 const progressHash = (position: string) => createHash("md5").update(position).digest("hex");
@@ -104,6 +116,7 @@ export async function runElectionResults(input: {
   deadlineMs?: number;
   clock?: () => number;
   cache?: CivicReadCache;
+  feedStore?: ElectionResultFeedStore;
   /** Bounds all fix upserts across both sources and every state in one turn. Detectives are separate. */
   maxFixRows?: number;
 }): Promise<ResultCounts & { reads: number; nextCheckAt: string | null; fixRowsWritten: number; pendingFixRows: number }> {
@@ -134,9 +147,11 @@ export async function runElectionResults(input: {
     { name: cursorName("US"), scope: null, hashMD5: cached[cursorName("US")]?.hashMD5 }]);
   const progress = new Map<string, StateProgress>();
   const ballotVersions = new Map<string, string | null>();
+  const resultHashes = new Map<string, string | null>();
   for (const row of cursorRows) {
     const name = String(row.name), state = name.slice("election-results:".length);
     ballotVersions.set(state, row.ballot_version == null ? null : String(row.ballot_version));
+    resultHashes.set(state, row.reader_slice_hash == null ? null : String(row.reader_slice_hash));
     if (row.clock_hash == null) { delete cached[name]; continue; }
     const hashMD5 = String(row.clock_hash);
     const position = row.position == null && cached[name]?.hashMD5 === hashMD5 ? cached[name].position : row.position;
@@ -170,6 +185,12 @@ export async function runElectionResults(input: {
     }
   };
   const saveProgress = async (state: string, value: StateProgress) => {
+    const queue = queuedFixes.get(state);
+    for (const [id, row] of queue ?? []) if (row.field === "election_result:Source incumbent flags disagree") {
+      const raceId = row.value && typeof row.value === "object" ? (row.value as Record<string, unknown>).sourceRaceId : undefined;
+      const key = Object.keys(value.races).find(key => key.startsWith("multistate:") && key.endsWith(`:${raceId}`));
+      if (key && !value.summaries[`incumbent-conflict:${key}`]) queue!.delete(id);
+    }
     const saved = { ...value, pendingFixes: [...queuedFixes.get(state)?.values() ?? []] };
     const name = cursorName(state), position = JSON.stringify(saved);
     await writePassCursor(query, name, position);
@@ -230,6 +251,14 @@ export async function runElectionResults(input: {
     const next = nextElectionResultCheck({ status: "pending", lastCheckedAt: at }, doors.get(url.includes("ballotpedia.org") ? "ballotpedia" : "multistate"), now);
     if (next) due.push(next);
   };
+  const finishFeedFailure = async (state: string, url: string) => {
+    const subjectId = `election-results:${state}`, field = `source:${createHash("sha256").update(url).digest("hex").slice(0, 16)}`;
+    const queue = queuedFixes.get(state);
+    for (const [id, row] of queue ?? []) if (row.subjectId === subjectId && row.field === field) {
+      queue!.delete(id); dirtyFixStates.add(state);
+    }
+    await workList(query, { owner: "election-results" }).resolve({ subjectId, fieldPrefix: field });
+  };
   // National results have their own clocks and cannot wait behind the initial state backfill.
   let nation: StateProgress = progress.get("US") ?? empty();
   const congressCertified = STATES.every(state => states.includes(state) && progress.get(state)?.sourceChecks?.ballotpedia
@@ -251,9 +280,11 @@ export async function runElectionResults(input: {
       if (batch.racePages) nation = { ...nation, federalRoutes: [...new Map([
         ...nation.federalRoutes ?? [], ...batch.racePages,
       ].map(page => [ballotpediaRaceId(page.url), page])).values()] };
+      const readerFacts = { ...nation.readerFacts };
       const changed = await publishElectionResultBatch({ query, db, batch, ballots: [], state: "US", prior: nation, now,
-        door: doors.get("ballotpedia"), purge: input.purge, more, writeFix });
-      nation = checked(pending({ ...nation, ...changed.progress }, key, changed.deferred), key, Boolean(batch.catalogErrors?.length));
+        door: doors.get("ballotpedia"), purge: input.purge, more, writeFix,
+        accepted: (id, field, value) => { readerFacts[field.startsWith("election_summary:") ? `${id}#${field}` : id] = value; } });
+      nation = checked(pending({ ...nation, ...changed.progress, readerFacts }, key, changed.deferred), key, Boolean(batch.catalogErrors?.length));
       unfinished ||= changed.deferred;
       for (const issue of batch.catalogErrors ?? []) await failure("US", issue.url, issue.reason);
       noteOutcome("ballotpedia", null);
@@ -266,6 +297,38 @@ export async function runElectionResults(input: {
     if (nextCheck) due.push(nextCheck);
   }
   await saveProgress("US", nation);
+  const projections = new Map<string, ResultProjection | null>(), preparedStates = new Set<string>();
+  const getProjection = async (state: string) => {
+    if (projections.has(state)) return projections.get(state)!;
+    const held = await cache.readCheckpoint<ResultProjection>("election-results-reader", state);
+    let projection = held && held.versionId === ballotVersions.get(state) && held.hash === resultHashes.get(state)
+      ? held : await readResultProjection(query, state);
+    if (projection) projection = { ...projection, hash: resultHashes.get(state) ?? null };
+    projections.set(state, projection);
+    return projection;
+  };
+  const prepareFeed = async (state: string, prior: StateProgress, acceptedFacts: BallotResultFacts): Promise<StateProgress> => {
+    if (!ballotVersions.get(state) || input.ballotsForState) return prior;
+    const held = await getProjection(state);
+    if (!held) return prior;
+    const facts = refreshedResultFacts({ ...held.facts, ...acceptedFacts, ...nation.readerFacts }, prior, nation);
+    const feed = preparedStateResultFeed(held, facts, state, at);
+    const url = `${PUBLIC_SITE_ORIGIN}/api/election-results?state=${state}`;
+    let readerPending = false;
+    try {
+      if (prior.readerPending || prior.readerSlice?.fingerprint !== feed.fingerprint)
+        await (input.feedStore ?? resultFeedStore()).writeState(state, feed);
+      if (prior.readerPending) await finishFeedFailure(state, url);
+    } catch (error) {
+      unfinished = true;
+      readerPending = true;
+      await failure(state, url, `Prepared results feed could not be published: ${String(error)}`);
+    }
+    const current = { ...held, facts, hash: feed.fingerprint };
+    projections.set(state, current); resultHashes.set(state, feed.fingerprint); preparedStates.add(state);
+    await cache.checkpoint("election-results-reader", state, current);
+    return { ...prior, readerPending, readerSlice: feed };
+  };
   for (const state of states) {
     if (!more()) { unfinished = true; break; }
     let prior: StateProgress = progress.get(state) ?? empty();
@@ -285,7 +348,13 @@ export async function runElectionResults(input: {
     try {
       await withBatchedReaderInvalidation(async purge => {
       let ballots: readonly BallotSet[] | undefined;
-      const getBallots = async () => ballots ??= await (input.ballotsForState?.(state) ?? servedBallots(query, state));
+      const acceptedFacts: Record<string, unknown> = {};
+      const getBallots = async () => {
+        if (ballots) return ballots;
+        if (input.ballotsForState) return ballots = await input.ballotsForState(state);
+        const held = await getProjection(state);
+        return ballots = held ? projectionBallots(held).map(ballot => withCandidateTickets(withCurrentCandidacies(ballot))) : [];
+      };
       const covered = new Set<string>(prior.coveredContestIds);
       const publish = async (batch: ElectionResultBatch, source: string): Promise<boolean> => {
         const fingerprint = (value: unknown) => createHash("sha256").update(canonicalJson(value)).digest("hex");
@@ -296,9 +365,12 @@ export async function runElectionResults(input: {
           if (previous && !doors.get(source)?.readNow && (nextElectionResultCheck(previous, doors.get(source), now) ?? "~") > at) continue;
           const { checkedAt: _at, quote: _quote, ...value } = race;
           const hash = fingerprint({ ...value, candidates: value.candidates.map(({ quote: _quote, ...candidate }) => candidate) });
-          if (previous && sourceFingerprints[key] === hash && !changedBallot) {
+          const missingCongressSummary = race.sourceId === "ballotpedia" && !prior.federalResults?.[`${race.electionDate}:${race.sourceRaceId}`];
+          if (previous && sourceFingerprints[key] === hash && !changedBallot && !missingCongressSummary) {
             const nextCheckAt = nextElectionResultCheck({ ...previous, lastCheckedAt: at }, doors.get(source), now);
-            prior = { ...prior, races: { ...prior.races, [key]: { ...previous, lastCheckedAt: at, nextCheckAt } } };
+            const federalKey = `${race.electionDate}:${race.sourceRaceId}`, federal = prior.federalResults?.[federalKey];
+            prior = { ...prior, races: { ...prior.races, [key]: { ...previous, lastCheckedAt: at, nextCheckAt } },
+              ...(federal ? { federalResults: { ...prior.federalResults, [federalKey]: { ...federal, checkedAt: at } } } : {}) };
             result.unchanged++; continue;
           }
           sourceFingerprints[key] = hash;
@@ -323,7 +395,12 @@ export async function runElectionResults(input: {
           }
         }
         const changed = await publishElectionResultBatch({ query, db, batch: { ...batch, races: eligible, summaries }, ballots: held,
-          state, prior, now, door: doors.get(source), purge, more, writeFix });
+          state, prior, now, door: doors.get(source), purge, more, writeFix,
+          accepted: (id, field, value) => {
+            if (field === "election_result" || field === "election_summary" || field.startsWith("election_summary:"))
+              acceptedFacts[field.startsWith("election_summary:") ? `${id}#${field}` : id] = value;
+            if (field === "election_summary") prior = { ...prior, stateSummary: value as BallotElectionSummary };
+          } });
         for (const race of eligible) {
           const key = raceClockKey(race);
           if (changed.progress.races[key]?.lastCheckedAt === at) for (const id of newlyCovered.get(key) ?? []) covered.add(id);
@@ -388,11 +465,27 @@ export async function runElectionResults(input: {
       ])).digest("hex");
       if (ballots && prior.standingFingerprint !== standingFingerprint) await ensureOpenElectionResults(query, ballots, covered);
       prior = { ...prior, coveredContestIds: [...covered].sort(), ...(ballots ? { standingFingerprint } : {}), ballotVersion };
+      if (prior.stateSummary) prior = { ...prior,
+        stateSummary: refreshedResultFacts({ state: prior.stateSummary }, prior).state as BallotElectionSummary };
+      prior = await prepareFeed(state, prior, acceptedFacts);
       await saveProgress(state, prior);
       progress.set(state, prior);
       due.push(...["multistate", "ballotpedia"].flatMap(source => sourceNext(prior, source, false) ?? []));
       }, input.purge);
     } catch (error) { await failure(state, `${PUBLIC_SITE_ORIGIN}/ballot`, String(error)); }
+  }
+  // A national check also reaches states whose own called races are not due today.
+  const checkedNation = Object.values(nation.sourceChecks ?? {}).some(check => check.lastSucceededAt === at);
+  if (!input.ballotsForState) for (const state of states) {
+    const prior: StateProgress = progress.get(state) ?? empty();
+    if (!ballotVersions.get(state) || preparedStates.has(state) || !checkedNation && !prior.readerPending) continue;
+    if (!more()) { unfinished = true; await saveProgress(state, { ...prior, readerPending: true }); continue; }
+    try { await saveProgress(state, await prepareFeed(state, prior, {})); }
+    catch (error) {
+      unfinished = true;
+      await saveProgress(state, { ...prior, readerPending: true });
+      await failure(state, `${PUBLIC_SITE_ORIGIN}/ballot`, String(error));
+    }
   }
   for (const [source, reason] of outcomes) {
     const row = doorRows.get(source);
@@ -405,6 +498,24 @@ export async function runElectionResults(input: {
     }
   }
   for (const state of [...dirtyFixStates]) await saveProgress(state, progress.get(state) ?? empty());
+  const previousSummary = progress.get("US")?.nationalSummary;
+  const checkedSource = [...progress.values()].some(value => Object.values(value.sourceChecks ?? {}).some(check => check.lastSucceededAt === at));
+  const nationalSummary = summarizeCongressResults([...progress.values()].flatMap(row => Object.values(row.federalResults ?? {})), checkedSource ? at : previousSummary?.checkedAt ?? at,
+    nation.federalRoutes?.filter(route => states.includes(route.state)), previousSummary);
+  const nationalFeed = { ...nationalSummary,
+    statewide: { ...previousSummary?.statewide, ...Object.fromEntries([...progress].flatMap(([state, value]) =>
+      value.stateSummary ? [[state, value.stateSummary]] : [])) } };
+  const nationalFeedFingerprint = createHash("sha256").update(canonicalJson(nationalFeed)).digest("hex");
+  let nationalFeedPending = false;
+  try {
+    if (progress.get("US")?.nationalFeedPending || progress.get("US")?.nationalFeedFingerprint !== nationalFeedFingerprint)
+      await (input.feedStore ?? resultFeedStore()).writeNation(nationalFeed);
+    if (progress.get("US")?.nationalFeedPending) await finishFeedFailure("US", `${PUBLIC_SITE_ORIGIN}/api/election-results?scope=nation`);
+  } catch (error) {
+    unfinished = true; nationalFeedPending = true;
+    await failure("US", `${PUBLIC_SITE_ORIGIN}/api/election-results?scope=nation`, `Prepared national results feed could not be published: ${String(error)}`);
+  }
+  await saveProgress("US", { ...progress.get("US") ?? nation, nationalSummary: nationalFeed, nationalFeedFingerprint, nationalFeedPending });
   const pendingFixRows = [...queuedFixes.values()].reduce((count, queue) => count + queue.size, 0);
   await cache.checkpoint(CLOCK_CACHE_NAMESPACE, CLOCK_CACHE_KEY, cached);
   return { ...result, reads, nextCheckAt: unfinished || pendingFixRows ? at : due.sort()[0] ?? null, fixRowsWritten, pendingFixRows };

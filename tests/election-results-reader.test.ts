@@ -10,6 +10,10 @@ import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import { migratedFactDb } from "./helpers/migrated-reader-db.ts";
+import { readResultProjection, refreshedResultFacts, preparedStateResultFeed } from "../lib/election-results/materialize.ts";
+import type { ResultProgress } from "../lib/election-results/publisher.ts";
+import { createElectionResultFeedStore } from "../lib/election-results/feed-store.ts";
+import { readStateElectionResults } from "../lib/reader/election-results.ts";
 
 const AT = "2026-11-06T12:00:00.000Z";
 const STATE = "ocd-division/country:us/state:ma";
@@ -69,11 +73,74 @@ test("national Senate and House summaries retain their independent sources", () 
   assert.equal(nation.sources?.length, 2);
 });
 
-test("ZIP and full-state ballots carry Slide facts and summaries in their existing read, including canonical aliases", async () => {
-  const { pg, publish, query } = await migratedFactDb();
+test("prepared result selection includes contest and candidate aliases without carrying another state's facts", async () => {
+  const set: BallotSet = { ...ballot, contests: [{ ...ballot.contests[0], aliases: ["older-governor"] }],
+    candidacies: [{ ...ballot.candidacies[0], aliases: ["older-ticket"] }], measures: [] };
+  const projection = { key: "synthetic", versionId: "source-v1", hash: null, facts: {},
+    payload: { kind: "ballot-contests" as const, ballots: { [ballotElectionKey(set)]: set } } };
+  const feed = preparedStateResultFeed(projection, { "older-governor": race, "older-ticket": choice,
+    "ocd-division/country:us/state:ca": { unrelated: true } }, "MA", AT);
+  const values = new Map<string, unknown>();
+  const store = createElectionResultFeedStore({ read: async key => values.get(key) ?? null,
+    write: async (key, value) => { values.set(key, value); } });
+  await store.writeState("MA", feed);
+  const selected = await readStateElectionResults("MA", ["older-governor"], store);
+  assert.deepEqual(selected?.facts.governor, race);
+  assert.deepEqual(selected?.facts.ticket, choice);
+  assert.deepEqual(selected?.facts["older-ticket"], choice);
+  assert.ok(selected?.contestIds?.["older-governor"].includes("older-ticket"));
+  assert.equal(selected?.facts["ocd-division/country:us/state:ca"], undefined);
+});
+
+test("initial ZIP and full-state ballots remain unchanged while a prepared result feed carries checked facts", async () => {
+  const db = await migratedFactDb();
+  const { pg, publish, query } = db;
   const pointer = { recordClass: "BALLOT_CANDIDACY" as const, scope: stateBallotScope("ballot-contests", "MA") };
   const key = `${pointer.recordClass}:${pointer.scope}`;
   const value = { kind: "ballot-contests" as const, ballots: { [ballotElectionKey(ballot)]: ballot } };
+  const emptyProgress: ResultProgress = { races: {}, summaries: {} };
+  const documents = new Map<string, unknown>();
+  const feeds = createElectionResultFeedStore({ read: async key => documents.get(key) ?? null,
+    write: async (key, value) => { documents.set(key, structuredClone(value)); } });
+  const prepare = async (progress = emptyProgress) => {
+    const held = await readResultProjection(query, "MA");
+    assert.ok(held);
+    const facts = refreshedResultFacts(held.facts, progress);
+    const feed = preparedStateResultFeed(held, facts, "MA", AT);
+    await feeds.writeState("MA", feed);
+    return feed;
+  };
+  const withFeed = async (ballot: BallotSet) => {
+    const feed = await readStateElectionResults("MA", ballot.contests.map(row => row.id), feeds);
+    return withBallotResultFacts({ ballots: { sample: ballot } }, feed?.facts ?? {}).ballots.sample;
+  };
+  let reads = 0;
+  const readerSql = (text: string) => assert.doesNotMatch(text, /\b(?:checked_fact|fact|fact_confirmation|pass_cursor)\b/i,
+    "ballot requests must not join, scan or overlay result facts or clocks");
+  const read = async (statements: readonly { text: string; params: readonly unknown[] }[]) => {
+    reads++;
+    assert.equal(statements.length, 1);
+    readerSql(statements[0].text);
+    return [await query(statements[0].text, statements[0].params)];
+  };
+  const selected = async () => {
+    const statement = selectedBallotStatement("MA", [STATE]);
+    readerSql(statement.text);
+    const rows = await query(statement.text, statement.params);
+    const entry = selectedStateEntry(pointer.recordClass, pointer.scope, rows[0]);
+    assert.equal(entry.kind, "PROMOTED");
+    if (entry.kind !== "PROMOTED") throw new Error("Missing selected ballot");
+    return (entry.projection.payload as typeof value).ballots[ballotElectionKey(ballot)];
+  };
+  const full = async () => {
+    const before = reads;
+    const held = await readCanonicalShelf([pointer], read);
+    assert.equal(reads, before + 1, "the initial full-state ballot uses its original single canonical request");
+    const entry = await held.readPromotedEntry!(pointer.recordClass, pointer.scope);
+    assert.equal(entry.kind, "PROMOTED");
+    if (entry.kind !== "PROMOTED") throw new Error("Missing full-state ballot");
+    return (entry.projection.payload as typeof value).ballots[ballotElectionKey(ballot)];
+  };
   try {
     const encoded = partitionCivicPayload(value);
     assert.ok(encoded.parts.length, "the test reads production's partitioned payload shape");
@@ -94,44 +161,36 @@ test("ZIP and full-state ballots carry Slide facts and summaries in their existi
       ["contest:ma:unrelated", "election_result", { status: "called", votes: 999 }]])
       await pg.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,quote,checked_at,produced_by)
         VALUES($1,$2,$3::jsonb,$3::text,'live','OWNER',$3::text,$4,'synthetic-result-test')`, [id, field, JSON.stringify(result), AT]);
-    const statement = selectedBallotStatement("MA", [STATE]);
-    const rows = await query(statement.text, statement.params);
-    const selected = selectedStateEntry(pointer.recordClass, pointer.scope, rows[0]);
-    assert.equal(selected.kind, "PROMOTED");
-    if (selected.kind !== "PROMOTED") throw new Error("Missing selected ballot");
-    const selectedValue = selected.projection.payload as typeof value;
-    const set = selectedValue.ballots[ballotElectionKey(ballot)];
+    assert.equal((await selected()).contests[0].result, undefined, "publishing a fact does not add request-time work");
+    const initial = await selected(), initialVersion = await publicationVersion([key], read);
+    const prepared = await prepare();
+    assert.equal(prepared.ballotVersion, "ballot-with-results");
+    assert.equal(await publicationVersion([key], read), initialVersion, "preparing results never updates promotions or their reader version");
+    assert.deepEqual(await selected(), initial, "the complete initial ZIP ballot payload remains unchanged");
+    assert.equal(Object.hasOwn(prepared, "ballots"), false, "a published result feed holds no ballot copy");
+    assert.equal(JSON.stringify(prepared).includes("Synthetic question text."), false, "source wording stays out of the result feed");
+    const set = await withFeed(await selected());
     assert.deepEqual(set.contests.map(row => row.id), ["governor", "measure-contest"]);
     assert.deepEqual(set.contests[0].result, race);
     assert.deepEqual(set.candidacies[0].result, choice);
     assert.equal(set.candidacies.find(row => row.id === "governor|Blair Baker / Casey Clark")?.result?.votes, 100000,
-      "a nominee created from the current slate receives the result under its actual served card id");
+      "the job attaches a current nominee's result to its actual served card identity");
     assert.deepEqual(set.measures[0].result, measure);
     assert.deepEqual(set.results, { state: summary, nation });
-    assert.equal(JSON.stringify(selectedValue).includes("999"), false, "another district's results never join the selected ballot");
-    let reads = 0;
-    const read = async (statements: readonly { text: string; params: readonly unknown[] }[]) => {
-      reads++;
-      assert.equal(statements.length, 1);
-      return [await query(statements[0].text, statements[0].params)];
-    };
-    const full = await readCanonicalShelf([pointer], read);
-    assert.equal(reads, 1, "full-state ballots obtain results in the original canonical request");
-    const held = await full.readPromotedEntry!(pointer.recordClass, pointer.scope);
-    assert.equal(held.kind, "PROMOTED");
-    if (held.kind === "PROMOTED") {
-      const fullSet = (held.projection.payload as typeof value).ballots[ballotElectionKey(ballot)];
-      assert.deepEqual(fullSet.candidacies[0].result, choice);
-      assert.deepEqual(fullSet.results, { state: summary, nation });
-      assert.equal(fullSet.contests.find(row => row.id === "local")?.result, undefined);
-    }
+    assert.equal(JSON.stringify(set).includes("999"), false, "unrelated results never join the selected ballot");
+    const stateBallot = await withFeed(await full());
+    assert.deepEqual(stateBallot.candidacies[0].result, choice);
+    assert.deepEqual(stateBallot.results, { state: summary, nation });
+    assert.equal(stateBallot.contests.find(row => row.id === "local")?.result, undefined);
     const before = await publicationVersion([key], read);
     await pg.query("UPDATE fact SET value=$1 WHERE entity_id='candidacy:ma:ticket' AND status='live'", [JSON.stringify({ ...choice, votes: 123457 })]);
-    const after = await publicationVersion([key], read);
-    assert.notEqual(after, before, "a new result invalidates shared reads while the original ballot pointer stays unchanged");
-    const changed = await readCanonicalShelf([pointer], read);
-    const changedEntry = await changed.readPromotedEntry!(pointer.recordClass, pointer.scope);
-    if (changedEntry.kind === "PROMOTED") assert.equal((changedEntry.projection.payload as typeof value).ballots[ballotElectionKey(ballot)].candidacies[0].result?.votes, 123457);
+    assert.equal(await publicationVersion([key], read), before, "fact updates alone add no reader invalidation or overlay work");
+    assert.equal((await withFeed(await selected())).candidacies[0].result?.votes, 123456);
+    await prepare();
+    assert.equal(await publicationVersion([key], read), before, "the feed job leaves the initial ballot publication version unchanged");
+    assert.equal((await withFeed(await selected())).candidacies[0].result?.votes, 123457);
+    assert.equal((await withFeed(await full())).candidacies[0].result?.votes, 123457);
+    assert.equal((await selected()).candidacies[0].result, undefined);
 
     const lastSuccess = "2026-11-06T18:00:00.000Z";
     await pg.query("UPDATE fact SET value=value||$1::jsonb WHERE entity_id='candidacy:ma:ticket' AND status='live'",
@@ -139,31 +198,29 @@ test("ZIP and full-state ballots carry Slide facts and summaries in their existi
     await pg.query("UPDATE fact SET value=value||$1::jsonb WHERE entity_id=$2 AND field='election_summary' AND status='live'",
       [JSON.stringify({ sourceClockKey: "multistate" }), STATE]);
     const clockVersion = await publicationVersion([key], read);
-    const clock = { races: { "multistate:2026-11-03:governor-10": { lastCheckedAt: lastSuccess },
-      "ballotpedia:2026-11-03:governor-10": { lastCheckedAt: "2026-11-06T23:00:00.000Z" } },
+    const raceClock = { fingerprint: "synthetic", status: "counting", statusChangedAt: AT, nextCheckAt: null, lastCheckedAt: lastSuccess };
+    const clock = { races: { "multistate:2026-11-03:governor-10": raceClock,
+      "ballotpedia:2026-11-03:governor-10": { ...raceClock, lastCheckedAt: "2026-11-06T23:00:00.000Z" } }, summaries: {},
       sourceChecks: { multistate: { checkedAt: lastSuccess, lastSucceededAt: lastSuccess } } };
     await pg.query("INSERT INTO pass_cursor(name,position) VALUES('election-results:MA',$1)", [JSON.stringify(clock)]);
-    assert.notEqual(await publicationVersion([key], read), clockVersion,
-      "a successful unchanged check invalidates shared snapshots without modifying facts");
-    const freshRows = await query(statement.text, statement.params);
-    const fresh = selectedStateEntry(pointer.recordClass, pointer.scope, freshRows[0]);
-    if (fresh.kind === "PROMOTED") {
-      const freshSet = (fresh.projection.payload as typeof value).ballots[ballotElectionKey(ballot)];
-      assert.equal(freshSet.candidacies[0].result?.checkedAt, lastSuccess, "the correct source and race clock supplies last checked");
-      assert.equal(freshSet.results?.state?.checkedAt, lastSuccess);
-    }
-    await pg.query("UPDATE pass_cursor SET position=$1 WHERE name='election-results:MA'", [JSON.stringify({ ...clock,
-      sourceChecks: { multistate: { checkedAt: "2026-11-07T00:00:00.000Z", lastSucceededAt: lastSuccess, failed: true } } })]);
-    const beforeFailedRead = reads;
-    const failed = await readCanonicalShelf([pointer], read);
-    const failedEntry = await failed.readPromotedEntry!(pointer.recordClass, pointer.scope);
-    assert.equal(reads, beforeFailedRead + 1, "freshness arrives in the existing canonical request");
-    if (failedEntry.kind === "PROMOTED") {
-      const failedSet = (failedEntry.projection.payload as typeof value).ballots[ballotElectionKey(ballot)];
-      assert.equal(failedSet.candidacies[0].result?.checkedAt, lastSuccess, "a failed attempt never advances the race's check date");
-      assert.equal(failedSet.results?.state?.checkedAt, lastSuccess, "a failed attempt never advances summary Sources dates");
-    }
+    assert.equal(await publicationVersion([key], read), clockVersion, "result clocks are not read during a ballot request");
+    await prepare(clock);
+    const fresh = await withFeed(await selected());
+    assert.equal(fresh.candidacies[0].result?.checkedAt, lastSuccess, "the job uses the correct source and race clock");
+    assert.equal(fresh.results?.state?.checkedAt, lastSuccess);
+    const failedClock = { ...clock, sourceChecks: { multistate: { checkedAt: "2026-11-07T00:00:00.000Z", lastSucceededAt: lastSuccess, failed: true } } };
+    await pg.query("UPDATE pass_cursor SET position=$1 WHERE name='election-results:MA'", [JSON.stringify(failedClock)]);
+    const beforeFailed = await publicationVersion([key], read);
+    const priorFeed = await readStateElectionResults("MA", undefined, feeds);
+    assert.equal((await prepare(failedClock)).fingerprint, priorFeed?.fingerprint, "a failed check never changes prepared result values");
+    assert.equal(await publicationVersion([key], read), beforeFailed);
+    assert.equal((await withFeed(await full())).candidacies[0].result?.checkedAt, lastSuccess, "a failed check never advances Sources dates");
     assert.equal((await query("SELECT value->>'checkedAt' AS checked FROM fact WHERE entity_id='candidacy:ma:ticket' AND status='live'"))[0].checked, AT,
-      "the freshness overlay does not rewrite unchanged fact values");
+      "confirmation dates do not create new fact values or history");
+    await publish({ ...pointer, id: "ballot-source-v2", sourceId: "synthetic-ballot", at: "2026-11-07T12:00:00.000Z",
+      value: encoded.value, payloadHash: canonicalCivicDataHash(value) });
+    assert.equal((await selected()).contests[0].result, undefined, "a new initial source ballot still carries no prepared results");
+    assert.equal((await full()).candidacies[0].result, undefined);
+    assert.equal((await prepare()).ballotVersion, "ballot-source-v2", "the independent result document names its current source authority version");
   } finally { await pg.close(); }
 });

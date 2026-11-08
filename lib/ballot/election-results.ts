@@ -18,6 +18,12 @@ export interface ContestResult extends ResultAttribution {
   readonly flipped?: boolean | null;
   readonly gainedByParty?: string | null;
   readonly incumbentLost?: boolean | null;
+  readonly seatsFlipped?: number | null;
+  readonly incumbentsLost?: number | null;
+  readonly yesVotes?: number | null;
+  readonly noVotes?: number | null;
+  readonly yesPercent?: number | null;
+  readonly outcome?: "passed" | "failed" | "counting";
 }
 
 export interface CandidateResult extends ResultAttribution {
@@ -85,50 +91,3 @@ export function withBallotResultFacts<T extends { readonly ballots: Readonly<Rec
   })) };
 }
 
-/** Only this ballot's ids and aliases are looked up. A district number never joins results to a race. */
-export function ballotResultFactsSql(payload: string): string {
-  return `(WITH result_root AS (SELECT reader_payload_node(${payload}) AS value),
-    result_ballots AS MATERIALIZED (SELECT reader_payload_node(b.value) AS value FROM result_root,
-      LATERAL jsonb_each(reader_payload_node(result_root.value->'ballots')) b),
-    result_clocks AS MATERIALIZED (SELECT name,position::jsonb AS value FROM pass_cursor WHERE name IN (
-      SELECT 'election-results:'||(value#>>'{election,state}') FROM result_ballots UNION SELECT 'election-results:US')),
-    result_records AS MATERIALIZED (SELECT reader_payload_node(r.item) AS value,b.value#>>'{election,state}' AS state FROM result_ballots b,
-      LATERAL (VALUES ('contests'),('candidacies'),('measures')) fields(name),
-      LATERAL reader_payload_members(b.value->fields.name) r),
-    result_ids AS (
-      SELECT value->>'id' AS id,'election_result'::text AS field,state FROM result_records
-      UNION SELECT a.id,'election_result',r.state FROM result_records r,
-        LATERAL jsonb_array_elements_text(coalesce(reader_payload_value(r.value->'aliases'),'[]'::jsonb)) a(id)
-      UNION SELECT (reader_payload_node(c.item)->>'contestId')||'|'||(reader_payload_node(n.item)->>'name'),'election_result',b.value#>>'{election,state}'
-        FROM result_ballots b,LATERAL reader_payload_members(reader_payload_node(b.value->'generalLineup')->'contests') c,
-        LATERAL reader_payload_members(reader_payload_node(c.item)->'nominees') n
-      UNION SELECT 'ocd-division/country:us/'||CASE WHEN value#>>'{election,state}'='DC' THEN 'district'
-          WHEN value#>>'{election,state}' IN ('AS','GU','MP','PR','VI') THEN 'territory' ELSE 'state' END
-        ||':'||lower(value#>>'{election,state}'),'election_summary',value#>>'{election,state}' FROM result_ballots
-      UNION SELECT 'ocd-division/country:us','election_summary','US' WHERE EXISTS(SELECT 1 FROM result_ballots)
-      UNION SELECT 'ocd-division/country:us',field,'US' FROM (VALUES ('election_summary:us_senate'),('election_summary:us_house')) chambers(field)
-        WHERE EXISTS(SELECT 1 FROM result_ballots)
-    ) SELECT coalesce(jsonb_object_agg(CASE WHEN f.field LIKE 'election_summary:%' THEN ids.id||'#'||f.field ELSE ids.id END,
-      f.value||jsonb_build_object('checkedAt',CASE WHEN receipt.at~'^[0-9]{4}-[0-9]{2}-[0-9]{2}T' AND receipt.at>=checked.at
-        THEN receipt.at ELSE checked.at END)),'{}'::jsonb) FROM result_ids ids
-      LEFT JOIN entity_external_id alias ON alias.scheme='body-alias' AND alias.value=ids.id
-      JOIN checked_fact f ON f.entity_id=coalesce(alias.entity_id,ids.id) AND f.field=ids.field AND f.status='live'
-      CROSS JOIN LATERAL (SELECT to_char(f.checked_at AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') AS at) checked
-      LEFT JOIN result_clocks clock ON clock.name='election-results:'||ids.state
-      LEFT JOIN LATERAL (SELECT CASE WHEN f.field='election_result' THEN
-        clock.value->'races'->((f.value->>'sourceId')||':'||(f.value->>'electionDate')||':'||(f.value->>'sourceRaceId'))->>'lastCheckedAt'
-        ELSE clock.value->'sourceChecks'->(f.value->>'sourceClockKey')->>'lastSucceededAt' END AS at) receipt ON true)`;
-}
-
-/** Publication metadata and result changes share the existing small fingerprint request. */
-export const BALLOT_RESULT_VERSION_SQL = `(SELECT coalesce(string_agg(jsonb_build_array(id,version)::text,'|' ORDER BY id),'') FROM (
-  SELECT f.id::text,f.xmin::text||coalesce((SELECT string_agg(c.xmin::text,',' ORDER BY c.source_copy_id,c.scope)
-    FROM fact_confirmation c WHERE c.fact_ids @> ARRAY[f.id]),'') AS version FROM entity e JOIN fact f ON f.entity_id=e.id
-    WHERE e.state=ANY(ARRAY(SELECT substring(key FROM '^BALLOT_CANDIDACY:US-([A-Z]{2}):') FROM unnest($1::text[]) key))
-      AND f.status='live' AND (f.field IN ('election_result','election_summary') OR f.field LIKE 'election_summary:%')
-  UNION ALL SELECT f.id::text,f.xmin::text||coalesce((SELECT string_agg(c.xmin::text,',' ORDER BY c.source_copy_id,c.scope)
-    FROM fact_confirmation c WHERE c.fact_ids @> ARRAY[f.id]),'') FROM fact f WHERE f.entity_id='ocd-division/country:us'
-    AND f.status='live' AND (f.field='election_summary' OR f.field LIKE 'election_summary:%')
-  UNION ALL SELECT c.name,c.xmin::text FROM pass_cursor c WHERE c.name=ANY(ARRAY(
-    SELECT 'election-results:'||substring(key FROM '^BALLOT_CANDIDACY:US-([A-Z]{2}):') FROM unnest($1::text[]) key
-    UNION SELECT 'election-results:US'))) versions)`;

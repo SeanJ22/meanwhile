@@ -16,7 +16,7 @@ export async function servePlaceFile(request: Request, name: string): Promise<Re
   const bytes = await store.readBytes(fileKey(name));
   if (!bytes) return new Response(null, { status: 404, headers: MISSING });
   const brotli = /\bbr\b/.test(request.headers.get("accept-encoding") ?? "");
-  return new Response(brotli ? bytes : brotliDecompressSync(bytes), { headers: { ...IMMUTABLE, "Content-Type": "application/json; charset=utf-8", "Vary": "Accept-Encoding", ...(brotli ? { "Content-Encoding": "br" } : {}) } });
+  return new Response((brotli ? bytes : brotliDecompressSync(bytes)) as unknown as BodyInit, { headers: { ...IMMUTABLE, "Content-Type": "application/json; charset=utf-8", "Vary": "Accept-Encoding", ...(brotli ? { "Content-Encoding": "br" } : {}) } });
 }
 
 /** The pointer of a state: the names of its current index and of the national file. */

@@ -11,6 +11,12 @@ export function mirrorScopes(state: string) {
   return { keys: [...keys, ...candidates].sort(), translations, memberOffices: [memberOfficeStateScope(state), MEMBER_OFFICE_NATIONAL_SCOPE] };
 }
 
+/** The local divisions a state's registration lists, in its order, read from the copy. */
+export async function copiedRegistration(copy: StateMirror, state: string): Promise<Record<string, unknown>[]> {
+  return (await copy.seam.facts(`SELECT d.value AS d FROM civic_data_promotions r,LATERAL jsonb_array_elements(r.payload->'divisions') WITH ORDINALITY d(value,n)
+    WHERE r.key='REGISTRATION:US-'||$1||':registration:v1' ORDER BY d.n`, [state])).map(row => row.d as Record<string, unknown>);
+}
+
 /** The published entries one state's statements read (and the member offices and owner choices beside them), as the rows and columns those statements use. */
 const PUBLISHED = `p.key=ANY((SELECT k FROM args)::text[]) OR p.record_class='CURATED_READER_RECORD' AND (p.scope LIKE (SELECT t FROM args) OR p.scope=ANY((SELECT m FROM args)::text[]))`;
 /** The Census groupings of every other state are left behind: the statements filter to the state the same way. */

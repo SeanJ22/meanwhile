@@ -153,7 +153,7 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
     }
   }
 
-  async readBytes(key: string): Promise<Uint8Array | null> {
+  async readBytes(key: string, _options?: { readonly strong?: boolean }): Promise<Uint8Array | null> {
     try {
       return new Uint8Array(readFileSync(this.path(key)));
     } catch {

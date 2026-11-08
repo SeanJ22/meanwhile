@@ -51,7 +51,7 @@ export interface ReaderStatePackage {
   readonly localDivisions?: readonly Division[];
   readonly version: string;
   /** What the version is the hash of, in order: the entries' versions, then the president and the local divisions as JSON. */
-  readonly versionParts: readonly (string | undefined)[];
+  readonly versionParts: readonly (string | null | undefined)[];
   readonly registry: RegistryRuntimeReadModel;
   readonly people: OfficeholderSet | null;
   readonly legislativePeople: OfficeholderSet | null;
@@ -160,7 +160,7 @@ function stateFederalRead(federal: CivicDataReadResult<FederalDirectoryReadModel
   return { kind: "BOOTSTRAP", value, metadata: federal.metadata, detail: "The state's current delegation, loaded with its offices and contact details." };
 }
 
-export const stateVersion = (parts: readonly (string | undefined)[]): string => createHash("sha256").update(parts.join("|")).digest("hex");
+export const stateVersion = (parts: readonly (string | null | undefined)[]): string => createHash("sha256").update(parts.join("|")).digest("hex");
 
 async function loadState(state: string, divisionIds: readonly string[], zip: string | undefined, composition: StateComposition, ballotOnly: boolean): Promise<ReaderStatePackage> {
   const jurisdiction = `US-${state}` as const;

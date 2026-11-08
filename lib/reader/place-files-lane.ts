@@ -13,8 +13,9 @@ import { buildPlaceFile, PLACE_FILE_PAGE_SQL } from "./place-file-build.ts";
 import { contentHash, type PlaceFile } from "./place-file.ts";
 import { getFile, indexPointerKey, putFile, READER_INDEX_TAG, type IndexPointer, type NationalFile } from "./place-files.ts";
 import { buildPlaceIndex, placeMeta, readPlaceIndex, readZipPlaces, stateAliases, type PlaceIndex, type PlaceMeta, type ZipPlaces } from "./place-index.ts";
-import { mirrorScopes, type StateMirror } from "./state-mirror.ts";
-import { cutState, stateDivisionId, type StateShare, type StateWide } from "./state-share.ts";
+import { copiedRegistration, mirrorScopes, type StateMirror } from "./state-mirror.ts";
+import { cutState, stateDivisionId } from "./state-share.ts";
+import { forgetNationalShelf } from "./shelf.ts";
 import { readStatePackage } from "./state.ts";
 import { withStateSeam } from "./state-seam.ts";
 
@@ -176,18 +177,21 @@ async function dueStates(facts: Query, prints: Record<string, string>): Promise<
   return due.sort((a, b) => (weight.get(b.state) ?? 0) - (weight.get(a.state) ?? 0));
 }
 
-/** Copies the state once, cuts its package by division, and lets the copy go. */
+/**
+ * Copies the state once, cuts its package by division, and lets the copy go. The national shelf is emptied around the cut: read from the copy it
+ * holds no President, and what it held then must not be what the national file is made from.
+ */
 async function cutOnce(deps: PlaceFilesDeps, state: string): Promise<Cut> {
   const copy = await deps.openMirror(state);
+  forgetNationalShelf();
   try {
     return await withStateSeam(copy.seam, () => withPlaceMapReads(async () => {
       const full = await readStatePackage(state);
-      const registration = (await copy.seam.facts(`SELECT d.value AS d FROM civic_data_promotions r,LATERAL jsonb_array_elements(r.payload->'divisions') WITH ORDINALITY d(value,n)
-        WHERE r.key='REGISTRATION:US-'||$1||':registration:v1' ORDER BY d.n`, [state])).map(row => row.d as Record<string, unknown>);
+      const registration = await copiedRegistration(copy, state);
       const [zip] = [...(await readStateZipPlaces(state)).keys()];
       return cutState(full, registration, await readStatePackage(state, [stateDivisionId(state)], zip, { earlyDistricts: true }));
     }));
-  } finally { await copy.close(); }
+  } finally { forgetNationalShelf(); await copy.close(); }
 }
 
 async function statePass(deps: PlaceFilesDeps, now: number): Promise<{ readonly considered: number; readonly tags: (string | null)[] } | null> {

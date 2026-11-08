@@ -14,7 +14,7 @@ export type Placed = readonly [number, unknown];
 export interface StateWide {
   readonly state: string;
   /** The versions of the entries the answer is read from, which its version is the hash of. */
-  readonly versions: { readonly runtime?: string; readonly people?: string; readonly federal?: string; readonly campaigns?: string; readonly offices?: string; readonly ballot?: string; readonly geography: string };
+  readonly versions: { readonly runtime?: string | null; readonly people?: string | null; readonly federal?: string | null; readonly campaigns?: string | null; readonly offices?: string | null; readonly ballot?: string | null; readonly geography: string };
   readonly boundaryUrl: string;
   readonly stateLegislatorAuthority: unknown;
   /** The people, federal and ballot entries as read, without the records the divisions hold. */
@@ -79,7 +79,7 @@ export function cutState(pkg: ReaderStatePackage, registration: readonly Row[], 
   }
   const members = new Map<number, number[]>();
   for (const n of nodes.keys()) members.set(find(n), [...members.get(find(n)) ?? [], n]);
-  const reach = new Map<string, Set<number>>(), linksOf = sets.map(([, set]) => new Map<string, number[]>());
+  const reach = new Map<string, Set<number>>(), linksOf = sets.map(() => new Map<string, number[]>());
   for (const [s, [, set]] of sets.entries()) {
     const index = new Map(rows(set?.officeholders).map((holder, at) => [holder.id as string, at]));
     for (const [n, link] of rows(set?.divisions).entries()) {

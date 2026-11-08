@@ -50,6 +50,8 @@ export interface ReaderStatePackage {
   readonly districts: Slice<GeographySlice>;
   readonly localDivisions?: readonly Division[];
   readonly version: string;
+  /** What the version is the hash of, in order: the entries' versions, then the president and the local divisions as JSON. */
+  readonly versionParts: readonly (string | undefined)[];
   readonly registry: RegistryRuntimeReadModel;
   readonly people: OfficeholderSet | null;
   readonly legislativePeople: OfficeholderSet | null;
@@ -158,6 +160,8 @@ function stateFederalRead(federal: CivicDataReadResult<FederalDirectoryReadModel
   return { kind: "BOOTSTRAP", value, metadata: federal.metadata, detail: "The state's current delegation, loaded with its offices and contact details." };
 }
 
+export const stateVersion = (parts: readonly (string | undefined)[]): string => createHash("sha256").update(parts.join("|")).digest("hex");
+
 async function loadState(state: string, divisionIds: readonly string[], zip: string | undefined, composition: StateComposition, ballotOnly: boolean): Promise<ReaderStatePackage> {
   const jurisdiction = `US-${state}` as const;
   const presidentRead = zip ? Promise.resolve(null) : nationalPresident().catch(() => null);
@@ -176,18 +180,8 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
   const idsRead = zip && !divisionIds.length ? readZipPlace(zip).then(value=>[...new Set(value?.ids ?? [])].sort()) : Promise.resolve(divisionIds);
   const load = (ids: readonly string[]) => {
     const statement = statePackageStatement(state, ids, zip);
-    const place = Object.values(FIPS_TO_STATE).find(row => row.postal === state)!;
-    const geography = stateContainersStatement(state);
-    const sources = [...entries, ...zipSourcePointers(state), ...memberContextPointers, ...stateAuthorityPointers("ballot-contests", state),
-      { recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state) },
-      { recordClass: "STATE_LEGISLATOR", scope: jurisdiction },
-      { recordClass: "STATE_LEGISLATOR", scope: `${jurisdiction}:openstates-people:v1` },
-      { recordClass: geography.params[0], scope: geography.params[1] },
-      { recordClass: "REGISTRATION", scope: `${jurisdiction}:registration:v1` }];
-    return readCanonicalPackages([entries], query, { ...statement, ...(zip && ballotOnly ? { sharedSources: {
-      keys: [...new Set(sources.map(row => `${row.recordClass}:${row.scope}`))].sort(),
-      translations: `US:plain-english-translations:ocd-division/country:us/${place.prefix}:${state.toLowerCase()}%`,
-    } } : {}) });
+    const shared = zipStateSources(state);
+    return readCanonicalPackages([entries], query, { ...statement, ...(zip && ballotOnly ? { sharedSources: shared } : {}) });
   };
   const groupsRead = Promise.resolve().then(async () => load(await idsRead));
   const canonicalRead = groupsRead.then(groups => groups.readGroup(0));
@@ -234,11 +228,11 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
     ...runtime.value.statewideExecutives.flatMap(row => row.holder ? [row.holder] : [])].flatMap(holder => [...personIdentityKeys(holder)]))];
   const offices = officeMembers.length ? await readMemberOfficeStateProjection(state, options, officeMembers) : null;
   const memberOffices = offices?.kind === "PROMOTED" || offices?.kind === "BOOTSTRAP" ? offices.value.records as unknown as MemberOfficeRecord[] : [];
-  const version = createHash("sha256").update([runtime.metadata.versionId, people.metadata.versionId, federal.metadata.versionId, campaigns.metadata.versionId, offices?.metadata.versionId,
+  const versionParts = [runtime.metadata.versionId, people.metadata.versionId, federal.metadata.versionId, campaigns.metadata.versionId, offices?.metadata.versionId,
     profiles?.metadata.versionId, portraits?.metadata.versionId, ballot.metadata.versionId,
-    districts.kind === "HELD" ? districts.versionId : districts.kind, JSON.stringify(president), JSON.stringify(localDivisions)].join("|")).digest("hex");
+    districts.kind === "HELD" ? districts.versionId : districts.kind, JSON.stringify(president), JSON.stringify(localDivisions)];
   const result: ReaderStatePackage = {
-    state, version, districts, localDivisions,
+    state, version: stateVersion(versionParts), versionParts, districts, localDivisions,
     registryRead: runtime, peopleRead: people, candidateProfilesRead: profiles, candidatePortraitsRead: portraits, ballotRead: ballot, everyday,
     federalRead,
     registry: runtime.value, people: roster, legislativePeople,
@@ -294,6 +288,20 @@ export function statePackageStatement(state: string, divisions: readonly string[
       (SELECT to_jsonb(o) FROM zip_official o) AS zip_official,(SELECT coalesce(jsonb_agg(to_jsonb(s)),'[]'::jsonb) FROM zip_sources s) AS zip_sources,
       (SELECT coalesce(jsonb_agg(to_jsonb(s)),'[]'::jsonb) FROM zip_context s) AS zip_context,
       (SELECT to_jsonb(b) FROM zip_ballot b) AS zip_ballot FROM state_geography g`,params};
+}
+
+/** Every published entry a state's ZIP answers read, and the pattern of the plain-English translations kept for its districts. */
+export function zipStateSources(state: string): { readonly keys: readonly string[]; readonly translations: string } {
+  const jurisdiction = `US-${state}`, geography = stateContainersStatement(state);
+  const place = Object.values(FIPS_TO_STATE).find(row => row.postal === state)!;
+  const sources = [EVERYDAY_ROUTING_POINTER, ...zipSourcePointers(state), ...memberContextPointers, ...stateAuthorityPointers("ballot-contests", state),
+    { recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state) },
+    { recordClass: "STATE_LEGISLATOR", scope: jurisdiction },
+    { recordClass: "STATE_LEGISLATOR", scope: `${jurisdiction}:openstates-people:v1` },
+    { recordClass: geography.params[0], scope: geography.params[1] },
+    { recordClass: "REGISTRATION", scope: `${jurisdiction}:registration:v1` }];
+  return { keys: [...new Set(sources.map(row => `${row.recordClass}:${row.scope}`))].sort(),
+    translations: `US:plain-english-translations:ocd-division/country:us/${place.prefix}:${state.toLowerCase()}%` };
 }
 
 const memberContextPointers = ["US:verified-officeholder-campaign-sites"]

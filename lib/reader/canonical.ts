@@ -38,9 +38,9 @@ async function publicationFingerprint(query: ReadOnlyQuery, params: readonly unk
 }
 
 /** The version of these promoted entries: it moves when any is published, confirmed again or changed in any way. One small statement. */
-export function publicationVersion(keys: readonly string[], query: ReadOnlyQuery | null = readerDatabaseQuery()): Promise<string> {
+export function publicationVersion(keys: readonly string[], query: ReadOnlyQuery | null = readerDatabaseQuery(), translations = ""): Promise<string> {
   if (!query) throw new Error("READER_STORE_NOT_CONFIGURED");
-  return publicationFingerprint(query, [keys, ""]);
+  return publicationFingerprint(query, [keys, translations]);
 }
 
 /** Only borrow an in-flight snapshot after an independent current fingerprint check. */

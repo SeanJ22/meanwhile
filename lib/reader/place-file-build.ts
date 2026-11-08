@@ -7,7 +7,8 @@ import { placeCheckRequest, type PlaceChecks } from "./place-checks.ts";
 import { unpackPlaceContextRow } from "./place-ready.ts";
 
 /** A saved page with the kind and state of its place. */
-export const PLACE_FILE_PAGE_SQL = `SELECT p.place_id AS id,e.kind,e.state,p.version,extract(epoch FROM p.built_at)::text AS built,p.context
+export const PLACE_FILE_PAGE_SQL = `SELECT p.place_id AS id,e.kind,e.state,p.version,extract(epoch FROM p.built_at)::text AS built,p.built_at::text AS built_text,
+  (SELECT jsonb_object_agg(v.key,jsonb_build_object('full',v.value->'full')) FROM jsonb_each(p.context) v WHERE v.key IN ('current','history','emptyCurrent','emptyHistory')) AS context
   FROM place_page p JOIN entity e ON e.id=p.place_id WHERE e.kind IN ('place','body') AND p.context ? 'current'`;
 
 /** The identity headers of one page, as a read of it takes them. */

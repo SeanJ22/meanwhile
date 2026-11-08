@@ -59,10 +59,11 @@ test("SPN-01PF: the lane files only the places that changed, moves the pointer a
     assert.deepEqual(log.filter(line => !line.startsWith("purge")), []);
 
     // One page changes: only its file, the index and the pointer are written, in that order, and the cache is cleared last.
-    await db.query("UPDATE place_page SET context=$2::jsonb,version=version+1,built_at='2026-10-02T12:00:00Z' WHERE place_id=$1", [A, JSON.stringify(packPlaceContext({ formatVersion: 1, current: page("Pima County") }))]);
+    await db.query("UPDATE place_page SET context=$2::jsonb,version=version+1,built_at='2026-10-02T12:00:00.123456Z' WHERE place_id=$1", [A, JSON.stringify(packPlaceContext({ formatVersion: 1, current: page("Pima County") }))]);
     closePlaceFilesLane();
     const turn = await placeFilesTurn(deps);
     assert.deepEqual(turn, { considered: 1, kind: "pages" });
+    assert.equal((await placeFilesTurn(deps)).kind, "idle", "the page just filed is not looked at again, though its time has microseconds");
     assert.equal(log.filter(line => line.startsWith("file:")).length, 2, "the place's new file and the new index");
     assert.equal(log.at(-2), `pointer:${indexPointerKey("AZ")}`);
     assert.equal(log.at(-1), `purge:${READER_INDEX_TAG("AZ")}`);

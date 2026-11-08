@@ -144,7 +144,7 @@ async function pagesTurn(deps: PlaceFilesDeps, now: number): Promise<{ readonly 
     if (changed.length) tags.push(await commit(deps, state, have, changed));
   }
   const last = pages.at(-1)!;
-  await writePassCursor(deps.facts, PAGES_CURSOR, JSON.stringify({ at: new Date(Number(last.built) * 1000).toISOString(), id: String(last.id) }));
+  await writePassCursor(deps.facts, PAGES_CURSOR, JSON.stringify({ at: String(last.built_text), id: String(last.id) }));
   return { considered: pages.length, tags };
 }
 

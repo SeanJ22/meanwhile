@@ -102,7 +102,7 @@ export async function loadPlaceFromFiles(input: PlaceInput, source: PlaceFileSou
 /* ---- the bytes ------------------------------------------------------------------------------------------------------ */
 
 /** The file as stored: the JSON, brotli compressed. */
-export const packFile = (value: unknown): Uint8Array => brotliCompressSync(JSON.stringify(value), { params: { [constants.BROTLI_PARAM_QUALITY]: 9 } });
+export const packFile = (value: unknown): Uint8Array => brotliCompressSync(JSON.stringify(value), { params: { [constants.BROTLI_PARAM_QUALITY]: 11 } });
 export const unpackFile = <T>(bytes: Uint8Array): T => JSON.parse(brotliDecompressSync(bytes).toString("utf8")) as T;
 const digest = (text: string): string => createHash("sha256").update(text).digest("hex").slice(0, 32);
 /** The file's version stamp, which is its name: the hash of everything it says. */

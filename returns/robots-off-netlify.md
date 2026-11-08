@@ -7,7 +7,7 @@ check: connection proofs
 ready: NB-01 bf885d9797a76a279c33429fc89eaaab08c3cce0
 river: 97a693b6948a504d07eb53ea1818d4a17ee7447f
 at: 2026-11-08T03:54:44Z
-state: returned
+state: cleared: integrated ready fab7b98798b3b9e35919b6d31b2269a7c68e4881 on river b9b55958805117e6d3488f626df290f1e518a2d9
 fix_subject: fix:438a452d
 fix: River · stream/robots-off-netlify — connection proofs failed for robots-off-netlify: READY bf885d9797a7 refused: its message lacks "connected end to end" and "still working on the next scheduled run". Every READY message states that the work is connected end to end and that it is still working on the next scheduled run, wit
 

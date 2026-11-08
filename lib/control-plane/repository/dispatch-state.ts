@@ -1,13 +1,20 @@
 import { versionedRowsFor } from "../../db/versioned-rows.ts";
 import { createHash } from "node:crypto";
 import { withCallerSite } from "../../db/transfer-by-caller.ts";
-import { boundedQuery, CONTROL_PLANE_REQUEST_BOUNDS_MS, type ControlPlaneRequestBounds } from "./request-bounds.ts";
+import { boundedQuery, CONTROL_PLANE_REQUEST_BOUNDS_MS, isControlPlaneRequestTimeout, type ControlPlaneRequestBounds } from "./request-bounds.ts";
+import { withControlPlaneConnectRetry } from "./connect-retry.ts";
 import type { RouteTask } from "../route-task.ts";
 import type { WorkItem } from "../work-item.ts";
 import type { StandingLineage } from "../workers/standing-lineage.ts";
 import type { FreshnessOccurrence } from "../scheduler/durable.ts";
 import { ConcurrentModification, CorruptPersistedState, UnknownAggregate, type AggregateRepository, type ControlPlaneRepositories, type Persisted } from "./types.ts";
 import type { Sql } from "./pg-store.ts";
+import { noteScanProgress } from "./scan-progress.ts";
+
+/** One try and two more for a page of the open-work read; the read is idempotent. */
+const OPEN_WORK_PAGE_ATTEMPTS = 3;
+/** Open work items read per call, so the read reports between calls. */
+const OPEN_WORK_ITEM_CHUNK = 500;
 
 export interface DispatchSnapshot {
   readonly occurrences: ReadonlyMap<string, Persisted<FreshnessOccurrence>>;
@@ -135,7 +142,15 @@ export function createPgDispatchState(sql: Sql, repos: () => ControlPlaneReposit
     const scoped = state ? table === 'cp_route_tasks'
       ? workItemStateFilter(table, state)
       : `cp_control_state(value)='${state}'` : "";
-    const found = await versionedRowsFor(sql).rows((text, args) => run(`readOpen:${table}`, text, args, true),
+    const found = await versionedRowsFor(sql).rows(async (text, args) => {
+      // A page that misses its request bound is asked again, within a cap: the store names such a timeout retryable.
+      const page = await withControlPlaneConnectRetry(() => run(`readOpen:${table}`, text, args, true), {
+        maxAttempts: OPEN_WORK_PAGE_ATTEMPTS,
+        isRetryable: error => isControlPlaneRequestTimeout(error) && error.retryable,
+      });
+      noteScanProgress("open work pages read");
+      return page;
+    },
       table, [predicate, scoped].filter(Boolean).map(filter => `(${filter})`).join(" AND "), params);
     return found.map(row => persisted<T>(row));
   }
@@ -171,7 +186,13 @@ export function createPgDispatchState(sql: Sql, repos: () => ControlPlaneReposit
         "changed_at >= $1::timestamptz AND value->>'state' IN ('DISPOSED', 'RESULT_RECORDED')", [since])) taskMap.set(row.id, row);
       const workIds = [...new Set([...occurrences.map(row => row.value.workItemId), ...[...taskMap.values()].map(row => row.value.workItemId)])];
       const work = repos().workItems;
-      const items = work.readMany ? await work.readMany(workIds) : (await Promise.all(workIds.map(id => work.read(id)))).filter(row => row !== null);
+      // In chunks, each reported: the read pages through every open item and is otherwise silent for as long as it takes.
+      const items: Persisted<WorkItem>[] = [];
+      for (let at = 0; at < workIds.length; at += OPEN_WORK_ITEM_CHUNK) {
+        const ids = workIds.slice(at, at + OPEN_WORK_ITEM_CHUNK);
+        items.push(...(work.readMany ? await work.readMany(ids) : (await Promise.all(ids.map(id => work.read(id)))).filter(row => row !== null)));
+        noteScanProgress("open work items read");
+      }
       return { occurrences: byId(occurrences), routeTasks: taskMap, workItems: byId(items), through };
     });
   }

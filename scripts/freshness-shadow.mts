@@ -275,6 +275,7 @@ import {
   trackStoreCalls,
   type CycleStallDiagnostic,
 } from "../lib/control-plane/scheduler/cycle-stall.ts";
+import { observeScanProgress } from "../lib/control-plane/repository/scan-progress.ts";
 import { PLANNER_SCOPE_PREFIX, answerStallProbes, roundProgressReporter } from "../lib/control-plane/scheduler/round-progress.ts";
 import { RUNTIME_NO_PROGRESS_MS } from "./pilot-runtime-child.mts";
 import { POST_CUTOFF_QUIET_LEAD_MS, untilQuietLimit, watchOutputClock } from "../lib/control-plane/scheduler/post-cutoff-bound.ts";
@@ -315,6 +316,8 @@ const pending = new PendingOperations();
 answerStallProbes({ describe: () => describePending(pending.snapshot()) });
 
 const roundProgress = roundProgressReporter();
+// The open-work read walks every open item and is otherwise silent; each page it finishes is counted work.
+observeScanProgress(label => roundProgress.note(label));
 
 const outputClock = watchOutputClock();
 const POST_CUTOFF_QUIET_MS = RUNTIME_NO_PROGRESS_MS - POST_CUTOFF_QUIET_LEAD_MS;
@@ -1174,9 +1177,9 @@ if (!dry && !canary && !intents.runnerPause.paused) {
   }
 }
 const recoveryRepos = filteredCycle ? await selectedCycleRepositories(repos, sync.all.map(row => row.id)) : repos;
-const dispatchSnapshot = await recoveryRepos.dispatchState.readOpen({
+const dispatchSnapshot = await pending.step("dispatch-state:read-open", () => recoveryRepos.dispatchState.readOpen({
   ...(filteredCycle || canary ? { obligationIds: canary ? [] : sync.all.map(row => row.id) } : {}),
-});
+}));
 for (const item of dispatchSnapshot.workItems.values()) if (lifetimeHuntSubjects.has(item.value.subject)) lifetimeHuntWorkIds.add(item.id);
 for (const row of dispatchSnapshot.routeTasks.values()) if (row.value.workerTask && lifetimeHuntSubjects.has(row.value.workerTask.contract.subjectId)) {
   lifetimeHuntWorkIds.add(row.id);

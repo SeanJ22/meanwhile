@@ -14,6 +14,8 @@ import { autonomousHarness } from "./helpers/autonomous-fleet.ts";
 import { nextAutonomousOperation, dispatchAutonomousTask } from "../lib/control-plane/workers/coordinator.ts";
 import { readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
 import { readHeldInputs } from "../lib/civic-data/worker-held-elections.ts";
+import { isControlPlaneRequestTimeout } from "../lib/control-plane/repository/request-bounds.ts";
+import { noteScanProgress, observeScanProgress } from "../lib/control-plane/repository/scan-progress.ts";
 import { CHANGED_AT_TOUCH_FUNCTION_DDL, changedAtColumnDdl, PLANNED_WORK_ITEM_INDEXES } from "../lib/control-plane/repository/pg-schema.ts";
 
 const NOW = "2026-10-01T12:00:00.000Z";
@@ -451,4 +453,68 @@ test("a planner learns which occurrences are open from what changed since it las
   assert.deepEqual(reads, [f.obligation.id], "a known open occurrence is refused without reading the obligation or the occurrence again");
   await closeOccurrence(f.repos, { occurrenceId: id, disposition: null, unresolvedReason: "test", now: NOW });
   assert.deepEqual([...await ask()], [], "a closed occurrence leaves the answer by its change");
+});
+
+test("the planner's open-work read reports each page and each work-item chunk, so a long read is not silent", async () => {
+  const f = await fixture();
+  const OPEN = 450;
+  await f.db.query(`INSERT INTO cp_work_items (id,revision,updated_at,value)
+    SELECT 'w'||n,1,$1,jsonb_build_object('id','w'||n,'subject','s'||n) FROM generate_series(1,${OPEN}) n`, [NOW]);
+  await f.db.query(`INSERT INTO cp_route_tasks (id,revision,updated_at,value)
+    SELECT 't'||n,1,$1,jsonb_build_object('workItemId','w'||n,'state','PENDING') FROM generate_series(1,${OPEN}) n`, [NOW]);
+  await f.db.query(`INSERT INTO cp_occurrences (id,revision,updated_at,value)
+    SELECT 'o'||n,1,$1,jsonb_build_object('obligationId','place-source','routeTaskId','t'||n,'workItemId','w'||n,'closedAt',NULL) FROM generate_series(1,${OPEN}) n`, [NOW]);
+  const seen: string[] = [];
+  const stop = observeScanProgress(label => seen.push(label));
+  try {
+    const snapshot = await f.repos.dispatchState.readOpen();
+    assert.equal(snapshot.occurrences.size, OPEN);
+    assert.equal(snapshot.workItems.size, OPEN);
+  } finally { stop(); }
+  const pages = seen.filter(label => label === "open work pages read").length;
+  assert.ok(pages >= 2 * Math.ceil(OPEN / 100), `each page of occurrences and of route tasks is reported (${pages})`);
+  assert.ok(seen.filter(label => label === "open work items read").length >= 1, "the work items are read in reported chunks");
+  stop();
+  noteScanProgress("after the observer is removed");
+  assert.equal(seen.includes("after the observer is removed"), false);
+});
+
+test("a throwing progress observer never changes what the read returns", async () => {
+  const f = await fixture();
+  const stop = observeScanProgress(() => { throw new Error("observer failed"); });
+  try { assert.equal((await f.repos.dispatchState.readOpen()).occurrences.size, 0); } finally { stop(); }
+});
+
+// A page of the open-work read that misses its request bound is asked again, a few times, before the planner gives up:
+// the store itself names such a timeout retryable, and the live `system` planner crashed on the first miss.
+const SLOW_PAGE_MS = 400;
+async function dispatchWithTightPageBound(f: Awaited<ReturnType<typeof fixture>>, slowAttempts: number) {
+  const tight = createPgDispatchState(f.sql, () => f.repos, { POINT: 5_000, DOCUMENT: 5_000, PAGE: 150 });
+  let pageReads = 0;
+  f.hooks.before = async text => {
+    if (!/FROM cp_occurrences\b[\s\S]*ORDER BY id LIMIT/.test(text)) return;
+    pageReads += 1;
+    if (pageReads <= slowAttempts) await new Promise(resolve => setTimeout(resolve, SLOW_PAGE_MS));
+  };
+  return { tight, pageReads: () => pageReads };
+}
+
+test("an open-work page that misses its request bound once is read again and the planner continues", async () => {
+  const f = await fixture();
+  const opened = await openOccurrence(f.repos, { obligation: f.obligation, dueAt: NOW, now: NOW });
+  assert.ok(opened);
+  const { tight, pageReads } = await dispatchWithTightPageBound(f, 1);
+  const snapshot = await tight.readOpen();
+  assert.deepEqual([...snapshot.occurrences.keys()], [opened.occurrence.id]);
+  assert.ok(pageReads() >= 2, "the page was asked again");
+  await new Promise(resolve => setTimeout(resolve, SLOW_PAGE_MS));
+});
+
+test("an open-work page that keeps missing its bound fails after three attempts with the store's own named timeout", async () => {
+  const f = await fixture();
+  await openOccurrence(f.repos, { obligation: f.obligation, dueAt: NOW, now: NOW });
+  const { tight, pageReads } = await dispatchWithTightPageBound(f, 99);
+  await assert.rejects(tight.readOpen(), (error: unknown) => isControlPlaneRequestTimeout(error) && /readOpen:cp_occurrences/.test((error as Error).message));
+  assert.equal(pageReads(), 3, "one try and two more, never an open-ended wait");
+  await new Promise(resolve => setTimeout(resolve, SLOW_PAGE_MS * 3));
 });

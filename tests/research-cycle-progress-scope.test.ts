@@ -89,3 +89,46 @@ test("a planning round counts a state it deferred as neither completed nor faile
   const round = await runStatePlanningRound(async state => state === "ak" ? true : state === "al" ? false : STATE_DEFERRED, ["ak", "al", "az", "ca"]);
   assert.deepEqual(round, { completed: 1, failed: ["al"], deferred: ["az", "ca"] });
 });
+
+// A read that walks a table page by page for longer than the runner's window (the live `dispatchState.readOpen` stall):
+// every page completes, and none of it prints unless the scan reports.
+const scanModule = JSON.stringify(new URL("../lib/control-plane/repository/scan-progress.ts", import.meta.url).href);
+const longScan = (reported: boolean) => `
+  import { roundProgressReporter } from ${progressModule};
+  import { noteScanProgress, observeScanProgress } from ${scanModule};
+  const progress = roundProgressReporter({ everyMs: 300 });
+  observeScanProgress(label => progress.note(label));
+  console.log('phase retirement: 76ms; 1 repository calls');
+  for (let page = 0; page < 20; page++) {
+    await new Promise(resolve => setTimeout(resolve, 300));
+    if (${reported}) noteScanProgress('open work pages read');
+  }
+  progress.flush();
+  console.log('open work read');
+  process.exit(0);
+`;
+const runScan = (reported: boolean) => runRuntimeChildren([{ id: "research-cycle", executable: process.execPath,
+  args: ["--experimental-strip-types", "--input-type=module", "-e", longScan(reported)] }], {
+  cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: NO_PROGRESS_MS });
+
+test("a silent page-by-page read longer than the runner's window is killed (the live failure)", async () => {
+  const [result] = await runScan(false);
+  assert.equal(result!.termination, "TIMED_OUT");
+  assert.match(result!.errorMessage!, /RESEARCH_CHILD_NO_PROGRESS/);
+  assert.doesNotMatch(result!.stdout, /open work read/);
+});
+
+test("the same read, reporting each finished page, completes", async () => {
+  const [result] = await runScan(true);
+  assert.equal(result!.termination, "EXITED", `${result!.errorMessage ?? ""}\n${result!.stdout}`);
+  assert.equal(result!.status, 0);
+  assert.match(result!.stdout, /round progress: open work pages read \d+ finished/);
+  assert.match(result!.stdout, /open work read/);
+});
+
+test("the planner reports its open-work read and names it in the stall report", () => {
+  const round = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
+  assert.match(round, /observeScanProgress\(label => roundProgress\.note\(label\)\);/);
+  assert.match(round, /await pending\.step\("dispatch-state:read-open", \(\) => recoveryRepos\.dispatchState\.readOpen\(/);
+  assert.doesNotMatch(round, /await recoveryRepos\.dispatchState\.readOpen\(/, "the read is never an unlabelled await");
+});

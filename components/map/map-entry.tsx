@@ -2151,7 +2151,8 @@ export function bodySubject(
     ],
     representation: seated,
     rosterGaps: [...projectedBodyRoster(body).gaps],
-    representationNote: representationNoteForClaim(claim),
+    // While the roster's detail is on its way the card does not say we have not sourced it.
+    representationNote: body.readerRosterRef && !body.readerRoster ? "" : representationNoteForClaim(claim),
     meetings,
     sources: [...districtCardSources([...roster, ...earlierMembers], meetings, body.officeContact?.provenance, body.fieldSources), ...bodyContactSources(body), ...(body.meetingCadence ? [{ what: "Regular meeting cadence", provenance: { sourceOrg: body.name ?? "", sourceUrl: body.meetingCadence.sourceUrl, collectedAt: "", verifiedAt: null } }] : [])],
     // Every section renders for every body: content, or its own absence line.

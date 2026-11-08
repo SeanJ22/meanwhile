@@ -59,7 +59,8 @@ value.catch(()=>{});parsed.set(response,value);return response};
 const early=url=>fetch(url,{headers:{accept:"application/json"}}).then(parseResponse);
 const zip3Url="/api/reader/zip3/"+zip.slice(0,3)+".json",zip3=early(zip3Url);
 requests[zip3Url]=zip3;zip3.catch(()=>{});
-const entry=zip3.then(r=>r.ok?parsed.get(r):null).then(f=>f&&f.v===1&&f.zips&&f.zips[zip]||null).catch(()=>null);
+// The answer's address is read from a copy of the small file at once, so it never waits for the boundary worker to start.
+const entry=zip3.then(r=>r.ok?r.clone().json():null).then(f=>f&&f.v===1&&f.zips&&f.zips[zip]||null).catch(()=>null);
 entry.then(e=>{if(e&&window.__readerStart===start){const url="/api/answer/"+zip+"/"+e.key;requests[url]=early(url);requests[url].catch(()=>{})}});
 const settings="/api/reader/settings";
 const outlines="/geo/state-outlines.geojson";

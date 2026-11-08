@@ -21,7 +21,7 @@ test("a planner that answers its supervisor's messages still exits once its work
 });
 
 test("a research cycle that outlives its budget is ended by the runner even when a grandchild holds its pipes, and recorded with the reason", async () => {
-  const hold = "require('node:child_process').spawn(process.execPath,['-e','setInterval(()=>{},1000)'],{stdio:'inherit'}); setInterval(()=>{},1000);";
+  const hold = "process.getBuiltinModule('node:child_process').spawn(process.execPath,['-e','setInterval(()=>{},1000)'],{stdio:'inherit'}); setInterval(()=>{},1000);";
   const [result] = await runRuntimeChildren([{ id: "research-cycle", executable: process.execPath, args: ["-e", hold] }], {
     cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, deadlineMs: Date.now() + 700 });
   assert.equal(result!.termination, "TIMED_OUT");

@@ -3,7 +3,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { createElectionResultFeedStore, localElectionResultFeedStore, resultFeedScope } from "../lib/election-results/feed-store.ts";
+import { createElectionResultFeedStore, localElectionResultFeedStore, resultFeedScope, runnerResultFeedStore } from "../lib/election-results/feed-store.ts";
 import type { StateResultFeed } from "../lib/election-results/feed-types.ts";
 import { electionFeedFixture, preserveFeedEnvironment } from "./helpers/election-feed-fixture.ts";
 
@@ -53,4 +53,23 @@ test("the native test-copy server uses its own temporary feed directory and refu
   process.env.WTP_RUNTIME_MODE = "production";
   delete process.env.WTP_DB_ROLE;
   assert.throws(() => localElectionResultFeedStore(root), /FORBIDDEN_IN_PRODUCTION/);
+});
+
+test("the runner writes the site-scoped store the live Function reads, whatever CONTEXT says", async context => {
+  preserveFeedEnvironment(context, ["CONTEXT", "WTP_BUILD_CONTEXT", "WTP_RUNTIME_MODE", "WTP_DB_ROLE", "WTP_ELECTION_RESULTS_TEST_FEED_DIR", "NETLIFY_SITE_ID", "NETLIFY_BLOBS_TOKEN"]);
+  for (const name of ["WTP_BUILD_CONTEXT", "WTP_RUNTIME_MODE", "WTP_DB_ROLE", "WTP_ELECTION_RESULTS_TEST_FEED_DIR"]) delete process.env[name];
+  process.env.NETLIFY_SITE_ID = "site-123";
+  process.env.NETLIFY_BLOBS_TOKEN = "synthetic-token";
+  const opened: unknown[][] = [], written = new Map<string, unknown>();
+  const open = async (...args: unknown[]) => { opened.push(args); return { get: async () => null, setJSON: async (key: string, value: unknown) => { written.set(key, value); } }; };
+  for (const environment of [{}, { CONTEXT: "deploy-preview" }, { CONTEXT: "production" }] as const) {
+    if ("CONTEXT" in environment) process.env.CONTEXT = environment.CONTEXT; else delete process.env.CONTEXT;
+    opened.length = 0;
+    await runnerResultFeedStore(process.env, open as never).writeNation(nation);
+    assert.deepEqual(opened, [["site", { siteID: "site-123", token: "synthetic-token" }]]);
+  }
+  assert.ok(written.has("nation.json"));
+  delete process.env.NETLIFY_BLOBS_TOKEN;
+  delete process.env.NETLIFY_API_TOKEN;
+  assert.throws(() => runnerResultFeedStore(process.env, open as never), /WRITE_CREDENTIALS_MISSING/);
 });

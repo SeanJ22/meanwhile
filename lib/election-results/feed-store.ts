@@ -1,4 +1,5 @@
 import { storedKeyValue } from "../core/keys-values.ts";
+import { resolveReaderArtifactWriteCredentials } from "../meetings/edge-store.ts";
 import type { StateResultFeed } from "./feed-types.ts";
 import { isResultState } from "./feed-types.ts";
 import type { NationalCongressSummary } from "./summary.ts";
@@ -69,9 +70,12 @@ export function nativeResultFeedScope(deployContext?: string): "site" | "deploy"
   return deployContext === "production" ? "site" : "deploy";
 }
 
-async function automaticBlobsStore(scope: "site" | "deploy"): Promise<ResultFeedBlobClient> {
+interface BlobsCredentials { readonly siteID: string; readonly token: string }
+
+/** The one Netlify wiring: platform credentials unless a site and token are given. */
+async function automaticBlobsStore(scope: "site" | "deploy", credentials?: BlobsCredentials): Promise<ResultFeedBlobClient> {
   const { getStore, getDeployStore } = await import("@netlify/blobs");
-  const options = { name: "meanwhile-election-results", consistency: "strong" as const };
+  const options = { name: "meanwhile-election-results", consistency: "strong" as const, ...credentials };
   return scope === "site" ? getStore(options) : getDeployStore(options);
 }
 
@@ -88,11 +92,9 @@ export function nativeResultFeedStore(deployContext?: string,
 }
 
 async function netlifyStore() {
-  const { getStore, getDeployStore } = await import("@netlify/blobs");
   const siteID = process.env.WTP_BLOBS_SITE_ID, token = storedKeyValue("WTP_BLOBS_TOKEN");
-  const options = { name: "meanwhile-election-results", consistency: "strong" as const, ...(siteID && token ? { siteID, token } : {}) };
   // Site stores are shared by every deploy. A preview must never open this one.
-  return resultFeedScope() === "site" ? getStore(options) : getDeployStore(options);
+  return automaticBlobsStore(resultFeedScope(), siteID && token ? { siteID, token } : undefined);
 }
 
 /** A native test-copy server can replay feeds from its own temporary directory. Never available in production. */
@@ -125,4 +127,20 @@ export function resultFeedStore(): ElectionResultFeedStore {
   if (installed) return installed;
   const local = process.env.WTP_ELECTION_RESULTS_TEST_FEED_DIR;
   return local ? localElectionResultFeedStore(local) : createElectionResultFeedStore(netlifyIO);
+}
+
+/** The runner is always production: it writes the site-scoped store the live Function reads, whatever CONTEXT says, with the
+ * site and token it already publishes reader artifacts with. A local or test-copy database role never reaches the site store. */
+export function runnerResultFeedStore(environment: Readonly<Record<string, string | undefined>> = process.env,
+  open: (scope: "site" | "deploy", credentials?: BlobsCredentials) => Promise<ResultFeedBlobClient> = automaticBlobsStore): ElectionResultFeedStore {
+  if (installed) return installed;
+  const local = environment.WTP_ELECTION_RESULTS_TEST_FEED_DIR;
+  if (local) return localElectionResultFeedStore(local);
+  if (/^(?:local|test)(?:-|$)/i.test(environment.WTP_DB_ROLE ?? "")) return resultFeedStore();
+  const credentials = resolveReaderArtifactWriteCredentials();
+  if (!credentials) throw new Error("ELECTION_RESULT_FEED_WRITE_CREDENTIALS_MISSING");
+  return createElectionResultFeedStore({
+    read: async key => (await open("site", credentials)).get(key, { type: "json", consistency: "strong" }),
+    write: async (key, value) => { await (await open("site", credentials)).setJSON(key, value); },
+  });
 }

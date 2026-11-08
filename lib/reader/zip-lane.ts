@@ -170,6 +170,8 @@ async function statePass(deps: ZipLaneDeps, now: number, log: (line: string) => 
       await file(deps, { ...base, states: { ...base.states, [state]: body } }, held?.print, tags);
     } catch (error) { log(`ZIP answers: ${zip} could not be read (${error instanceof Error ? error.message : String(error)}); it keeps its last answer`); }
   }
+  // What the look kept of the saved pages (shared by neighbouring ZIPs) is let go before the next look.
+  dropHeldPlaceRows();
   const written = await clear(deps, tags, log);
   if (zips.length < BATCH) {
     c.prints[state] = c.active.print; delete c.active; memory.statesCheckedAt = 0;

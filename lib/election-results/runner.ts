@@ -24,7 +24,7 @@ import { runtimeCivicReadCache, type CivicReadCache } from "../db/civic-read-cac
 import type { ElectionResult, ElectionResultBatch } from "./types.ts";
 import type { BallotResultFacts, BallotElectionSummary } from "../ballot/election-results.ts";
 import { readResultProjection, refreshedResultFacts, preparedStateResultFeed, projectionBallots, type ResultProjection } from "./materialize.ts";
-import { resultFeedStore, type ElectionResultFeedStore } from "./feed-store.ts";
+import { runnerResultFeedStore, type ElectionResultFeedStore } from "./feed-store.ts";
 import type { StateResultFeed } from "./feed-types.ts";
 import { summarizeCongressResults, type NationalCongressSummary } from "./summary.ts";
 
@@ -302,7 +302,7 @@ export async function runElectionResults(input: {
     let readerPending = false;
     try {
       if (prior.readerPending || prior.readerSlice?.fingerprint !== feed.fingerprint)
-        await (input.feedStore ?? resultFeedStore()).writeState(state, feed);
+        await (input.feedStore ?? runnerResultFeedStore()).writeState(state, feed);
       if (prior.readerPending) await finishFeedFailure(state, url);
     } catch (error) {
       unfinished = true;
@@ -494,7 +494,7 @@ export async function runElectionResults(input: {
   let nationalFeedPending = false;
   try {
     if (progress.get("US")?.nationalFeedPending || progress.get("US")?.nationalFeedFingerprint !== nationalFeedFingerprint)
-      await (input.feedStore ?? resultFeedStore()).writeNation(nationalFeed);
+      await (input.feedStore ?? runnerResultFeedStore()).writeNation(nationalFeed);
     if (progress.get("US")?.nationalFeedPending) await finishFeedFailure("US", `${PUBLIC_SITE_ORIGIN}/api/election-results?scope=nation`);
   } catch (error) {
     unfinished = true; nationalFeedPending = true;

@@ -10,8 +10,7 @@ import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import type { Contest } from "../lib/ballot/types.ts";
 import type { CandidacyRemoval } from "../lib/ballot/types.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
-import type { ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
-import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { promotedFixtureBundle } from "./helpers/promoted-fixtures.ts";
 
 
 
@@ -20,13 +19,6 @@ import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 
 
-
-function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
-  const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
-  return { stateAuthorities: current.stateAuthorities,
-    ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
-    ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
-}
 
 function njMorrisFiling(races: readonly TestRace[], extra: {
   readonly removals?: readonly CandidacyRemoval[];

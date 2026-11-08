@@ -21,16 +21,7 @@ import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import type { FreshnessOccurrence } from "../lib/control-plane/scheduler/durable.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
-import type { ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
-import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-
-function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
-  const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
-  return { stateAuthorities: current.stateAuthorities,
-    ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
-    ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
-}
+import { installRegistryAuthority, promotedFixtureBundle } from "./helpers/promoted-fixtures.ts";
 
 const WHOLE_TABLE = new Set(["list", "listNarrowed", "readAll", "keys"]);
 

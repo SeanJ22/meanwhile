@@ -5,15 +5,13 @@ import { allSeatHolders, governmentListingById, governmentListingsForDivisions, 
 import { namedOfficeholders } from "../lib/ask/server-sources.ts";
 import { governmentListingEvidence, readerGovernmentListings } from "../lib/ask/government-listings.ts";
 import { incumbentHolderFor } from "../lib/ballot/incumbent-record.ts";
-import { installRegistryAuthority, syntheticStateLegislators } from "./helpers/promoted-fixtures.ts";
+import { installRegistryAuthority, syntheticStateLegislators, promotedFixtureBundle } from "./helpers/promoted-fixtures.ts";
 import type { RegistrationGovernmentListing } from "../lib/registration/listings.ts";
 import type { RegistrationReadModel } from "../lib/registration/candidate.ts";
 import { readNativeMemberVotes } from "../lib/state-rollcalls/reader-votes.ts";
 import { prlPersonKeys, prlStatementEvidence } from "../lib/sources/prl/person.ts";
 import { PRL_RHETORIC_ATTRIBUTION } from "../lib/sources/prl/types.ts";
 import type { OfficialStateLegislatorReadModel } from "../lib/civic-data/candidate-builders.ts";
-import type { ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
-import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 
 
@@ -21,13 +19,6 @@ import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 
 
-
-function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
-  const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
-  return { stateAuthorities: current.stateAuthorities,
-    ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
-    ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
-}
 
 
 const DIVISION = "ocd-division/country:us/state:oh/sldl:1";

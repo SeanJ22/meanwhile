@@ -55,7 +55,7 @@ export async function serveBoard(request: Request, bodyId: string, version: stri
     const index = (await openPlaceFiles(store).index(file.state))?.index, current = index && boardVersion(index, bodyId);
     if (!current || current.id !== file.id) return missing();
     if (current.version !== version) return moved(boardPath(current.id, current.version));
-    return encoded(request, await assemble(store, file), { ...IMMUTABLE, "ETag": `"${version}"` });
+    return encoded(request, await assemble(store, file, version), { ...IMMUTABLE, "ETag": `"${version}"` });
   } catch (error) { return failed(error); }
 }
 

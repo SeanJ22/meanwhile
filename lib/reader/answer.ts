@@ -3,12 +3,14 @@ import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
 import { readReaderMeetingSettings } from "../meetings/reader-settings.ts";
 import type { PlaceEntry } from "../place-map/reader.ts";
 import type { Meeting } from "../sources/types.ts";
+import { isDeepStrictEqual } from "node:util";
+import { serverReaderValue } from "./memory.ts";
 import type { PlaceInput } from "./place-types.ts";
 import { DEFAULT_RADIUS_KM } from "../meetings/constants.ts";
 import { stateCoverage } from "./coverage.ts";
 import { locationFromEntry, readLocationPlace, readerTerritory } from "./location.ts";
 import { composeMeetingsAnswer } from "./meetings-answer.ts";
-import { loadPlaceFromFiles, type PlaceFile } from "./place-file.ts";
+import { loadPlaceFromFiles, type PlaceFile, type PlaceFileSource } from "./place-file.ts";
 import { openPlaceFiles } from "./place-files.ts";
 import { lengthen, type PlaceIndex } from "./place-index.ts";
 import { stateResponseHeaders } from "./state-response.ts";
@@ -76,7 +78,7 @@ export async function assembleFullAnswer(store: ReaderArtifactStore, zip: string
 const MOVED_MEETING = ["fieldSources", "publicationConflicts", "provenance"] as const;
 
 /** An answer with its heavy parts left at their boards. A body or meeting whose board has no file keeps them. */
-export function slimAnswer(full: Row, detail: (bodyId: string) => string | null): Row {
+export function slimAnswer(full: Row, detail: (bodyId: string) => string | null, movable: (meeting: Row) => boolean = () => true): Row {
   const bodies = (list: readonly Row[]) => list.map(body => {
     const url = detail(body.bodyId);
     if (!url || !body.readerRoster) return body;
@@ -87,6 +89,8 @@ export function slimAnswer(full: Row, detail: (bodyId: string) => string | null)
   const meetings = (list: readonly Row[]) => list.map(meeting => {
     const url = meeting.bodyId ? detail(meeting.bodyId) : null;
     if (!url) return meeting;
+    // A sitting several pages hold is merged from their copies, which a board alone cannot repeat: its sources stay with it.
+    if (!movable(meeting)) return { ...meeting, detail: url };
     const { fieldSources: _a, publicationConflicts: _b, provenance, ...rest } = meeting;
     // The page of the meeting is what a row links to when it has no agenda.
     return { ...rest, ...(provenance?.sourceUrl ? { sourceUrl: provenance.sourceUrl } : {}), detail: url };
@@ -96,10 +100,41 @@ export function slimAnswer(full: Row, detail: (bodyId: string) => string | null)
     ...(state ? { stateResponse: { ...full.stateResponse, value: { ...state, coverage: { ...state.coverage, bodies: bodies(state.coverage.bodies) } } } } : {}) };
 }
 
+/** The sources, conflicts and provenance of a board's meetings as its own file says them, by meeting id. A board is read once for the ZIPs that follow. */
+const boardMeetingsHeld = serverReaderValue("board-meetings", () => new Map<string, Promise<Readonly<Record<string, Row>>>>());
+function boardMeetings(source: PlaceFileSource, state: string, id: string, version: string): Promise<Readonly<Record<string, Row>>> {
+  let held = boardMeetingsHeld.get(version);
+  if (!held) {
+    held = loadPlaceFromFiles({ state, divisionIds: [], bodyIds: [id], placeId: `board:${id}` }, source).then(place => Object.fromEntries((place.meetings as readonly Meeting[])
+      .filter(meeting => meeting.bodyId && source.canonicalBody(meeting.bodyId) === id).flatMap(meeting => {
+        const moved = Object.fromEntries(MOVED_MEETING.filter(field => meeting[field] !== undefined).map(field => [field, meeting[field]]));
+        return Object.keys(moved).length ? [[meeting.id, moved]] : [];
+      })));
+    boardMeetingsHeld.set(version, held);
+    held.catch(() => boardMeetingsHeld.delete(version));
+    for (const oldest of boardMeetingsHeld.keys()) { if (boardMeetingsHeld.size <= 400) break; boardMeetingsHeld.delete(oldest); }
+  }
+  return held;
+}
+
 /** A ZIP's answer as it is published. */
 export async function assembleAnswer(store: ReaderArtifactStore, zip: string, row: ZipRow, day: string): Promise<Row> {
   const { answer, indexes } = await assembleFullAnswer(store, zip, row, day);
-  return slimAnswer(answer, bodyId => { for (const index of indexes.values()) { const board = boardVersion(index, bodyId); if (board) return boardPath(board.id, board.version); } return null; });
+  const ref = (bodyId: string): { readonly state: string; readonly id: string; readonly version: string } | null => {
+    for (const [state, index] of indexes) { const board = boardVersion(index, bodyId); if (board) return { state, ...board }; }
+    return null;
+  };
+  const files = openPlaceFiles(store), agreeing = new Set<string>();
+  const boards = new Map((answer.meetings as Row[]).flatMap(meeting => { const board = meeting.bodyId ? ref(meeting.bodyId) : null; return board ? [[board.version, board] as const] : []; }));
+  await Promise.all([...boards.values()].map(async board => {
+    const own = await boardMeetings(await files.source(board.state), board.state, board.id, board.version);
+    for (const meeting of answer.meetings as Row[]) {
+      if (!meeting.bodyId || ref(meeting.bodyId)?.version !== board.version) continue;
+      const moved = Object.fromEntries(MOVED_MEETING.filter(field => meeting[field] !== undefined).map(field => [field, meeting[field]]));
+      if (isDeepStrictEqual(own[meeting.id] ?? {}, moved)) agreeing.add(meeting.id);
+    }
+  }));
+  return slimAnswer(answer, bodyId => { const board = ref(bodyId); return board ? boardPath(board.id, board.version) : null; }, meeting => agreeing.has(meeting.id));
 }
 
 /* ---- one board's detail ---------------------------------------------------------------------------------------------- */
@@ -113,16 +148,13 @@ export interface BoardDetail {
 }
 
 /** What a board's answer parts say, from the board's own file. */
-export async function assembleBoard(store: ReaderArtifactStore, file: PlaceFile): Promise<BoardDetail> {
+export async function assembleBoard(store: ReaderArtifactStore, file: PlaceFile, version: string): Promise<BoardDetail> {
   const state = file.state!, source = await openPlaceFiles(store).source(state), id = file.id;
   const place = await loadPlaceFromFiles({ state, divisionIds: [], bodyIds: [id], placeId: `board:${id}` }, source);
-  const body = place.registry!.registry.bodies.find(candidate => candidate.id === id);
-  const served = body ? [...(body.ocdId ? [body.ocdId] : []), ...(body.alsoServesOcdIds ?? [])] : [];
-  const coverage = stateCoverage({ state, registry: place.registry!, version: place.snapshot.generatedAt }, served, 0, 0, place.meetings, place.bodies, place.divisions);
+  // The board is named as the one body the territory holds, so coverage reads it whichever division it serves.
+  const coverage = stateCoverage({ state, registry: place.registry!, version: place.snapshot.generatedAt }, [], 0, 0, place.meetings, place.bodies, place.divisions,
+    { type: "BodyTerritorySelection", inside: [id], known: [id] });
   const covered = coverage.bodies.find(candidate => candidate.bodyId === id);
-  const meetings = Object.fromEntries((place.meetings as readonly Meeting[]).filter(meeting => meeting.bodyId === id).flatMap(meeting => {
-    const moved = Object.fromEntries(MOVED_MEETING.filter(field => meeting[field] !== undefined).map(field => [field, meeting[field]]));
-    return Object.keys(moved).length ? [[meeting.id, moved]] : [];
-  }));
+  const meetings = await boardMeetings(source, state, id, version);
   return { bodyId: id, readerRoster: covered?.readerRoster ?? null, fieldSources: covered?.fieldSources ?? null, meetings };
 }

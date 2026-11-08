@@ -13,6 +13,7 @@ import { stateCoverage, withPlaceRegistry } from "./coverage.ts";
 import { territoryBodies, type ReaderLocation } from "./location.ts";
 import { placePageCacheIds, type PlacePackage } from "./place.ts";
 import type { ReaderStatePackage } from "./state.ts";
+import type { Meeting } from "../sources/types.ts";
 
 export interface MeetingsAnswerInput {
   readonly location: ReaderLocation;
@@ -49,14 +50,15 @@ export async function composeMeetingsAnswer(input: MeetingsAnswerInput): Promise
     publicationAttempts: attemptsByFamily(place.publicationAttempts.filter(attempt => attempt.bodyId === body.bodyId)) }));
   const partial = new Set(location.partial);
   if (zip) coverage.bodies = coverage.bodies.map(body => body.ocdId && partial.has(body.ocdId) ? { ...body, couldGovern: true } : body);
-  const listingIdentity = withRegistryRuntimeProjection(registry, location.states, () => meetingListingIdentity(result.meetings, canonicalBodyIdentity));
+  const identityOf = (meetings: readonly Meeting[]) => withRegistryRuntimeProjection(registry, location.states, () => meetingListingIdentity(meetings, canonicalBodyIdentity));
+  const listingIdentity = identityOf(result.meetings);
   const pageIds = placePageCacheIds(place);
   return {
     cachePlaces: pageIds.length ? pageIds : [...ids, ...fringe, ...territoryBodyIds],
     answer: {
       ...result, coverage, listingIdentity, ...(input.stateResponse ? { stateResponse: input.stateResponse } : {}),
       readerScope: readerMeetingScope({ heldMeetings: place.meetings, bodies: coverage.bodies, ownDivisionIds: divisionIds,
-        now, listingIdentity: meetingListingIdentity(place.meetings, canonicalBodyIdentity) }),
+        now, listingIdentity: identityOf(place.meetings) }),
       commentAccess: place.bodies.flatMap(body => body.comment ?? []), commentAccessDataState: "PROMOTED",
       everydayRouting: place.everydayRouting,
       everydayRoutingDataState: place.everydayRouting ? "PROMOTED" : "NOT_RECORDED",

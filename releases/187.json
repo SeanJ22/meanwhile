@@ -24,12 +24,21 @@
   "ci": "fail",
   "at": "2026-11-08T03:58:55Z",
   "failed_jobs": [
+    "test (2/4)",
     "test (3/4)"
   ],
   "failed_tests": [
     {
       "file": "tests/reader-cache.test.ts",
       "name": "an empty calendar's new source check queues its consuming place without rereading payloads"
+    },
+    {
+      "file": "tests/rb-a3-door.test.ts",
+      "name": "a newer source for an unchanged value rebuilds its pages and an exact replay queues nothing"
+    },
+    {
+      "file": "tests/rb-a3-door.test.ts",
+      "name": "scheduled source restamps queue the body and served places without queuing an unchanged repeat"
     }
   ],
   "returned": [

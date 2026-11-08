@@ -1,10 +1,8 @@
 import { readPassCursor, writePassCursor } from "../facts/db.ts";
 import type { Query } from "../facts/publish.ts";
-import { REGISTRY_STATES } from "../civic-data/state-scopes.ts";
-import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
 import type { IndependentRuntimeLane } from "../ops/independent-runtime-pass.ts";
 import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
-import { purgeReaderCacheTags, readerCacheScopeForPublication, readerZipTag, type ReaderCachePurger } from "./cache.ts";
+import { purgeReaderCacheTags, readerZipTag, type ReaderCachePurger } from "./cache.ts";
 import { databaseBytesSpent, owedMsFor, untilEnd } from "./lane-pace.ts";
 import { dropHeldPlaceRows } from "./place.ts";
 import { packZipAnswer, zipAnswerKey, type ZipAnswer } from "./zip-answer.ts";
@@ -34,10 +32,10 @@ export const owedMs = (bytes: number): number => owedMsFor(bytes, ZIP_ANSWER_BYT
 /** Which ZIPs hold a published answer and with what print: one small file per three-digit ZIP prefix, kept beside the answers. */
 class ZipIndex {
   private readonly shards = new Map<string, { value: Record<string, string>; etag: string | null; dirty: boolean }>();
-  constructor(private readonly store: ReaderArtifactStore) {}
-  private static key = (zip: string) => `reader/zip-index/${zip.slice(0, 3)}.json`;
+  private readonly store: ReaderArtifactStore;
+  constructor(store: ReaderArtifactStore) { this.store = store; }
   private async shard(zip: string) {
-    const key = ZipIndex.key(zip);
+    const key = `reader/zip-index/${zip.slice(0, 3)}.json`;
     let held = this.shards.get(key);
     if (!held) {
       const read = await this.store.readJsonPointer<Record<string, string>>(key);
@@ -121,49 +119,64 @@ async function orderedByState(facts: Query, zips: readonly string[]): Promise<[s
 /* ---- ZIPs whose answer changed ------------------------------------------------------------------------------------ */
 
 interface Mark { readonly at: string; readonly id: string }
-/** Where the lane has read to in what changed: saved pages by when they were built, publications by when they were promoted; and the range it is working through, with the last ZIP it reached. */
-interface Changes { pages: Mark; promos: Mark; range?: { readonly kind: "pages" | "promos"; readonly to: Mark; zip: string } }
+/** What the lane has read to in what changed: saved pages by when they were built; the publication counts the database keeps by state; the states still to be laid over their ZIPs; and the range of pages it is working through, with the last ZIP it reached. */
+interface Changes {
+  pages: Mark;
+  counts: { ready: boolean; since: string | null; seen: Record<string, number> };
+  states: string[];
+  stateZip: string;
+  range?: { readonly to: Mark; zip: string };
+}
 
 const STATE_ROOT = `^ocd-division/country:us/(?:state|territory|district):[a-z]{2}$`;
+/** The hourly count of sets published, by state and kind. A state-wide kind that moved changes that state's ZIP answers; a calendar reaches readers through its saved pages and a national set through the daily check. */
+const PUBLISHED_SQL = `SELECT state,hour::text AS hour,step,n FROM count_hour WHERE step LIKE 'v1:%"published sets", "in"]' AND state<>'US'
+  AND hour>=coalesce($1::timestamptz,date_trunc('hour',now())-interval '1 hour')`;
 
-/** The states a promoted publication changes the ZIP answers of. A meeting calendar reaches readers through its saved place pages. */
-function statesOfPromotion(row: Record<string, unknown>): readonly string[] {
-  const recordClass = String(row.record_class), scope = String(row.scope);
-  if (recordClass === "MEETING") return [];
-  if (recordClass === "CURATED_READER_RECORD" && scope === requiredManualProductionContract("everyday-routing").scope) return REGISTRY_STATES;
-  return readerCacheScopeForPublication(scope, { recordClass }).states ?? [];
+/** The states in which a kind of set other than a calendar was published since the counts were last read. */
+async function publishedStates(facts: Query, counts: Changes["counts"]): Promise<string[]> {
+  const rows = await facts(PUBLISHED_SQL, [counts.since]);
+  const baseline = !counts.ready, changed = new Set<string>();
+  counts.ready = true;
+  for (const row of rows) {
+    const key = `${row.state}|${row.step}|${row.hour}`, n = Number(row.n);
+    if (!baseline && (counts.seen[key] ?? 0) < n && (JSON.parse(String(row.step).slice(3)) as string[])[0] !== "MEETING") changed.add(String(row.state));
+    counts.seen[key] = n;
+  }
+  const latest = rows.reduce((hour, row) => String(row.hour) > hour ? String(row.hour) : hour, counts.since ?? "");
+  if (latest) {
+    counts.since = latest;
+    for (const key of Object.keys(counts.seen)) if (key.split("|").at(-1)! < latest) delete counts.seen[key];
+  }
+  return [...changed].sort();
 }
 
 async function nextChanged(facts: Query, now: number): Promise<{ readonly zips: string[]; readonly commit: () => Promise<void> }> {
   const saved = await readPassCursor(facts, CHANGES_CURSOR);
   const start = new Date(now).toISOString();
-  const c: Changes = saved ? JSON.parse(saved) as Changes : { pages: { at: start, id: "" }, promos: { at: start, id: "" } };
+  const c: Changes = saved ? JSON.parse(saved) as Changes : { pages: { at: start, id: "" }, counts: { ready: false, since: null, seen: {} }, states: [], stateZip: "" };
   const save = () => writePassCursor(facts, CHANGES_CURSOR, JSON.stringify(c));
-  if (!saved) await save();
-  if (!c.range) {
+  if (!saved) { await publishedStates(facts, c.counts); await save(); }
+  if (!c.range && !c.states.length) {
     const pages = await facts(`SELECT place_id AS id,built_at::text AS at FROM place_page WHERE (built_at,place_id)>($1::timestamptz,$2::text) ORDER BY built_at,place_id LIMIT $3`, [c.pages.at, c.pages.id, RANGE_ROWS]);
-    const promos = pages.length ? [] : await facts(`SELECT key AS id,promoted_at::text AS at FROM civic_data_promotions WHERE (promoted_at,key)>($1::timestamptz,$2::text) ORDER BY promoted_at,key LIMIT $3`, [c.promos.at, c.promos.id, RANGE_ROWS]);
-    const rows = pages.length ? pages : promos;
-    if (!rows.length) return { zips: [], commit: async () => {} };
-    c.range = { kind: pages.length ? "pages" : "promos", to: { at: String(rows.at(-1)!.at), id: String(rows.at(-1)!.id) }, zip: "" };
+    if (pages.length) c.range = { to: { at: String(pages.at(-1)!.at), id: String(pages.at(-1)!.id) }, zip: "" };
+    else { c.states = await publishedStates(facts, c.counts); c.stateZip = ""; if (!c.states.length) return { zips: [], commit: save }; }
   }
-  const range = c.range, from = c[range.kind];
   let zips: string[];
-  if (range.kind === "pages") {
+  if (c.range) {
+    const { range } = c;
     zips = (await facts(`WITH changed AS (SELECT place_id AS id FROM place_page WHERE (built_at,place_id)>($1::timestamptz,$2::text) AND (built_at,place_id)<=($3::timestamptz,$4::text)),
       places AS (SELECT id FROM changed UNION SELECT place_id FROM entity_place WHERE entity_id IN (SELECT id FROM changed)),
       states AS (SELECT DISTINCT upper(substring(id FROM '([a-z]{2})$')) AS state FROM places WHERE id ~ '${STATE_ROOT}')
       SELECT m.zip FROM zip_place m WHERE m.zip>$5 AND (m.place_id IN (SELECT id FROM places)
         OR m.place_id IN (SELECT e.id FROM entity e WHERE e.kind='place' AND e.state IN (SELECT state FROM states)))
-      GROUP BY m.zip ORDER BY m.zip LIMIT $6`, [from.at, from.id, range.to.at, range.to.id, range.zip, BATCH])).map(row => String(row.zip));
+      GROUP BY m.zip ORDER BY m.zip LIMIT $6`, [c.pages.at, c.pages.id, range.to.at, range.to.id, range.zip, BATCH])).map(row => String(row.zip));
+    if (zips.length < BATCH) { c.pages = range.to; delete c.range; } else range.zip = zips.at(-1)!;
   } else {
-    const rows = await facts(`SELECT record_class,scope FROM civic_data_promotions WHERE (promoted_at,key)>($1::timestamptz,$2::text) AND (promoted_at,key)<=($3::timestamptz,$4::text)`,
-      [from.at, from.id, range.to.at, range.to.id]);
-    const states = [...new Set(rows.flatMap(statesOfPromotion))];
-    zips = !states.length ? [] : (await facts(`SELECT m.zip FROM zip_place m JOIN entity e ON e.id=m.place_id AND e.kind='place' WHERE e.state=ANY($1::char(2)[]) AND m.zip>$2
-      GROUP BY m.zip ORDER BY m.zip LIMIT $3`, [states, range.zip, BATCH])).map(row => String(row.zip));
+    zips = (await facts(`SELECT m.zip FROM zip_place m JOIN entity e ON e.id=m.place_id AND e.kind='place' WHERE e.state=$1::char(2) AND m.zip>$2
+      GROUP BY m.zip ORDER BY m.zip LIMIT $3`, [c.states[0], c.stateZip, BATCH])).map(row => String(row.zip));
+    if (zips.length < BATCH) { c.states.shift(); c.stateZip = ""; } else c.stateZip = zips.at(-1)!;
   }
-  if (zips.length < BATCH) { c[range.kind] = range.to; delete c.range; } else range.zip = zips.at(-1)!;
   return { zips, commit: save };
 }
 
@@ -175,7 +188,8 @@ async function nextUnpublished(facts: Query, store: ReaderArtifactStore): Promis
   const held = JSON.parse(await readPassCursor(facts, BACKFILL_CURSOR) ?? "{}") as Backfill;
   if (held.doneAt) return { zips: [], commit: async () => {} };
   const index = new ZipIndex(store);
-  let after = held.after, zips: string[] = [], finished = false;
+  let after = held.after, finished = false;
+  const zips: string[] = [];
   for (let look = 0; look < PRIORITY_LOOKS && zips.length < BATCH && !finished; look++) {
     const rows = await facts(`SELECT substring(id FROM 5) AS zip,page_priority FROM entity WHERE id ~ '^zip:[0-9]{5}$' AND page_priority>0 AND (page_priority,id)<($1::int,$2::text)
       ORDER BY page_priority DESC,id DESC LIMIT $3`, [after?.[0] ?? 2_147_483_647, after ? `zip:${after[1]}` : "", PRIORITY_ZIPS]);

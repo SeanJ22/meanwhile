@@ -4665,10 +4665,6 @@ main[data-sidebar="closed"] .map-top-row {
   margin-top: var(--space-4);
 }
 
-.ballot-office-card[data-office-tier-start="true"] {
-  border-top-width: 3px;
-}
-
 .ballot-candidate-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -4956,3 +4952,4 @@ main[data-sidebar="closed"] .map-top-row {
   --cat-credit: #b0457e;
   --cat-bipartisan: #2f8a66;
 }
+

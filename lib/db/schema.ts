@@ -210,13 +210,15 @@ export const reactions = pgTable(
     occurredAt: timestamp("occurred_at", { withTimezone: true, mode: "string" }).notNull(),
     /** The kind of record the reaction attaches to. Type-level enum on a text column. */
     targetType: text("target_type", {
-      // MEASURE_PROVISION attaches to a contested provision, keyed `<contestId>#<slug>`.
+      // MEASURE_PROVISION attaches to a contested provision, keyed `<contestId>#<slug>`;
+      // VOTE_CAST to how a reader voted in a contest, keyed `<contestId>@<optionId>`.
       enum: [
         "FEDERAL_VOTE",
         "CANDIDATE",
         "FUNDING_TOTAL_REACTION",
         "CONTRIBUTOR_REACTION",
         "MEASURE_PROVISION",
+        "VOTE_CAST",
       ],
     }).notNull(),
     /** The roll-call key (`house:119-2:283`) — validated against the votes snapshot. */
@@ -241,7 +243,7 @@ export const reactions = pgTable(
     }).notNull(),
     /**
      * Which instrument produced this row: 1 = yes/no/unsure (+ SOMEONE_ELSE),
-     * 2 = the five-point funding scale. Rows on different scales are never
+     * 2 = the five-point funding scale, 4 = how a reader voted. Rows on different scales are never
      * combined. Server-derived from the target type; `SCALE_BREAKS` in
      * lib/signal/reactions.ts dates the break.
      */

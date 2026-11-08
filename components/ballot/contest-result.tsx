@@ -131,3 +131,17 @@ export function MeasureSummary({ contest, measure }: { contest: ResultContest; m
   </div>;
 }
 
+
+/** The measure's one explainer, as "What happens now": what each vote meant, the winning side marked. */
+export function WhatHappensNow({ yes, no, outcome, closed }: { yes: string | null; no: string | null; outcome: "passed" | "failed" | "counting" | null; closed: boolean }): ReactNode {
+  const column = (label: string, text: string | null, won: boolean) => text && <div data-won={won ? "true" : undefined}>
+    <b>{label}{won && " · won"}</b><p>{text}</p>
+  </div>;
+  return <section className="rr-now" data-what-happens-now="">
+    <h3>{closed ? "What happens now" : "What a vote means"}</h3>
+    <div className="rr-now-cols">
+      {column(closed ? "A yes vote meant" : "A yes vote means", yes, outcome === "passed")}
+      {column(closed ? "A no vote meant" : "A no vote means", no, outcome === "failed")}
+    </div>
+  </section>;
+}

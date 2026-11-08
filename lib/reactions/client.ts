@@ -65,7 +65,7 @@ export function getStoredReaction(
  */
 export const REACTIONS_EVENT = "wtp:reactions-changed";
 
-function rememberReaction(
+export function rememberReaction(
   targetType: ReactionTargetType,
   targetId: string,
   reaction: ReactionValue,

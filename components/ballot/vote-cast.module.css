@@ -1,0 +1,13 @@
+.box { display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 8px; border: 1px solid color-mix(in srgb, var(--link) 35%, var(--panel-border)); background: var(--surface); }
+.head { display: flex; flex-direction: column; gap: 2px; }
+.title { margin: 0; font-size: 0.9375rem; font-weight: 600; }
+.reminder { margin: 0; font-size: 0.8125rem; color: var(--text-dim); }
+.options { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
+.option { padding: 10px 8px; border: 0; border-radius: 6px; background: var(--panel); color: var(--text); font: inherit; font-size: 0.875rem; text-align: center; cursor: pointer; }
+.option[aria-pressed="true"] { font-weight: 700; box-shadow: inset 0 0 0 1.5px var(--text); }
+.option:focus-visible, .why:focus-visible, .send:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.why { padding: 10px 12px; border: 1px solid var(--panel-border); border-radius: 6px; background: var(--panel); color: var(--text); font: inherit; font-size: 0.875rem; resize: vertical; }
+.note { margin: 0; font-size: 0.75rem; color: var(--text-dim); }
+.foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; }
+.send { padding: 9px 18px; border: 0; border-radius: 6px; background: var(--action); color: var(--action-on); font: inherit; font-size: 0.875rem; font-weight: 600; cursor: pointer; }
+.send:disabled { opacity: 0.5; cursor: not-allowed; }

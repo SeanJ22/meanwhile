@@ -1,0 +1,66 @@
+/* Party fills are the same in light and dark; party text colors follow the app's themed tokens. */
+.fills { --sc-count: color-mix(in srgb, var(--text-dim) 70%, var(--panel)); }
+
+.summary { display: flex; flex-direction: column; gap: 6px; }
+.sentence { margin: 0; font-size: 0.875rem; line-height: 1.5; text-wrap: pretty; }
+.headRows { display: flex; flex-wrap: wrap; gap: 6px 12px; }
+.headRow { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8125rem; }
+.headName { font-weight: 600; color: var(--text); }
+
+.pill { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px; border-radius: 999px; color: var(--party-on); font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+.pill svg { flex: none; }
+.pillMd { height: 24px; padding: 0 10px; font-size: 0.8125rem; }
+.pillD { background: var(--party-democratic); flex-direction: row-reverse; }
+.pillMd.pillD { padding: 0 9px 0 10px; }
+.pillR { background: var(--party-republican); }
+.pillO { background: var(--party-independent); }
+
+.body { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+
+.tabs { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; padding: 4px; border-radius: 8px; background: var(--panel-bg); box-shadow: inset 0 0 0 1px var(--panel-border); }
+.tab { padding: 9px 4px; border: 0; border-radius: 6px; background: transparent; color: var(--text-dim); font: inherit; font-size: 0.875rem; font-weight: 600; cursor: pointer; min-width: 0; overflow-wrap: anywhere; }
+.tab:hover { color: var(--text); }
+.tab[aria-selected="true"] { background: var(--surface); color: var(--text); box-shadow: inset 0 0 0 1px var(--lumen-rim-strong); }
+.tab:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+
+.chambers, .twoUp { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px; }
+.chamber { display: flex; flex-direction: column; gap: 12px; padding: 14px; border-radius: var(--radius-sm); background: var(--panel-bg); box-shadow: inset 0 0 0 1px var(--panel-border); min-width: 0; }
+.chamberHead { display: flex; justify-content: space-between; align-items: baseline; gap: 4px 10px; flex-wrap: wrap; }
+.chamberName { font-size: 1rem; font-weight: 600; }
+.chamberSize { font-size: 0.8125rem; color: var(--text-dim); }
+.seatRow { display: flex; flex-direction: column; gap: 6px; }
+.counts { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; font-size: 0.8125rem; }
+.rowLabel { min-width: 48px; font-weight: 600; }
+.partyD { color: var(--party-democratic); font-weight: 600; }
+.partyR { color: var(--party-republican); font-weight: 600; }
+.partyO { color: var(--party-independent); font-weight: 600; }
+.stillCounting { color: var(--text-dim); font-weight: 600; }
+.dots { display: flex; flex-direction: column; gap: 12px; width: 100%; min-width: 0; }
+.dots svg { display: block; max-width: 100%; }
+.fillD { fill: var(--party-democratic); }
+.fillR { fill: var(--party-republican); }
+.fillO { fill: var(--party-independent); }
+.fillCounting { fill: var(--sc-count); }
+.control { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 0.8125rem; }
+.controlLabel { font-weight: 600; }
+.controlNow { color: var(--text-dim); }
+.note { font-size: 0.75rem; color: var(--text-dim); }
+
+.block { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.blockLabel { font-size: 0.8125rem; font-weight: 600; color: var(--text-dim); }
+.blockText { margin: 0; font-size: 0.9375rem; line-height: 1.45; text-wrap: pretty; }
+.flips { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.flips li { display: flex; justify-content: space-between; align-items: center; gap: 4px 12px; flex-wrap: wrap; padding-bottom: 6px; border-bottom: 1px solid var(--panel-border); font-size: 0.875rem; }
+
+.parties { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 10px; }
+.party { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border-radius: var(--radius-sm); min-width: 0; }
+.partyDBar { box-shadow: inset 0 0 0 1px var(--panel-border), inset 0 3px 0 var(--party-democratic); }
+.partyRBar { box-shadow: inset 0 0 0 1px var(--panel-border), inset 0 3px 0 var(--party-republican); }
+.partyName { font-size: 0.9375rem; font-weight: 600; padding-top: 2px; }
+.line { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 0.8125rem; line-height: 1.35; }
+.lineLabel { color: var(--text-dim); }
+.value { display: inline-flex; align-items: center; justify-content: center; flex: none; min-width: 26px; height: 20px; padding: 0 7px; box-sizing: border-box; border-radius: 999px; font-family: var(--font-mono, "JetBrains Mono", ui-monospace, monospace); font-size: 0.75rem; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--text); }
+.hotD { background: var(--party-democratic); color: var(--party-on); font-weight: 700; }
+.hotR { background: var(--party-republican); color: var(--party-on); font-weight: 700; }
+.heldD { color: var(--party-democratic); font-weight: 700; }
+.heldR { color: var(--party-republican); font-weight: 700; }

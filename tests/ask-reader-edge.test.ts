@@ -31,7 +31,6 @@ import {
 } from "./helpers/promoted-edge-entry.ts";
 import { stateMoneyFixture, syntheticCandidateCorpus, syntheticCandidateProfiles, syntheticFederalDirectory, syntheticFederalKeyVotes, syntheticFederalRollCalls, syntheticOfficeholderStatements, syntheticPimaLocalFinance, stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
 import { recordedMeetingsSnapshot, syntheticExecutiveActions } from "./helpers/reader-fixtures.ts";
-
 import { syntheticAzBallot } from "./helpers/synthetic-ballots.ts";
 
 import { registryFixtureForState, stateRegistryArtifacts } from "./helpers/promoted-fixtures.ts";

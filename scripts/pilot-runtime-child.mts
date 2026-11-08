@@ -101,7 +101,8 @@ export async function runRuntimeChildren(
     let stopped = false;
     let idle: ReturnType<typeof setTimeout> | undefined;
     let probe: ReturnType<typeof setTimeout> | undefined;
-    const progress = { stdout: progressLines(), stderr: progressLines() };
+    const progressScope = {};
+    const progress = { stdout: progressLines(progressScope), stderr: progressLines(progressScope) };
     const report = (part: NeonBytesHour) => vitalSignsSink?.(part);
     const reports = { stdout: vitalSignsLineFilter(report), stderr: vitalSignsLineFilter(report) };
     const child = spawn(command.executable, [...command.args], {

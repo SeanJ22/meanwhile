@@ -4,15 +4,18 @@ import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import { candidateChangeSet, civicRecordsFor } from "./changes.ts";
 import { civicVersionRef, civicVersionVault, holdCivicVersion, readCivicVersionPath, type CivicVersionVaultRef } from "./version-vault.ts";
 import type { RoutineCandidate, RoutineChangeSet } from "./types.ts";
+import { sourceWorkClockFacts } from "./source-work-clock.ts";
+import { holdRawCapture, readRawCapture, type RawCaptureRef } from "./raw-capture-vault.ts";
 
 interface VaultPath { readonly version: CivicVersionVaultRef; readonly path: readonly string[] }
 export interface CandidateVaultFormat {
   readonly formatVersion: 1;
   readonly readModel: CivicVersionVaultRef | null;
   readonly normalizedPayload: CivicVersionVaultRef | null;
+  readonly retainedSourceResponses?: CivicVersionVaultRef;
   readonly excludedFacts: VaultPath | null;
   readonly previousFingerprint: string | null;
-  /** Removed after the source-evidence readers switch to the vault accessor. */
+  /** Legacy rows may also carry inline evidence. */
   readonly inlineEvidence?: true;
   readonly civicRecords?: "DERIVED" | CivicVersionVaultRef;
   readonly excludedFactsPresent?: true;
@@ -27,10 +30,43 @@ export type VaultCandidate = Omit<RoutineCandidate,"readModel"|"normalizedPayloa
 const object=(value:unknown):Record<string,unknown>|null=>value!==null&&typeof value==="object"&&!Array.isArray(value)?value as Record<string,unknown>:null;
 const hash=(value:unknown)=>canonicalCivicDataHash(value,{durable:true});
 
+interface RetainedSource { readonly value:unknown; readonly capture:RawCaptureRef|null }
+/** Source responses already have a byte-addressed vault; do not partition a second base64 copy. */
+async function holdRetainedSources(vault:EvidenceStore,value:unknown):Promise<CivicVersionVaultRef>{
+  if(!Array.isArray(value))return holdCivicVersion(vault,value,hash(value));
+  const rows:RetainedSource[]=[];
+  for(const item of value){
+    const row=object(item),encoded=row?.base64;
+    const bytes=typeof encoded==="string"?Buffer.from(encoded,"base64"):null;
+    if(!row||!bytes||bytes.toString("base64")!==encoded){rows.push({value:item,capture:null});continue;}
+    const {base64:_body,...metadata}=row;
+    rows.push({value:metadata,capture:await holdRawCapture(vault,String(row.source??""),bytes,String(row.contentType??""))});
+  }
+  const saved={kind:"retained-source-refs/1",rows};
+  return holdCivicVersion(vault,saved,hash(saved));
+}
+
+async function retainedSourcePath(vault:EvidenceStore,ref:CivicVersionVaultRef,path:readonly string[]):Promise<unknown>{
+  const reader=civicVersionVault(vault),saved=await reader.read(ref) as {kind?:string;rows?:RetainedSource[]}|null;
+  if(saved?.kind!=="retained-source-refs/1"||!Array.isArray(saved.rows))return reader.path(ref,path);
+  const restore=async(row:RetainedSource)=>row.capture
+    ?{...object(row.value),base64:Buffer.from(await readRawCapture(vault,row.capture)).toString("base64")}:row.value;
+  if(!path.length){
+    const rows:unknown[]=[];
+    for(let start=0;start<saved.rows!.length;start+=8)rows.push(...await Promise.all(saved.rows!.slice(start,start+8).map(restore)));
+    return rows;
+  }
+  if(!/^\d+$/.test(path[0]))return null;
+  const row=saved.rows![Number(path[0])];if(!row)return null;
+  if(path.length===1)return restore(row);
+  if(path[1]==="base64"&&row.capture)return path.length===2?Buffer.from(await readRawCapture(vault,row.capture)).toString("base64"):null;
+  return reader.path(ref,["rows",path[0],"value",...path.slice(1)]);
+}
+
 /** Keep source pointers and work boundaries in the database, rather than another roster/report/agenda copy. */
 function sourceMetadata(value:unknown):Record<string,unknown>{
   const root=object(value);if(!root)return {};
-  const fields=["captures","sourceProbe","continuationPending","sourceInputDigest","nextTermAt","nextDueAt","nextWorkAt"];
+  const fields=["sourceProbe","continuationPending","sourceInputDigest","nextTermAt","nextDueAt","nextWorkAt"];
   return Object.fromEntries(fields.filter(key=>Object.hasOwn(root,key)).map(key=>[key,root[key]]));
 }
 
@@ -52,11 +88,16 @@ export async function holdCandidateFacts(vault:EvidenceStore,candidate:RoutineCa
   const civicRecords=candidate.civicRecords===undefined?undefined:
     hash(candidate.civicRecords)===hash(civicRecordsFor(candidate.recordClass,candidate.readModel))?"DERIVED" as const:
       await holdCivicVersion(vault,candidate.civicRecords,hash(candidate.civicRecords));
-  const {readModel:_model,normalizedPayload:_normalized,excludedFacts:_facts,changeSet:_changes,civicRecords:_members,...metadata}=candidate;
+  const {readModel:_model,normalizedPayload:_normalized,excludedFacts:_facts,changeSet:_changes,civicRecords:_members,
+    retainedSourceResponses,...metadata}=candidate as RoutineCandidate & {readonly retainedSourceResponses?:unknown};
+  const retained=retainedSourceResponses===undefined?undefined:
+    await holdRetainedSources(vault,retainedSourceResponses);
+  const workFacts=sourceWorkClockFacts(candidate);
   return {...metadata,normalizedPayload:options.retainEvidence?candidate.normalizedPayload as Record<string,unknown>:sourceMetadata(candidate.normalizedPayload),
-    ...(options.retainEvidence&&candidate.excludedFacts?{excludedFacts:candidate.excludedFacts}:{}),
+    ...(options.retainEvidence&&candidate.excludedFacts?{excludedFacts:candidate.excludedFacts}:workFacts.length?{excludedFacts:workFacts}:{}),
     ...(options.retainReadModel?{readModel:candidate.readModel}:{}),
     vault:{formatVersion:1,readModel,normalizedPayload,excludedFacts,previousFingerprint,
+      ...(retained?{retainedSourceResponses:retained}:{}),
       ...(civicRecords?{civicRecords}:{}),...(candidate.excludedFacts!==undefined?{excludedFactsPresent:true as const}:{}),
       ...(options.retainEvidence?{inlineEvidence:true as const}:{})}};
 }
@@ -69,14 +110,20 @@ export function candidateVaultFormat(candidate:unknown):CandidateVaultFormat|nul
 }
 
 /** Hydrate only when an operation actually needs parser evidence. Reader proofs use the scalar fingerprints. */
-export async function hydrateCandidateFacts(vault:EvidenceStore,stored:unknown):Promise<unknown>{
+export async function hydrateCandidateFacts(vault:EvidenceStore|(()=>EvidenceStore),stored:unknown):Promise<unknown>{
   const format=candidateVaultFormat(stored);if(!format)return stored;
-  const {vault:_vault,...candidate}=stored as VaultCandidate,reader=civicVersionVault(vault);
+  const {vault:_vault,...candidate}=stored as VaultCandidate;
+  // The vault is opened only when a field actually lives there. A candidate that keeps its read model and evidence inline
+  // (the form every reader-served vote candidate is written in) must load where no shared vault is configured: the website.
+  let held:ReturnType<typeof civicVersionVault>|undefined;
+  const reader={read:(ref:CivicVersionVaultRef)=>(held??=civicVersionVault(typeof vault==="function"?vault():vault)).read(ref),
+    path:(ref:CivicVersionVaultRef,path:readonly string[])=>(held??=civicVersionVault(typeof vault==="function"?vault():vault)).path(ref,path)};
   const readModel=Object.hasOwn(candidate,"readModel")?candidate.readModel:format.readModel?await reader.read(format.readModel):null;
   const normalizedPayload=format.inlineEvidence?(stored as RoutineCandidate).normalizedPayload:format.normalizedPayload?format.normalizedPayload.fingerprint===format.readModel?.fingerprint?readModel:
     await reader.read(format.normalizedPayload):null;
   const excludedFacts=format.inlineEvidence?(stored as RoutineCandidate).excludedFacts??[]:format.excludedFacts?await reader.path(format.excludedFacts.version,format.excludedFacts.path):[];
   return {...candidate,readModel,normalizedPayload,...(format.excludedFacts||format.excludedFactsPresent?{excludedFacts}:{}),
+    ...(format.retainedSourceResponses?{retainedSourceResponses:await retainedSourcePath(typeof vault==="function"?vault():vault,format.retainedSourceResponses,[])}:{}),
     ...(format.civicRecords?{civicRecords:format.civicRecords==="DERIVED"?civicRecordsFor(candidate.recordClass,readModel):await reader.read(format.civicRecords)}:{})};
 }
 
@@ -95,17 +142,20 @@ export async function rebuildCandidateChanges(vault:EvidenceStore,stored:unknown
 }
 
 /** A selected source-evidence field can be rebuilt without selecting its candidate envelope. */
-export async function readCivicCandidatePath(query:Query,vault:EvidenceStore,id:string,path:readonly string[]):Promise<unknown>{
+export async function readCivicCandidatePath(query:Query,vault:EvidenceStore|(()=>EvidenceStore),id:string,path:readonly string[],
+  readLegacy?:()=>Promise<unknown>):Promise<unknown>{
   if(!path.length)throw new Error("CIVIC_CANDIDATE_PATH_REQUIRED");
   if(path[0]==="readModel")return readCivicVersionPath(query,vault,id,path.slice(1));
   const [header]=await query("SELECT candidate->'vault' AS vault FROM civic_data_candidates WHERE id=$1",[id]);
   if(!header)return null;
   const format=candidateVaultFormat(header);
   if(format){
-    const reader=civicVersionVault(vault);
+    const reader=civicVersionVault(typeof vault==="function"?vault():vault);
     if(path[0]==="normalizedPayload")return format.normalizedPayload?reader.path(format.normalizedPayload,path.slice(1)):null;
+    if(path[0]==="retainedSourceResponses"&&format.retainedSourceResponses)return retainedSourcePath(typeof vault==="function"?vault():vault,format.retainedSourceResponses,path.slice(1));
     if(path[0]==="excludedFacts")return format.excludedFacts?reader.path(format.excludedFacts.version,[...format.excludedFacts.path,...path.slice(1)]):[];
-    if(path[0]==="civicRecords"){
+    if(path[0]==="civicRecords"&&format.civicRecords){
+      if(format.civicRecords&&format.civicRecords!=="DERIVED")return reader.path(format.civicRecords,path.slice(1));
       const [row]=await query("SELECT record_class FROM civic_data_candidates WHERE id=$1",[id]);
       const value=format.readModel?await reader.read(format.readModel):null;
       const records=civicRecordsFor(row.record_class as RoutineCandidate["recordClass"],value);
@@ -113,6 +163,7 @@ export async function readCivicCandidatePath(query:Query,vault:EvidenceStore,id:
       return result;
     }
   }
+  if(readLegacy)return readLegacy();
   const [row]=await query(`WITH RECURSIVE selected(value,depth) AS (
     SELECT candidate,0 FROM civic_data_candidates WHERE id=$1
     UNION ALL SELECT reader_payload_node(value)->($2::text[])[depth+1],depth+1 FROM selected WHERE depth<cardinality($2::text[])

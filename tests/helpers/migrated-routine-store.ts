@@ -9,6 +9,7 @@ import { MemoryEvidenceStore } from "../../lib/control-plane/evidence/store.ts";
 import type { RuntimeAuthorityEnvelope } from "../../lib/civic-data/runtime-authority.ts";
 import { factDb } from "./fact-db.ts";
 import { COUNT_SCHEMA_SOURCE } from "../../lib/control-plane/repository/migrations/RB-A8.ts";
+import { SOURCE_CLOCK_CLASS_DDL } from "../../lib/control-plane/repository/migrations/CX-WRITES-02.ts";
 
 /** The production adapter and actual fact, page and integrity migrations, with only the HTTP transport kept local. */
 export async function withMigratedRoutineStore(
@@ -24,6 +25,7 @@ export async function withMigratedRoutineStore(
   for (const sql of readerFunctions) await pg.exec(sql);
   await pg.exec(readFileSync(new URL("../../lib/db/migrations/VB-01_candidate_vault.sql",import.meta.url),"utf8"));
   await pg.exec(readFileSync(COUNT_SCHEMA_SOURCE,"utf8"));
+  await pg.exec(SOURCE_CLOCK_CLASS_DDL);
   // Use the actual migration's table and triggers: scoped field copies must
   // observe every candidate, event and pointer write in these adapter tests.
   const readVersions=readFileSync(new URL("../../lib/db/migrations/DB-01_read_versions.sql",import.meta.url),"utf8")

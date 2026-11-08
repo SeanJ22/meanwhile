@@ -63,6 +63,7 @@ import { stateBallotContractId, stateBallotScope } from "../lib/civic-data/state
 import { DUARTE, KAPNER, MAYES, TANG_WILLIAMS, committedSubjects, fixture, servedRuntime, sha256, subject } from "./helpers/campaign-sites.ts";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
+import { syntheticAzBallot } from "./helpers/synthetic-ballots.ts";
 import type { GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { requireBallotState } from "../lib/civic-data/state-scopes.ts";
 import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
@@ -72,8 +73,6 @@ import { installManualValue } from "./helpers/promoted-fixtures.ts";
 import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 
 
-
-import { syntheticAzBallot } from "./helpers/synthetic-ballots.ts";
 
 async function installBallots(...ballots: BallotSet[]): Promise<GenericBallotProjection> {
   const installed: GenericBallotProjection = { kind: "ballot-contests", ballots: {} };

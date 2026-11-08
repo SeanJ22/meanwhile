@@ -13,53 +13,13 @@ import { readRegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts"
 import { nationalDelivery, publishNationalPlaceSources, type NationalDivisionInput } from "../lib/civic-data/worker-national-publication.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
-import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
-import { stateRegistryRuntimeContractId } from "../lib/civic-data/state-scopes.ts";
-import { rowKeyedCivicRecordsFor } from "../lib/civic-data/changes.ts";
-import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
-import { trustedLkgImportUrl } from "../lib/civic-data/trusted-lkg-import.ts";
-import { withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
-import { candidateChangeSet } from "../lib/civic-data/changes.ts";
-import { ROW_KEYED_CIVIC_CHANGE_CONTRACT } from "../lib/civic-data/changes.ts";
-import { trustedLkgCandidateEnvelopeSha256 } from "../lib/civic-data/trusted-lkg-import.ts";
-import { trustedLkgValidatorIds } from "../lib/civic-data/trusted-lkg-import.ts";
-import { trustedLkgCandidateId } from "../lib/civic-data/trusted-lkg-import.ts";
-import type { CandidateVersionRecord } from "../lib/civic-data/types.ts";
-import type { PromotedProjection } from "../lib/civic-data/types.ts";
 import { STATE_BINDING_REFRESH_TASKS } from "../lib/civic-data/state-binding-refresh-contracts.ts";
 import { routineTaskDue } from "../lib/civic-data/runner.ts";
 import { CENSUS_STATE_IDENTITIES_URL, refreshStateBinding } from "../lib/civic-data/state-binding-refresh.ts";
 import type { KnownRelease } from "../lib/sources/known-release.ts";
 
-import { registryFixtureForState } from "./helpers/promoted-fixtures.ts";
-function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataStore(), value?: RegistryRuntimeReadModel): MemoryRoutineDataStore {
-  const original = registryTransferImport();
-  const payload = registryFixtureForState(state, value), scope = stateRegistryRuntimeScope(state), contractId = stateRegistryRuntimeContractId(state);
-  const civicRecords = rowKeyedCivicRecordsFor("REGISTRY_RUNTIME_BINDING", payload), digest = canonicalCivicDataHash(payload);
-  const candidate = { ...original.record.candidate, scope,
-    retrieval: { ...original.record.candidate.retrieval, requestedUrl: trustedLkgImportUrl(contractId) },
-    normalization: { ...original.record.candidate.normalization, normalizedHash: digest, normalizedPayloadHash: digest,
-      inputRecords: civicRecords.length, outputRecords: civicRecords.length, droppedRecords: 0 },
-    normalizedPayload: payload, readModel: payload, civicRecords, identities: [],
-    horizon: { ...original.record.candidate.horizon, returnedRecords: civicRecords.length },
-    sourceProjectionEvidence: { kind: "SOURCE_PROJECTION_CONTRACT" as const, sourceId: original.record.candidate.sourceId, recordClass: original.record.candidate.recordClass, scope },
-  };
-  Object.assign(candidate, { normalization: withStateRecordHashes(candidate).normalization });
-  candidate.changeSet = candidateChangeSet(candidate, null, ROW_KEYED_CIVIC_CHANGE_CONTRACT);
-  candidate.bootstrapImport = { ...original.record.candidate.bootstrapImport!, contractId, scope,
-    normalizedPayloadSha256: digest, readModelSha256: digest, candidateEnvelopeSha256: trustedLkgCandidateEnvelopeSha256(candidate), validatorIds: trustedLkgValidatorIds(candidate) };
-  candidate.id = trustedLkgCandidateId(candidate.bootstrapImport);
-  const receipt = { ...original.record.receipt!, candidateId: candidate.id, scope };
-  const record = { ...original.record, candidate, receipt, promotedVersion: candidate.id, lastKnownGoodVersion: candidate.id };
-  const projection = { ...original.projection, key: `REGISTRY_RUNTIME_BINDING:${scope}`, scope, versionId: candidate.id,
-    lastKnownGoodVersionId: candidate.id, payload, receipt };
-  const held = store as unknown as { candidates: Map<string, CandidateVersionRecord>; promotions: Map<string, PromotedProjection> };
-  held.candidates.set(candidate.id, record);
-  held.promotions.set(projection.key, projection);
-  return store;
-}
+import { registryFixtureForState, stateRegistryRuntimeStore } from "./helpers/promoted-fixtures.ts";
 
 const NOW = "2026-09-29T20:00:00.000Z";
 const OH = "ocd-division/country:us/state:oh";

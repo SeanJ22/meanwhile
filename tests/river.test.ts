@@ -20,10 +20,11 @@ import test from "node:test";
 import {
   DEVICE_VISITS,
   FULL_CI_LABEL,
-  OLD_PHONE_VISIT,
   STALE_LOCK_MS,
   FIFTY_STATES,
+  afterSweepPlan,
   applyConditions,
+  beforeRecord,
   blameLanes,
   countsAsCode,
   decideCi,
@@ -695,10 +696,26 @@ test("the phone check runs at a real phone's speed: processor slowed 4 times, an
   assert.deepEqual(sent.find(([m]) => m === "Network.emulateNetworkConditions")?.[1], { offline: false, latency: 70, downloadThroughput: 1_500_000, uploadThroughput: 375_000 });
   assert.equal(DEVICE_VISITS.tablet.cpu, 1, "tablet unchanged");
   assert.equal(DEVICE_VISITS.desktop.cpu, 1, "desktop unchanged");
-  assert.equal(OLD_PHONE_VISIT.cpu, 1, "the transitional old phone line has no slowdown");
-  assert.deepEqual(OLD_PHONE_VISIT.net, DEVICE_VISITS.phone.net);
-  const side = { at: "t", live: "abc1234", zips: { phone: [2000, 5000], phoneOld: [2000, 2500], tablet: [1000, 1000], desktop: [1000, 1000] } };
+  const side = { at: "t", live: "abc1234", zips: { phone: [2000, 5000], tablet: [1000, 1000], desktop: [1000, 1000] } };
   const notes = measureNotes({ zips: [{ zip: "00501", state: "NY" }, { zip: "01001", state: "MA" }], before: side, after: side }).join("\n");
   assert.match(notes, /phone \(390×844, touch, 12 Mbps down, 3 up, 70 ms, processor slowed 4 times/);
-  assert.match(notes, /Phone \(old, no processor slowdown[^)]*\): ZIPs usable in under 3 seconds 2→2, against phone \(processor slowed 4 times\) 1→1/);
+  assert.doesNotMatch(notes, /old, no processor slowdown|phoneOld/);
+});
+
+test("one live sweep a release: the before is the last release's after, no page loads, and a second sweep is refused", () => {
+  const zips = [{ zip: "00501", state: "NY" }, { zip: "01001", state: "MA" }];
+  const sweep = { at: "2026-11-07T10:00:00Z", live: "abc1234", zips: { phone: [1000, 4000], tablet: [1000, 1000], desktop: [900, 900] } };
+  // The next release's before is copied from the saved after: with the sweep's time and live commit, on the same ZIPs.
+  const next = beforeRecord({ zips, release: 41, before: {}, after: sweep }, zips);
+  assert.deepEqual(next, { zips, before: sweep });
+  const notes = measureNotes(next).join("\n");
+  assert.match(notes, /Slowest ZIPs before \(2026-11-07T10:00:00Z, live abc1234\)/);
+  assert.match(measureNotes(beforeRecord(null, zips)).join("\n"), /ZIPs before: not measured/);
+  assert.deepEqual(beforeRecord({ zips, after: sweep }, [{ zip: "99501", state: "AK" }, ...zips.slice(1)]).before, {}, "a different ZIP set is never compared");
+  // The after sweep runs once; facts and reads alone never sweep; --again is the deliberate exception.
+  assert.equal(afterSweepPlan({}, {}), true);
+  assert.throws(() => afterSweepPlan(sweep, {}), /one live after sweep is already saved/);
+  assert.equal(afterSweepPlan(sweep, { facts: "5" }), false);
+  assert.equal(afterSweepPlan(sweep, { again: true }), true);
+  assert.match(measureNotes({ zips, before: {}, after: { ...sweep, again: true } }).join("\n"), /taken a second time with --again/);
 });

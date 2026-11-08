@@ -425,6 +425,7 @@ const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "DB-01_read_versions": { phase: "expand", why: "Adds hourly runner transfer aggregates, per-scope clock versions and targeted open-flag indexes; existing readers and writers keep working." },
   "VB-01_read_model_fingerprints": {phase: "expand", why: "Adds nullable validated candidate and promotion fingerprints before readers compare current version identities without loading stored models."},
   "VB-01_candidate_vault": {phase: "expand", why: "Admits vault-backed candidates through their immutable model fingerprint while preserving the exact legacy payload guard and all atomic publication checks."},
+  "0084_cx_writes_02_meeting_owner_lookup": {phase: "expand", why: "Indexes meeting ownership and adds source-clock metadata extraction so background reads avoid unrelated calendars and stored source bodies."},
   "DB-05_source_hash": { phase: "expand", why: "Extends the unchanged source confirmation with an atomic raw-hash and parser comparison; every existing event shape remains valid." },
   "DB-05_keyed_rows": { phase: "expand", why: "Materializes government, registry and meeting members as keyed rows in the same transaction as their published pointer; existing payload readers remain valid.", lockFirst: ["civic_data_promotions", "civic_data_payload_parts"] },
   "DB-05_venue_rows": { phase: "expand", why: "Keeps source/body/tenant venue lookups on exact rows with complete shared source and placement evidence.", lockFirst: ["civic_data_promotions", "civic_data_payload_parts"] },

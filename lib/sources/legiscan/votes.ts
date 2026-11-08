@@ -1,4 +1,5 @@
 import { votePagesIssue, type VoteMemberPage } from "../../state-rollcalls/vote-page-model.ts";
+import { votePlaceSelectedIssue } from "../plural/votes.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../../civic-data/types.ts";
 import type { RoutineDataStore, RosterIdentityPerson } from "../../civic-data/store.ts";
@@ -39,14 +40,15 @@ export function mergeLegiscanVoteMetadata(prior: Pick<LegiscanVotesProjection, "
     datasets: [...datasets.values()].sort((a, b) => a.sessionId - b.sessionId),
     identityAuthority: { ...input.identityAuthority, joins: orderedJoins, crosswalkSha256: digest(orderedJoins) } };
 }
-export function legiscanVotesProjectionIssue(value: LegiscanVotesProjection): string | null {
+/** `selected`: a place-selected reader read keeps only the rows, pages and joins that name the requested member. */
+export function legiscanVotesProjectionIssue(value: LegiscanVotesProjection, options: { selected?: boolean } = {}): string | null {
   let state: string;
   try { state = legiscanState(value?.state); } catch { return "LEGISCAN_VOTE_STATE_INVALID"; }
   if (![1, 2].includes(value.formatVersion) || value.state !== state || !Array.isArray(value.rollCalls) || !Array.isArray(value.datasets) || !value.identityAuthority) return "LEGISCAN_VOTE_PROJECTION_INVALID";
-  if (value.formatVersion === 2) { const issue = votePagesIssue(value); if (issue) return issue; }
+  if (value.formatVersion === 2) { const issue = votePagesIssue(value, options); if (issue) return issue; }
   const authority = value.identityAuthority;
   if (authority.sourceId !== "plural-openstates" || authority.scope !== `US-${state}:openstates-people:v1` || !authority.versionId || !Array.isArray(authority.joins) ||
-    authority.crosswalkSha256 !== digest(authority.joins) || new Set(authority.joins.map(join => join.legiscanPeopleId)).size !== authority.joins.length ||
+    !options.selected && authority.crosswalkSha256 !== digest(authority.joins) || new Set(authority.joins.map(join => join.legiscanPeopleId)).size !== authority.joins.length ||
     new Set(authority.joins.map(join => join.personId)).size !== authority.joins.length || authority.joins.some(join => !Number.isSafeInteger(join.legiscanPeopleId) || join.legiscanPeopleId <= 0 ||
       !nativePersonId(join.personId) || !join.sourceRosterVersionId || !profileUrl(join.sourceUrl) || !["NATIVE_ID", "EXACT_MEMBER_PROFILE_URL"].includes(join.basis) ||
       (join.basis === "EXACT_MEMBER_PROFILE_URL" && (!profileUrl(join.matchedUrl) || profileUrl(join.openStatesProfileUrl) !== join.matchedUrl || profileUrl(join.legiscanProfileUrl) !== join.matchedUrl)) ||
@@ -56,7 +58,7 @@ export function legiscanVotesProjectionIssue(value: LegiscanVotesProjection): st
     !dataset.downloadedAt || !Number.isFinite(Date.parse(dataset.downloadedAt)))) return "LEGISCAN_DATASET_IDENTITY_INVALID";
   if (new Set(value.rollCalls.map(vote => vote.id)).size !== value.rollCalls.length) return "LEGISCAN_VOTE_DUPLICATE";
   const people = new Set(authority.joins.map(join => join.personId));
-  if (value.formatVersion === 2 && (value.memberPages!.some(page => !people.has(page.personId)) || value.rollCalls.some(vote => !people.has(vote.firstPersonId!)))) return "LEGISCAN_VOTE_NATIVE_FACT_INVALID";
+  if (!options.selected && value.formatVersion === 2 && (value.memberPages!.some(page => !people.has(page.personId)) || value.rollCalls.some(vote => !people.has(vote.firstPersonId!)))) return "LEGISCAN_VOTE_NATIVE_FACT_INVALID";
   for (const vote of value.rollCalls) {
     if (!/^legiscan:roll_call:[1-9]\d*$/.test(vote.id) || !/^legiscan:bill:[1-9]\d*$/.test(vote.billId) || !new RegExp(`^legiscan:chamber:${state}:[1-9]\\d*$`).test(vote.organizationId) ||
       !vote.billNumber || !vote.billTitle || !vote.session || !vote.motion || !["Passed", "Failed"].includes(vote.result) || !(state === "NE" ? ["upper", "lower", "legislature"] : ["upper", "lower"]).includes(vote.chamber) ||
@@ -65,7 +67,7 @@ export function legiscanVotesProjectionIssue(value: LegiscanVotesProjection): st
       !Number.isSafeInteger(vote.unresolvedPositions) || vote.unresolvedPositions < 0 || !Array.isArray(vote.sourceUrls) || !vote.sourceUrls.length || vote.sourceUrls.some(url => !profileUrl(url)) ||
       !Array.isArray(vote.counts) || vote.counts.length !== 4 || vote.counts.some(row => !["yea", "nay", "nv", "absent"].includes(row.option) || !Number.isSafeInteger(row.value) || row.value < 0) ||
       new Set(vote.counts.map(row => row.option)).size !== 4 || !Array.isArray(vote.positions) || value.formatVersion === 1 && !vote.positions.length || vote.positions.some(position =>
-        !nativePersonId(position.personId) || !people.has(position.personId) || !position.option || !Number.isFinite(Date.parse(position.retrievedAt)) || position.retrievedAt > vote.retrievedAt) ||
+        !nativePersonId(position.personId) || !options.selected && !people.has(position.personId) || !position.option || !Number.isFinite(Date.parse(position.retrievedAt)) || position.retrievedAt > vote.retrievedAt) ||
       new Set(vote.positions.map(position => position.personId)).size !== vote.positions.length) return "LEGISCAN_VOTE_NATIVE_FACT_INVALID";
   }
   return null;
@@ -135,6 +137,8 @@ export function legiscanVotesCandidate(input: { projection: LegiscanVotesProject
 }
 export async function readLegiscanVotesProjection(state: string, options: PromotedCivicDataReadOptions = {}) {
   const read = await readPromotedCivicData<LegiscanVotesProjection>("STATE_ROLL_CALL", legiscanVotesScope(state), options);
-  if (read.kind === "PROMOTED" && (read.metadata.sourceId !== LEGISCAN_VOTES_SOURCE || read.value.state !== legiscanState(state) || legiscanVotesProjectionIssue(read.value))) throw new Error("LEGISCAN_VOTES_READER_INVALID");
+  // A place-selected reader read is trimmed to the requested member; it is held to the member-level checks.
+  if (read.kind === "PROMOTED" && (read.metadata.sourceId !== LEGISCAN_VOTES_SOURCE || read.value.state !== legiscanState(state) ||
+    votePlaceSelectedIssue(read.value, options => legiscanVotesProjectionIssue(read.value, options)))) throw new Error("LEGISCAN_VOTES_READER_INVALID");
   return read;
 }

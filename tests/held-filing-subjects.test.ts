@@ -2,9 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { heldFilingSubjects, requestedHeldFilings } from "../lib/ask/held-filing-subjects.ts";
-
 import { syntheticAzBallot } from "./helpers/synthetic-ballots.ts";
-
 
 test("published source-filing profiles retain exact identities outside the mapped ballot without duplicating joined people", () => {
   const provenance = { sourceUrl: "https://azsos.gov/elections/candidates", sourceOrg: "Arizona Secretary of State", collectedAt: "2026-09-26", verifiedAt: null };

@@ -14,7 +14,7 @@ const DATASET_RESPONSE_LIMIT = 384 * 1024 * 1024;
 type SharedOptions = Pick<KnownReleaseOptions, "store" | "locks" | "fetchImpl" | "now">;
 export const legiscanDatasetListUrl = (state: string) => `https://api.legiscan.com/?op=getDatasetList&state=${legiscanState(state)}`;
 const datasetUrl = (session: LegiscanSession) => `https://api.legiscan.com/?op=getDataset&id=${session.sessionId}&dataset_hash=${session.datasetHash}`;
-export type LegiscanDatasetResult = Awaited<ReturnType<typeof parseLegiscanDatasetFile>> & { session: LegiscanSession };
+type LegiscanDatasetResult = Awaited<ReturnType<typeof parseLegiscanDatasetFile>> & { session: LegiscanSession };
 export interface LegiscanCompletedDataset {
   session: LegiscanSession; evidence: LegiscanDatasetEvidence; rollCalls: number; memberVotes: number; unmatchedPositions: number;
   held?: readonly {key:string;detail:string}[];

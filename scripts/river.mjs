@@ -27,10 +27,11 @@
  *   node scripts/river.mjs return <lane> --check C [--output-file F]   send a failure back (returns/<lane>.md)
  *   node scripts/river.mjs lock claim|heartbeat|release --branch B --file F --token T [--worker W --run-id R]
  *   node scripts/river.mjs observe <sha> [--dry-run]     one post-deploy reading per deployed SHA
- *   node scripts/river.mjs measure [--after] [--fresh] [--facts N|N/H] [--reads GB] [--at ISO] [--pr N]
+ *   node scripts/river.mjs measure [--after] [--again] [--redraw] [--facts N|N/H] [--reads GB] [--at ISO] [--pr N]
  *                                                        the four release numbers (rulings §5), into the release notes
  *
- * A release, in order: `measure` on the live site, `fold`, `migrations`,
+ * A release, in order: `measure` (loads no page: its before is the last release's
+ * live after sweep), `fold`, `migrations`,
  * `release <n>`, then `settle <n>` once GitHub CI has finished, and `measure
  * --after` once the release is live. `release` refuses a release that grows
  * the lines of code; the other three numbers are read before and after.
@@ -501,7 +502,7 @@ export function zipsByState(root = ROOT) {
   return byState;
 }
 
-/** One random ZIP in each of the 50 states, drawn fresh for each release. */
+/** One random ZIP in each of the 50 states. */
 export function drawZips(byState, random = Math.random) {
   return FIFTY_STATES.map((state) => {
     const zips = byState.get(state) ?? [];
@@ -1309,8 +1310,6 @@ export const DEVICE_VISITS = Object.freeze({
   tablet: { context: { viewport: { width: 820, height: 1180 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 }, net: [30, 10, 40], cpu: 1 },
   desktop: { context: { viewport: { width: 1440, height: 900 } }, net: [30, 10, 40], cpu: 1 },
 });
-/** TRANSITION, removed after the first release that reports it: the phone check as River ran it before RP-01 (no CPU slowdown, 12 Mbps), reported as a second phone line. Delete this constant, its loop entry in zipTimes and the old-phone line in measureNotes. */
-export const OLD_PHONE_VISIT = Object.freeze({ ...DEVICE_VISITS.phone, cpu: 1 });
 /** Puts a page's network and processor at a device's conditions through the browser's debugging protocol. */
 export async function applyConditions(cdp, { net, cpu }) {
   const [down, up, latency] = net;
@@ -1341,19 +1340,18 @@ async function zipTimes(zips) {
   // One guarded browser per ZIP: three cold visits of about 16 provider requests each.
   process.env.WTP_PROVIDER_REQUEST_CEILING ||= "100";
   const { launchGuarded } = await import("./browser.mts");
-  const visits = { ...DEVICE_VISITS, phoneOld: OLD_PHONE_VISIT };
-  const times = Object.fromEntries(Object.keys(visits).map((device) => [device, []]));
+  const times = Object.fromEntries(Object.keys(DEVICE_VISITS).map((device) => [device, []]));
   for (const { state, zip } of zips) {
     const browser = await launchGuarded({ label: "river-measure", headless: true, blockWrites: true, spendsProviderQuota: "maptiler" });
     try {
-      for (const device of Object.keys(visits)) {
-        const { context: options } = visits[device];
+      for (const device of Object.keys(DEVICE_VISITS)) {
+        const { context: options } = DEVICE_VISITS[device];
         const context = await browser.context(options);
         let ms = null;
         try {
           const page = await context.newPage();
           const cdp = await context.newCDPSession(page);
-          await applyConditions(cdp, visits[device]);
+          await applyConditions(cdp, DEVICE_VISITS[device]);
           await page.goto(`${PUBLIC_SITE_ORIGIN}/?zip=${zip}`, { waitUntil: "commit", timeout: VISIT_LIMIT_MS });
           ms = Math.round(await (await page.waitForFunction(USABLE, undefined, { polling: "raf", timeout: VISIT_LIMIT_MS })).jsonValue());
         } catch {
@@ -1382,12 +1380,6 @@ function measuresOf(record) {
   };
 }
 
-/** TRANSITION (see OLD_PHONE_VISIT): the old phone condition's count beside the real one, for the first release after RP-01. */
-const oldPhoneNote = (record) => {
-  const under3s = (times) => (times ? `${times.filter((ms) => ms !== null && ms < 3000).length}` : "not measured");
-  return `Phone (old, no processor slowdown; River's phone check before this release; same 12 Mbps, 3 up, 70 ms): ZIPs usable in under 3 seconds ${under3s(record.before?.zips?.phoneOld)}→${record.after?.zips?.phoneOld ? under3s(record.after.zips.phoneOld) : "measuring"}, against phone (processor slowed ${DEVICE_VISITS.phone.cpu} times) ${under3s(record.before?.zips?.phone)}→${record.after?.zips?.phone ? under3s(record.after.zips.phone) : "measuring"} in the line above. The old line is shown once and then removed.`;
-};
-
 /** The notes under the four lines: the slowest ZIPs, the ZIPs drawn, and what each number means. */
 export function measureNotes(record) {
   const slowest = (side) => DEVICES.filter((device) => record[side]?.zips?.[device]).map((device) => `${device} ${record.zips
@@ -1396,11 +1388,12 @@ export function measureNotes(record) {
     .map(({ zip, state, ms }) => `${zip} ${state} ${ms === null ? "over 15 s" : `${(ms / 1000).toFixed(1)} s`}`).join(", ")}`).join("; ");
   return [
     ...["before", "after"].filter((side) => record[side]?.zips).map((side) => `Slowest ZIPs ${side} (${record[side].at}, live ${record[side].live?.slice(0, 7) ?? "unknown"}): ${slowest(side)}.`),
+    ...(record.before?.zips ? [] : ["ZIPs before: not measured (no earlier release's after sweep was saved on these ZIPs; no page was loaded to make one up)."]),
+    ...(record.after?.again ? ["The after sweep was taken a second time with --again to re-measure a contended run."] : []),
     ...(record.zips.length ? [`The 50 ZIPs: ${record.zips.map(({ zip, state }) => `${zip} ${state}`).join(", ")}.`] : []),
     "",
     "Facts reaching readers: facts that went live in the 24 hours ending at the deploy, then in the first 24 hours on the release, counted once each, and only when the value is new for that thing and field (no earlier shown row holds the same value), is still the current value, and is on a reader's page (a place page built since it went live depends on its thing; a meeting counts when its body is on a place page). Replaced rows and reloads of values already shown don't count. An early read gives facts an hour over the first full hours.",
-    `ZIPs usable: one random ZIP in each of the 50 states, the same 50 before and after, each opened cold (new browser context, empty cache) on ${PUBLIC_SITE_ORIGIN} on a phone (390×844, touch, 12 Mbps down, 3 up, 70 ms, processor slowed ${DEVICE_VISITS.phone.cpu} times like a mid-range phone's), a tablet (820×1180, touch) and a desktop (1440×900), both 30 Mbps down, 10 up, 40 ms, no slowdown. Usable means the side panel shows the place with no loading note (with its count badge where the panel is a sheet) and the map, basemap and district lines included, has finished drawing; counted when under 3 seconds, timed from the start of the visit.`,
-    ...(record.after?.zips?.phoneOld || record.before?.zips?.phoneOld ? [oldPhoneNote(record)] : []),
+    `ZIPs usable: one random ZIP in each of the 50 states, the same 50 every release. Each release's live site is swept once, after its deploy; that sweep is its after and the next release's before (no page is loaded for a before), each ZIP opened cold (new browser context, empty cache) on ${PUBLIC_SITE_ORIGIN} on a phone (390×844, touch, 12 Mbps down, 3 up, 70 ms, processor slowed ${DEVICE_VISITS.phone.cpu} times like a mid-range phone's), a tablet (820×1180, touch) and a desktop (1440×900), both 30 Mbps down, 10 up, 40 ms, no slowdown. Usable means the side panel shows the place with no loading note (with its count badge where the panel is a sheet) and the map, basemap and district lines included, has finished drawing; counted when under 3 seconds, timed from the start of the visit.`,
     "Database reads: response bytes (the data Neon bills) in database_transfer_hourly, both databases, in GB an hour, averaged over the 6 full hours before the deploy and the first 6 full hours after the runner switched.",
     "Lines of code: lines in every tracked .ts, .tsx, .mts, .cts, .mjs, .cjs, .js, .jsx, .css and .sql file, except .d.ts, *.min.*, node_modules, .next and public/vendor; river at the release base, then the release head.",
   ];
@@ -1426,25 +1419,53 @@ export function measureSql(at, after) {
   };
 }
 
+/** The one set of 50 ZIPs every release is measured on: drawn once, saved in .scratch/river/zips.json, redrawn only on `--redraw`. */
+function savedZips(redraw) {
+  const saved = readScratch("zips.json");
+  if (saved?.zips?.length && !redraw) return saved.zips;
+  const zips = drawZips(zipsByState());
+  writeScratch("zips.json", { drawn: nowIso(), zips });
+  return zips;
+}
+const sameZips = (a, b) => a?.length === b.length && b.every(({ zip }, i) => a[i].zip === zip);
+
+/** A new release's measurement: no page is loaded; its before ZIP times are the last release's after sweep, when taken on these same ZIPs. */
+export function beforeRecord(saved, zips) {
+  const last = saved?.after?.zips && sameZips(saved.zips, zips) ? saved.after : null;
+  return { zips, before: last ? { at: last.at, live: last.live, zips: last.zips } : {} };
+}
+
+/** Whether `measure --after` loads pages: once per release; a second sweep is refused unless `--again`. Facts or reads alone never sweep. */
+export function afterSweepPlan(after, flags) {
+  if (!after.zips || flags.again === true) return true;
+  if (flags.facts !== undefined || flags.reads !== undefined) return false;
+  throw new Refusal("this release's one live after sweep is already saved (.scratch/river/measure.json); a second one would only add traffic to the live site and replace the numbers the next release starts from. Pass --again only to re-measure a contended run.");
+}
+
 /**
- * Measure the live site before a deploy (a fresh draw of 50 ZIPs) or, with
- * `--after`, the same ZIPs once the release is live. Facts and reads come from
- * SQL River runs itself (printed when absent) and are given back as flags. The
- * block goes into the release's pull request once `release` has opened it.
+ * `measure` loads no page: it starts the release's record with the last
+ * release's after sweep as this release's before. `--after` runs the release's one
+ * live sweep of the saved 50 ZIPs, kept as this release's after and the next
+ * release's before. Facts and reads come from SQL River runs itself (printed
+ * when absent) and are given back as flags. The block goes into the release's
+ * pull request once `release` has opened it.
  */
 async function measure(flags) {
   const after = flags.after === true;
+  const zips = savedZips(flags.redraw === true);
   let record = readScratch("measure.json");
-  if (after && !record?.before?.zips) throw new Refusal("no before measurement in .scratch/river/measure.json; measure before the deploy first");
-  if (!after && (flags.fresh || !record || record.after)) record = { zips: drawZips(zipsByState()), before: {} };
+  if (after && !record?.before) throw new Refusal("no release record in .scratch/river/measure.json; run measure (no flags) before the release first");
+  if (!after && (!record || record.after || !sameZips(record.zips, zips))) record = beforeRecord(record, zips);
   const phase = after ? (record.after ??= {}) : record.before;
+  const sweep = after && afterSweepPlan(phase, flags);
   if (flags.facts !== undefined) {
     const [count, hours] = String(flags.facts).split("/").map(Number);
     if (hours && after && hours < 24) record.after.early = { perHour: Math.round(count / hours), hours };
     else phase.facts = count;
   }
   if (flags.reads !== undefined) phase.reads = Number(flags.reads);
-  if (!phase.zips) {
+  if (sweep) {
+    phase.again = flags.again === true || undefined;
     const build = await fetch(`${PUBLIC_SITE_ORIGIN}/api/build`, { signal: AbortSignal.timeout(10_000) }).then((r) => r.json()).catch(() => ({}));
     Object.assign(phase, { at: nowIso(), live: typeof build.commit === "string" ? build.commit : null, zips: await zipTimes(record.zips) });
   }
@@ -1518,7 +1539,7 @@ export function parseArgs(argv) {
   return { flags, positional };
 }
 
-const BOOLEAN_FLAGS = new Set(["dry-run", "after", "fresh"]);
+const BOOLEAN_FLAGS = new Set(["dry-run", "after", "again", "redraw"]);
 
 async function main(argv) {
   const [command, ...rest] = argv;

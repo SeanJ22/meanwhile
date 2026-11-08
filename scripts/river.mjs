@@ -1306,13 +1306,20 @@ const DEVICE_VISITS = Object.freeze({
   tablet: { context: { viewport: { width: 820, height: 1180 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 }, net: [30, 10, 40] },
   desktop: { context: { viewport: { width: 1440, height: 900 } }, net: [30, 10, 40] },
 });
-/** Usable: the side panel shows the place (no loading note; the count badge where the panel is a sheet) and the map has drawn. */
-const USABLE = `(() => {
+/**
+ * Usable, as a reader sees it: the side panel shows the place (no loading note; the count badge where the panel is a
+ * sheet), the map has drawn, and its district lines are drawn: a district line layer is on the map and the map
+ * renders features from it. Runs in the page, so it reads only globals; returns the time, or false.
+ */
+export function usableNow() {
   const count = document.querySelector('[data-stat="meetings"] .num'), map = window.__wtpMap;
-  return /^\\d/.test(count?.textContent ?? "") && !document.querySelector(".mw-loading-note")
-    && (!document.querySelector(".mw-sheet-handle") || !!document.querySelector(".count-badge"))
-    && !!map && map.loaded() && !map.isMoving() && performance.now();
-})()`;
+  if (!/^\d/.test(count?.textContent ?? "") || document.querySelector(".mw-loading-note")
+    || (document.querySelector(".mw-sheet-handle") && !document.querySelector(".count-badge"))
+    || !map || !map.loaded() || map.isMoving()) return false;
+  const lines = (map.getStyle()?.layers ?? []).filter((layer) => /^district-.+-line$/.test(layer.id)).map((layer) => layer.id);
+  return lines.length > 0 && map.queryRenderedFeatures({ layers: lines }).length > 0 && performance.now();
+}
+const USABLE = `(${usableNow})()`;
 const VISIT_LIMIT_MS = 15_000;
 
 /** Each ZIP opened cold on each device; milliseconds to usable, or null past the limit. */
@@ -1374,7 +1381,7 @@ function measureNotes(record) {
     ...(record.zips.length ? [`The 50 ZIPs: ${record.zips.map(({ zip, state }) => `${zip} ${state}`).join(", ")}.`] : []),
     "",
     "Facts reaching readers: facts that went live in the 24 hours ending at the deploy, then in the first 24 hours on the release, counted once each, and only when the value is new for that thing and field (no earlier shown row holds the same value), is still the current value, and is on a reader's page (a place page built since it went live depends on its thing; a meeting counts when its body is on a place page). Replaced rows and reloads of values already shown don't count. An early read gives facts an hour over the first full hours.",
-    `ZIPs usable: one random ZIP in each of the 50 states, the same 50 before and after, each opened cold (new browser context, empty cache) on ${PUBLIC_SITE_ORIGIN} on a phone (390×844, touch, 12 Mbps down, 3 up, 70 ms), a tablet (820×1180, touch) and a desktop (1440×900), both 30 Mbps down, 10 up, 40 ms. Usable means the side panel shows the place with no loading note (with its count badge where the panel is a sheet) and the map, basemap included, has finished drawing; counted when under 3 seconds.`,
+    `ZIPs usable: one random ZIP in each of the 50 states, the same 50 before and after, each opened cold (new browser context, empty cache) on ${PUBLIC_SITE_ORIGIN} on a phone (390×844, touch, 12 Mbps down, 3 up, 70 ms), a tablet (820×1180, touch) and a desktop (1440×900), both 30 Mbps down, 10 up, 40 ms. Usable means the side panel shows the place with no loading note (with its count badge where the panel is a sheet) and the map, basemap and district lines included, has finished drawing; counted when under 3 seconds.`,
     "Database reads: response bytes (the data Neon bills) in database_transfer_hourly, both databases, in GB an hour, averaged over the 6 full hours before the deploy and the first 6 full hours after the runner switched.",
     "Lines of code: lines in every tracked .ts, .tsx, .mts, .cts, .mjs, .cjs, .js, .jsx, .css and .sql file, except .d.ts, *.min.*, node_modules, .next and public/vendor; river at the release base, then the release head.",
   ];

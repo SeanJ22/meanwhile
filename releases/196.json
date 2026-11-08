@@ -1,0 +1,36 @@
+{
+  "n": 196,
+  "branch": "release/196",
+  "head_sha": "41ce37f64cc4f9985bd13fcbf008517f15ef8137",
+  "base_river_sha": "f2ff8f70e81c65038c2bb59ab8d7ad6752f21cae",
+  "main_sha": "1415b5fb58b6ab388a25ddbbf6f965e21b7b6edf",
+  "lanes": [
+    {
+      "lane": "results-turn",
+      "steps": [
+        "RT-01"
+      ],
+      "ready_sha": "8de95b834e45ffcf652a6ba12551e7588e2205c4",
+      "result_sha": "09503d7a6b00d8cab5606a5e3b4b2e11aeae5090"
+    },
+    {
+      "lane": "river-growth-note",
+      "steps": [
+        "RG-02"
+      ],
+      "ready_sha": "6533ab7e3bfc9d51a578ce6c45d3ff631bcd5aed",
+      "result_sha": "bfe26f76312836f3979c5d951ba8d96955ab2932"
+    }
+  ],
+  "steps": [
+    "RT-01",
+    "RG-02"
+  ],
+  "pr": {
+    "number": 915,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/915"
+  },
+  "ci": "running",
+  "at": "2026-11-08T23:19:05Z",
+  "growth_reason": "election results fix: results run as their own routine step and publish to the store the live site reads (RT-01), finishing the new election-results feature"
+}

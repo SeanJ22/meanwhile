@@ -5,7 +5,7 @@ const NAMED: Readonly<Record<string, string>> = {
   "saved-keys": "Saved key checks",
   ...Object.fromEntries(Object.values(ROUTINE_JOBS).map(job => [job.id, job.label])),
   "door-probes": "Hourly door checks", "release-install": "Release install", "place-pages": "Place pages", "place-files": "Place files", "slices": "Place slices", "parser-lane": "Page readers", "hunter-lane": "Hunters", "intake-runtime": "Intake checks", "platform-census": "Website platform census",
-  "research-cycle": "Paid research rounds", "people-portraits": "Portraits", "place-map": "Place maps", "voting-sites": "Voting places",
+  "research-cycle": "Paid research rounds", "line-keeper-watch": "Line keeper check", "people-portraits": "Portraits", "place-map": "Place maps", "voting-sites": "Voting places",
   "registration": "Voter registration", "legistar-members": "Legistar members", "meeting-partition": "Meeting calendar",
   "meeting-doors": "Meeting doors", "audit-pass": "Audit pass", "console-publish": "Console publishing", "member-offices": "Member offices",
 };

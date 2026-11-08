@@ -117,7 +117,7 @@ test("the runner starts every child from the switched checkout, behind its switc
   assert.doesNotMatch(runner, /\bcwd: ROOT\b/, "no child starts from the parent's checkout by name");
   assert.doesNotMatch(runner, /WTP_RELEASE_QUICK_SWITCH|RELEASE_QUICK_SWITCH|WTP_RELEASE_DRAIN_FIRST/, "the switch has no opt-in gate");
   assert.match(runner, /\{ id: RELEASE_INSTALL_JOB, everyMs: 60_000, budgetMs: [^}]*run: runReleaseInstall \}/, "installing a release is a scheduled runner job");
-  assert.match(runner, /CODE_ROOT = directory;\s*RUNNING_CODE_SHA = targetSha;\s*runtimeContracts.request\(targetSha, directory\);/,
-    "contract migrations run independently from the switched code without delaying admission");
+  assert.match(runner, /CODE_ROOT = directory;\s*RUNNING_CODE_SHA = targetSha;\s*followReleaseCheckout\(storedKeyEnvironment\(\), directory, targetSha\);\s*runtimeContracts.request\(targetSha, directory\);/,
+    "children are admitted against the switched checkout, and contract migrations run independently from the switched code without delaying admission");
   assert.match(runner, /researchCycleChild\.send\(\{ kind: "RUNTIME_RELEASE_DRAIN" \}/, "the drain path stays for a parent change");
 });

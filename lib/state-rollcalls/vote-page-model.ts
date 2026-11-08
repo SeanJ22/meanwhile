@@ -11,7 +11,9 @@ export function votePageRollBody(vote: PluralVoteFact) {
   const { positions: _positions, positionHash: _hash, positionCount: _count, firstPersonId: _first, ...body } = vote;
   return body;
 }
-export function votePagesIssue(projection: VotePageProjection): string | null {
+/** `selected`: a place-selected reader read returns only the roll rows and pages that name the requested member, so the
+ * whole-projection totals cannot hold; every surviving row and page still passes its own checks. */
+export function votePagesIssue(projection: VotePageProjection, options: { selected?: boolean } = {}): string | null {
   if (projection?.formatVersion !== 2 || !/^[A-Z]{2}$/.test(projection.state) || !Array.isArray(projection.rollCalls) || !Array.isArray(projection.memberPages)) return "VOTE_PAGE_INDEX_INVALID";
   const keys = new Set<string>(), totals = new Map<string, number>(), pages = new Map<string, number>();
   for (const vote of projection.rollCalls) {
@@ -20,12 +22,12 @@ export function votePagesIssue(projection: VotePageProjection): string | null {
     totals.set(vote.session, (totals.get(vote.session) ?? 0) + vote.positionCount);
   }
   for (const page of projection.memberPages) {
-    if (!page || !totals.has(page.session) || !VOTE_PAGE_PERSON.test(page.personId) || !/^[a-f0-9]{64}$/.test(page.sha256) ||
+    if (!page || !options.selected && !totals.has(page.session) || !VOTE_PAGE_PERSON.test(page.personId) || !/^[a-f0-9]{64}$/.test(page.sha256) ||
         !Number.isSafeInteger(page.count) || page.count <= 0 || page.count > VOTE_PAGE_ROWS || keys.has(page.key)) return "VOTE_PAGE_REFERENCE_INVALID";
     const expected = new RegExp(`^project/state-votes/[a-z0-9-]+/${projection.state}/${votePageDigest(page.session)}/${page.personId.slice(11)}/${page.sha256}\\.json$`);
     if (!expected.test(page.key)) return "VOTE_PAGE_REFERENCE_INVALID";
     keys.add(page.key); pages.set(page.session, (pages.get(page.session) ?? 0) + page.count);
   }
-  for (const [session, total] of totals) if (pages.get(session) !== total) return "VOTE_PAGE_POSITION_TOTAL_INVALID";
+  if (!options.selected) for (const [session, total] of totals) if (pages.get(session) !== total) return "VOTE_PAGE_POSITION_TOTAL_INVALID";
   return null;
 }

@@ -56,12 +56,15 @@ export async function runStateControlBackfill(jobs:ControlReadsBackfill,state:st
   }
   onProgress(state,copied,archived);
 }
-export async function runStatePlanningRound(run:(state:string)=>Promise<boolean>,states:readonly string[]=PLANNING_STATES):Promise<{readonly completed:number;readonly failed:readonly string[]}> {
-  let completed=0;const failed:string[]=[];
+/** A state the round never started because a release handoff was under way: not planned, not failed; the next round plans it. */
+export const STATE_DEFERRED="DEFERRED";
+export async function runStatePlanningRound(run:(state:string)=>Promise<boolean|typeof STATE_DEFERRED>,states:readonly string[]=PLANNING_STATES):Promise<{readonly completed:number;readonly failed:readonly string[];readonly deferred:readonly string[]}> {
+  let completed=0;const failed:string[]=[];const deferred:string[]=[];
   for(const state of states) {
-    if(await run(state))completed++;else failed.push(state);
+    const outcome=await run(state);
+    if(outcome===STATE_DEFERRED)deferred.push(state);else if(outcome)completed++;else failed.push(state);
   }
-  return {completed,failed};
+  return {completed,failed,deferred};
 }
 
 export interface PlanningControls {

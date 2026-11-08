@@ -11,7 +11,8 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { bindVotePageVault, readVotePages, votePageVault } from "../lib/state-rollcalls/vote-pages.ts";
 
-import { pluralVotesCandidate, pluralVotesContract } from "../lib/sources/plural/votes.ts";
+import { pluralVotesCandidate, pluralVotesContract, votePlaceSelectedIssue } from "../lib/sources/plural/votes.ts";
+import { withReaderSelection } from "../lib/db/reader-route.ts";
 
 const root = new URL("./fixtures/state-votes/openstates/", import.meta.url);
 const manifest = JSON.parse(await readFile(new URL("manifest.json", root), "utf8"));
@@ -144,5 +145,34 @@ test("missing immutable pages and changed roll metadata fail the exact person re
     await assert.rejects(readVotePages(new MemoryEvidenceStore(), projection, original.positions[0].personId), /VOTE_PAGE_EVIDENCE_INVALID/);
     const incomplete = structuredClone(projection); incomplete.memberPages!.pop();
     assert.equal(votePagesIssue(incomplete), "VOTE_PAGE_POSITION_TOTAL_INVALID");
+  } finally { await sink.close(); }
+});
+
+test("a reader read trimmed to one member by place selection still returns exactly that member's sourced votes", async () => {
+  const vault = new MemoryEvidenceStore(), sink = await sinkFor(vault);
+  try {
+    await sink.put(original); await sink.put({ ...original, id: native(2) });
+    const projection = await sink.snapshot();
+    assert.equal(votePagesIssue(projection), null);
+    const [first, other] = original.positions.map(row => row.personId).sort();
+    // What the reader SQL keeps for ?member=<other>: that member's page references, and only the rolls that name them (none: `other` is never a roll's first person).
+    const trimmed: VotePageProjection = { ...projection, rollCalls: projection.rollCalls.filter(roll => JSON.stringify(roll).includes(other)),
+      memberPages: projection.memberPages!.filter(page => page.personId === other) };
+    assert.equal(trimmed.rollCalls.length, 0);
+    assert.notEqual(votePagesIssue(trimmed), null, "whole-projection totals cannot hold for a trimmed read");
+    assert.equal(votePagesIssue(trimmed, { selected: true }), null);
+    // Outside a reader selection a trimmed projection stays refused; inside one it is held to the member-level checks.
+    assert.notEqual(votePlaceSelectedIssue(trimmed, options => votePagesIssue(trimmed, options)), null);
+    assert.equal(await withReaderSelection({ keys: new Set([other, "state:WA"]) }, async () => votePlaceSelectedIssue(trimmed, options => votePagesIssue(trimmed, options))), null);
+    await assert.rejects(readVotePages(vault, trimmed, other), /VOTE_PAGE_/);
+    const rows = await readVotePages(vault, trimmed, other, { selected: true });
+    assert.equal(rows.length, 2);
+    assert.ok(rows.every(vote => vote.positions.length === 1 && vote.positions[0].personId === other));
+    assert.equal(rows[0].positions[0].option, original.positions.find(row => row.personId === other)!.option);
+    assert.deepEqual(rows[0].sourceUrls, original.sourceUrls);
+    assert.deepEqual(await readVotePages(vault, trimmed, first, { selected: true }), [], "another member's pages are not in this read");
+    // The page is still pinned to its promoted digest and count.
+    const tampered = { ...trimmed, memberPages: trimmed.memberPages!.map(page => ({ ...page, count: page.count + 1 })) };
+    await assert.rejects(readVotePages(vault, tampered, other, { selected: true }), /VOTE_PAGE_COUNT_INVALID/);
   } finally { await sink.close(); }
 });

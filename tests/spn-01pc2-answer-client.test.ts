@@ -1,22 +1,24 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { answerUrl, centroidOfEntry, detailUrlOfBody, expandAnswer, loadAnswer, loadBoardDetail, loadZip3, loadZipEntry, withBoardDetail, zip3Url, type SlimAnswer } from "../lib/reader/answer-client.ts";
+import { projectedBodyRoster } from "../lib/registry/body-roster-client.ts";
 
 const entry = { states: ["MT"], point: [-112.53, 45.99] as const, key: "abc123def456", ids: ["ocd-division/country:us/state:mt"], partial: [], fringe: [] };
-const board = "/api/answer/board/government%3AUS-MT%3Acog%3A1%23body%3Acouncil/0123456789abcdef0123456789abcdef";
+const board = "/api/answer/board/government%3AUS-MT%3Acog%3A1%23body%3Acouncil/0123456789abcdef";
 
 const slim = (): SlimAnswer => ({
-  tier: "local", radiusKm: 25, center: { lat: 45.99, lng: -112.53 },
+  tier: "exact", radiusKm: 25, center: { lat: 45.99, lng: -112.53 },
   meetings: [{ id: "m1", bodyId: "b1", bodyName: "Council", title: "Regular", startsAt: "2026-11-10T18:00:00-07:00", timeZone: "America/Denver", detail: board } as never,
     { id: "m2", bodyId: "b2", bodyName: "Plain", title: "Regular", startsAt: "2026-11-11T18:00:00-07:00", timeZone: "America/Denver" } as never],
-  coverage: { state: "MEETINGS", bodies: [{ bodyId: "b1", readerRoster: { count: 3, detail: board } }, { bodyId: "b2", readerRoster: { members: [], gaps: [], officePhone: null } }], seats: [], divisions: [] } as never,
+  coverage: { state: "MEETINGS", bodies: [{ bodyId: "b1", readerRoster: { count: 3, gaps: [{ statement: "one missing" }], detail: board } }, { bodyId: "b2", readerRoster: { members: [], gaps: [], officePhone: null } }], seats: [], divisions: [] } as never,
   stateResponse: { status: 200, value: { state: "MT", version: "v", zipPlaces: {}, directory: null, boundaryUrl: "", coverage: { bodies: [{ bodyId: "s1", readerRoster: { count: 1, detail: board } }] } } as never },
 });
 
 test("an answer's light roster becomes a reference and a whole roster stays as it is", () => {
   const answer = expandAnswer(slim());
   const [light, whole] = answer.coverage!.bodies;
-  assert.deepEqual(light!.readerRosterRef, { count: 3, detail: board });
+  assert.deepEqual(light!.readerRosterRef, { count: 3, gaps: [{ statement: "one missing" }], detail: board });
+  assert.deepEqual(projectedBodyRoster(light).gaps, [{ statement: "one missing" }], "a board's gaps are read before its roster arrives");
   assert.equal(light!.readerRoster, undefined);
   assert.deepEqual(whole!.readerRoster, { members: [], gaps: [], officePhone: null });
   assert.equal(answer.stateResponse!.value.coverage.bodies[0]!.readerRosterRef!.count, 1);

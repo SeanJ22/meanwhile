@@ -159,6 +159,8 @@ export type MeetingStatus = "SCHEDULED" | "CONCLUDED" | "CANCELED";
 export interface Meeting {
   /** The address of the detail (sources and conflicts) a published answer leaves out of this meeting. */
   detail?: string;
+  /** The page of the meeting, which a published answer keeps when it leaves the rest of the meeting's provenance to the detail. */
+  sourceUrl?: string;
   /** Source and exact quote for each composed field, when available. */
   fieldSources?: Readonly<Record<string, Provenance>>;
   /** Original partition ids retained so agenda links and evidence can follow a merge. */

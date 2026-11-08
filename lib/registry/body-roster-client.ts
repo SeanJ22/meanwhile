@@ -11,9 +11,10 @@ export interface BodyRosterClientProjection {
 const EMPTY: BodyRosterClientProjection = Object.freeze({ members: [], gaps: [] });
 
 export function projectedBodyRoster(
-  body: Pick<CoveredBody, "readerRoster"> | null | undefined,
+  body: Pick<CoveredBody, "readerRoster" | "readerRosterRef"> | null | undefined,
 ): BodyRosterClientProjection {
-  return body?.readerRoster ?? EMPTY;
+  // A published answer carries a board's gaps beside the address of its roster, which arrives when a reader opens the board.
+  return body?.readerRoster ?? (body?.readerRosterRef?.gaps ? { members: [], gaps: body.readerRosterRef.gaps } : EMPTY);
 }
 
 function governingBodyForDivision(body: CoveredBody, ocdId: string): boolean {

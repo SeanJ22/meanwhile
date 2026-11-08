@@ -4,15 +4,14 @@ import type { Meeting } from "../sources/types.ts";
  * The map reads one light index per state and a place's own file only when the view is close enough to show its meetings. Every file is the same for
  * everyone and named by its version, so a file is fetched once; only a state's pointer moves.
  *
- * An index place is `[id, kind, name, parent, file, centerLat, centerLng, west, south, east, north]` (see lib/reader/place-index.ts); an id that starts
- * with a slash follows the index's `base`.
+ * An index place is `[id, kind, name, west, south, east, north, file]` (see lib/reader/place-index.ts); an id that starts with a slash follows the index's
+ * `base`. The state's boards are listed apart and have no place on the map.
  */
-type IndexRow = readonly [string, 0 | 1, string, number, string, ...(number | null)[]];
+type IndexRow = readonly [string, 0, string, number | null, number | null, number | null, number | null, string];
 interface IndexFile { readonly v: 1; readonly state: string; readonly base: string; readonly places: readonly IndexRow[] }
 
 export interface IndexPlace {
   readonly id: string;
-  readonly kind: "place" | "body";
   readonly name: string;
   readonly file: string;
   /** [west, south, east, north] */
@@ -45,10 +44,10 @@ export function loadStateIndex(state: string): Promise<StateIndex | null> {
   const held = indexes.get(state);
   if (held && held.expires > Date.now()) return held.promise;
   const promise = (async () => {
-    const pointer = await fetchJson<{ index: string }>(`/api/reader/index/${state}.json`);
-    const index = pointer && await fetchFile<IndexFile>(pointer.index);
-    return index ? { state, places: index.places.flatMap((row): IndexPlace[] => row[7] === null || row[7] === undefined ? []
-      : [{ id: lengthen(index.base, row[0]), kind: row[1] ? "body" : "place", name: row[2], file: row[4], box: [row[7], row[8]!, row[9]!, row[10]!] }]) } : null;
+    const pointer = await fetchJson<{ map: string }>(`/api/reader/index/${state}.json`);
+    const index = pointer && await fetchFile<IndexFile>(pointer.map);
+    return index ? { state, places: index.places.flatMap((row): IndexPlace[] => row[3] === null || row[3] === undefined ? []
+      : [{ id: lengthen(index.base, row[0]), name: row[2], file: row[7], box: [row[3], row[4]!, row[5]!, row[6]!] }]) } : null;
   })().catch(() => null).then(index => {
     if (!index && indexes.get(state)?.promise === promise) indexes.delete(state);
     return index;
@@ -93,15 +92,20 @@ const PIN_FIELDS = ["id", "ocdId", "bodyId", "bodyName", "title", "startsAt", "s
 type Row = Record<string, unknown>;
 const isMeeting = (value: unknown): value is Meeting => !!value && typeof value === "object" && typeof (value as Row).id === "string" && typeof (value as Row).startsAt === "string";
 
+/** A pin of a place file (`id, title, startsAt, lat, lng, bodyId`) as the meeting it draws. */
+const pinMeeting = (pin: Row): Row => ({ id: pin.id, title: pin.title, startsAt: pin.startsAt, ...(pin.bodyId ? { bodyId: pin.bodyId } : {}), location: { name: "", address: null, lat: pin.lat, lng: pin.lng } });
+
 /**
- * The meetings a place's file lists, with only pin fields (or whole, for the place a reader opened). A file lists them as `pins`, or inside its current page; a page whose rows are not in the
- * file (held as parts) lists none here.
+ * The meetings a place's file lists: its pins (only the pin fields), or, for the place a reader opened, the whole meetings of its current page. A page whose
+ * rows are not in the file (held as parts) lists none here.
  */
 export function pinsOfPlaceFile(file: unknown, whole = false): Meeting[] {
   const found = (file as { pins?: unknown } | null)?.pins;
   const inline = (((file as { variants?: { current?: { row?: { meeting_rows?: unknown } } } } | null)?.variants?.current?.row?.meeting_rows) as { payload?: { meetings?: unknown } }[] | undefined)
     ?.flatMap(part => Array.isArray(part.payload?.meetings) ? part.payload!.meetings as unknown[] : []);
-  const listed = [...(Array.isArray(found) ? found : inline ?? [])].filter(isMeeting);
+  if (whole && inline?.length) return inline.filter(isMeeting);
+  if (Array.isArray(found)) return (found as Row[]).filter(pin => typeof pin?.id === "string" && Number.isFinite(pin.lat) && Number.isFinite(pin.lng)).map(pinMeeting) as unknown as Meeting[];
+  const listed = (inline ?? []).filter(isMeeting);
   if (whole) return listed;
   return listed.map(meeting => {
     const light: Row = {};

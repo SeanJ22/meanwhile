@@ -468,7 +468,7 @@ export const countsAsCode = (path) => /\.(?:[cm]?[jt]s|[jt]sx|css|sql)$/.test(pa
   && !/\.d\.ts$|\.min\.|(?:^|\/)node_modules\/|^\.next\/|^public\/vendor\//.test(path);
 
 /** One-time growth Sean approved for a step: while that step is folded, a release may grow the code by up to its lines. The next phase deletes the entry. */
-export const APPROVED_GROWTH = Object.freeze({ "SPN-01PZ": Object.freeze({ lines: 2700, approved: "Sean, 2026-11-08" }) });
+export const APPROVED_GROWTH = Object.freeze({ "SPN-01PZ": Object.freeze({ lines: 2650, approved: "Sean, 2026-11-08" }) });
 
 /** Refuses growth beyond what the folded steps were approved for; returns the sentence to print when approved growth was used, else null. */
 export function checkGrowth({ before, after, steps, head = "", approved = APPROVED_GROWTH }) {

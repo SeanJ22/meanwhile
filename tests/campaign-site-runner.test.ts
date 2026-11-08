@@ -63,9 +63,8 @@ import { stateBallotContractId, stateBallotScope } from "../lib/civic-data/state
 import { DUARTE, KAPNER, MAYES, TANG_WILLIAMS, committedSubjects, fixture, servedRuntime, sha256, subject } from "./helpers/campaign-sites.ts";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
+import { syntheticAzBallot } from "./helpers/synthetic-ballots.ts";
 import type { GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
-import type { Contest } from "../lib/ballot/types.ts";
-import type { LineupOutcome } from "../lib/identity/types.ts";
 import { requireBallotState } from "../lib/civic-data/state-scopes.ts";
 import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
@@ -74,30 +73,6 @@ import { installManualValue } from "./helpers/promoted-fixtures.ts";
 import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 
 
-
-interface SyntheticLineupNominee {
-  readonly name: string;
-  readonly partyLabel: string;
-  readonly outcome: LineupOutcome;
-  readonly candidacyId?: string;
-  readonly filingParty?: string;
-}
-
-interface SyntheticContest {
-  readonly id: string;
-  readonly title: string;
-  readonly ocdId?: string;
-  readonly type?: Contest["type"];
-  readonly candidacies?: readonly { readonly id: string; readonly givenName: string; readonly familyName: string; readonly partyLabel?: string | null }[];
-  readonly lineup?: readonly SyntheticLineupNominee[];
-}
-
-function syntheticAzBallot(contests?: readonly SyntheticContest[]): BallotSet {
-  const fixtures = JSON.parse(readFileSync(new URL("./fixtures/synthetic-az-ballots.json", import.meta.url), "utf8")) as Record<string, BallotSet>;
-  const ballot = fixtures[JSON.stringify(contests ?? null)];
-  if (!ballot) throw new Error("The synthetic Arizona ballot input has no recorded fixture");
-  return ballot;
-}
 
 async function installBallots(...ballots: BallotSet[]): Promise<GenericBallotProjection> {
   const installed: GenericBallotProjection = { kind: "ballot-contests", ballots: {} };

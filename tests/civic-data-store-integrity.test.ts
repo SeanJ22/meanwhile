@@ -1,4 +1,6 @@
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { hydrateCandidateFacts } from "../lib/civic-data/candidate-vault.ts";
+import { withMigratedRoutineStore } from "./helpers/migrated-routine-store.ts";
 import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { immutableStateHash, immutableStateValue, rememberStatePublicationHashes, rememberStatePublicationPrior, withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
 import assert from "node:assert/strict";
@@ -840,7 +842,7 @@ interface NeonStatement {
 let cannedVersion = 0;
 async function withCannedNeon<T>(
   answer: (statement: NeonStatement) => NeonAnswer | Promise<NeonAnswer>,
-  run: (store: PostgresRoutineDataStore, sent: NeonStatement[]) => Promise<T>,
+  run: (store: PostgresRoutineDataStore, sent: NeonStatement[], vault: MemoryEvidenceStore) => Promise<T>,
   version?: (() => string) | "POSTGRES",
 ): Promise<T> {
   const originalFetch = neonConfig.fetchFunction;
@@ -908,7 +910,7 @@ async function withCannedNeon<T>(
   }) as typeof neonConfig.fetchFunction;
   process.env.DATABASE_URL = "postgresql://canned:canned@ep-canned-store-proof.us-east-2.aws.neon.tech/neondb";
   try {
-    const store = new PostgresRoutineDataStore({vault:new MemoryEvidenceStore()});
+    const vault=new MemoryEvidenceStore(),store = new PostgresRoutineDataStore({vault});
     Object.assign(store as unknown as Record<string, unknown>, {
       writeAuthority: {
         repo: ROOT,
@@ -919,7 +921,7 @@ async function withCannedNeon<T>(
         nonce: "2".repeat(64),
       } satisfies RuntimeAuthorityEnvelope,
     });
-    return await run(store, sent);
+    return await run(store, sent, vault);
   } finally {
     neonConfig.fetchFunction = originalFetch;
     if (originalReport === undefined) delete process.env.WTP_VITAL_SIGNS_REPORT; else process.env.WTP_VITAL_SIGNS_REPORT = originalReport;
@@ -942,6 +944,8 @@ test("a vote job reads only the retained source references, without loading its 
   const encoded=await codec.store(value);
   const fetched:unknown[]=[];
   await withCannedNeon(statement=>{
+    if(statement.query==="SELECT candidate->'vault' AS vault FROM civic_data_candidates WHERE id=$1")
+      return {columns:[["vault","jsonb"]],rows:[[null]]};
     if(statement.query.includes('FROM "civic_data_candidates"')) {
       assert.deepEqual(statement.params.slice(0,3), ["held-votes", "normalizedPayload", "acquisitions"]);
       return {columns:[["value","jsonb"],["depth","text"]],rows:[[encoded,1]]};
@@ -1217,20 +1221,42 @@ test("every Postgres candidate-event allocator is serialized inside its Neon bat
   assert.match(append, /civicDataPromotions\.lastKnownGoodVersionId\} = \$\{candidateId\}/);
 });
 
-test("the Postgres retry clock keeps failed attempts local and uses an observed source check for successful held-byte replay", () => {
-  const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
-  const postgres = source.slice(source.indexOf("export class PostgresRoutineDataStore"));
-  const clock = postgres.slice(postgres.indexOf("  async clock("));
-  assert.match(clock, /CASE WHEN \$\{civicDataCandidates\.state\} = 'PROMOTED'[\s\S]*\$\{civicDataCandidates\.acquisitionSucceeded\} = true/);
-  assert.match(clock, /THEN LEAST\([\s\S]*retrieval,sourceCheck,checkedAt[\s\S]*civicDataCandidateEvents\.at[\s\S]*ELSE \$\{civicDataCandidateEvents\.at\} END/);
-  assert.match(clock, /select\(\{ attemptedAt: attemptAt[,} ]/);
-  assert.match(clock, /eq\(civicDataCandidateEvents\.sequence, 1\)/);
-  assert.match(clock, /orderBy\(desc\(attemptAt\)[,)]/);
-  assert.doesNotMatch(
-    clock,
-    /orderBy\(desc\(civicDataCandidates\.retrievedAt\)\)/,
-    "an untrusted future retrievedAt would postpone a source retry",
-  );
+test("the Postgres retry clock keeps failed attempts local and uses an observed source check for successful held-byte replay",async()=>{
+  await withMigratedRoutineStore("fec-funding",async(store,_vault,pg)=>{
+    // Isolate historical retry metadata from publication proof; neither scope has a live pointer.
+    await pg.exec("ALTER TABLE civic_data_candidates DISABLE TRIGGER USER; ALTER TABLE civic_data_candidate_events DISABLE TRIGGER USER");
+    const seed=async(id:string,scope:string,state:string,at:string,sourceCheck?:string,bootstrap?:string)=>{
+      const base=candidate(id,sourceCheck??at,"fec-open-api"),failed=state==="SOURCE_BLOCKED";
+      const value={...base,scope,retrieval:{...base.retrieval,succeeded:!failed,
+        ...(state==="FETCHED"?{retrievedAt:"2099-01-01T00:00:00Z"}:{}),
+        ...(sourceCheck?{sourceCheck:{requestedUrl:base.retrieval.requestedUrl,finalUrl:base.retrieval.finalUrl!,httpStatus:200 as const,rawHash:HASH,checkedAt:sourceCheck}}:{})},
+        normalization:{...base.normalization,parserVersion:"retry-clock/1"},
+        ...(bootstrap?{bootstrapImport:{kind:bootstrap}}:{})} as RoutineCandidate;
+      const good=receiptFor(value),receipt=state==="FETCHED"?null:failed?{...good,decision:"FAIL",
+        checks:[{...good.checks[0],verdict:"FAIL",code:"SOURCE_UNAVAILABLE",detail:"Source read failed"},...good.checks.slice(1)]}:good;
+      await pg.query(`INSERT INTO civic_data_candidates(id,source_id,record_class,scope,state,acquisition_succeeded,raw_hash,normalized_hash,
+        retrieved_at,source_through,parser_version,identity,candidate,validation_receipt,promoted_version_id,last_known_good_version_id,failure_code,failure_detail)
+        VALUES($1,'fec-open-api','FEC_FUNDING',$2,$3,$4,$5,$6,$7,$8,'retry-clock/1',$9,$10,$11,$12,$12,$13,$14)`,
+        [id,scope,state,!failed,value.retrieval.rawHash,value.normalization.normalizedHash,value.retrieval.retrievedAt,
+          value.temporal.sourceThrough,value.identities,value,receipt,state==="PROMOTED"?id:null,failed?"SOURCE_UNAVAILABLE":null,failed?"Source read failed":null]);
+      await pg.query("INSERT INTO civic_data_candidate_events(candidate_id,sequence,state,at,detail) VALUES($1,1,'FETCHED',$2,'Observed locally')",[id,at]);
+    };
+    const sourceAt="2026-11-08T01:00:00Z",normalAt="2026-11-08T02:00:00Z",replayAt="2026-11-08T03:00:00Z";
+    await seed("normal","ordinary","FETCHED",normalAt);
+    await seed("replay","ordinary","PROMOTED",replayAt,sourceAt);
+    await seed("transfer","ordinary","PROMOTED","2026-11-08T04:00:00Z",undefined,"TRUSTED_LKG_IMPORT");
+    await seed("failed","failure","SOURCE_BLOCKED",normalAt,sourceAt);
+    await seed("replay-after-failure","failure","PROMOTED",replayAt,sourceAt);
+    await seed("replay-only","replay","PROMOTED",replayAt,sourceAt);
+    await pg.exec("ALTER TABLE civic_data_candidates ENABLE TRIGGER USER; ALTER TABLE civic_data_candidate_events ENABLE TRIGGER USER");
+    const clock=(scope:string,parser="retry-clock/1")=>store.clock("fec-open-api","FEC_FUNDING",scope,parser);
+    assert.equal((await clock("ordinary")).lastAttemptedAt,new Date(normalAt).toISOString(),"reprocessing saved bytes and transfers cannot postpone an ordinary retry");
+    const failure=await clock("failure");
+    assert.equal(failure.lastAttemptedAt,new Date(normalAt).toISOString(),"a failed attempt keeps its local clock even if it carries old source metadata");
+    assert.equal(failure.failureStreak,1);
+    assert.equal((await clock("replay")).lastAttemptedAt,new Date(sourceAt).toISOString(),"a successful saved-byte replay retains the provider's actual check");
+    assert.equal((await clock("ordinary","new-parser")).lastAttemptedAt,undefined);
+  });
 });
 
 test("every Postgres civic-data mutation proves the sanctioned runtime authority before touching the database", () => {
@@ -1371,7 +1397,7 @@ for (const family of STATE_BALLOT_FAMILIES) test(`${family} stores bounded state
       rows: [[value.id, isMetadata ? metadata.candidate : envelope, "PROMOTED", true, receipt, value.id, value.id, null, null]] };
     }
     return none;
-  }, async (store, sent) => {
+  }, async (store, sent, vault) => {
     Object.assign(store as unknown as Record<string, unknown>, { writeAuthority: {
       repo: ROOT, sha: "1".repeat(40), capability: manual ? "MANUAL_CONTRACT" : "ROUTINE_CONTRACT", contract: id,
       parentPid: 123, nonce: "2".repeat(64),
@@ -1388,7 +1414,7 @@ for (const family of STATE_BALLOT_FAMILIES) test(`${family} stores bounded state
     const decoded = await new CivicPayloadParts({ existing: async () => [], write: async () => {},
       read: async hashes => hashes.map(hash => ({ hash, payload: parts.get(hash) })),
     }).load(envelope!);
-    const {vault:_vault,...logical}=decodeStateCandidate(decoded) as Record<string,unknown>;
+    const logical=await hydrateCandidateFacts(vault,decodeStateCandidate(decoded));
     assert.deepEqual(logical, value, "source evidence, identities, and reader values survive the encoding exactly");
     const readAt = sent.length;
     const lineageRef = (envelope!.retrieval.derived as unknown as { $civicPayloadPart: string }).$civicPayloadPart;
@@ -1611,7 +1637,7 @@ for (const family of ["candidate-profiles", "candidate-corpus", "candidate-campa
         normalizedHash: normalizedHash(payload), normalizedPayloadHash: normalizedHash(payload) } });
     const parts = new Map<string, unknown>();
     let envelope: RoutineCandidate | undefined;
-    await withCannedNeon(({ query, params }) => {
+    const vault=await withCannedNeon(({ query, params }) => {
       if (query.startsWith('insert into "civic_data_payload_parts"'))
         for (let at = 0; at < params.length; at += 2) parts.set(String(params[at]), JSON.parse(String(params[at + 1])));
       if (query.startsWith('insert into "civic_data_candidates"')) envelope = params.flatMap(value => {
@@ -1619,19 +1645,20 @@ for (const family of ["candidate-profiles", "candidate-corpus", "candidate-campa
         try { const parsed = JSON.parse(value); return parsed?.id === base.id ? [parsed] : []; } catch { return []; }
       })[0];
       return { columns: [], rows: [] };
-    }, async store => {
+    }, async (store,_sent,vault) => {
       Object.assign(store, { writeAuthority: { repo: ROOT, sha: "1".repeat(40), capability: manual ? "MANUAL_CONTRACT" : "ROUTINE_CONTRACT",
         contract: id, parentPid: 123, nonce: "2".repeat(64) } satisfies RuntimeAuthorityEnvelope });
       await store.create({ candidate: value, state: "FETCHED", acquisitionSucceeded: true, receipt: null, promotedVersion: null,
         lastKnownGoodVersion: null, failureCode: null, failureDetail: null },
       { candidateId: value.id, sequence: 1, state: "FETCHED", at: value.retrieval.retrievedAt, detail: "Source payload acquired" });
+      return vault;
     });
     assert.ok(envelope);
     assert.deepEqual(Object.keys(envelope.readModel as object), ["$civicPayloadPart"]);
     assert.equal(parts.size, 1);
     const codec = new CivicPayloadParts({ existing: async () => [], write: async () => assert.fail("readback cannot write"),
       read: async hashes => hashes.map(hash => ({ hash, payload: parts.get(hash) })) });
-    const {vault:_vault,...logical}=decodeStateCandidate(await codec.load(envelope)) as Record<string,unknown>;
+    const logical=await hydrateCandidateFacts(vault,decodeStateCandidate(await codec.load(envelope)));
     assert.deepEqual(logical, value);
     assert.deepEqual(await codec.load(envelope.readModel), payload, "the promotion's exact stored reference resolves to the same payload");
   });

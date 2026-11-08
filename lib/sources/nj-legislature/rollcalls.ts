@@ -1,10 +1,10 @@
-import { createHash } from "node:crypto";
 import { readZipEntries } from "../archive.ts";
 
 import { sourceAcquisitionFailure } from "../../civic-data/source-acquisition-failure.ts";
 import { officialStateOfficeholderId } from "../../state-rollcalls/authority.ts";
 import type { StateMemberVote, StateRollCall, StateVotePosition } from "../legiscan/types.ts";
 import { njSecondTuesday } from "./roster.ts";
+import { sha256 } from "../../sha256.ts";
 
 export const NJ_VOTING_RECORDS_INDEX_URL = "https://www.njleg.state.nj.us/api/votingRecords";
 export const NJ_MEMBER_REQUEST_CONCURRENCY = 8;
@@ -156,10 +156,6 @@ function canonical(value: unknown): string {
       .join(",")}}`;
   }
   return JSON.stringify(value);
-}
-
-function sha256(value: string | Uint8Array): string {
-  return createHash("sha256").update(value).digest("hex");
 }
 
 function object(value: unknown, label: string): Record<string, unknown> {

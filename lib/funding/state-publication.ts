@@ -1,3 +1,4 @@
+import { saveSourceReference } from "../facts/source-copy.ts";
 import { storedKeyValue } from "../core/keys-values.ts";
 import { createHash, randomUUID } from "node:crypto";
 import { mkdir, mkdtemp, rm } from "node:fs/promises";
@@ -171,7 +172,7 @@ async function importHeldCampaignMoney(options:StateRefreshOptions,people:readon
       for(const held of records){
         const person=byId.get(String(held.person_id))!;
       const record=held.record as StateMoneyRecord;
-      if(record.dataClass!=="STATE_COMMITTEE" || held.record_kind && held.record_kind!=="CAMPAIGN_FINANCE_FILING" || typeof record.totals.coveringPeriod!=="string" || !record.totals.coveringPeriod.trim() || record.jurisdiction!==options.state || held.ocd_id && held.ocd_id!==person.division || record.filingState!=="FILED" || !record.committeeId || !record.registeredName || !record.filingsUrl || !record.provenance.verifiedAt ||
+      if(record.dataClass!=="STATE_COMMITTEE" || held.record_kind && held.record_kind!=="CAMPAIGN_FINANCE_FILING" || typeof record.totals.coveringPeriod!=="string" || !record.totals.coveringPeriod.trim() || record.jurisdiction!==options.state || held.ocd_id && held.ocd_id!==person.division || record.filingState!=="FILED" || !record.committeeId || !record.registeredName || !record.filingsUrl || !record.provenance.verifiedAt || !record.provenance.sourceUrl ||
         !record.match.allThreeAgree || campaignName(record.candidateNameAsFiled)!==campaignName(person.name) || campaignOffice(record.officeSought??"")!==campaignOffice(person.office) || record.electionYear<2020)continue;
       if(person.division!==campaignStateOcd(options.state) && !record.targetKeys.some(key=>key===person.id || person.aliases?.includes(key)) && record.detailSource?.ocdId!==person.division)continue;
       const dates=record.totals.coveringPeriod?.match(/\b(?:19|20)\d{2}\b/g)?.map(Number)??[record.electionYear];
@@ -186,14 +187,13 @@ async function importHeldCampaignMoney(options:StateRefreshOptions,people:readon
       const source={url:record.provenance.sourceUrl,filingUrl:record.filingsUrl,publisher:record.agency,rawHash,vaultKey,byteLength:body.length,retrievedAt:record.provenance.collectedAt,
         publicationDate:null,checkedAt:record.checkedAt};
       await options.facts.transaction(async query=>{
-        const [copy]=await query(`INSERT INTO source_copy(url,final_url,fetched_at,http_status,sha256,blob_key,is_archive) VALUES($1,$1,$2,NULL,$3,$4,false)
-          ON CONFLICT(blob_key) DO UPDATE SET blob_key=EXCLUDED.blob_key RETURNING id`,[source.url,source.retrievedAt,rawHash,vaultKey]);
+        const copyId=await saveSourceReference(query,{key:vaultKey,url:source.url,finalUrl:source.url,fetchedAt:source.retrievedAt,httpStatus:null,contentHash:rawHash});
         const changedCommittee=await query(`INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'committee',$2,$3,$4)
           ON CONFLICT(id) DO UPDATE SET name=EXCLUDED.name WHERE entity.name IS DISTINCT FROM EXCLUDED.name RETURNING id`,[committee,record.registeredName,options.state,person.id]);
         const value={id:`${committee}:${cycle}`,person:{id:person.id,name:person.name,seat:person.seat},committee:record.registeredName,cycle,totals,sources:[source],
           organizations:filedOrganizations(record.funding),individualTotal:record.funding?.scope==="ELECTION_CYCLE"?record.funding.individualTotal:null,smallDonorShare:null};
         await query("CREATE TEMP TABLE money_cycles(entity_id text,field text,source_copy_id bigint,value jsonb,checked_at timestamptz) ON COMMIT DROP");
-        await query("INSERT INTO money_cycles VALUES($1,$2,$3,$4,$5)",[person.id,`campaign-cycle:${committee}:${cycle}`,copy.id,JSON.stringify(value),record.provenance.verifiedAt]);
+        await query("INSERT INTO money_cycles VALUES($1,$2,$3,$4,$5)",[person.id,`campaign-cycle:${committee}:${cycle}`,copyId,JSON.stringify(value),record.provenance.verifiedAt]);
         const cycles=await replaceCycles(query,at);
         const affected=[...new Set([...cycles,...changedCommittee.map(row=>String(row.id))])];
         if(affected.length){

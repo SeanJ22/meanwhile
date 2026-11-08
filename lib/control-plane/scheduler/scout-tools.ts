@@ -36,6 +36,7 @@ import {
   type ScoutToolkit,
 } from "./scout-contract.ts";
 import { decodeEntities, visibleText } from "../../extract/visible-text.ts";
+import { extractLinks } from "../../hunt/page-links.ts";
 
 /** The ordinary public-page reader for collectors: held bytes, then HTTP, then the existing browser. */
 export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:number}={}) {
@@ -92,7 +93,6 @@ export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:numb
 
 /** Page text the model is shown: compact by default, the passages that match `look_for` when given. */
 export const TEXT_CAP_CHARS = 5_000;
-export const LINK_CAP = 40;
 export const REQUEST_LIST_CAP = 40;
 const SOURCE_API_CHARS = 8_000;
 const READ_PASSAGE_CHARS = 4_000;
@@ -247,37 +247,6 @@ export function htmlTitle(html: string): string | null {
   if (!m) return null;
   const title = decodeEntities(m[1]).replace(/\s+/g, " ").trim();
   return title === "" ? null : title;
-}
-
-export interface DerivedLink {
-  readonly url: string;
-  readonly text: string;
-}
-
-/** Absolute http(s) links, deduplicated, same-host first, capped. */
-export function extractLinks(html: string, base: URL, cap: number = LINK_CAP): DerivedLink[] {
-  const seen = new Set<string>();
-  const same: DerivedLink[] = [];
-  const other: DerivedLink[] = [];
-  const re = /<a\b[^>]*\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))[^>]*>([\s\S]*?)<\/a\s*>/gi;
-  for (const m of html.matchAll(re)) {
-    const href = decodeEntities(m[1] ?? m[2] ?? m[3] ?? "").trim();
-    if (href === "" || href.startsWith("#") || /^(javascript|mailto|tel|data):/i.test(href)) continue;
-    let resolved: URL;
-    try {
-      resolved = new URL(href, base);
-    } catch {
-      continue;
-    }
-    if (resolved.protocol !== "http:" && resolved.protocol !== "https:") continue;
-    resolved.hash = "";
-    const key = resolved.toString();
-    if (seen.has(key)) continue;
-    seen.add(key);
-    const text = visibleText(m[4] ?? "").replace(/\s+/g, " ").trim().slice(0, 100);
-    (resolved.host.toLowerCase() === base.host.toLowerCase() ? same : other).push({ url: key, text });
-  }
-  return [...same, ...other].slice(0, cap);
 }
 
 function capText(text: string, cap: number = TEXT_CAP_CHARS): { readonly text: string; readonly note: string } {

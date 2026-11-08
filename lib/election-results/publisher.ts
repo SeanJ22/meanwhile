@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import type { BallotSet } from "../ballot/types.ts";
 import { workList, type WorkInput } from "../core/work.ts";
 import { ensureSourceEntity } from "../facts/entities.ts";
+import { stateName } from "../facts/entity-read.ts";
 import { pageCopy, saveSourceReference } from "../facts/source-copy.ts";
 import { publishClaim, type FactDb, type Query } from "../facts/publish.ts";
 import type { SavedCopy } from "../facts/check.ts";
@@ -11,6 +12,7 @@ import { nextElectionResultCheck } from "./schedule.ts";
 import type { DoorRecord } from "../doors/registry.ts";
 import type { ReaderCachePurger } from "../reader/cache.ts";
 import type { ElectionResult, ElectionResultBatch } from "./types.ts";
+import { updateCongressResults, type CongressRaceResult } from "./summary.ts";
 
 export interface RaceClock {
   readonly fingerprint: string;
@@ -23,6 +25,7 @@ export interface RaceClock {
 export interface ResultProgress {
   readonly races: Readonly<Record<string, RaceClock>>;
   readonly summaries: Readonly<Record<string, string>>;
+  readonly federalResults?: Readonly<Record<string, CongressRaceResult>>;
 }
 export interface ResultCounts {
   matched: number;
@@ -63,6 +66,7 @@ async function publishValue(input: {
   db: FactDb; query: Query; copy: SavedCopy; race: ElectionResult; id: string;
   kind: "contest" | "candidacy" | "measure" | "place"; name: string; parentId: string | null;
   sourceId: string; value: unknown; quote: string; quotes?: readonly string[]; field?: string; now: Date; purge?: ReaderCachePurger;
+  accepted?: (id: string, field: string, value: unknown) => void;
 }): Promise<boolean> {
   const { race } = input;
   const quotes = input.quotes?.length ? input.quotes : [input.quote];
@@ -80,6 +84,8 @@ async function publishValue(input: {
     acquisition: "checked", producedBy: "election-results", costUsd: 0,
   }, clocks, input.now, { purge: input.purge });
   if ("blank" in outcome) throw new Error(`ELECTION_RESULT_REFUSED:${outcome.blank}`);
+  if (outcome.decision === "PUBLISH" || outcome.decision === "CONFIRM")
+    input.accepted?.(input.id, input.field ?? "election_result", input.value);
   return outcome.decision === "PUBLISH";
 }
 
@@ -89,9 +95,14 @@ export async function publishElectionResultBatch(input: {
   prior?: ResultProgress; door?: DoorRecord; now?: Date; purge?: ReaderCachePurger; more?: () => boolean;
   /** One runner-owned allowance handles every kind of fix; queued work never delays a fact. */
   writeFix?: (row: WorkInput) => Promise<void>;
+  /** Only values the Slide published or confirmed enter the job-built reader slice. */
+  accepted?: (id: string, field: string, value: unknown) => void;
 }): Promise<{ counts: ResultCounts; progress: ResultProgress; nextCheckAt: string | null; deferred: boolean }> {
   const now = input.now ?? new Date(), at = now.toISOString(), counts: ResultCounts = { matched: 0, unmatched: 0, ambiguous: 0, published: 0, unchanged: 0 };
-  const progress = { races: { ...input.prior?.races }, summaries: { ...input.prior?.summaries } };
+  const progress: { races: Record<string, RaceClock>; summaries: Record<string, string>; federalResults?: Readonly<Record<string, CongressRaceResult>> } = {
+    races: { ...input.prior?.races }, summaries: { ...input.prior?.summaries },
+    ...(input.prior?.federalResults ? { federalResults: input.prior.federalResults } : {}),
+  };
   let deferred = false;
   let copy: SavedCopy | undefined;
   const observed = async () => {
@@ -120,12 +131,48 @@ export async function publishElectionResultBatch(input: {
     const race = { ...raw, statusChangedAt: raw.statusChangedAt ?? (previous?.status === raw.status ? previous.statusChangedAt : raw.checkedAt) };
     const nextCheckAt = nextElectionResultCheck({ ...race, lastCheckedAt: at }, input.door, now);
     const hash = resultFingerprint(raw, match);
+    if (race.sourceId === "ballotpedia" && (race.office === "us_senate" || race.office === "us_house")) {
+      const [federalKey, federal] = Object.entries(updateCongressResults(undefined, [race]))[0];
+      const { checkedAt: _at, ...value } = federal;
+      const summaryKey = `congress:${federalKey}`, federalHash = fingerprint(value);
+      if (progress.summaries[summaryKey] === federalHash && progress.federalResults?.[federalKey]) {
+        progress.federalResults = { ...progress.federalResults, [federalKey]: { ...progress.federalResults[federalKey], checkedAt: at } };
+      } else {
+        let admitted = false;
+        if (await publishValue({ db: input.db, query: input.query, copy: await observed(), race, id: statePlace(race.state),
+          kind: "place", name: stateName(race.state) ?? race.state, parentId: statePlace("US"), sourceId: race.sourceRaceId,
+          value: federal, quote: race.quote, field: `election_congress:${race.sourceRaceId}`, now, purge: input.purge,
+          accepted: (...args) => { admitted = true; input.accepted?.(...args); } })) counts.published++;
+        if (admitted) {
+          progress.federalResults = { ...progress.federalResults, [federalKey]: federal };
+          progress.summaries[summaryKey] = federalHash;
+        }
+      }
+    }
     if (match.kind === "matched") counts.matched++;
     else if (match.kind === "ambiguous") counts.ambiguous++;
     else counts.unmatched++;
     if (previous?.fingerprint === hash) { counts.unchanged++; progress.races[key] = { ...previous, lastCheckedAt: at, nextCheckAt }; continue; }
+    const incumbentConflictReason = "Source incumbent flags disagree";
+    const incumbentConflictKey = `incumbent-conflict:${key}`;
+    const conflictingCandidates = race.sourceId === "multistate" && race.incumbentLost === false
+      && (race.status === "called" || race.status === "certified")
+      ? race.candidates.filter(candidate => candidate.incumbent === true && candidate.won === false) : [];
+    const updateIncumbentConflict = async () => {
+      if (conflictingCandidates.length) {
+        await electionResultFix(input.query, race, incumbentConflictReason, "fix", {
+          reportedIncumbentLost: false, candidateNames: conflictingCandidates.map(candidate => candidate.name),
+        }, input.writeFix);
+        progress.summaries[incumbentConflictKey] = hash;
+      } else if (progress.summaries[incumbentConflictKey]) {
+        await workList(input.query, { owner: "election-results" }).resolve({ subjectId: `election-results:${race.state}:${race.sourceRaceId}`,
+          fieldPrefix: `election_result:${incumbentConflictReason}` });
+        delete progress.summaries[incumbentConflictKey];
+      }
+    };
     if (match.kind !== "matched") {
       await electionResultFix(input.query, race, match.reason, match.kind === "ambiguous" ? "detect" : "fix", { contestIds: match.contestIds }, input.writeFix);
+      await updateIncumbentConflict();
     } else {
       const evidence = await observed(), citation = { sources: sources(race), checkedAt: at,
         sourceId: race.sourceId, sourceRaceId: race.sourceRaceId, electionDate: race.electionDate };
@@ -134,14 +181,17 @@ export async function publishElectionResultBatch(input: {
         const { checkedAt: _checkedAt, ...value } = args.value as Record<string, unknown>;
         const fieldKey = `${args.kind}:${args.id}`, hash = fingerprint(value);
         if (values[fieldKey] === hash) return;
-        if (await publishValue({ ...args, db: input.db, query: input.query, copy: evidence, race, now, purge: input.purge })) counts.published++;
+        if (await publishValue({ ...args, db: input.db, query: input.query, copy: evidence, race, now, purge: input.purge, accepted: input.accepted })) counts.published++;
         values[fieldKey] = hash;
       };
+      const measureValue = race.measure ? { yesVotes: race.measure.yesVotes ?? null, noVotes: race.measure.noVotes ?? null,
+        yesPercent: race.measure.yesPercent ?? null, outcome: race.measure.outcome } : undefined;
       await write({ id: match.contest.id, kind: "contest", name: match.contest.title, parentId: match.contest.ocdId,
         sourceId: race.sourceRaceId, quote: race.quote,
         value: { status: race.status, percentCounted: race.percentCounted ?? null, statusChangedAt: raw.statusChangedAt ?? null,
           seatsToFill: race.seatsToFill ?? match.contest.voteFor, flipped: race.flipped ?? null,
-          gainedByParty: race.gainedByParty ?? null, incumbentLost: race.incumbentLost ?? null, ...citation } });
+          gainedByParty: race.gainedByParty ?? null, incumbentLost: race.incumbentLost ?? null,
+          seatsFlipped: race.seatsFlipped ?? null, incumbentsLost: race.incumbentsLost ?? null, ...measureValue, ...citation } });
       for (const row of match.candidates) {
         const candidate = race.candidates[row.resultIndex];
         await write({ id: row.candidacy.id, kind: "candidacy", name: candidate.name, parentId: match.contest.id,
@@ -151,16 +201,17 @@ export async function publishElectionResultBatch(input: {
       }
       if (race.measure && match.measure) await write({ id: match.measure.id, kind: "measure", name: race.measure.name,
         parentId: match.contest.id, sourceId: race.sourceRaceId, quote: race.quote,
-        value: { yesVotes: race.measure.yesVotes ?? null, noVotes: race.measure.noVotes ?? null,
-          yesPercent: race.measure.yesPercent ?? null, outcome: race.measure.outcome, ...citation } });
+        value: { ...measureValue, ...citation } });
       if (match.unmatchedCandidates.length) await electionResultFix(input.query, race, "Candidate missing from served ballot", "fix",
         { candidateNames: match.unmatchedCandidates.map(index => race.candidates[index].name) }, input.writeFix);
       if (match.ambiguousCandidates.length) await electionResultFix(input.query, race, "Candidate identity tie", "detect",
         { candidateNames: match.ambiguousCandidates.map(index => race.candidates[index].name) });
+      await updateIncumbentConflict();
       const list = workList(input.query, { owner: "election-results" });
       await list.resolve({ subjectId: `election-results:${race.state}:${race.sourceRaceId}`, fieldPrefix: "election_result:",
         exceptFields: [...match.unmatchedCandidates.length ? ["election_result:Candidate missing from served ballot"] : [],
-          ...match.ambiguousCandidates.length ? ["election_result:Candidate identity tie"] : []] });
+          ...match.ambiguousCandidates.length ? ["election_result:Candidate identity tie"] : [],
+          ...conflictingCandidates.length ? [`election_result:${incumbentConflictReason}`] : []] });
       await list.resolve({ subjectId: match.contest.id, fieldPrefix: "election_result" });
       progress.races[key] = { fingerprint: hash, status: race.status, statusChangedAt: race.statusChangedAt,
         lastCheckedAt: at, nextCheckAt, values };
@@ -182,7 +233,7 @@ export async function publishElectionResultBatch(input: {
     if (await publishValue({ db: input.db, query: input.query, copy: await observed(), race, id, kind: "place", name: summary.state,
       parentId: summary.state === "US" ? null : statePlace("US"), sourceId: summary.state,
       value: { ...value, checkedAt: at, sourceClockKey: `${sourceId}${chamberKey ? `:${chamberKey}` : ""}` }, quote, quotes,
-      field: chamberKey ? `election_summary:${chamberKey}` : "election_summary", now, purge: input.purge })) counts.published++;
+      field: chamberKey ? `election_summary:${chamberKey}` : "election_summary", now, purge: input.purge, accepted: input.accepted })) counts.published++;
     progress.summaries[key] = hash;
   }
   const due = Object.values(progress.races).flatMap(row => row.nextCheckAt ? [row.nextCheckAt] : []).sort();

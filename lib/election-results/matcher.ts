@@ -86,7 +86,7 @@ function districtHint(contest: Contest, hint: string | undefined): boolean {
   return [division, titleHint].some(value => value !== undefined && clean(value) === wanted);
 }
 
-function measureMatch(result: ElectionResult, contest: Contest, ballot: ServedBallot): readonly Measure[] {
+function measureMatch(result: ElectionResult, contest: Contest, ballot: ServedBallot): readonly (Measure | undefined)[] {
   if (!result.measure) return [];
   const designation = (value: string): string => {
     const normalized = key(value);
@@ -95,10 +95,13 @@ function measureMatch(result: ElectionResult, contest: Contest, ballot: ServedBa
   };
   const published = [result.measure.name, result.measure.number].filter((value): value is string => !!value);
   const designations = new Set(published.flatMap(value => [key(value), designation(value)]));
-  return ballot.measures.filter(measure => {
+  const titleMatches = designations.has(key(contest.title)) || designations.has(designation(contest.title));
+  const held = ballot.measures.filter(measure => measure.contestId === contest.id);
+  // A served yes/no contest can precede its separate wording record. Its published designation still identifies it.
+  if (!held.length) return titleMatches ? [undefined] : [];
+  return held.filter(measure => {
     const officialNumber = measure.officialNumber;
-    return measure.contestId === contest.id &&
-    ([contest.title, officialNumber].some(value => value !== undefined &&
+    return ([contest.title, officialNumber].some(value => value !== undefined &&
       (designations.has(key(value)) || designations.has(designation(value)))) ||
       // A bare official number belongs to this state's measure; no candidate district is consulted.
       !!officialNumber && /^\d+$/.test(key(officialNumber)) && published.some(value =>

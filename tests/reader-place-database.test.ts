@@ -3,8 +3,8 @@ import test from "node:test";
 import {migratedReaderDb} from "./helpers/migrated-reader-db.ts";
 import {installFactReader} from "../lib/facts/db.ts";
 import {installReaderDatabaseQuery} from "../lib/reader/database.ts";
-import {PLACE_PAGES_SQL, PLACE_PRINT_SQL,readPlacePackage,readPlacePackageHttp} from "../lib/reader/place.ts";
-import {PLACE_PACKAGE_SQL,buildPlacePackage} from "../lib/reader/place-builder.ts";
+import {PLACE_PAGES_SQL,readPlacePackage,readPlacePackageHttp} from "../lib/reader/place.ts";
+import {PLACE_PACKAGE_SQL,PLACE_CHECKS_SQL,buildPlacePackage} from "../lib/reader/place-builder.ts";
 import {seedPlacePages} from "./helpers/place-pages.ts";
 import {withReaderSelection} from "../lib/db/reader-route.ts";
 import {stateCoverage,withPlaceRegistry} from "../lib/reader/coverage.ts";
@@ -55,7 +55,7 @@ test("place reads preserve the migrated state type, use the existing one-shot cl
     await pg.exec("RESET enable_seqscan");
     const query=async(text:string,params:readonly unknown[]=[]) => (await pg.query<Record<string,unknown>>(text,[...params])).rows;
     await seedPlacePages(query,input);
-    installFactReader(async(text,params=[])=>{assert.ok(text===PLACE_PAGES_SQL||text===PLACE_PRINT_SQL);reads++;await held;return(await pg.query<Record<string,unknown>>(text,[...params])).rows;});
+    installFactReader(async(text,params=[])=>{assert.ok(text===PLACE_PAGES_SQL||text===PLACE_CHECKS_SQL);if(text===PLACE_PAGES_SQL)reads++;await held;return(await pg.query<Record<string,unknown>>(text,[...params])).rows;});
     installReaderDatabaseQuery(async()=>{throw new Error("A one-shot place read must not open a socket session")});
     await withReaderSelection({states:["AZ"],keys:new Set(input.divisionIds)},async()=>{
       const first=readPlacePackageHttp(input);
@@ -89,7 +89,7 @@ test("an independent place request sees a rebuilt current page while an older qu
     const query=async(text:string,params:readonly unknown[]=[]) => (await pg.query<Record<string,unknown>>(text,[...params])).rows;
     await seedPlacePages(query,input);
     installFactReader(async(text,params=[])=>{
-      const call=++reads;
+      const call=text===PLACE_PAGES_SQL?++reads:0;
       const rows=await checked(async(text,params)=>(await pg.query<Record<string,unknown>>(text,[...params])).rows,text,params);
       if(call===1){started();await held;}
       return rows;

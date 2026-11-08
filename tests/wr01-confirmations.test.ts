@@ -10,6 +10,7 @@ import { campaignFinanceSource } from "../lib/funding/state-sources.ts";
 import { campaignSourceRecord } from "../lib/funding/state-source-records.ts";
 import { fileCampaignMoneyFacts } from "../lib/funding/state-facts.ts";
 import { rebuildCampaignCycles } from "../lib/funding/state-cycles.ts";
+import { confirmCampaignResourceChecks } from "../lib/funding/state-source-probe.ts";
 
 const at = "2026-10-26T10:00:00.000Z";
 const later = (hour: number) => new Date(Date.parse(at)+hour*3_600_000).toISOString();
@@ -140,6 +141,8 @@ test("Kentucky counts cross-export transactions once, preserves within-export re
     assert.deepEqual(await db.query("SELECT count(*)::int AS n FROM fact WHERE field LIKE 'campaign-donor:%'"),[{n:1}]);
   }
   const changed={...november[1],amounts:[{label:"Receipts",amount:250}],donor:{...november[1].donor!,amount:250}};
+  await confirmCampaignResourceChecks(db,"KY",[{resourceId:source.id,rawHash:"combined",rawHashes:["a".repeat(64),"b".repeat(64)],checkedAt:later(3)}],purge);
+  assert.deepEqual(await updates(db),zero,"a scheduled full-source money check does not rewrite any financial fact");
   await fileCampaignMoneyFacts(db,"KY",[changed],later(3),{purge});await rebuildCampaignCycles(db,"KY",[person.id],later(3),purge);
   assert.equal(Number((await db.query("SELECT value->>'amount' AS amount FROM fact WHERE field LIKE 'campaign-donor:%' AND status='live'"))[0].amount),550);
   await db.query("UPDATE fact SET status='superseded' WHERE field LIKE 'campaign-donor:%' AND status='live'");

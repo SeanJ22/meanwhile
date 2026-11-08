@@ -1,3 +1,4 @@
+import { PLACE_CHECKS_SQL } from "../lib/reader/place-builder.ts";
 import assert from "node:assert/strict";
 import { placePagesAnswer } from "./helpers/place-pages-answer.ts";
 import test from "node:test";
@@ -42,6 +43,7 @@ test("state jobs list IDs once per state and defer each bounded page read until 
       assert.deepEqual(params, [calls.filter(call => call.text.startsWith("SELECT id FROM entity")).length === 1 ? ["AZ"] : ["CA"]]);
       return (params[0] as string[]).includes("AZ") ? [{ id: FIRST }, { id: SECOND }] : [{ id: FOREIGN }];
     }
+    if(text===PLACE_CHECKS_SQL)return [];
     assert.equal(text, PLACE_PAGES_SQL);
     assert.equal(params[5], false, "a worker never opens a complete state aggregate");
     const bodies = params[2] as string[];
@@ -98,6 +100,7 @@ test("an explicit state resolves a short body alias for current and held agendas
     await seedPlacePages(query,{state:"US",divisionIds:[country],bodyIds:[national]});
     const states:string[] = [];
     const saved:Query = async(text,params=[]) => {
+      if(text===PLACE_CHECKS_SQL)return query(text,params);
       assert.equal(text,PLACE_PAGES_SQL,"alias state selection adds no identity query");
       states.push(String(params[0]));
       return query(text,params);
@@ -190,6 +193,7 @@ test("saved division contexts read current alias pointers without storing a seco
     for(const includeHistory of [false,true]) {
       let reads=0;
       const place=await readPlacePackage({state:'AZ',divisionIds:[division],includeHistory},async(text,params)=>{
+        if(text===PLACE_CHECKS_SQL)return query(text,params);
         reads++;assert.equal(text,PLACE_PAGES_SQL);
         const rows=await query(text,params);
         assert.deepEqual((rows[0] as {read:{headers:unknown}}).read.headers,{[alias]:{id:body,name:'City Council'},[body]:{id:body,name:'City Council'}},'one indexed query supplies only this saved page\'s identity headers');

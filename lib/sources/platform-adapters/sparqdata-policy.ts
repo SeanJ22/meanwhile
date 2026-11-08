@@ -1,5 +1,5 @@
 /** Decode saved Sparq school-policy responses; no network or model calls. */
-import { extractLinks } from '../../control-plane/scheduler/scout-tools.ts';
+import { extractLinks } from '../../hunt/page-links.ts';
 import { visibleText } from '../../extract/visible-text.ts';
 import type {PlatformAdapterGuide} from '../../control-plane/scheduler/scout-adapters.ts';
 

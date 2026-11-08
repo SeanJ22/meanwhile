@@ -1,8 +1,46 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { startTransition, useCallback, useEffect, useState, type ReactNode } from "react";
 
 import { AddressPrompt } from "@/components/address/address-prompt";
+import { enhanceBallotResults } from "./deferred-result-enhancer";
+
+/** Results wait until the existing ballot has painted and accepts input. */
+export function afterBallotReady(start: () => void): () => void {
+  let stopped = false, queued = false, firstFrame = 0, secondFrame = 0, idle: number | undefined;
+  let observer: MutationObserver | undefined;
+  const run = () => { if (!stopped) { performance.mark("ballot-results-ready"); start(); } };
+  const loaded = () => {
+    if (stopped || !document.querySelector("article[data-contest-id]")) return;
+    const pills = [...document.querySelectorAll<HTMLButtonElement>("[data-battlecard-pill]")];
+    const controls = pills.length ? pills : [...document.querySelectorAll<HTMLButtonElement>('[data-kind="pick"] button')];
+    const check = () => {
+      if (stopped || queued || controls.some(node => node.disabled)) return;
+      queued = true;
+      observer?.disconnect();
+      firstFrame = requestAnimationFrame(() => {
+        secondFrame = requestAnimationFrame(() => {
+          if (stopped) return;
+          if ("requestIdleCallback" in window) idle = window.requestIdleCallback(run, { timeout: 1_000 });
+          else run();
+        });
+      });
+    };
+    observer = new MutationObserver(check);
+    for (const control of controls) observer.observe(control, { attributes: true, attributeFilter: ["disabled"] });
+    check();
+  };
+  if (document.readyState === "complete") loaded();
+  else window.addEventListener("load", loaded, { once: true });
+  return () => {
+    stopped = true;
+    observer?.disconnect();
+    window.removeEventListener("load", loaded);
+    cancelAnimationFrame(firstFrame);
+    cancelAnimationFrame(secondFrame);
+    if (idle !== undefined) window.cancelIdleCallback(idle);
+  };
+}
 
 export function BallotNarrowing({
   zip,
@@ -16,6 +54,20 @@ export function BallotNarrowing({
 }) {
   /** How many contests the address set aside. Null means no narrowing applied. */
   const [setAside, setSetAside] = useState<number | null>(null);
+  const [lateNodes, setLateNodes] = useState<ReactNode>(null);
+  useEffect(() => {
+    const controller = new AbortController();
+    let dispose: (() => void) | undefined;
+    const cancel = afterBallotReady(() => {
+      void enhanceBallotResults(controller.signal, nodes => {
+        if (!controller.signal.aborted) startTransition(() => setLateNodes(nodes));
+      }).then(cleanup => {
+        if (controller.signal.aborted) cleanup();
+        else dispose = cleanup;
+      }).catch(() => { /* A result-cache failure never removes the ballot. */ });
+    });
+    return () => { controller.abort(); cancel(); dispose?.(); setLateNodes(null); };
+  }, [zip, electionDate]);
 
   /** Mark the sections. The page renders every contest; this hides some. */
   const applyScope = useCallback((contestIds: string[] | null): number => {
@@ -46,6 +98,7 @@ export function BallotNarrowing({
 
   return (
     <>
+      {lateNodes}
       {setAside !== null && (
         <div className="ballot-narrowed">
           <p>

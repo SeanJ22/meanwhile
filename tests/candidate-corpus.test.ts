@@ -16,24 +16,7 @@ import {
   positionsSummary,
 } from "../lib/candidates/positions.ts";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
-import type { CandidateCorpus } from "../lib/candidates/corpus.ts";
-import { syntheticCandidateCorpus } from "./helpers/promoted-fixtures.ts";
-import { installManualValue } from "./helpers/promoted-fixtures.ts";
-import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
-import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
-import { readStateAuthorityProjection } from "../lib/civic-data/state-reader.ts";
-
-function served<T>(read: CivicDataReadResult<T>, what: string): T {
-  if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(`${what} fixture did not install: ${read.kind} ${"detail" in read ? read.detail : ""}`);
-  return read.value as T;
-}
-
-async function installCandidateCorpus(value: CandidateCorpus = syntheticCandidateCorpus(), state = "AZ"): Promise<CandidateCorpus> {
-  installManualValue(stateBallotContractId("candidate-corpus", state), value, `test:candidate-corpus:${state}`);
-  served((await readStateAuthorityProjection("candidate-publications", state)).result, "Candidate publications");
-  return value;
-}
-
+import { installCandidateCorpus } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
 await installCandidateCorpus();

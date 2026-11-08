@@ -123,22 +123,25 @@ test("the round wires its long phases to the reporter and ends a hung worker bef
   assert.ok(RUNTIME_NO_PROGRESS_MS - 60_000 > 8 * 60_000, "a hunter's own 8-minute wall still ends it first");
 });
 
-const silentChild = (print: string) => `${print} setInterval(() => {}, 1000); await new Promise(() => {});`;
-const laneRun = (source: string, partialAtDeadline: boolean) => runRuntimeChildren([{ id: "platform-census", executable: process.execPath,
+const hold = "setInterval(() => {}, 1000); await new Promise(() => {});";
+const laneRun = (source: string, partialWithinMs?: number) => runRuntimeChildren([{ id: "platform-census", executable: process.execPath,
   args: ["--experimental-strip-types", "--input-type=module", "-e", source] }],
-  { cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: 30_000, partialAtDeadline, deadlineMs: Date.now() + 1500 });
+  { cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: 30_000, partialWithinMs, deadlineMs: Date.now() + 2500 });
 
-test("a lane cut by its deadline having printed progress is a finished partial pass; with none it is a failure", async () => {
-  const [partial] = await laneRun(silentChild("console.log('  round progress: control read 3 finished');"), true);
-  assert.equal(partial!.termination, "EXITED");
-  assert.equal(partial!.status, 0);
-  const [none] = await laneRun(silentChild(""), true);
+test("a pass cut by its lane deadline is finished only if it printed progress shortly before it; early-only progress is a stall; none is a failure", async () => {
+  const [recent] = await laneRun(`console.log('PLATFORM_WALKING a'); setTimeout(() => console.log('PLATFORM_WALKING b'), 1900); ${hold}`, 700);
+  assert.equal(recent!.termination, "EXITED");
+  assert.equal(recent!.status, 0);
+  const [stalled] = await laneRun(`console.log('PLATFORM_WALKING tx:city:stuck'); ${hold}`, 700);
+  assert.equal(stalled!.termination, "TIMED_OUT");
+  assert.match(stalled!.errorMessage!, /PASS_TIME_BUDGET.*stalled since \d{4}-.*after "PLATFORM_WALKING tx:city:stuck"/);
+  const [none] = await laneRun(hold, 700);
   assert.equal(none!.termination, "TIMED_OUT");
-  assert.match(none!.errorMessage!, /PASS_TIME_BUDGET/);
+  assert.match(none!.errorMessage!, /PASS_TIME_BUDGET.*printed no progress/);
 });
 
 test("a lane that did not ask for partial passes (the research round) is still a failure at its deadline", async () => {
-  const [result] = await laneRun(silentChild("console.log('  round progress: dispatch 3 finished');"), false);
+  const [result] = await laneRun(`console.log('round progress: dispatch 3 finished'); setTimeout(() => console.log('round progress: dispatch 4 finished'), 2000); ${hold}`);
   assert.equal(result!.termination, "TIMED_OUT");
   assert.match(result!.errorMessage!, /PASS_TIME_BUDGET/);
 });

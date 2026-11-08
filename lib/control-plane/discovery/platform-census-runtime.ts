@@ -146,6 +146,7 @@ export async function runNationalPlatformCensus() {
         const size = websiteSizeFromHoldings([page.government.state], root);
         sizeReaders.set(page, size);
         const need = platformRegistrationNeed(page)!;
+        console.log(`PLATFORM_WALKING ${need.jurisdictionId}`);
         const [shared, local, priorAttempts] = await Promise.all([
           methods(), controlQuery(PLATFORM_CENSUS_NOTES_SQL.government, [need.jurisdictionId]),
           repos.discoveryAttempts.readRecent(need.jurisdictionId, 1),

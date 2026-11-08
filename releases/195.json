@@ -1,0 +1,38 @@
+{
+  "n": 195,
+  "branch": "release/195",
+  "head_sha": "f2ff8f70e81c65038c2bb59ab8d7ad6752f21cae",
+  "base_river_sha": "df60bf774fd5c1e5bf1f3d6e61b2dcca90f23719",
+  "main_sha": "7008de8d558b860921586851228c3a00951979c1",
+  "lanes": [
+    {
+      "lane": "results-merge",
+      "steps": [
+        "CX-ELECTION",
+        "ELECTION-RESULTS"
+      ],
+      "ready_sha": "78ef49bd3ac2acf1750f0d30676fd9311de5aa54",
+      "result_sha": "f2bf01f3edb5dc60bdacacdd51a55e65916bac3a"
+    },
+    {
+      "lane": "river-growth",
+      "steps": [
+        "RG-01"
+      ],
+      "ready_sha": "a756003104cd83b5efbf35e8a34ffb01b1ee0449",
+      "result_sha": "90b4561d7e516c4c0930ae46481cc2d595c3ae43"
+    }
+  ],
+  "steps": [
+    "CX-ELECTION",
+    "ELECTION-RESULTS",
+    "RG-01"
+  ],
+  "pr": {
+    "number": 914,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/914"
+  },
+  "ci": "running",
+  "at": "2026-11-08T20:29:27Z",
+  "growth_reason": "election results, a genuinely new feature (MultiState and Ballotpedia results on ballot cards, state and national summaries, results map), allowed by Sean's 2026-11-08 code-size ruling"
+}

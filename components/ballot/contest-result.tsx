@@ -8,6 +8,7 @@ import { NoResultsLine } from "./no-results-line";
 
 const FLIP_LEFT = "M10 6H3M5.5 3l-3 3 3 3";
 const FLIP_RIGHT = "M2 6h7M6.5 3l3 3-3 3";
+const voteFormat = new Intl.NumberFormat("en-US");
 
 function FlipPill({ to, seats }: { to: "D" | "R"; seats: number }) {
   const arrow = <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={to === "D" ? FLIP_LEFT : FLIP_RIGHT} /></svg>;
@@ -88,7 +89,7 @@ export function CandidateResultLine({ candidate, incumbent, lost }: { candidate:
         {outcome === "won" && <span className="rr-pill">Won</span>}
         {outcome === "runoff" && <span className="rr-pill rr-pill--outline">Runoff</span>}
         {typeof result.percent === "number" && <span className="rr-percent">{formatPercent(result.percent)}</span>}
-        {typeof result.votes === "number" && <span className="rr-votes">{result.votes.toLocaleString("en-US")} votes</span>}
+        {typeof result.votes === "number" && <span className="rr-votes">{voteFormat.format(result.votes)} votes</span>}
       </div>
       {typeof result.percent === "number" && <div className="rr-bar" aria-hidden="true"><span data-strong={outcome ? "true" : undefined} style={{ width: barWidth(result.percent) }} /></div>}
     </div>}
@@ -105,7 +106,7 @@ export function MeasureResultBody({ measure, contest }: { measure: Pick<Measure,
     <div className="rr-yesno-main">
       <div className="rr-candidate-line">
         {percent !== null && <span className="rr-percent">{percent.toFixed(2)}%</span>}
-        {typeof votes === "number" && <span className="rr-votes">{votes.toLocaleString("en-US")} votes</span>}
+        {typeof votes === "number" && <span className="rr-votes">{voteFormat.format(votes)} votes</span>}
       </div>
       {percent !== null && <div className="rr-bar rr-bar--tall" aria-hidden="true"><span data-strong={strong ? "true" : undefined} style={{ width: barWidth(percent) }} /></div>}
     </div>

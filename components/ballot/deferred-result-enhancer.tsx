@@ -1,5 +1,3 @@
-"use client";
-
 import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { CardSourceContext, cardSourceTargetFor, waitForCardSourceTarget, type CardSourceRegister } from "@/components/ui/card-source-context";
@@ -51,7 +49,7 @@ function cardPortals(card: HTMLElement, feed: ResultFeedResponse, register: Card
   };
 }
 
-/** This module and the checked feed are loaded only after the original ballot accepts input. */
+/** Fetch and render the checked feed only after the original ballot accepts input. */
 export async function enhanceBallotResults(signal: AbortSignal, render: (nodes: ReactNode) => void): Promise<() => void> {
   const cards = [...document.querySelectorAll<HTMLElement>("article[data-contest-id]")];
   const main = cards[0]?.closest("main");

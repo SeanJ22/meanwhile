@@ -1,5 +1,3 @@
-"use client";
-
 import { Card } from "@/components/ui/card";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import type { CardSource } from "@/lib/officials/card-sources";

@@ -3,6 +3,7 @@ import test, { beforeEach } from "node:test";
 import { createHash } from "node:crypto";
 import { runElectionResults as runElectionResultsWith } from "../lib/election-results/runner.ts";
 import { parseCapturedBallotpedia, readCapturedBallotpediaResults } from "../lib/election-results/ballotpedia.ts";
+import { fetchCapturedBallotpediaText } from "../lib/election-results/captured-source.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { seedFeedDoors } from "../lib/doors/seed-feeds.ts";
 import type { Query } from "../lib/facts/publish.ts";
@@ -714,4 +715,17 @@ test("a failed prepared-feed write retries from checked facts without changing i
   assert.doesNotMatch(JSON.stringify(await initialFull()), /"(?:result|results)"\s*:/, "the full initial ballot carries no result fields");
   assert.equal((await db.query("SELECT count(*)::int n FROM work WHERE kind='fix' AND field LIKE 'source:%' AND status='waiting'"))[0].n, 0,
     "successful publication closes the earlier object-store failure");
+});
+
+test("the captured file falls back to the checkout's git fetch when the GitHub contents API refuses", async () => {
+  const calls: string[][] = [], file = JSON.stringify({ formatVersion: 1, capturedAt: at, pages: {} });
+  const text = await fetchCapturedBallotpediaText((async () => new Response("Not Found", { status: 404 })) as typeof fetch, {} as NodeJS.ProcessEnv,
+    async (_exe, args) => { calls.push([...args]); return { status: 0, stdout: args[0] === "show" ? file : "", stderr: "" }; }, "/runner");
+  assert.equal(text, file);
+  assert.deepEqual(calls, [["fetch", "--quiet", "--no-tags", "origin", "stream/rt-02-data"],
+    ["show", "FETCH_HEAD:data/election-results/ballotpedia-2026-captured.json"]]);
+  await assert.rejects(fetchCapturedBallotpediaText((async () => new Response("no", { status: 403 })) as typeof fetch, {} as NodeJS.ProcessEnv,
+    async () => ({ status: 128, stdout: "", stderr: "fatal: could not read Username" }), "/runner"), /GitHub HTTP 403; git fetch failed/);
+  const viaApi = await fetchCapturedBallotpediaText((async () => new Response(file)) as typeof fetch, {} as NodeJS.ProcessEnv, async () => { throw new Error("git must not run"); }, "/runner");
+  assert.equal(viaApi, file);
 });

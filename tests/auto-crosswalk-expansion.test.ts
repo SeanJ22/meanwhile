@@ -22,17 +22,15 @@ import {
   familyMembers,
   readDerivedMeetingWiring,
 } from "../lib/civic-data/derived-meeting-wiring.ts";
-import { manualProjectionCandidate, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { MEETING_PARTITION_CONTRACTS, derivedMeetingFamilyId, requiredMeetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
 import { POST_FIXTURE_MEETING_PARTITIONS } from "./helpers/meeting-partition-fixture.ts";
 import { promoteDerivedMeetingFamily } from "../scripts/ingest.ts";
 import {
-  processRegisteredManualCandidate,
   processRegisteredMeetingPartitionCandidate,
   processRegisteredRoutineCandidate,
 } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { autoCrosswalkReviewerId, reviewDiscoveryWalk, type HeldBytes } from "../lib/control-plane/discovery/auto-crosswalk.ts";
+import { autoCrosswalkReviewerId, reviewDiscoveryWalk } from "../lib/control-plane/discovery/auto-crosswalk.ts";
 import { deriveWiringDecisions, wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { readHeldCalendars, type HeldCalendarReading } from "../lib/control-plane/discovery/derived-wiring-reading.ts";
 import { readFreeDiscoveryWalks } from "../lib/control-plane/discovery/free-walks.ts";
@@ -52,10 +50,9 @@ import { REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOU
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
-import { curatedReaderSourceClass } from "./helpers/curated-reader-source-class.ts";
-import { ics, localStart as localStartFrom, reviewedIds } from "./helpers/expansion-fixtures.ts";
+import { ics, localStart as localStartFrom, promoteVenues, reviewedIds, vaultingWalkRuntime } from "./helpers/expansion-fixtures.ts";
 import { freshEdge, publishPass, readPlace } from "./helpers/meeting-body-fixtures.ts";
-import { recordedDiscoveryOpen, type RecordedReply } from "./helpers/recorded-discovery-open.ts";
+import type { RecordedReply } from "./helpers/recorded-discovery-open.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 /* Anchored to the real clock: the engine refuses an event dated in the future. */
@@ -117,34 +114,6 @@ function ohioRegistry(): JurisdictionRegistry {
 
 const sha = (value: unknown): string => createHash("sha256").update(canonicalCivicDataJson(value)).digest("hex");
 
-/** A promoted venue-resolutions version: every adapter reading resolves through it (lib/control-plane/discovery/derived-wiring-reading.ts). */
-async function promoteVenues(store: MemoryRoutineDataStore): Promise<void> {
-  const urls = ["https://public.example.gov/venue", "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=373+S+High+St&benchmark=Public_AR_Current&format=json"];
-  const pkg: ManualProjectionPackage = {
-    contractId: "venue-resolutions",
-    version: T_REGISTRATION,
-    sourceThrough: T_REGISTRATION,
-    sourceReceipt: {
-      contractVersion: 1, reviewedAt: T_REGISTRATION, reviewedBy: "a reviewing agent session (test)",
-      sources: urls.map((url, index) => ({
-        requestedUrl: url, finalUrl: url, publisher: "Exact named primary publisher", sourceClass: curatedReaderSourceClass("venue-resolutions"),
-        retrievedAt: T_REGISTRATION, httpStatus: 200, rawHash: String.fromCharCode(97 + index).repeat(64),
-        reviewedEvidence: "The exact response bytes and normalized record were reviewed together.",
-      })),
-    },
-    payload: {
-      kind: "venue-resolutions",
-      records: [{
-        id: "venue:test:franklin:373shigh", sourceId: "test-source", bodyOcdId: "ocd-division/country:us/state:oh/county:franklin", match: "373 S High St",
-        name: "Franklin County Courthouse", address: "373 S High St, Columbus, OH 43215", lat: 39.95, lng: -82.99,
-        addressSourceUrl: urls[0], coordinateSourceUrl: urls[1], verifiedAt: T_REGISTRATION,
-      }],
-    },
-  };
-  const outcome = await processRegisteredManualCandidate(store, "venue-resolutions", manualProjectionCandidate(pkg), T_REGISTRATION);
-  assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? "");
-}
-
 test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed by rule, wired and read by the Reader; an ambiguous calendar publishes nothing and says why", async (t) => {
   assert.ok(DERIVED_MEETING_FAMILY_STATES.includes("US-OH"), "Ohio has a derived family with no code change");
 
@@ -189,24 +158,8 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
     [`https://${CITY_HOST}/`]: { status: 200, body: CITY_HOME },
     [CITY_ROUTE]: { status: 200, body: CITY_FEED, contentType: "text/calendar" },
   };
-  const vault = new Map<string, HeldBytes>();
-  let tick = 0;
-  await recordFreeDiscoveryWalks({
-    repos, needs,
-    runtime: {
-      open: recordedDiscoveryOpen(site),
-      spaceOut: async () => {},
-      vault: async (artifact, body) => {
-        vault.set(artifact.id, {
-          text: body, sha256: artifact.contentHash.slice("sha256-".length),
-          evidence: { kind: "VAULTED_EVIDENCE", artifactId: artifact.id, contentHash: artifact.contentHash, tier: artifact.tier === "SANITIZED_DERIVED" ? "SANITIZED_DERIVED" : "RAW", retrievedAt: artifact.retrievedAt },
-        });
-        return { stored: true, where: `vault/${artifact.id}`, why: "stored" };
-      },
-      now: () => new Date(Date.parse(T_WALK) + (tick++) * 1000).toISOString(),
-      budget: { spent: () => false },
-    },
-  });
+  const { vault, runtime } = vaultingWalkRuntime(site, T_WALK);
+  await recordFreeDiscoveryWalks({ repos, needs, runtime });
   const walked = (await Promise.all(needs.map(need => repos.discoveryAttempts.read(need.jurisdictionId)))).flat();
   assert.deepEqual(walked.map((a) => a.jurisdictionId).sort(), [CITY, COUNTY], "the free walk took the Send's governments, not the ledger's rotation");
   assert.ok(walked.every((a) => a.outcome === "FOUND"));
@@ -222,7 +175,10 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
     reviewed: reviewedIds(ROOT),
   });
   assert.equal((await processRegisteredRoutineCandidate(store, "registration-oh", registration, T_REGISTRATION)).candidate.state, "PROMOTED");
-  await promoteVenues(store);
+  await promoteVenues(store, T_REGISTRATION, "373+S+High+St", {
+    id: "venue:test:franklin:373shigh", bodyOcdId: "ocd-division/country:us/state:oh/county:franklin", match: "373 S High St",
+    name: "Franklin County Courthouse", address: "373 S High St, Columbus, OH 43215", lat: 39.95, lng: -82.99,
+  });
   const reg = await readRegistrationProjection("OH", { store,  now: T_CROSSWALK });
   assert.equal(reg.kind, "PROMOTED");
   if (reg.kind !== "PROMOTED") return;

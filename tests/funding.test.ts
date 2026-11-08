@@ -32,6 +32,7 @@ import {
   STATE_FUNDING_NOTE,
 } from "../lib/funding/display.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
+import { walkFiles } from "./helpers/walk-files.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 await refreshFundingFromPromoted({ store: new MemoryRoutineDataStore() });
@@ -119,11 +120,7 @@ test("D40: distinct officials resolve to distinct funding payloads", () => {
 });
 
 test("D40: no query-keyed API route marks itself publicly cacheable unless the CDN keys on every consumed query parameter", () => {
-  const walk = (dir: string): string[] =>
-    readdirSync(dir).flatMap((entry) => {
-      const full = join(dir, entry);
-      return statSync(full).isDirectory() ? walk(full) : /route\.ts$/.test(entry) ? [full] : [];
-    });
+  const walk = (dir: string): string[] => walkFiles(dir, (name) => /route\.ts$/.test(name));
   const keyedOnEveryParameter: string[] = [];
   const sharedCacheIsPublic = /\bpublic\b/i.test(readerCacheHeaders({})["Cache-Control"] ?? "");
   for (const file of walk(join(ROOT, "app", "api"))) {

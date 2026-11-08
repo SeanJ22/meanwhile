@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
-import { readdirSync } from "node:fs";
 import { extname, join, relative, resolve } from "node:path";
 import test from "node:test";
 import ts from "typescript";
+import { walkFiles } from "./helpers/walk-files.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const SOURCE_ROOTS = ["lib", "app", "components", "hooks", "scripts"];
@@ -15,10 +15,7 @@ const CENSUS_DECLARATIONS = new Set([
 const relativePath = (path: string): string => relative(ROOT, path).replaceAll("\\", "/");
 
 function sourceFiles(directory: string): string[] {
-  return readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
-    const path = join(directory, entry.name);
-    return entry.isDirectory() ? sourceFiles(path) : SOURCE_EXTENSIONS.has(extname(path)) ? [path] : [];
-  });
+  return walkFiles(directory, (n) => SOURCE_EXTENSIONS.has(extname(n)));
 }
 
 function censusOcdIdReads(source: ts.SourceFile, checker: ts.TypeChecker): string[] {

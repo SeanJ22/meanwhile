@@ -6,6 +6,7 @@ import test from "node:test";
 
 // One normalizer, so an offender list reads identically on Windows and on Linux.
 import { posixRelative } from "../scripts/repo-path.mjs";
+import { walkFiles } from "./helpers/walk-files.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -28,14 +29,8 @@ const NOT_OURS = new Set([
   "test-results",
 ]);
 
-function walk(dir: string, found: string[] = []): string[] {
-  for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    if (NOT_OURS.has(entry.name)) continue;
-    const full = join(dir, entry.name);
-    if (entry.isDirectory()) walk(full, found);
-    else if (/\.(js|cjs)$/.test(entry.name)) found.push(posixRelative(ROOT, full));
-  }
-  return found;
+function walk(dir: string): string[] {
+  return walkFiles(dir, (n) => /\.(js|cjs)$/.test(n), (n) => NOT_OURS.has(n)).map((file) => posixRelative(ROOT, file));
 }
 
 test("R46: the package declares itself ESM", () => {

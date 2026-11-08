@@ -6,7 +6,7 @@
  */
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 
 import { NextRequest } from "next/server";
@@ -15,6 +15,7 @@ import { GET as startGET } from "@/app/(admin)/admin/auth/google/route.ts";
 import { GOOGLE_CLIENT_ID_VAR, GOOGLE_CLIENT_SECRET_VAR, OAUTH_START_PATH } from "@/lib/control-plane/admin-google.ts";
 import { ADMIN_SESSION_KEY_VAR } from "@/lib/control-plane/admin-auth.ts";
 import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
+import { walkFiles } from "./helpers/walk-files.ts";
 
 const ROOT = process.cwd();
 const ADMIN_HOST = new URL(ADMIN_ORIGIN).host;
@@ -38,13 +39,7 @@ const IN_PROCESS_FORWARDS: Readonly<Record<string, string>> = {
 };
 
 function sourceFiles(dir: string): string[] {
-  const out: string[] = [];
-  for (const name of readdirSync(dir)) {
-    const path = join(dir, name);
-    if (statSync(path).isDirectory()) out.push(...sourceFiles(path));
-    else if (/\.(ts|tsx)$/.test(name)) out.push(path);
-  }
-  return out;
+  return walkFiles(dir, (n) => /\.(ts|tsx)$/.test(n));
 }
 
 /** Code only: block and line comments removed, so a comment that DESCRIBES the defect is not the defect. */

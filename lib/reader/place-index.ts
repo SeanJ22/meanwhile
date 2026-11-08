@@ -8,8 +8,8 @@ import { stateDivisionId } from "./state-share.ts";
  * A state publishes small files besides its places' own: a map index, a list of its boards, one ZIP file per three-digit prefix, and a pointer that names
  * them.
  *
- * The map index is what a map needs to choose places in view: `[id, kind, name, centerLat, centerLng, west, south, east, north, file]`, the file the
- * place's file name. The center is the center of the box, which is the place's boundary. Ids that start with a slash follow `base`. Boards, which have no
+ * The map index is what a map needs to choose places in view: `[id, kind, name, west, south, east, north, file]`, the box the place's boundary (its
+ * center is the box's center) and the file the place's file name. Ids that start with a slash follow `base`. Boards, which have no
  * place on a map, are listed apart as `[id, name, file]`.
  */
 export interface MapIndex {
@@ -75,8 +75,7 @@ export function buildMapIndex(state: string, files: ReadonlyMap<string, string>,
   const base = stateDivisionId(state), ids = [...files.keys()].sort(), kind = (id: string) => meta.get(id)?.kind === "body";
   return { map: { v: 1, state, base, places: ids.filter(id => !kind(id)).map(id => {
     const box = meta.get(id)?.box ?? null;
-    const center = box ? [Math.round((box[1]! + box[3]!) * 5e2) / 1e3, Math.round((box[0]! + box[2]!) * 5e2) / 1e3] : [null, null];
-    return [shorten(base, id), 0, meta.get(id)?.name ?? "", ...center, ...(box ?? [null, null, null, null]), files.get(id)!] as const;
+    return [shorten(base, id), 0, meta.get(id)?.name ?? "", ...(box ?? [null, null, null, null]), files.get(id)!] as const;
   }) }, boards: { v: 1, state, base, boards: ids.filter(kind).map(id => [shorten(base, id), meta.get(id)?.name ?? "", files.get(id)!] as const) } };
 }
 
@@ -112,7 +111,7 @@ export function readPublished(map: MapIndex, boards: BoardsIndex, zip3: readonly
   for (const row of map.places) {
     const id = lengthen(map.base, row[0]);
     files.set(id, row.at(-1) as string);
-    meta.set(id, { id, kind: "place", name: row[2], box: row[5] === null || row[5] === undefined ? null : [row[5], row[6], row[7], row[8]] as number[] });
+    meta.set(id, { id, kind: "place", name: row[2], box: row[3] === null || row[3] === undefined ? null : [row[3], row[4], row[5], row[6]] as number[] });
   }
   for (const [short, name, file] of boards.boards) { const id = lengthen(boards.base, short); files.set(id, file); meta.set(id, { id, kind: "body", name, box: null }); }
   const zips: Record<string, ZipPlaces> = {}, pool = new Map<string, string>();

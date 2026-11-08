@@ -256,6 +256,28 @@ test("the source catalog fetches a race missing from the served ballot and gives
   assert.deepEqual(requested, [url], "the catalog does not restart the certified race");
 });
 
+test("a challenged live Ballotpedia read falls back to the captured file once, and a race missing from it is skipped", async context => {
+  const db = await resultFactDb(context, "test-captured-fallback");
+  const { mkdtemp, writeFile } = await import("node:fs/promises"), { tmpdir } = await import("node:os"), { join } = await import("node:path");
+  const capturedPath = join(await mkdtemp(join(tmpdir(), "captured-")), "captured.json");
+  const url = (n: number) => `https://ballotpedia.org/Arizona%27s_${n}th_Congressional_District_election,_2026`;
+  await writeFile(capturedPath, JSON.stringify({ capturedAt: "2026-11-03T23:00:00.000Z",
+    pages: { [new URL(url(7)).pathname]: federalBox("Arizona", "House") } }));
+  const page = (n: number) => ({ state: "AZ", office: "us_house" as const, districtHint: String(n), electionDate: "2026-11-03", url: url(n) });
+  const requested: string[] = [], warnings: string[] = [], warn = console.warn;
+  console.warn = (message: string) => { warnings.push(String(message)); };
+  try {
+    const result = await runElectionResults({ query: db.query, db, states: ["AZ"], multistate: emptyBatch, now: new Date(at), capturedPath,
+      congressSummaries: [overview("us_senate"), overview("us_house", [page(7), page(8)])], ballotsForState: async () => [],
+      purge: async () => ({ purged: true }),
+      fetch: async (request: Parameters<typeof fetch>[0]) => { requested.push(String(request)); return new Response("<html>challenge</html>", { status: 202 }); } });
+    assert.deepEqual(requested, [url(7)], "one live attempt; the block ends live reads for the check");
+    assert.equal(result.unmatched, 1, "the captured race published");
+    assert.equal((await readNationalElectionResults(feeds))?.states.AZ.us_house.reportedRaces, 1);
+    assert.ok(warnings.some(message => message.includes(url(8))), "the race missing from the file is logged and skipped");
+  } finally { console.warn = warn; }
+});
+
 test("the Senate catalog replaces a generic Florida fallback with the source's special-election route", async context => {
   const db = await resultFactDb(context, "test-special-catalog");
   const url = "https://ballotpedia.org/United_States_Senate_special_election_in_Florida,_2026", requested: string[] = [];

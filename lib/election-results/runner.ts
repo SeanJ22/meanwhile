@@ -12,7 +12,7 @@ import { workId, workList, type WorkInput } from "../core/work.ts";
 import type { DoorRepository, DoorRecord } from "../doors/registry.ts";
 import { isDoorRecord } from "../doors/registry.ts";
 import { parseMultiStateResults, readMultiStateResults } from "./multistate.ts";
-import { readBallotpediaResults, readBallotpediaCongressSummary, ballotpediaRaceId, type BallotpediaRace } from "./ballotpedia.ts";
+import { readBallotpediaResults, readBallotpediaCongressSummary, ballotpediaRaceId, loadCapturedBallotpedia, readCapturedBallotpediaResults, CAPTURED_BALLOTPEDIA_PATH, type BallotpediaRace } from "./ballotpedia.ts";
 import { PUBLIC_SITE_ORIGIN } from "../ops/origins.ts";
 import { ensureOpenElectionResults, publishElectionResultBatch, raceClockKey, type ResultProgress, type ResultCounts } from "./publisher.ts";
 import { matchElectionResult } from "./matcher.ts";
@@ -93,6 +93,8 @@ function federalRoutes(catalog: readonly BallotpediaRace[], held: readonly Ballo
 export async function runElectionResults(input: {
   query: Query; db: FactDb; doors?: DoorRepository; now?: Date; fetch?: typeof fetch;
   states?: readonly string[];
+  /** Browser-captured Ballotpedia pages used when the live read is blocked. Defaults to the repository file when no fetch is injected. */
+  capturedPath?: string;
   /** Local test adapters supply the reader authority; no repository ballot file is used. */
   ballotsForState?: (state: string) => Promise<readonly BallotSet[]>;
   multistate?: ElectionResultBatch;
@@ -318,6 +320,9 @@ export async function runElectionResults(input: {
     return { ...prior, readerPending, readerSlice: feed };
   };
   // Every state's MultiState results are published before any Ballotpedia request, so a slow Ballotpedia cannot keep them off the feeds.
+  let capturedLoad: ReturnType<typeof loadCapturedBallotpedia> | undefined; // read once per run
+  const capturedPages = () => capturedLoad ??= input.capturedPath || !input.fetch
+    ? loadCapturedBallotpedia(input.capturedPath ?? CAPTURED_BALLOTPEDIA_PATH) : Promise.resolve(null);
   let ballotpediaBlocked = false; // the first blocked or failed Ballotpedia response ends Ballotpedia for this whole check
   const ballotsRead = new Map<string, readonly BallotSet[]>();
   for (const phase of ["multistate", "ballotpedia"] as const) for (const state of states) {
@@ -429,7 +434,7 @@ export async function runElectionResults(input: {
         }
       }
       if (phase === "ballotpedia" && sourceDue("ballotpedia")) {
-        if (ballotpediaBlocked) prior = checked(pending(prior, "ballotpedia", false), "ballotpedia", true);
+        if (ballotpediaBlocked && !await capturedPages()) prior = checked(pending(prior, "ballotpedia", false), "ballotpedia", true);
         else if (!more()) { prior = pending(prior, "ballotpedia", true); unfinished = true; }
         else {
         const visited = new Set<string>();
@@ -443,8 +448,19 @@ export async function runElectionResults(input: {
           const previous = prior.races[raceClockKey({ sourceId: "ballotpedia", sourceRaceId: ballotpediaRaceId(race.url), electionDate: race.electionDate ?? "2026-11-03" })];
           if (previous?.status === "certified" || previous && !doors.get("ballotpedia")?.readNow &&
             (nextElectionResultCheck(previous, doors.get("ballotpedia"), now) ?? "~") > at) continue;
-          try { if (!await publish(await readBallotpediaResults(race, at, ballotpediaFetch), "ballotpedia")) deferred = true; }
-          catch (error) { failed = ballotpediaBlocked = true; await failure(state, race.url, String(error)); break; }
+          let batch: ElectionResultBatch | null | undefined;
+          if (!ballotpediaBlocked) {
+            try { batch = await readBallotpediaResults(race, at, ballotpediaFetch); }
+            catch (error) { failed = ballotpediaBlocked = true; await failure(state, race.url, String(error)); }
+          }
+          if (!batch) { // blocked: the browser-captured page, else the source is done for this check
+            const held = await capturedPages();
+            if (!held) break;
+            batch = readCapturedBallotpediaResults(held, race);
+            if (!batch) { console.warn(`Ballotpedia race missing from the captured file: ${race.url}`); continue; }
+          }
+          try { if (!await publish(batch, "ballotpedia")) deferred = true; }
+          catch (error) { failed = true; await failure(state, race.url, String(error)); }
         }
         prior = checked(pending({ ...prior, federalRoutes: routes }, "ballotpedia", deferred), "ballotpedia", failed);
         unfinished ||= deferred;

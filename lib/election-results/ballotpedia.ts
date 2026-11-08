@@ -264,3 +264,29 @@ export async function readBallotpediaCongressSummary(office: "us_house" | "us_se
   }));
   return { ...batch, ...(catalog.size ? { racePages: [...catalog.values()] } : {}), ...(catalogErrors.length ? { catalogErrors } : {}) };
 }
+
+/** Race pages captured through a browser that passes Ballotpedia's challenge: the exact page substrings, dated when captured. */
+export interface CapturedBallotpedia { capturedAt: string; pages: Map<string, string> }
+
+export const CAPTURED_BALLOTPEDIA_PATH = "data/election-results/ballotpedia-2026-captured.json";
+
+const capturedKey = (path: string): string => {
+  try { return decodeURIComponent(path.replace(/^https?:\/\/[^/]+/i, "").replace(/^\//, "")); } catch { return path; }
+};
+
+/** Null when the file is absent or unreadable; the caller then behaves as if no capture exists. */
+export async function loadCapturedBallotpedia(path: string = CAPTURED_BALLOTPEDIA_PATH): Promise<CapturedBallotpedia | null> {
+  try {
+    const { readFile } = await import("node:fs/promises");
+    const file = JSON.parse(await readFile(path, "utf8")) as { capturedAt?: unknown; pages?: Record<string, unknown> };
+    if (typeof file.capturedAt !== "string" || !file.pages || typeof file.pages !== "object") return null;
+    return { capturedAt: file.capturedAt, pages: new Map(Object.entries(file.pages).flatMap(([key, html]) =>
+      typeof html === "string" ? [[capturedKey(key), html] as const] : [])) };
+  } catch { return null; }
+}
+
+/** The race read from its captured page (checkedAt is the capture time), or null when the file lacks the race. */
+export function readCapturedBallotpediaResults(captured: CapturedBallotpedia, race: BallotpediaRace): ElectionResultBatch | null {
+  const html = captured.pages.get(ballotpediaRaceId(race.url));
+  return html === undefined ? null : parseBallotpediaResults(html, race, captured.capturedAt);
+}

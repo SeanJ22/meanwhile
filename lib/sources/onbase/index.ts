@@ -9,10 +9,10 @@ import { decodeEntities, politeGetText } from "../http.ts";
 import type {
   Meeting,
   MeetingQuery,
-  MeetingStatus,
   NormalizeDropCounts,
   ReportingMeetingSource,
 } from "../types.ts";
+import { sittingStatus } from "../sitting-status.ts";
 import {
   accountedNormalize,
   type Accounted,
@@ -91,12 +91,6 @@ function wallClock(
   };
 }
 
-function statusOf(startsAt: string, now: Date): MeetingStatus {
-  // OnBase exposes no cancellation signal; claiming CANCELED from nothing
-  // would keep someone at home. Time is the only honest axis here.
-  return Date.parse(startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED";
-}
-
 export function makeOnBaseSource(
   wiringRows: BodySourceWiring[],
   fetchImpl?: typeof fetch,
@@ -163,7 +157,8 @@ export function makeOnBaseSource(
           },
           agendaUrl: row.agendaPdfUrl,
           jurisdiction: wiring.jurisdiction,
-          status: statusOf(startsAt, now),
+          // OnBase exposes no cancellation signal; claiming CANCELED from nothing would keep someone at home.
+          status: sittingStatus(startsAt, false, now),
           provenance: {
             // The ViewMeeting permalink, in the form the page itself links.
             sourceUrl: `${baseUrl}/Meetings/ViewMeeting?id=${row.meetingId}&doctype=1`,

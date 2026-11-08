@@ -21,6 +21,7 @@ on:
 permissions:
   contents: read
   actions: read
+  deployments: write
 
 concurrency:
   group: post-deploy-integrity
@@ -96,6 +97,16 @@ jobs:
               exit "$code"
               ;;
           esac
+
+      # The runner reads this, not the site, to learn which commit is live.
+      - name: Record the commit as GitHub's live production deployment
+        if: steps.observe.outputs.observer_exit == '0' && inputs.dry_run != true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          sha=${{ inputs.sha || github.sha }}
+          id=$(echo "{\"ref\":\"$sha\",\"environment\":\"production\",\"auto_merge\":false,\"required_contexts\":[]}" | gh api "repos/$GITHUB_REPOSITORY/deployments" --input - --jq .id)
+          gh api "repos/$GITHUB_REPOSITORY/deployments/$id/statuses" -f state=success
 
       - name: Name the cause
         if: failure() && steps.observe.outcome != 'skipped'

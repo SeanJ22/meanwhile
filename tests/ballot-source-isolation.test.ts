@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { rawBallot, type TestRace } from "./helpers/raw-ballot.ts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
@@ -23,7 +24,7 @@ import {
   settleBallotAuxiliaryPreloads,
   type BallotAuxiliaryFamily,
 } from "../lib/ballot/auxiliary-preloads.ts";
-import { installAbsent, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { installAbsent, installRegistryAuthority, promotedFixtureBundle } from "./helpers/promoted-fixtures.ts";
 import type { StateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
 import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import { withReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
@@ -32,40 +33,8 @@ import { POST as ballotScope } from "../app/api/ballot/scope/route.ts";
 import { fixtureZipResolution } from "./helpers/zip-location.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
 import type { Contest } from "../lib/ballot/types.ts";
-import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 
-
-const TEST_BALLOT_PROVENANCE = { sourceUrl: "https://example.test/ballot", sourceOrg: "Synthetic test ballot", collectedAt: "2026-09-25", verifiedAt: null };
-
-function rawBallot(state: string, races: readonly TestRace[]): BallotSet {
-  const electionId = `${state.toLowerCase()}-2026-general-test`;
-  return {
-    election: { id: electionId, date: "2026-11-03", name: "2026 General Election (test)", state },
-    contests: races.map((race) => ({
-      id: race.id, electionId, ocdId: race.ocdId, divisionVintage: "2026", title: race.title, type: race.type ?? (race.measure ? "MEASURE" : "CANDIDACY"),
-      voteFor: 1, termYears: race.measure ? null : 4, scopeNote: null, provenance: TEST_BALLOT_PROVENANCE,
-    })),
-    candidacies: races.flatMap((race) => (race.candidacies ?? []).map((row) => ({
-      id: row.id, contestId: race.id, givenName: row.givenName, familyName: row.familyName, partyLabel: row.partyLabel ?? null,
-      slogan: null, incumbent: null, websiteUrl: null, provenance: TEST_BALLOT_PROVENANCE,
-    }))),
-    measures: races.flatMap((race) => race.measure ? [{
-      id: `${race.id}#measure`, contestId: race.id, ...(race.measure.officialNumber ? { officialNumber: race.measure.officialNumber } : {}),
-      questionText: race.measure.questionText, officialStatement: null, provenance: TEST_BALLOT_PROVENANCE,
-    }] : []),
-    absences: [],
-  };
-}
-
-interface TestRace {
-  readonly id: string;
-  readonly title: string;
-  readonly ocdId: string;
-  readonly type?: Contest["type"];
-  readonly candidacies?: readonly { readonly id: string; readonly givenName: string; readonly familyName: string; readonly partyLabel?: string | null }[];
-  readonly measure?: { readonly questionText: string; readonly officialNumber?: string };
-}
 
 function nhBallot(races: readonly TestRace[]): BallotSet {
   return rawBallot("NH", races);
@@ -74,13 +43,6 @@ function nhBallot(races: readonly TestRace[]): BallotSet {
 
 
 
-
-function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
-  const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
-  return { stateAuthorities: current.stateAuthorities,
-    ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
-    ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
-}
 
 
 

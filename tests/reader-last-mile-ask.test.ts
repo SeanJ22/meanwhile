@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
+import { rawBallot, type TestRace } from "./helpers/raw-ballot.ts";
 import { createHash } from "node:crypto";
 import { installReaderDatabaseQuery, readerDatabaseQuery } from "../lib/reader/database.ts";
 import { readFileSync } from "node:fs";
 import test from "./helpers/playbooks.ts";
 import type { CandidateDocument } from "../lib/candidates/corpus.ts";
-import { installFederalVotes, installOfficeholderStatements, installRegistryAuthority, installStateMoney, stateMoneyFixture, syntheticCandidateCorpus, syntheticFiledStateMoneyRecord } from "./helpers/promoted-fixtures.ts";
+import { installFederalVotes, installOfficeholderStatements, installRegistryAuthority, installStateMoney, stateMoneyFixture, syntheticCandidateCorpus, syntheticFiledStateMoneyRecord, promotedFixtureBundle } from "./helpers/promoted-fixtures.ts";
 import { recordedMeetings85701 } from "./helpers/reader-fixtures.ts";
 
 await installRegistryAuthority();
@@ -30,7 +31,6 @@ import { resolveSubjectRef } from "../lib/ask/subject.ts";
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
 import type { Contest } from "../lib/ballot/types.ts";
-import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 import { installManualValue } from "./helpers/promoted-fixtures.ts";
 import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
@@ -61,37 +61,6 @@ function njMorrisFiling(races: readonly TestRace[], extra: {
   };
 }
 
-const TEST_BALLOT_PROVENANCE = { sourceUrl: "https://example.test/ballot", sourceOrg: "Synthetic test ballot", collectedAt: "2026-09-25", verifiedAt: null };
-
-function rawBallot(state: string, races: readonly TestRace[]): BallotSet {
-  const electionId = `${state.toLowerCase()}-2026-general-test`;
-  return {
-    election: { id: electionId, date: "2026-11-03", name: "2026 General Election (test)", state },
-    contests: races.map((race) => ({
-      id: race.id, electionId, ocdId: race.ocdId, divisionVintage: "2026", title: race.title, type: race.type ?? (race.measure ? "MEASURE" : "CANDIDACY"),
-      voteFor: 1, termYears: race.measure ? null : 4, scopeNote: null, provenance: TEST_BALLOT_PROVENANCE,
-    })),
-    candidacies: races.flatMap((race) => (race.candidacies ?? []).map((row) => ({
-      id: row.id, contestId: race.id, givenName: row.givenName, familyName: row.familyName, partyLabel: row.partyLabel ?? null,
-      slogan: null, incumbent: null, websiteUrl: null, provenance: TEST_BALLOT_PROVENANCE,
-    }))),
-    measures: races.flatMap((race) => race.measure ? [{
-      id: `${race.id}#measure`, contestId: race.id, ...(race.measure.officialNumber ? { officialNumber: race.measure.officialNumber } : {}),
-      questionText: race.measure.questionText, officialStatement: null, provenance: TEST_BALLOT_PROVENANCE,
-    }] : []),
-    absences: [],
-  };
-}
-
-interface TestRace {
-  readonly id: string;
-  readonly title: string;
-  readonly ocdId: string;
-  readonly type?: Contest["type"];
-  readonly candidacies?: readonly { readonly id: string; readonly givenName: string; readonly familyName: string; readonly partyLabel?: string | null }[];
-  readonly measure?: { readonly questionText: string; readonly officialNumber?: string };
-}
-
 function nhBallot(races: readonly TestRace[]): BallotSet {
   return rawBallot("NH", races);
 }
@@ -105,13 +74,6 @@ async function installCandidateCorpus(value: CandidateCorpus = syntheticCandidat
 
 
 
-
-function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
-  const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
-  return { stateAuthorities: current.stateAuthorities,
-    ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
-    ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
-}
 
 function served<T>(read: CivicDataReadResult<T>, what: string): T {
   if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(`${what} fixture did not install: ${read.kind} ${"detail" in read ? read.detail : ""}`);

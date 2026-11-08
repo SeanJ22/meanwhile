@@ -6,7 +6,7 @@ import { pathToFileURL } from "node:url";
 import type { CivicDataReadResult, PromotedEdgeEntry } from "../../lib/civic-data/read-model.ts";
 import type { CandidateVersionRecord, PromotedProjection, RoutineRecordClass } from "../../lib/civic-data/types.ts";
 import { MemoryRoutineDataStore } from "../../lib/civic-data/store.ts";
-import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../../lib/registry/runtime-edge.ts";
+import { currentReaderAuthorityEdge, enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../../lib/registry/runtime-edge.ts";
 import { readRegistryRuntimeProjection } from "../../lib/registry/runtime-read-model.ts";
 import type { RegistryRuntimeReadModel } from "../../lib/registry/runtime-data-plane.ts";
 import {
@@ -43,13 +43,13 @@ import type { MemberVote, RollCallVote, VotePosition } from "../../lib/votes/typ
 import { provenEdgeEntry } from "./promoted-edge-entry.ts";
 import { rosterFactReader } from "./roster-fact-reader.ts";
 import { installFactReader } from "../../lib/facts/db.ts";
-import { registryJurisdictions, stateRegistryRuntimeContractId, stateRegistryRuntimeScope } from "../../lib/civic-data/state-scopes.ts";
+import { registryJurisdictions, stateBallotContractId, stateRegistryRuntimeContractId, stateRegistryRuntimeScope } from "../../lib/civic-data/state-scopes.ts";
 import { candidateChangeSet, ROW_KEYED_CIVIC_CHANGE_CONTRACT, rowKeyedCivicRecordsFor } from "../../lib/civic-data/changes.ts";
 import { canonicalCivicDataHash } from "../../lib/civic-data/canonical-hash.ts";
 import { trustedLkgCandidateEnvelopeSha256, trustedLkgCandidateId, trustedLkgImportUrl, trustedLkgValidatorIds } from "../../lib/civic-data/trusted-lkg-import.ts";
 import { withStateRecordHashes } from "../../lib/civic-data/state-publication.ts";
 import { STATE_AUTHORITY_FAMILIES, type StateAuthorityFamily } from "../../lib/meetings/edge-artifacts.ts";
-import { stateAuthorityPointers } from "../../lib/civic-data/state-reader.ts";
+import { readStateAuthorityProjection, stateAuthorityPointers } from "../../lib/civic-data/state-reader.ts";
 import { installCanonicalEntries, activateCanonicalFixture } from "./canonical-reader-fixtures.ts";
 
 const ROOT = join(import.meta.dirname, "..", "..");
@@ -96,6 +96,13 @@ export function installPromotedValue<T>(input: {
   installCanonicalEntries([entry]);
   enter();
   return entry;
+}
+
+export function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
+  const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
+  return { stateAuthorities: current.stateAuthorities,
+    ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
+    ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
 }
 
 export function installManualValue<T>(id: ManualProductionContractId, value: T, versionId: string = `test:${id}`) {
@@ -496,6 +503,12 @@ export function syntheticOfficeholderStatements(subjects: readonly string[] = Ar
 export async function installOfficeholderStatements(value: StatementCorpus = syntheticOfficeholderStatements()): Promise<StatementCorpus> {
   installManualValue("officeholder-statements", value, "test:officeholder-statements");
   served(await readOfficeholderStatementsProjection(), "Officeholder statements");
+  return value;
+}
+
+export async function installCandidateCorpus(value: CandidateCorpus = syntheticCandidateCorpus(), state = "AZ"): Promise<CandidateCorpus> {
+  installManualValue(stateBallotContractId("candidate-corpus", state), value, `test:candidate-corpus:${state}`);
+  served((await readStateAuthorityProjection("candidate-publications", state)).result, "Candidate publications");
   return value;
 }
 

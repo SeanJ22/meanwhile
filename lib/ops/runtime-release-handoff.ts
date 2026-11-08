@@ -197,6 +197,33 @@ export async function fetchGithubCheckRuns(input: {
   }
 }
 
+/** The commit GitHub records as live: the newest production deployment the post-deploy workflow marked successful. Never asks the site. */
+export async function fetchDeployedCommit(input: {
+  readonly repository: string;
+  readonly token?: string | null;
+  readonly fetchImpl?: typeof fetch;
+}): Promise<ServedCommit> {
+  const get = async (path: string): Promise<unknown> => {
+    const response = await (input.fetchImpl ?? fetch)(`https://api.github.com/repos/${input.repository}/${path}`, {
+      headers: { accept: "application/vnd.github+json", "user-agent": "we-the-people-permanent-runtime", ...(input.token ? { authorization: `Bearer ${input.token}` } : {}) },
+      signal: AbortSignal.timeout(15_000),
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return response.json();
+  };
+  const how = `GitHub production deployments of ${input.repository}`;
+  try {
+    const deployments = await get("deployments?environment=production&per_page=5") as { id?: number; sha?: string }[];
+    for (const deployment of Array.isArray(deployments) ? deployments : []) {
+      const statuses = await get(`deployments/${deployment.id}/statuses?per_page=1`) as { state?: string }[];
+      if (statuses[0]?.state === "success" && typeof deployment.sha === "string") return { sha: deployment.sha, how, httpStatus: 200 };
+    }
+    return { sha: null, how: `${how}: none succeeded yet`, httpStatus: 200 };
+  } catch (error) {
+    return { sha: null, how: `${how}: ${(error as Error).message}`, httpStatus: null };
+  }
+}
+
 export interface RuntimeProductionDeploy {
   readonly commit_ref?: unknown;
   readonly context?: unknown;

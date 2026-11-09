@@ -13,7 +13,7 @@ import type { DoorRepository, DoorRecord } from "../doors/registry.ts";
 import { isDoorRecord } from "../doors/registry.ts";
 import { parseMultiStateResults, readMultiStateResults } from "./multistate.ts";
 import { CAPTURED_BALLOTPEDIA_URL, fetchCapturedBallotpediaText } from "./captured-source.ts";
-import { ballotpediaRaceId, parseCapturedBallotpedia, readCapturedBallotpediaResults, type CapturedBallotpedia, type BallotpediaRace } from "./ballotpedia.ts";
+import { ballotpediaRaceId, parseCapturedBallotpedia, readCapturedBallotpediaResults, readCapturedCongressSummary, type CapturedBallotpedia, type BallotpediaRace } from "./ballotpedia.ts";
 import { PUBLIC_SITE_ORIGIN } from "../ops/origins.ts";
 import { ensureOpenElectionResults, publishElectionResultBatch, raceClockKey, type ResultProgress, type ResultCounts } from "./publisher.ts";
 import { matchElectionResult } from "./matcher.ts";
@@ -42,6 +42,8 @@ interface StateProgress extends ResultProgress {
   readonly federalRoutes?: readonly BallotpediaRace[];
   /** The newest browser-capture time this state's Senate and House results were read from. */
   readonly capturedBallotpediaAt?: string;
+  /** Newest capture each national overview (Senate, House) was published from. */
+  readonly capturedSummaryAt?: Partial<Record<"us_house" | "us_senate", string>>;
   readonly ballotVersion?: string | null;
   readonly pendingSources?: readonly string[];
   readonly pendingFixes?: readonly WorkInput[];
@@ -287,11 +289,20 @@ export async function runElectionResults(input: {
   for (const office of ["us_senate", "us_house"] as const) {
     if (!more()) { unfinished = true; break; }
     const key = `ballotpedia:${office}`, next = sourceNext(nation, key);
-    if (!nation.pendingSources?.includes(key) && congressCertified && lastCertification && (nation.sourceChecks?.[key]?.checkedAt ?? "") >= lastCertification) continue;
-    if (next === null) continue;
-    if (next > at) { due.push(next); continue; }
+    const injected = input.congressSummaries?.find(batch => batch.summaries.some(summary => summary.chambers.some(chamber => chamber.name === office)));
+    // Without an injected batch the overview comes from the captured file, and only when that capture is newer than the one last published (certified or not).
+    const capturedNew = !injected && captured !== null && captured.capturedAt > (nation.capturedSummaryAt?.[office] ?? "");
+    if (!injected && captured !== null && !captured.overviews[office]) {
+      console.log(`Ballotpedia ${office} overview page is not in the captured file yet; the chamber summary waits for the next refresh.`);
+      continue;
+    }
+    if (!capturedNew && !nation.pendingSources?.includes(key) && congressCertified && lastCertification && (nation.sourceChecks?.[key]?.checkedAt ?? "") >= lastCertification) continue;
+    if (!capturedNew) {
+      if (next === null) continue;
+      if (next > at) { due.push(next); continue; }
+    }
     try {
-      const batch = input.congressSummaries?.find(batch => batch.summaries.some(summary => summary.chambers.some(chamber => chamber.name === office)));
+      const batch = injected ?? (capturedNew ? await readCapturedCongressSummary(captured!, office) : null);
       if (!batch) continue;
       if (batch.racePages) nation = { ...nation, federalRoutes: [...new Map([
         ...nation.federalRoutes ?? [], ...batch.racePages,
@@ -300,7 +311,8 @@ export async function runElectionResults(input: {
       const changed = await publishElectionResultBatch({ query, workQuery, db, batch, ballots: [], state: "US", prior: nation, now,
         door: doors.get("ballotpedia"), purge: input.purge, more, writeFix,
         accepted: (id, field, value) => { readerFacts[field.startsWith("election_summary:") ? `${id}#${field}` : id] = value; } });
-      nation = checked(pending({ ...nation, ...changed.progress, readerFacts }, key, changed.deferred), key, Boolean(batch.catalogErrors?.length));
+      nation = checked(pending({ ...nation, ...changed.progress, readerFacts, ...capturedNew && !changed.deferred
+        ? { capturedSummaryAt: { ...nation.capturedSummaryAt, [office]: captured!.capturedAt } } : {} }, key, changed.deferred), key, Boolean(batch.catalogErrors?.length));
       unfinished ||= changed.deferred;
       for (const issue of batch.catalogErrors ?? []) await failure("US", issue.url, issue.reason);
       noteOutcome("ballotpedia", null);

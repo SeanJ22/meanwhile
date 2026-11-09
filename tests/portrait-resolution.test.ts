@@ -7,8 +7,8 @@
 
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readFileSync, readdirSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { readFileSync } from "node:fs";
+import { walkFiles } from "./helpers/walk-files.ts";
 
 /** The large circle at dpr 2. Conservative by the border's 6px, on purpose. */
 const LARGE_FLOOR = 184;
@@ -50,15 +50,7 @@ function intrinsic(buf: Buffer): { w: number; h: number } | null {
 }
 
 function portraits(): { path: string; w: number; h: number }[] {
-  const files: string[] = [];
-  const walk = (dir: string) => {
-    for (const entry of readdirSync(dir)) {
-      const full = join(dir, entry);
-      if (statSync(full).isDirectory()) walk(full);
-      else if (/\.(jpe?g|png|webp)$/i.test(entry)) files.push(full);
-    }
-  };
-  walk("public");
+  const files = walkFiles("public", (name) => /\.(jpe?g|png|webp)$/i.test(name));
   const out: { path: string; w: number; h: number }[] = [];
   for (const path of files) {
     const d = intrinsic(readFileSync(path).subarray(0, 200_000));

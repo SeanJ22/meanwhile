@@ -1,4 +1,3 @@
-import { platformCensusWatchdog } from "../lib/control-plane/discovery/platform-census-watchdog.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
@@ -117,40 +116,32 @@ test("the round wires its long phases to the reporter and ends a hung worker bef
   for (const label of ["dispatch", "worker wave"]) assert.ok(round.includes(`roundProgress.note("${label}")`), label);
   assert.ok(!round.includes('roundProgress.note("meetings walks")'));
   const census = readFileSync(new URL("../lib/control-plane/discovery/platform-census-runtime.ts", import.meta.url), "utf8");
-  const watchdog = readFileSync(new URL("../lib/control-plane/discovery/platform-census-watchdog.ts", import.meta.url), "utf8");
-  assert.match(watchdog, /CENSUS_PROGRESS/);
-  assert.match(census, /platformCensusWatchdog\(deadline\)/);
+  assert.match(census, /roundProgressReporter\(\)/);
   for (const label of ["public page", "government", "control read", "registration read"]) assert.ok(census.includes(`progress.note("${label}")`), label);
   assert.ok(CENSUS_LANE_BUDGET_MS - 60_000 < RUNTIME_NO_PROGRESS_MS);
   assert.match(round, /childTimeoutMs: RUNTIME_NO_PROGRESS_MS - 60_000/);
   assert.ok(RUNTIME_NO_PROGRESS_MS - 60_000 > 8 * 60_000, "a hunter's own 8-minute wall still ends it first");
 });
 
-test("a census blocked on an await with nothing finished is ended by its own wall as a failure", async () => {
-  const watchdog = JSON.stringify(new URL("../lib/control-plane/discovery/platform-census-watchdog.ts", import.meta.url).href);
-  const [result] = await runRuntimeChildren([{ id: "platform-census", executable: process.execPath,
-    args: ["--experimental-strip-types", "--input-type=module", "-e", `import { platformCensusWatchdog } from ${watchdog};
-      platformCensusWatchdog(Date.now() + 100); setInterval(() => {}, 1000); await new Promise(() => {});`] }],
-    { cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: 3000 });
-  assert.equal(result!.termination, "EXITED");
-  assert.equal(result!.status, 1);
-  assert.match(result!.stderr, /CENSUS_PASS_TIMEOUT/);
+const hold = "setInterval(() => {}, 1000); await new Promise(() => {});";
+const laneRun = (source: string, partialWithinMs?: number) => runRuntimeChildren([{ id: "platform-census", executable: process.execPath,
+  args: ["--experimental-strip-types", "--input-type=module", "-e", source] }],
+  { cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: 30_000, partialWithinMs, deadlineMs: Date.now() + 2500 });
+
+test("a pass cut by its lane deadline is finished only if it printed progress shortly before it; early-only progress is a stall; none is a failure", async () => {
+  const [recent] = await laneRun(`console.log('PLATFORM_WALKING a'); setTimeout(() => console.log('PLATFORM_WALKING b'), 1900); ${hold}`, 700);
+  assert.equal(recent!.termination, "EXITED");
+  assert.equal(recent!.status, 0);
+  const [stalled] = await laneRun(`console.log('PLATFORM_WALKING tx:city:stuck'); ${hold}`, 700);
+  assert.equal(stalled!.termination, "TIMED_OUT");
+  assert.match(stalled!.errorMessage!, /PASS_TIME_BUDGET.*stalled since \d{4}-.*after "PLATFORM_WALKING tx:city:stuck"/);
+  const [none] = await laneRun(hold, 700);
+  assert.equal(none!.termination, "TIMED_OUT");
+  assert.match(none!.errorMessage!, /PASS_TIME_BUDGET.*printed no progress/);
 });
 
-test("a census that reaches its wall having finished work exits cleanly as a partial pass, and the next pass is judged afresh", async () => {
-  const watchdog = JSON.stringify(new URL("../lib/control-plane/discovery/platform-census-watchdog.ts", import.meta.url).href);
-  const [result] = await runRuntimeChildren([{ id: "platform-census", executable: process.execPath,
-    args: ["--experimental-strip-types", "--input-type=module", "-e", `import { platformCensusWatchdog } from ${watchdog};
-      const w = platformCensusWatchdog(Date.now() + 100); w.note("government"); setInterval(() => {}, 1000); await new Promise(() => {});`] }],
-    { cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: 3000 });
-  assert.equal(result!.termination, "EXITED");
-  assert.equal(result!.status, 0);
-  assert.match(result!.stdout, /CENSUS_PASS_PARTIAL: .* 1 finished reads/);
-  assert.doesNotMatch(result!.stderr, /CENSUS_PASS_TIMEOUT/);
-  // The next scheduled pass starts with its own count: a pass that finishes nothing still fails.
-  const outcomes: string[] = [];
-  const next = platformCensusWatchdog(Date.now() + 20, { write: () => {}, partial: d => outcomes.push(d), fail: d => outcomes.push(d) });
-  await new Promise(resolve => setTimeout(resolve, 80));
-  next.close();
-  assert.match(outcomes[0]!, /CENSUS_PASS_TIMEOUT/);
+test("a lane that did not ask for partial passes (the research round) is still a failure at its deadline", async () => {
+  const [result] = await laneRun(`console.log('round progress: dispatch 3 finished'); setTimeout(() => console.log('round progress: dispatch 4 finished'), 2000); ${hold}`);
+  assert.equal(result!.termination, "TIMED_OUT");
+  assert.match(result!.errorMessage!, /PASS_TIME_BUDGET/);
 });

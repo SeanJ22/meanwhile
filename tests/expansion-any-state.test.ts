@@ -14,7 +14,6 @@ import { planDerivedVersion, type DerivedInputRef } from "../lib/civic-data/deri
 import { composeCrosswalk, derivedCrosswalkCandidate, planDerivedCrosswalk, readDerivedMeetingBodyCrosswalk } from "../lib/civic-data/derived-crosswalk.ts";
 import { buildDerivedFamily, derivedFamilyCandidate, type FamilyMemberRead } from "../lib/civic-data/derived-meeting-family.ts";
 import { bodySourceWiringFor, derivedWiringCandidate, derivedWiringKey, familyMembers, readDerivedMeetingWiring } from "../lib/civic-data/derived-meeting-wiring.ts";
-import { manualProjectionCandidate, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { derivedMeetingFamilyId, requiredMeetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
 import {
   clearRegistrationJurisdictionRegistries,
@@ -22,10 +21,10 @@ import {
   operationalReferenceBundle,
   requiredJurisdictionRegistry,
 } from "../lib/civic-data/operational-references.ts";
-import { processRegisteredManualCandidate, processRegisteredMeetingPartitionCandidate, processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
+import { processRegisteredMeetingPartitionCandidate, processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { registrationGovernments, type ReadOnlyQuery, type Row } from "../lib/control-plane/admin-view/promoted-slices.ts";
-import { autoCrosswalkReviewerId, reviewDiscoveryWalk, type HeldBytes } from "../lib/control-plane/discovery/auto-crosswalk.ts";
+import { autoCrosswalkReviewerId, reviewDiscoveryWalk } from "../lib/control-plane/discovery/auto-crosswalk.ts";
 import { deriveWiringDecisions, wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { readHeldCalendars, type HeldCalendarReading } from "../lib/control-plane/discovery/derived-wiring-reading.ts";
 import { readFreeDiscoveryWalks } from "../lib/control-plane/discovery/free-walks.ts";
@@ -61,10 +60,9 @@ import { REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOU
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
-import { curatedReaderSourceClass } from "./helpers/curated-reader-source-class.ts";
-import { ics, localStart, reviewedIds } from "./helpers/expansion-fixtures.ts";
+import { ics, localStart, promoteVenues, reviewedIds, vaultingWalkRuntime } from "./helpers/expansion-fixtures.ts";
 import { freshEdge, publishPass, readPlace } from "./helpers/meeting-body-fixtures.ts";
-import { recordedDiscoveryOpen, type RecordedReply } from "./helpers/recorded-discovery-open.ts";
+import type { RecordedReply } from "./helpers/recorded-discovery-open.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 
@@ -225,40 +223,16 @@ async function runnerCycle(
   return { reading, scope };
 }
 
-async function promoteVenues(store: MemoryRoutineDataStore): Promise<void> {
-  const urls = ["https://public.example.gov/venue", "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=90+W+Broad+St&benchmark=Public_AR_Current&format=json"];
-  const pkg: ManualProjectionPackage = {
-    contractId: "venue-resolutions",
-    version: T_REGISTRATION,
-    sourceThrough: T_REGISTRATION,
-    sourceReceipt: {
-      contractVersion: 1, reviewedAt: T_REGISTRATION, reviewedBy: "a reviewing agent session (test)",
-      sources: urls.map((url, index) => ({
-        requestedUrl: url, finalUrl: url, publisher: "Exact named primary publisher", sourceClass: curatedReaderSourceClass("venue-resolutions"),
-        retrievedAt: T_REGISTRATION, httpStatus: 200, rawHash: String.fromCharCode(97 + index).repeat(64),
-        reviewedEvidence: "The exact response bytes and normalized record were reviewed together.",
-      })),
-    },
-    payload: {
-      kind: "venue-resolutions",
-      records: [{
-        id: "venue:test:columbus:90wbroad", sourceId: "test-source", bodyOcdId: "ocd-division/country:us/state:oh/place:columbus", match: "90 W Broad St",
-        name: "Columbus City Hall", address: "90 W Broad St, Columbus, OH 43215", lat: 39.96, lng: -83.0,
-        addressSourceUrl: urls[0], coordinateSourceUrl: urls[1], verifiedAt: T_REGISTRATION,
-      }],
-    },
-  };
-  const outcome = await processRegisteredManualCandidate(store, "venue-resolutions", manualProjectionCandidate(pkg), T_REGISTRATION);
-  assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? "");
-}
-
 test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner creates, from registration, and Columbus's calendar reaches the Reader", async (t) => {
   clearRegistrationJurisdictionRegistries();
   const store = new MemoryRoutineDataStore();
   const repos = createMemoryRepositories();
   await repos.adminConfig.put(ADMIN_CONFIG_ID, defaultAdminConfig(T_REGISTRATION), T_REGISTRATION);
   await promoteRegistration(store, "OH");
-  await promoteVenues(store);
+  await promoteVenues(store, T_REGISTRATION, "90+W+Broad+St", {
+    id: "venue:test:columbus:90wbroad", bodyOcdId: "ocd-division/country:us/state:oh/place:columbus", match: "90 W Broad St",
+    name: "Columbus City Hall", address: "90 W Broad St, Columbus, OH 43215", lat: 39.96, lng: -83.0,
+  });
   const reg = await readRegistrationProjection("OH", { store,  now: T_SEND });
   assert.equal(reg.kind, "PROMOTED");
   if (reg.kind !== "PROMOTED") return;
@@ -347,28 +321,12 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.deepEqual(columbus.addressSource, { source: "REGISTRATION", versionId });
   const subjects = needs.map((n) => ({ jurisdictionId: n.jurisdictionId, walkable: walkableByFreeWalk(n) }));
   assert.equal((await readFreeDiscoveryWalks(repos, subjects)).latestFor(COLUMBUS), "NOT_WALKED");
-  const vault = new Map<string, HeldBytes>();
-  let tick = 0;
-  await recordFreeDiscoveryWalks({
-    repos, needs: [columbus],
-    runtime: {
-      open: recordedDiscoveryOpen({
-        [`https://${COLUMBUS_HOST}/robots.txt`]: ALLOW,
-        [`https://${COLUMBUS_HOST}/`]: { status: 200, body: COLUMBUS_HOME },
-        [COLUMBUS_ROUTE]: { status: 200, body: COLUMBUS_FEED, contentType: "text/calendar" },
-      }),
-      spaceOut: async () => {},
-      vault: async (artifact, body) => {
-        vault.set(artifact.id, {
-          text: body, sha256: artifact.contentHash.slice("sha256-".length),
-          evidence: { kind: "VAULTED_EVIDENCE", artifactId: artifact.id, contentHash: artifact.contentHash, tier: artifact.tier === "SANITIZED_DERIVED" ? "SANITIZED_DERIVED" : "RAW", retrievedAt: artifact.retrievedAt },
-        });
-        return { stored: true, where: `vault/${artifact.id}`, why: "stored" };
-      },
-      now: () => new Date(Date.parse(T_WALK) + (tick++) * 1000).toISOString(),
-      budget: { spent: () => false },
-    },
-  });
+  const { vault, runtime } = vaultingWalkRuntime({
+    [`https://${COLUMBUS_HOST}/robots.txt`]: ALLOW,
+    [`https://${COLUMBUS_HOST}/`]: { status: 200, body: COLUMBUS_HOME },
+    [COLUMBUS_ROUTE]: { status: 200, body: COLUMBUS_FEED, contentType: "text/calendar" },
+  }, T_WALK);
+  await recordFreeDiscoveryWalks({ repos, needs: [columbus], runtime });
   const walked = await repos.discoveryAttempts.read(columbus.jurisdictionId);
   assert.deepEqual(walked.map((a) => [a.jurisdictionId, a.outcome]), [[COLUMBUS, "FOUND"]], "the free walk took the Send's city first");
   const [attempt] = walked;

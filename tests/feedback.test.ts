@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
@@ -22,6 +22,7 @@ import {
   classifySubmission,
   intakeLimits,
 } from "../lib/signal/intake-limits.ts";
+import { walkFiles } from "./helpers/walk-files.ts";
 
 /**
  * The personal address is gone from everything a browser can see, and the in-app form keeps its promises: its own
@@ -45,13 +46,8 @@ test("report links round-trip the card, ZIP and public record, with bounds and n
   assert.equal(url.searchParams.has("intent"), false, "problem reports keep their own intent");
 });
 
-function walk(dir: string, out: string[] = []): string[] {
-  for (const entry of readdirSync(dir)) {
-    const full = join(dir, entry);
-    if (statSync(full).isDirectory()) walk(full, out);
-    else out.push(full);
-  }
-  return out;
+function walk(dir: string): string[] {
+  return walkFiles(dir);
 }
 
 test("the author's personal address is gone from every source a browser can reach", () => {

@@ -38,3 +38,22 @@ export async function runElectionResultsWhenDue<T extends { readonly nextCheckAt
   await rename(temporary, input.path);
   return result;
 }
+
+/** Election results are their own step of the routine turn, on the turn's deadline rather than the fact-maintenance budget.
+ * A turn with no time left records the skip (`skipped`) and leaves the clock alone, so the next turn is due again. */
+export function runElectionResultsStep<T extends { readonly nextCheckAt: string | null }>(input: {
+  readonly path: string;
+  readonly deadlineMs: number;
+  readonly now?: () => number;
+  readonly requestedAt?: string;
+  readonly run: () => Promise<T | null>;
+  readonly skipped: (detail: string) => void;
+}): Promise<T | null> {
+  const now = input.now ?? Date.now;
+  return runElectionResultsWhenDue({ path: input.path, now: new Date(now()).toISOString(), requestedAt: input.requestedAt,
+    run: () => {
+      if (now() < input.deadlineMs) return input.run();
+      input.skipped("ELECTION_RESULTS_TURN_DEADLINE_PASSED: the turn ran out of time before election results were due; they are checked again next turn");
+      return Promise.resolve(null);
+    } });
+}

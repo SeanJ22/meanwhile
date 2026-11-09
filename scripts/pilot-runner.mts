@@ -1,8 +1,8 @@
 import { storedKeyEnvironment, storedKeyValue } from "../lib/core/keys-values.ts";
 import { LEGISTAR_MEMBER_DATABASE_BYTES } from "../lib/sources/legistar/members-queue.ts";
 import { keysRunnerPass, savedKeysLane } from "../lib/core/keys-runner.ts";
-import { readPlanningContinuation } from "../lib/control-plane/scheduler/state-planning.ts";
-import { CENSUS_LANE_BUDGET_MS, CENSUS_LANE_INTERVAL_MS } from "../lib/control-plane/discovery/census-lane.ts";
+import { RESEARCH_CYCLE_BUDGET_MS, readPlanningContinuation } from "../lib/control-plane/scheduler/state-planning.ts";
+import { CENSUS_LANE_BUDGET_MS, CENSUS_LANE_INTERVAL_MS, CENSUS_PARTIAL_WINDOW_MS } from "../lib/control-plane/discovery/census-lane.ts";
 
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { hostname } from "node:os";
@@ -440,6 +440,7 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     env: storedKeyEnvironment(),
     maxBufferBytes: 64 * 1024 * 1024,
     noProgressMs: RUNTIME_NO_PROGRESS_MS,
+    deadlineMs: Date.now() + RESEARCH_CYCLE_BUDGET_MS,
     onStdout: (_id, output) => { process.stdout.write(output); currentCycleOutput = `${currentCycleOutput}${output}`.slice(-8000); },
     onStderr: (_id, output) => {
       process.stderr.write(output);
@@ -1340,13 +1341,13 @@ const laneChildren = new Map<string, ChildProcess>();
 // Expected SQL request and response bytes for one 55-minute turn of the page readers: claims, page copies, fact checks and new links.
 const PARSER_LANE_DATABASE_BYTES = 150_000_000;
 /** One turn of a standing lane's child. The child ends itself by exit 0 when idle or drained, and that is a finish; a kill or any other exit is a stop. */
-async function runLaneChild(id: string, databaseBytesPerRun: number, script: string, deadlineMs: number, stopped: string, memory?: WorkerProcessSlots): Promise<void> {
+async function runLaneChild(id: string, databaseBytesPerRun: number, script: string, deadlineMs: number, stopped: string, memory?: WorkerProcessSlots, partialWithinMs?: number): Promise<void> {
   if (canary || runtimeAdmissionsHeld || provider !== "postgres" || !jobLaunchAllowed(id)) return;
   const release = await memory?.acquire(script.split("/").at(-1), deadlineMs);
   try {
     const [run] = await runRuntimeChildren([{ id, databaseBytesPerRun, executable: process.execPath, args: [...TS_CHILD, script],
       env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs) }], {
-      cwd: CODE_ROOT, env: storedKeyEnvironment(), deadlineMs, maxBufferBytes: 16 * 1024 * 1024, noProgressMs: RUNTIME_NO_PROGRESS_MS,
+      cwd: CODE_ROOT, env: storedKeyEnvironment(), deadlineMs, partialWithinMs, maxBufferBytes: 16 * 1024 * 1024, noProgressMs: RUNTIME_NO_PROGRESS_MS,
       onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output),
       onStarted: (_id, child) => { laneChildren.set(id, child); if (child.pid) release?.observe?.(child.pid); } });
     if (run?.status === 0) return;
@@ -1374,7 +1375,7 @@ const auditPasses = auditPassClock({
 
 const censusMemory = reportingWorkerSlots(routineProcessSlots());
 async function runPlatformCensus(deadlineMs: number): Promise<void> {
-  await runLaneChild("platform-census", 11_852_414, "scripts/platform-census-runner.mts", deadlineMs, "Platform census stopped; unvisited sources remain due", censusMemory);
+  await runLaneChild("platform-census", 11_852_414, "scripts/platform-census-runner.mts", deadlineMs, "Platform census stopped; unvisited sources remain due", censusMemory, CENSUS_PARTIAL_WINDOW_MS);
 }
 
 /** Place pages are built by the runner, the one process holding the production write address. */

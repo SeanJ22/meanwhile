@@ -1,8 +1,9 @@
 import ts from "typescript";
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { walkFiles } from "./helpers/walk-files.ts";
 
 /**
  * A Server Component may pass a Client Component only SERIALIZABLE props, and a
@@ -58,16 +59,8 @@ const HANDLER = /^on[A-Z]/;
  */
 const EXEMPT = /@server-boundary-exempt\s+(\S.*)$/m;
 
-function walk(dir: string, out: string[] = []): string[] {
-  for (const entry of readdirSync(dir)) {
-    const path = join(dir, entry);
-    if (statSync(path).isDirectory()) {
-      walk(path, out);
-    } else if (/\.tsx$/.test(entry)) {
-      out.push(path);
-    }
-  }
-  return out;
+function walk(dir: string): string[] {
+  return walkFiles(dir, (n) => /\.tsx$/.test(n));
 }
 
 /** Read actual property types; an arrow value in a local object is not a prop declaration. */

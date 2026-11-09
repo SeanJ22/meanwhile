@@ -201,6 +201,26 @@ export function foldEntries(entries: readonly FieldManualEntry[]): FieldManualEn
   return [...byId.values()];
 }
 
+/* Readers the seed script and the method-store test fixture share when folding a knowledge record into a manual entry. */
+export function strings(value: unknown): string[] {
+  return Array.isArray(value) ? value.filter((v): v is string => typeof v === "string") : [];
+}
+
+export function bestOutcome(outcomes: readonly { readonly outcome?: unknown }[] | undefined): FieldManualOutcome {
+  if (!outcomes || outcomes.length === 0) return "REFERENCE";
+  const set = new Set(outcomes.map((o) => String(o.outcome)));
+  if (set.has("YIELDED")) return "YIELDED";
+  if (set.has("BLOCKED")) return "BLOCKED";
+  if (set.has("FAILED")) return "FAILED";
+  if (set.has("ZERO")) return "ZERO";
+  return "REFERENCE";
+}
+
+export function latestDate(...values: (string | null | undefined)[]): string | null {
+  const dates = values.filter((v): v is string => typeof v === "string" && /\d{4}-\d{2}-\d{2}/.test(v));
+  return dates.length === 0 ? null : dates.sort().at(-1)!;
+}
+
 export const OUTCOME_RANK: Readonly<Record<FieldManualOutcome, number>> = {
   YIELDED: 0,
   REFERENCE: 1,

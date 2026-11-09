@@ -2,7 +2,7 @@ import { createRouteTask, type RouteDisposition, type RouteTask } from "../route
 import { createWorkItem, type WorkItem } from "../work-item.ts";
 import { inheritPublicationConnection } from "../workers/autonomous-plan.ts";
 import { questionOfObligation } from "../work-question.ts";
-import { registerRouteTask, registerWorkItem } from "../repository/coordinator.ts";
+import { abandonAttempt, attemptsForRouteTask, registerRouteTask, registerWorkItem } from "../repository/coordinator.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "../repository/types.ts";
 
 import type { DispatchSnapshot } from "../repository/dispatch-state.ts";
@@ -735,6 +735,7 @@ export async function closeOccurrence(
 ): Promise<FreshnessOccurrence> {
   const row = await repos.occurrences.mustRead(input.occurrenceId);
   if (row.value.closedAt !== null) {
+    await settleClaimedTask(repos, row.value.routeTaskId, input.unresolvedReason, input.now);
     await repos.dispatchState.archiveOccurrence(row.id, input.now);
     return row.value;
   }
@@ -762,8 +763,21 @@ export async function closeOccurrence(
     },
     input.now,
   );
+  await settleClaimedTask(repos, row.value.routeTaskId, input.unresolvedReason, input.now);
   await repos.dispatchState.archiveOccurrence(row.id, input.now);
   return closed;
+}
+
+/** Archiving moves the RouteTask out of reach of the lease sweep, so a task still CLAIMED has its open Attempts abandoned first, which releases the lease. */
+async function settleClaimedTask(repos: ControlPlaneRepositories, routeTaskId: string, why: string | null, now: string): Promise<void> {
+  const task = await repos.routeTasks.read(routeTaskId);
+  if (task === null || task.value.state !== "CLAIMED") return;
+  for (const attempt of await attemptsForRouteTask(repos, routeTaskId)) {
+    if (attempt.value.outcome === null) {
+      await abandonAttempt(repos, { routeTaskId, attemptId: attempt.id, outcome: "ABORTED",
+        reason: `The occurrence closed before this Attempt ended${why === null ? "" : `: ${why}`}`, now });
+    }
+  }
 }
 
 export async function closeSettledOccurrence(

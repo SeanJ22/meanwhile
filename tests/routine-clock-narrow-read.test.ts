@@ -29,6 +29,7 @@ import {
   type RoutineClockRecord,
 } from "../lib/civic-data/store.ts";
 import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+import { fecCandidate, receiptFor } from "./helpers/fec-candidate.ts";
 import { routineTaskDue } from "../lib/civic-data/runner.ts";
 import { AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts";
 import {
@@ -45,10 +46,7 @@ import {
   sourceProjectionEvidence,
   type CandidateVersionRecord,
   type RoutineCandidate,
-  type ValidationReceipt,
 } from "../lib/civic-data/types.ts";
-
-import { routineCandidateFixture, routineReceiptFixture, routineRecordFixture } from "./helpers/routine-candidate-fixture.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const HASH = "a".repeat(64);
@@ -60,11 +58,22 @@ function selectList(query: { toSQL(): { sql: string } }): string {
   return text.slice(0, text.indexOf(" from "));
 }
 
-const candidate = (id: string, overrides: Partial<RoutineCandidate> = {}) =>
-  routineCandidateFixture({ id, records: 50 }, overrides);
-const receiptFor = (value: RoutineCandidate, decision: ValidationReceipt["decision"] = "GOOD") =>
-  routineReceiptFixture(value, { decision });
-const promoted = routineRecordFixture;
+const candidate = (id: string, overrides: Partial<RoutineCandidate> = {}): RoutineCandidate =>
+  fecCandidate(id, Array.from({ length: 50 }, (_, index) => `${id}-${index}`), "2026-09-08T12:00:00.000Z", overrides);
+
+function promoted(value: RoutineCandidate, overrides: Partial<CandidateVersionRecord> = {}): CandidateVersionRecord {
+  return {
+    candidate: value,
+    state: "PROMOTED",
+    acquisitionSucceeded: true,
+    receipt: receiptFor(value),
+    promotedVersion: value.id,
+    lastKnownGoodVersion: value.id,
+    failureCode: null,
+    failureDetail: null,
+    ...overrides,
+  };
+}
 
 function pointerFor(value: RoutineCandidate, overrides: Record<string, unknown> = {}) {
   return {

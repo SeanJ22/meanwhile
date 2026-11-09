@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
@@ -20,6 +20,7 @@ import {
   readTable,
   referenceFiles,
 } from "../lib/reference/index.ts";
+import { walkFiles, hiddenOrVendored } from "./helpers/walk-files.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 // Voting routes and election scope use the JSON reference loader; county clocks are a static JSON import.
@@ -292,12 +293,6 @@ test("the CSV reader survives quoted commas, escaped quotes and embedded newline
   assert.equal(rows.length, 3, "a final line without a trailing newline is still a row");
 });
 
-function walk(dir: string, out: string[] = []): string[] {
-  for (const entry of readdirSync(dir)) {
-    if (entry === "node_modules" || entry.startsWith(".")) continue;
-    const full = join(dir, entry);
-    if (statSync(full).isDirectory()) walk(full, out);
-    else out.push(full);
-  }
-  return out;
+function walk(dir: string): string[] {
+  return walkFiles(dir, () => true, hiddenOrVendored);
 }

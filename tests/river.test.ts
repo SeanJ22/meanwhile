@@ -35,6 +35,7 @@ import {
   foldOrder,
   linesOfCode,
   measureNotes,
+  measuresText,
   measureSql,
   migrationProblems,
   missingProofs,
@@ -483,6 +484,12 @@ test("fold, migrations, the quick check, release, settle and the lock protocol w
     assert.equal(grown.code, 1, grown.out);
     assert.match(grown.out, /grows the code from 9 to 11 lines \(\+2\)/);
     assert.equal(remoteSha(riverCheckout, "release/1"), "", "a release that grows the code pushes no release branch");
+    // --growth: an empty reason is refused; a reviewed reason passes and rides the Lines of code line.
+    assert.match(river(riverCheckout, "release", "1", "--growth", "").out, /--growth needs a reason/);
+    const allowed = river(riverCheckout, "release", "1", "--dry-run", "--growth", "election results");
+    assert.equal(allowed.code, 0, allowed.out);
+    assert.match(allowed.out, /grows the code by \+2 lines: election results/);
+    assert.match(allowed.out, /Lines of code: 9 before, 11 after \(\+2\) — new feature: election results/);
     sh(riverCheckout, ["rm", "--quiet", "lib/old.ts"]);
     sh(riverCheckout, ["commit", "--quiet", "-m", "River: remove unused code"]);
 
@@ -700,6 +707,14 @@ test("the phone check runs at a real phone's speed: processor slowed 4 times, an
   const notes = measureNotes({ zips: [{ zip: "00501", state: "NY" }, { zip: "01001", state: "MA" }], before: side, after: side }).join("\n");
   assert.match(notes, /phone \(390×844, touch, 12 Mbps down, 3 up, 70 ms, processor slowed 4 times/);
   assert.doesNotMatch(notes, /old, no processor slowdown|phoneOld/);
+});
+
+test("a release's growth reason rides every rerender of its measures, and no reason leaves the line unchanged", () => {
+  const record = { zips: [], before: {}, after: {}, lines: { before: 668383, after: 671654 } };
+  const plain = measuresText(record, null);
+  assert.match(plain, /^- Lines of code: .*\(\+3,271\)$/m);
+  assert.doesNotMatch(plain, /new feature/);
+  assert.match(measuresText(record, "election results"), /^- Lines of code: .*\(\+3,271\) — new feature: election results$/m);
 });
 
 test("one live sweep a release: the before is the last release's after, no page loads, and a second sweep is refused", () => {

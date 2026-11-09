@@ -180,11 +180,16 @@ export function resolveReaderArtifactStore(): ReaderArtifactStore | null {
   return null;
 }
 
+/** The site and token the runner publishes reader artifacts with. Every runner-side site-store write resolves them here. */
+export function resolveReaderArtifactWriteCredentials(): { siteID: string; token: string } | null {
+  const siteID = process.env.NETLIFY_SITE_ID?.trim() || process.env.NETLIFY_BLOBS_SITE_ID?.trim();
+  const token = storedKeyValue("NETLIFY_BLOBS_TOKEN")?.trim() || storedKeyValue("NETLIFY_API_TOKEN")?.trim();
+  return siteID && token ? { siteID, token } : null;
+}
+
 export function resolveReaderArtifactWriteStore(): ReaderArtifactStore | null {
   const localDir = process.env.WTP_READER_EDGE_DIR?.trim();
   if (localDir) return new LocalFileArtifactStore(localDir);
-  const siteID = process.env.NETLIFY_SITE_ID?.trim() || process.env.NETLIFY_BLOBS_SITE_ID?.trim();
-  const token = storedKeyValue("NETLIFY_BLOBS_TOKEN")?.trim() || storedKeyValue("NETLIFY_API_TOKEN")?.trim();
-  if (siteID && token) return new NetlifyBlobsArtifactStore({ siteID, token });
-  return null;
+  const credentials = resolveReaderArtifactWriteCredentials();
+  return credentials ? new NetlifyBlobsArtifactStore(credentials) : null;
 }

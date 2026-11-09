@@ -40,6 +40,7 @@ const stateOfficeAliases: Readonly<Record<string, Readonly<Record<string, string
   VT: { "auditor of accounts": "auditor" },
 };
 const officeTitle = (office: string): string => office.replace(/_/g, " ")
+  .replace(/\(\s*(?:unexpired|special|ending|remainder)[^)]*\)/gi, " ")
   .replace(/\bunexpired\s+(?:\d+\s*[- ]?\s*year\s+)?term\b/gi, " ")
   .replace(/\s*[—–-]\s*special\s+election\b/gi, " ")
   .replace(/\b(?:place|seat|position)\s+(?:no\.?\s*)?\d+\b/gi, " ").trim();
@@ -64,17 +65,64 @@ function contestOffice(contest: Contest): string | null {
   return null;
 }
 
+/** Formal given name -> the common nicknames results print for it. Two nicknames are never equal to each other, only to the formal name. */
+const NICKNAMES: Readonly<Record<string, readonly string[]>> = {
+  william: ["bill", "will", "billy"], robert: ["bob", "rob", "bobby"], richard: ["rick", "dick", "rich"], james: ["jim", "jimmy"],
+  john: ["jack"], joseph: ["joe"], thomas: ["tom"], michael: ["mike"], gregory: ["greg"], christopher: ["chris"],
+  daniel: ["dan", "danny"], david: ["dave"], edward: ["ed", "ted", "ned"], elizabeth: ["liz", "beth", "betsy"],
+  katherine: ["kate", "kathy", "cathy"], catherine: ["kate", "kathy", "cathy"], margaret: ["maggie", "peggy"], patricia: ["pat", "patty"],
+  jennifer: ["jen", "jenny"], steven: ["steve"], stephen: ["steve"], timothy: ["tim"], anthony: ["tony"], andrew: ["andy"],
+  benjamin: ["ben"], charles: ["chuck", "charlie"], donald: ["don"], douglas: ["doug"], gerald: ["jerry"], kenneth: ["ken"],
+  lawrence: ["larry"], matthew: ["matt"], nicholas: ["nick"], peter: ["pete"], ronald: ["ron"], samuel: ["sam"], theodore: ["ted"],
+  walter: ["walt"], zachary: ["zach"], alexander: ["alex"], jonathan: ["jon"], nathaniel: ["nate"], frederick: ["fred"],
+  raymond: ["ray"], gerard: ["jerry"], joshua: ["josh"], jeffrey: ["jeff"], philip: ["phil"], abraham: ["abe"], albert: ["al"],
+  alfred: ["al"], victoria: ["vicky"], susan: ["sue"], deborah: ["debbie", "deb"], rebecca: ["becky"], jacqueline: ["jackie"],
+  christine: ["chris"], christina: ["chris"], pamela: ["pam"], barbara: ["barb"], cynthia: ["cindy"], kimberly: ["kim"],
+  melissa: ["missy"], alexandria: ["alex"], alexandra: ["alex"], eugene: ["gene"], harold: ["hal"], henry: ["hank"],
+  leonard: ["len", "lenny"], mitchell: ["mitch"], randall: ["randy"], russell: ["russ"], stanley: ["stan"], vincent: ["vince"],
+  gabriel: ["gabe"], isaac: ["ike"], jacob: ["jake"], jerome: ["jerry"],
+};
+const FORMAL_NAMES: ReadonlyMap<string, readonly string[]> = (() => {
+  const formals = new Map<string, string[]>();
+  for (const [formal, nicknames] of Object.entries(NICKNAMES)) for (const nickname of nicknames) formals.set(nickname, [...formals.get(nickname) ?? [], formal]);
+  return formals;
+})();
+/** A given name's own nicknames if it is formal, or the formal names it is a nickname for. */
+const givenVariants = (given: string): readonly string[] => [...NICKNAMES[given] ?? [], ...FORMAL_NAMES.get(given) ?? []];
+
+/** Filing given names matched by nickname equivalence; consulted only when no candidate matches by the stricter names. */
+function nicknameNames(candidate: Candidacy, office: string): ReadonlySet<string> {
+  const person = office === "lieutenant_governor" && candidate.ticket ? candidate.ticket.runningMate : candidate;
+  const given = (person.givenName ?? "").trim(), family = (person.familyName ?? "").trim(), values: string[] = [];
+  if (given && family) {
+    const nickname = /["“]([^"”]+)["”]/.exec(given)?.[1], first = given.replace(/["“][^"”]*["”]/g, " ").trim().split(/\s+/)[0];
+    for (const alias of [nickname, first]) if (alias) for (const variant of givenVariants(key(alias))) values.push(`${variant} ${family}`);
+  }
+  return new Set(values.flatMap(value => { const known = nameKey(value); return [known, withoutSuffix(known)]; }));
+}
+
 function names(candidate: Candidacy, office: string): ReadonlySet<string> {
   const person = office === "lieutenant_governor" && candidate.ticket ? candidate.ticket.runningMate : candidate;
   const values = [ballotCandidateDisplayName({ ...person, ticket: undefined }), person.filing?.publishedName,
     ...person.aliases?.flatMap(alias => alias.includes("|") ? [alias.slice(alias.lastIndexOf("|") + 1)] : []) ?? []];
   if (office === "governor") values.push(ballotCandidateDisplayName(person));
-  return new Set(values.filter((value): value is string => !!value?.trim()).map(nameKey));
+  // Filings spell legal names ("Thomas "Jay" Feely IV"); results print how the person is known ("Jay Feely"): first or nickname plus family.
+  const given = (person.givenName ?? "").trim(), family = (person.familyName ?? "").trim();
+  if (given && family) {
+    const nickname = /["“]([^"”]+)["”]/.exec(given)?.[1], first = given.replace(/["“][^"”]*["”]/g, " ").trim().split(/\s+/)[0];
+    for (const alias of [nickname, first]) if (alias) values.push(`${alias} ${family}`);
+  }
+  return new Set(values.filter((value): value is string => !!value?.trim()).flatMap(value => {
+    const known = nameKey(value);
+    return [known, withoutSuffix(known)];
+  }));
 }
+
+const withoutSuffix = (name: string): string => name.replace(/\s+(?:jr|sr|ii|iii|iv)$/, "");
 
 function sourceName(name: string, office: string): string {
   // The source can print the joint choice as two full names. The governor is its lead.
-  return nameKey(office === "governor" ? name.split(/\s*\/\s*|\s+and\s+|\s*&\s*/i)[0] : name);
+  return withoutSuffix(nameKey(office === "governor" ? name.split(/\s*\/\s*|\s+and\s+|\s*&\s*/i)[0] : name));
 }
 
 function districtHint(contest: Contest, hint: string | undefined): boolean {
@@ -129,8 +177,10 @@ export function matchElectionResult(result: ElectionResult, ballot: ServedBallot
     const candidates = ballot.candidacies.filter(candidate => candidate.contestId === contest.id);
     const resolved = result.candidates.map((candidate, resultIndex) => {
       const wanted = sourceName(candidate.name, office);
-      const found = /^(?:write ins?|other|scattering|none of (?:these|the above))$/.test(wanted) ? []
-        : candidates.filter(candidate => names(candidate, office).has(wanted));
+      const skipped = /^(?:write ins?|other|scattering|none of (?:these|the above))$/.test(wanted);
+      // A nickname equivalence is a fallback: an exact filing name wins, and two nickname matches stay ambiguous.
+      const strict = skipped ? [] : candidates.filter(candidate => names(candidate, office).has(wanted));
+      const found = skipped || strict.length ? strict : candidates.filter(candidate => nicknameNames(candidate, office).has(wanted));
       return { resultIndex, found };
     });
     return { contest, resolved, score: resolved.filter(row => row.found.length > 0).length,

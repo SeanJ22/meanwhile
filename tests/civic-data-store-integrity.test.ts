@@ -36,15 +36,13 @@ import {
 } from "../lib/civic-data/store.ts";
 import type { RuntimeAuthorityEnvelope } from "../lib/civic-data/runtime-authority.ts";
 import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+import { fecCandidate, receiptFor } from "./helpers/fec-candidate.ts";
 import { serializeReaderProjectionReadback } from "../lib/civic-data/reader-readback.ts";
 import {
-  sourceProjectionEvidence,
   type CandidateVersionRecord,
   type RoutineCandidate,
   type ValidationReceipt,
 } from "../lib/civic-data/types.ts";
-
-import { routineAcquiredFixture, routineCandidateFixture, routineReceiptFixture } from "./helpers/routine-candidate-fixture.ts";
 
 const HASH = "a".repeat(64);
 const ROOT = resolve(import.meta.dirname, "..");
@@ -92,12 +90,8 @@ test("Postgres routine-data timestamps have one fail-closed canonical evidence b
   assert.match(adapter, /canonicalPostgresRoutineTimestamp\(lastSucceededAt/);
 });
 
-function candidate(id: string, retrievedAt = "2026-09-08T12:00:00.000Z", sourceId = "fec-open-api"): RoutineCandidate {
-  return routineCandidateFixture({ id, retrievedAt, sourceId,
-    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported") });
-}
-
-const receiptFor = routineReceiptFixture;
+const candidate = (id: string, retrievedAt = "2026-09-08T12:00:00.000Z", sourceId = "fec-open-api"): RoutineCandidate =>
+  fecCandidate(id, [id], retrievedAt, { sourceId });
 
 async function seedValidated(
   store: MemoryRoutineDataStore,
@@ -105,7 +99,16 @@ async function seedValidated(
   receipt: ValidationReceipt = receiptFor(value),
   lastKnownGoodVersion: string | null = null,
 ): Promise<ValidationReceipt> {
-  const record: CandidateVersionRecord = routineAcquiredFixture(value, lastKnownGoodVersion);
+  const record: CandidateVersionRecord = {
+    candidate: value,
+    state: "FETCHED",
+    acquisitionSucceeded: true,
+    receipt: null,
+    promotedVersion: null,
+    lastKnownGoodVersion,
+    failureCode: null,
+    failureDetail: null,
+  };
   await store.create(record, {
     candidateId: value.id,
     sequence: 1,
@@ -306,7 +309,16 @@ test("candidate creation refuses a mismatched first event before persisting eith
   const store = new MemoryRoutineDataStore();
   const value = candidate("mismatched-first-event");
   await assert.rejects(
-    store.create(routineAcquiredFixture(value), {
+    store.create({
+      candidate: value,
+      state: "FETCHED",
+      acquisitionSucceeded: true,
+      receipt: null,
+      promotedVersion: null,
+      lastKnownGoodVersion: null,
+      failureCode: null,
+      failureDetail: null,
+    }, {
       candidateId: "another-candidate",
       sequence: 1,
       state: "FETCHED",
@@ -323,7 +335,16 @@ test("candidate event time is a bounded local clock and never moves backward by 
   const futureStore = new MemoryRoutineDataStore();
   const future = candidate("future-acquisition", "2999-01-01T00:00:00.000Z");
   const observedAt = "2026-09-08T12:00:00.000Z";
-  await futureStore.create(routineAcquiredFixture(future), {
+  await futureStore.create({
+    candidate: future,
+    state: "FETCHED",
+    acquisitionSucceeded: true,
+    receipt: null,
+    promotedVersion: null,
+    lastKnownGoodVersion: null,
+    failureCode: null,
+    failureDetail: null,
+  }, {
     candidateId: future.id,
     sequence: 1,
     state: "FETCHED",
@@ -362,7 +383,16 @@ test("candidate event time is a bounded local clock and never moves backward by 
   const futureEventStore = new MemoryRoutineDataStore();
   const futureEvent = candidate("future-local-event", "2026-09-08T12:00:00.000Z");
   await assert.rejects(
-    futureEventStore.create(routineAcquiredFixture(futureEvent), {
+    futureEventStore.create({
+      candidate: futureEvent,
+      state: "FETCHED",
+      acquisitionSucceeded: true,
+      receipt: null,
+      promotedVersion: null,
+      lastKnownGoodVersion: null,
+      failureCode: null,
+      failureDetail: null,
+    }, {
       candidateId: futureEvent.id,
       sequence: 1,
       state: "FETCHED",
@@ -375,7 +405,16 @@ test("candidate event time is a bounded local clock and never moves backward by 
 
   const backwardSequenceStore = new MemoryRoutineDataStore();
   const backwardSequence = candidate("event-clock-backward", "2026-09-08T12:00:00.000Z");
-  await backwardSequenceStore.create(routineAcquiredFixture(backwardSequence), {
+  await backwardSequenceStore.create({
+    candidate: backwardSequence,
+    state: "FETCHED",
+    acquisitionSucceeded: true,
+    receipt: null,
+    promotedVersion: null,
+    lastKnownGoodVersion: null,
+    failureCode: null,
+    failureDetail: null,
+  }, {
     candidateId: backwardSequence.id,
     sequence: 1,
     state: "FETCHED",
@@ -398,7 +437,16 @@ test("candidate event time is a bounded local clock and never moves backward by 
 test("a terminal transition requires exact non-GOOD receipt evidence and is immutable", async () => {
   const store = new MemoryRoutineDataStore();
   const value = candidate("terminal-proof");
-  await store.create(routineAcquiredFixture(value), {
+  await store.create({
+    candidate: value,
+    state: "FETCHED",
+    acquisitionSucceeded: true,
+    receipt: null,
+    promotedVersion: null,
+    lastKnownGoodVersion: null,
+    failureCode: null,
+    failureDetail: null,
+  }, {
     candidateId: value.id,
     sequence: 1,
     state: "FETCHED",
@@ -1055,7 +1103,10 @@ test("promotion hands every transition the candidate it already holds", async ()
   assert.deepEqual(outcome.candidate.candidate, durable);
 
   const other = candidate("promotion-holds-envelope-2");
-  await store.create(routineAcquiredFixture(other), { candidateId: other.id, sequence: 1, state: "FETCHED", at: other.retrieval.retrievedAt, detail: "acquired" });
+  await store.create({
+    candidate: other, state: "FETCHED", acquisitionSucceeded: true, receipt: null,
+    promotedVersion: null, lastKnownGoodVersion: null, failureCode: null, failureDetail: null,
+  }, { candidateId: other.id, sequence: 1, state: "FETCHED", at: other.retrieval.retrievedAt, detail: "acquired" });
   await assert.rejects(
     store.transition(other.id, "NORMALIZED", other.retrieval.retrievedAt, "normalized", undefined, undefined, {
       candidate: { ...other, normalization: { ...other.normalization, normalizedHash: "f".repeat(64) } },
@@ -1193,7 +1244,8 @@ for (const recordClass of ["STATE_ROLL_CALL", "MEETING"] as const) test(`${recor
       repo: ROOT, sha: "1".repeat(40), capability: "ROUTINE_CONTRACT", contract: contract.id,
       parentPid: 123, nonce: "2".repeat(64),
     } satisfies RuntimeAuthorityEnvelope });
-    await store.create(routineAcquiredFixture(value),
+    await store.create({ candidate: value, state: "FETCHED", acquisitionSucceeded: true,
+      receipt: null, promotedVersion: null, lastKnownGoodVersion: null, failureCode: null, failureDetail: null },
       { candidateId: value.id, sequence: 1, state: "FETCHED", at: value.retrieval.retrievedAt, detail: "Publisher read held" });
     const partWrites = sent.filter(row => row.query.startsWith('insert into "civic_data_payload_parts"'));
     assert.ok(partWrites.length > 0);
@@ -1276,7 +1328,8 @@ for (const family of STATE_BALLOT_FAMILIES) test(`${family} stores bounded state
       repo: ROOT, sha: "1".repeat(40), capability: manual ? "MANUAL_CONTRACT" : "ROUTINE_CONTRACT", contract: id,
       parentPid: 123, nonce: "2".repeat(64),
     } satisfies RuntimeAuthorityEnvelope });
-    await store.create(routineAcquiredFixture(value),
+    await store.create({ candidate: value, state: "FETCHED", acquisitionSucceeded: true,
+      receipt: null, promotedVersion: null, lastKnownGoodVersion: null, failureCode: null, failureDetail: null },
       { candidateId: value.id, sequence: 1, state: "FETCHED", at: value.retrieval.retrievedAt, detail: "Publisher read held" });
     const writes = sent.filter(row => row.query.startsWith("insert into"));
     assert.ok(parts.size > 0);
@@ -1521,7 +1574,8 @@ for (const family of ["candidate-profiles", "candidate-corpus", "candidate-campa
     }, async (store,_sent,vault) => {
       Object.assign(store, { writeAuthority: { repo: ROOT, sha: "1".repeat(40), capability: manual ? "MANUAL_CONTRACT" : "ROUTINE_CONTRACT",
         contract: id, parentPid: 123, nonce: "2".repeat(64) } satisfies RuntimeAuthorityEnvelope });
-      await store.create(routineAcquiredFixture(value),
+      await store.create({ candidate: value, state: "FETCHED", acquisitionSucceeded: true, receipt: null, promotedVersion: null,
+        lastKnownGoodVersion: null, failureCode: null, failureDetail: null },
       { candidateId: value.id, sequence: 1, state: "FETCHED", at: value.retrieval.retrievedAt, detail: "Source payload acquired" });
       return vault;
     });

@@ -16,6 +16,7 @@ import { ensureFactEntities, loadChangedStates, registeredStates } from "../lib/
 import { ensurePortalBodyLabels } from "../lib/facts/portal-publication.ts";
 import { makeCensusGoverningBodies } from "../lib/facts/census-governing.ts";
 import { syncReaderIds } from "../lib/core/resolve.ts";
+import { controlPlaneQuery } from "../lib/core/work.ts";
 import { cartonComments, cartonOffices, cartonRosters, importCartonComments, importCartonOffices, importCartonRosters } from "../lib/facts/carton-import.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { factRefreshBounds, observedSourceEveryMs, readSourceChangeHistory, type SourceChangeHistory } from "../lib/civic-data/source-change-cadence.ts";
@@ -783,6 +784,25 @@ async function recordHuntSourceProgressEach(tasks: readonly RoutineSourceTask[],
   if (failed) throw new Error(failed.error!);
 }
 
+/** Election results run on their own, beside fact maintenance and on the turn's deadline, never inside its 60-second budget. */
+async function runElectionResultsStep(deadlineMs: number): Promise<void> {
+  const connection = controlPlaneUrlFromEnv();
+  if (!connection) return;
+  try {
+    const { runElectionResultsStep: whenDue } = await import("../lib/election-results/turn.ts");
+    const results = await whenDue({ path: join(ROOT, ".mirror", "election-results-next-check.json"), deadlineMs, requestedAt: electionResultsRequestedAt,
+      skipped: detail => recordLaunchDecision({ id: ROUTINE_JOBS.electionResults.id, sourceId: ROUTINE_JOBS.electionResults.id, scope: "US" }, "DEFER", "Out of time this turn", detail),
+      run: () => routineJob(ROUTINE_JOBS.electionResults, async () => {
+        const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
+        const { runElectionResults } = await import("../lib/election-results/runner.ts");
+        return runElectionResults({ query: readerFactDb().query, workQuery: controlPlaneQuery({ WTP_CONTROL_PLANE_DATABASE_URL: connection }), db: readerFactDb(), doors: repos.doors, now: new Date(), deadlineMs });
+      }, null) });
+    if (results) console.log(`RCD_ELECTION_RESULTS ${JSON.stringify(results)}`);
+  } catch (error) {
+    supervisorFailures.push({ taskId: "election-results", code: "ELECTION_RESULTS_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+  }
+}
+
 async function runFactMaintenance(deadlineMs: number): Promise<void> {
   const facts = readerFactDb(), states = registeredStates(ROOT);
   try {
@@ -850,18 +870,6 @@ async function runFactMaintenance(deadlineMs: number): Promise<void> {
       const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
       const common = { facts, clocks: factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null), repos,
         vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), fetch: pacedProbeFetch({ pacing: repos.websitePacing }), now: RUN_STARTED_AT, deadlineMs };
-      try {
-        const { runElectionResultsWhenDue } = await import("../lib/election-results/turn.ts");
-        const results = await runElectionResultsWhenDue({ path: join(ROOT, ".mirror", "election-results-next-check.json"),
-          now: new Date().toISOString(), requestedAt: electionResultsRequestedAt,
-          run: () => routineJob(ROUTINE_JOBS.electionResults, async () => {
-            const { runElectionResults } = await import("../lib/election-results/runner.ts");
-            return runElectionResults({ query: facts.query, db: facts, doors: repos.doors, now: new Date(), deadlineMs: common.deadlineMs });
-          }, null) });
-        if (results) console.log(`RCD_ELECTION_RESULTS ${JSON.stringify(results)}`);
-      } catch (error) {
-        supervisorFailures.push({ taskId: "election-results", code: "ELECTION_RESULTS_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
-      }
       const report = (label: string, value: Awaited<ReturnType<typeof importCartonRosters>>) => {
         console.log(`fact store ${label}: ${value.live} facts live, ${value.confirmed} confirmed, ${value.blanks} blanks, ${value.unreadable.length} pages unreadable`);
       };
@@ -1757,6 +1765,7 @@ const factMaintenance = !PUBLISH_NOW && !OWN_LANE && ONLY === null
   ? runFactMaintenance(Math.min(PASS_MAINTENANCE_DEADLINE_MS, Date.now() + 60_000)).catch(error => {
     supervisorFailures.push({ taskId: "fact-maintenance", code: "FACT_MAINTENANCE_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   }) : Promise.resolve();
+const electionResultsStep = !PUBLISH_NOW && !OWN_LANE && ONLY === null ? runElectionResultsStep(PASS_MAINTENANCE_DEADLINE_MS) : Promise.resolve();
 const pass = await runHotReadCatchUp({
   work: sourcePass,
   unblocked: Promise.resolve(),
@@ -1774,6 +1783,7 @@ if (pass.error !== undefined) {
   console.error(`RCD_TASK routine-civic-data-hot-read-catch-up: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
 await factMaintenance;
+await electionResultsStep;
 await heldPublication;
 await flushLaunchDecisions();
 if (!PUBLISH_NOW && !OWN_LANE && ONLY === null && Date.now() < PASS_DEADLINE_MS - 30_000) {

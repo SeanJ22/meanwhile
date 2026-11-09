@@ -1,12 +1,12 @@
 /** Speed comes from our own scheduled test visits; nothing about real readers' timing or errors is collected. */
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { CLIENT_EVENT_TYPES } from "../lib/events/wire.ts";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
 import { SPEED_VISITS_EVERY_MS, speedVisitsDue, speedVisitsEnabled, speedVisitsLane } from "../lib/health/speed-visits.ts";
+import { walkFiles } from "./helpers/walk-files.ts";
 
 const NOW = "2026-10-06T12:00:00.000Z";
 
@@ -30,10 +30,8 @@ test("the lane registers on the runner's scheduler and runs once per tick, never
 
 test("no reader-side code collects page timing or errors: the wire has no such event and no page imports the measuring code", () => {
   for (const type of CLIENT_EVENT_TYPES) assert.doesNotMatch(type, /TIMING|LOAD|PERF|VITAL|ERROR|SPEED/i, type);
-  const walk = (dir: string): string[] => readdirSync(dir).flatMap((name) => {
-    const path = join(dir, name);
-    return statSync(path).isDirectory() ? (name === "node_modules" || name === ".next" ? [] : walk(path)) : /\.(ts|tsx)$/.test(name) ? [path] : [];
-  });
+  const walk = (dir: string): string[] =>
+    walkFiles(dir, (name) => /\.(ts|tsx)$/.test(name), (name) => name === "node_modules" || name === ".next");
   const offenders = [...walk("app"), ...walk("components")].filter((file) => {
     const text = readFileSync(file, "utf8");
     return /health\/page-metrics|health\/worst-case-speed|new PerformanceObserver|web-vitals|reportWebVitals/.test(text);

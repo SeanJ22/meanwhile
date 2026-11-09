@@ -6,22 +6,15 @@
 
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { walkFiles } from "./helpers/walk-files.ts";
 
 const ROOT = process.cwd();
 
 /** Every `.tsx`/`.ts` under the reader-facing trees. */
-function sourceFiles(dir: string, out: string[] = []): string[] {
-  for (const entry of readdirSync(dir)) {
-    const full = join(dir, entry);
-    if (statSync(full).isDirectory()) {
-      sourceFiles(full, out);
-    } else if (/\.tsx?$/.test(entry)) {
-      out.push(full);
-    }
-  }
-  return out;
+function sourceFiles(dir: string): string[] {
+  return walkFiles(dir, (n) => /\.tsx?$/.test(n));
 }
 
 /** Source with block comments, line comments and JSX text removed. */

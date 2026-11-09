@@ -1,14 +1,11 @@
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
-import { join } from "node:path";
+import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import ts from "typescript";
+import { walkFiles } from "./helpers/walk-files.ts";
 
 function componentFiles(directory: string): string[] {
-  return readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
-    const file = join(directory, entry.name);
-    return entry.isDirectory() ? componentFiles(file) : /\.[jt]sx?$/.test(entry.name) ? [file] : [];
-  });
+  return walkFiles(directory, (name) => /\.[jt]sx?$/.test(name));
 }
 
 test("only the shared card footer renders Sources, and field components cannot use WorkingOnIt", () => {

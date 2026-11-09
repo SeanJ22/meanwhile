@@ -1,15 +1,11 @@
 import assert from "node:assert/strict";
-import {
-  existsSync,
-  readFileSync,
-  readdirSync,
-  statSync,
-} from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, extname, join, relative, resolve } from "node:path";
 import { test } from "node:test";
 
 import { build } from "esbuild";
 import ts from "typescript";
+import { walkFiles } from "./helpers/walk-files.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const SOURCE_ROOTS = ["app", "components", "hooks", "lib"];
@@ -30,13 +26,7 @@ const normalizedRelative = (path: string): string =>
   relative(ROOT, path).replaceAll("\\", "/");
 
 function sourceFilesBelow(directory: string): string[] {
-  const files: string[] = [];
-  for (const entry of readdirSync(directory, { withFileTypes: true })) {
-    const path = join(directory, entry.name);
-    if (entry.isDirectory()) files.push(...sourceFilesBelow(path));
-    else if (SOURCE_EXTENSIONS.has(extname(entry.name))) files.push(path);
-  }
-  return files;
+  return walkFiles(directory, (name) => SOURCE_EXTENSIONS.has(extname(name)));
 }
 
 function resolveLocalModule(importer: string, specifier: string): string | null {

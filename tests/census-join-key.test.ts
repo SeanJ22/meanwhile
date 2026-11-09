@@ -1,11 +1,12 @@
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import { posixRelative } from "../scripts/repo-path.mjs";
 import { readTable } from "../lib/reference/index.ts";
+import { walkFiles, hiddenOrVendored } from "./helpers/walk-files.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -14,14 +15,8 @@ const THIS_GUARD = "tests/census-join-key.test.ts";
 
 const SWEPT = ["app", "components", "hooks", "lib", "scripts", "tests"];
 
-function walk(dir: string, out: string[] = []): string[] {
-  for (const entry of readdirSync(dir)) {
-    if (entry === "node_modules" || entry.startsWith(".")) continue;
-    const full = join(dir, entry);
-    if (statSync(full).isDirectory()) walk(full, out);
-    else if (/\.(ts|tsx|mts|mjs|sql)$/.test(entry)) out.push(full);
-  }
-  return out;
+function walk(dir: string): string[] {
+  return walkFiles(dir, (n) => /\.(ts|tsx|mts|mjs|sql)$/.test(n), hiddenOrVendored);
 }
 
 function sources(): Array<{ rel: string; code: string }> {

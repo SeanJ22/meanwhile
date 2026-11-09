@@ -94,7 +94,10 @@ function federalRoutes(catalog: readonly BallotpediaRace[], held: readonly Ballo
 }
 
 export async function runElectionResults(input: {
-  query: Query; db: FactDb; doors?: DoorRepository; now?: Date; fetch?: typeof fetch;
+  query: Query;
+  /** The control-plane query: fix-list (`work`) rows live only in the control-plane database. Defaults to `query` for single-database callers. */
+  workQuery?: Query;
+  db: FactDb; doors?: DoorRepository; now?: Date; fetch?: typeof fetch;
   states?: readonly string[];
   /** Browser-captured Ballotpedia pages (file text) used when the live read is blocked. Defaults to GitHub when no fetch is injected. */
   captured?: () => Promise<string>;
@@ -126,6 +129,7 @@ export async function runElectionResults(input: {
     return query(text, params);
   };
   const query = count(input.query), db: FactDb = { transaction: work => input.db.transaction(tx => work(count(tx))) };
+  const workQuery = input.workQuery ?? query;
   const cache = (input.cache ?? runtimeCivicReadCache()).jobState();
   const savedClocks = await cache.readCheckpoint<unknown>(CLOCK_CACHE_NAMESPACE, CLOCK_CACHE_KEY);
   const cached: Record<string, CachedClock> = {};
@@ -170,7 +174,7 @@ export async function runElectionResults(input: {
     if (writtenFixes.has(id)) return;
     if (fixRowsWritten < maxFixRows && more()) {
       fixRowsWritten++;
-      await workList(query, { owner: "election-results" }).ensure([row]);
+      await workList(workQuery, { owner: "election-results" }).ensure([row]);
       writtenFixes.add(id);
       if (queue.delete(id)) dirtyFixStates.add(state);
     } else {
@@ -253,7 +257,7 @@ export async function runElectionResults(input: {
     for (const [id, row] of queue ?? []) if (row.subjectId === subjectId && row.field === field) {
       queue!.delete(id); dirtyFixStates.add(state);
     }
-    await workList(query, { owner: "election-results" }).resolve({ subjectId, fieldPrefix: field });
+    await workList(workQuery, { owner: "election-results" }).resolve({ subjectId, fieldPrefix: field });
   };
   // National results have their own clocks and cannot wait behind the initial state backfill.
   let nation: StateProgress = progress.get("US") ?? empty();
@@ -289,7 +293,7 @@ export async function runElectionResults(input: {
         ...nation.federalRoutes ?? [], ...batch.racePages,
       ].map(page => [ballotpediaRaceId(page.url), page])).values()] };
       const readerFacts = { ...nation.readerFacts };
-      const changed = await publishElectionResultBatch({ query, db, batch, ballots: [], state: "US", prior: nation, now,
+      const changed = await publishElectionResultBatch({ query, workQuery, db, batch, ballots: [], state: "US", prior: nation, now,
         door: doors.get("ballotpedia"), purge: input.purge, more, writeFix,
         accepted: (id, field, value) => { readerFacts[field.startsWith("election_summary:") ? `${id}#${field}` : id] = value; } });
       nation = checked(pending({ ...nation, ...changed.progress, readerFacts }, key, changed.deferred), key, Boolean(batch.catalogErrors?.length));
@@ -406,7 +410,7 @@ export async function runElectionResults(input: {
             newlyCovered.set(key, [...newlyCovered.get(key) ?? [], match.contest.id]);
           }
         }
-        const changed = await publishElectionResultBatch({ query, db, batch: { ...batch, races: eligible, summaries }, ballots: held,
+        const changed = await publishElectionResultBatch({ query, workQuery, db, batch: { ...batch, races: eligible, summaries }, ballots: held,
           state, prior, now, door: doors.get(source), purge, more, writeFix,
           accepted: (id, field, value) => {
             if (field === "election_result" || field === "election_summary" || field.startsWith("election_summary:"))
@@ -480,7 +484,7 @@ export async function runElectionResults(input: {
       const standingFingerprint = createHash("sha256").update(JSON.stringify([
         ballots?.flatMap(ballot => ballot.contests.map(contest => contest.id)).sort(), [...covered].sort(),
       ])).digest("hex");
-      if (ballots && prior.standingFingerprint !== standingFingerprint) await ensureOpenElectionResults(query, ballots, covered);
+      if (ballots && prior.standingFingerprint !== standingFingerprint) await ensureOpenElectionResults(workQuery, ballots, covered);
       prior = { ...prior, coveredContestIds: [...covered].sort(), ...(ballots ? { standingFingerprint } : {}), ballotVersion };
       if (prior.stateSummary) prior = { ...prior,
         stateSummary: refreshedResultFacts({ state: prior.stateSummary }, prior).state as BallotElectionSummary };

@@ -217,3 +217,22 @@ test("an at-large House seat and a Senate special with a parenthetical term matc
     ballot([senate], [given("s", senate.id, "Sherrod", "Brown"), given("h", senate.id, "Jon", "Husted")]));
   assert.equal(found.kind === "matched" && found.contest.id, senate.id);
 });
+
+test("a printed nickname that is not a prefix matches its formal filing name, and a tie between nicknames stays ambiguous", () => {
+  const senate = contest("oh-special", "OH", "U.S. Senator (Unexpired term ending 1/3/2029)", "");
+  const set = ballot([senate], [given("w", senate.id, "William", "Redpath"), given("g", senate.id, "Gregory", "Levy")]);
+  const found = matchElectionResult(result("OH", ["Bill Redpath", "Greg Levy"], { office: "us_senate", districtHint: undefined }), set);
+  assert.equal(found.kind, "matched");
+  if (found.kind === "matched") { assert.deepEqual(found.candidates.map(row => row.candidacy.id), ["w", "g"]); assert.deepEqual(found.unmatchedCandidates, []); }
+  // Different family name or an unrelated given name is never a nickname.
+  const other = matchElectionResult(result("OH", ["Bob Redpath", "Greg Levin"], { office: "us_senate", districtHint: undefined }), set);
+  assert.equal(other.kind, "unmatched");
+  // Two filings that both answer to the printed nickname are a tie, never a guess; an exact filing name still wins.
+  const tie = ballot([senate], [given("a", senate.id, "Katherine", "Jones"), given("b", senate.id, "Catherine", "Jones")]);
+  const ambiguous = matchElectionResult(result("OH", ["Kate Jones"], { office: "us_senate", districtHint: undefined }), tie);
+  assert.equal(ambiguous.kind === "matched" && ambiguous.ambiguousCandidates.join(), "0");
+  assert.equal(ambiguous.kind === "matched" && ambiguous.candidates.length, 0);
+  const exact = ballot([senate], [given("a", senate.id, "Katherine", "Jones"), given("b", senate.id, "Kate", "Jones")]);
+  const chosen = matchElectionResult(result("OH", ["Kate Jones"], { office: "us_senate", districtHint: undefined }), exact);
+  assert.equal(chosen.kind === "matched" && chosen.candidates[0]?.candidacy.id, "b");
+});

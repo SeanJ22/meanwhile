@@ -729,3 +729,30 @@ test("the captured file falls back to the checkout's git fetch when the GitHub c
   const viaApi = await fetchCapturedBallotpediaText((async () => new Response(file)) as typeof fetch, {} as NodeJS.ProcessEnv, async () => { throw new Error("git must not run"); }, "/runner");
   assert.equal(viaApi, file);
 });
+
+test("fix rows go to the control-plane work query and facts to the reader query, which has no work table", async context => {
+  const db = await resultFactDb(context, "test-split-databases");
+  await db.query("INSERT INTO pass_cursor(name,position) VALUES('election-results:AZ',$1)", [JSON.stringify({ races: {}, summaries: {},
+    federalRoutes: [], ballotVersion: null, sourceChecks: { multistate: { checkedAt: at }, ballotpedia: { checkedAt: at } } })]);
+  const touchesWork = (text: string) => /\b(?:FROM|INTO|UPDATE|JOIN)\s+work\b/i.test(text);
+  const readerSql: string[] = [], workSql: string[] = [];
+  const reader: Query = async (text, params) => {
+    if (touchesWork(text)) throw new Error('relation "work" does not exist');
+    readerSql.push(text);
+    return db.query(text, params);
+  };
+  const workQuery: Query = async (text, params) => { workSql.push(text); return db.query(text, params); };
+  const url = "https://ballotpedia.org/Arizona%27s_7th_Congressional_District_election,_2026";
+  const house = overview("us_house", [{ state: "AZ", office: "us_house", districtHint: "7", electionDate: "2026-11-03", url }]);
+  const result = await runElectionResults({ query: reader, workQuery, db: { transaction: run => db.transaction(tx => run(async (text, params) => {
+      if (touchesWork(text)) throw new Error('relation "work" does not exist');
+      return tx(text, params);
+    })) }, states: ["AZ"], multistate: emptyBatch, congressSummaries: [overview("us_senate"), house],
+    ballotsForState: async () => [], purge: async () => ({ purged: true }), now: new Date("2026-11-04T00:05:00.000Z"),
+    captured: capturedFile({ [new URL(url).pathname.slice(1).replaceAll("%27", "'")]: federalBox("Arizona", "House") }) });
+  assert.equal(result.unmatched, 1);
+  assert.ok(workSql.some(text => touchesWork(text)), "fix rows were written through the work query");
+  assert.equal(readerSql.filter(touchesWork).length, 0);
+  assert.ok(Number((await db.query("SELECT count(*)::int AS n FROM work WHERE kind='fix'"))[0].n) > 0);
+  assert.equal((await db.query("SELECT count(*)::int AS n FROM fact WHERE field LIKE 'election_congress:%' AND status='live'"))[0].n, 1, "facts still publish through the reader");
+});

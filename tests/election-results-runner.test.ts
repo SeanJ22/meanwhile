@@ -241,7 +241,7 @@ test("the captured file supplies a race missing from the served ballot and gives
   const requested: string[] = [];
   const input = { query: db.query, db, states: ["AZ"], multistate: emptyBatch, congressSummaries: [overview("us_senate"), house],
     ballotsForState: async () => [], purge: async () => ({ purged: true }),
-    captured: capturedFile({ [new URL(url).pathname.slice(1).replaceAll("%27", "'")]: federalBox("Arizona", "House") }),
+    captured: capturedFile({ [url.replace(/^https?:\/\/[^/]+\//, "").replaceAll("%27", "'")]: federalBox("Arizona", "House") }),
     fetch: async (request: Parameters<typeof fetch>[0]) => { requested.push(String(request)); throw new Error("ballotpedia.org must not be requested"); } };
   const result = await runElectionResults({ ...input, now: new Date("2026-11-04T00:05:00.000Z") });
   assert.deepEqual(requested, [], "ballotpedia.org is never requested");
@@ -264,7 +264,7 @@ test("the captured file supplies a race missing from the served ballot and gives
 test("a newer capture publishes, the same capture is a no-op, and a race missing from it is skipped", async context => {
   const db = await resultFactDb(context, "test-captured-source");
   const url = (n: number) => `https://ballotpedia.org/Arizona%27s_${n}th_Congressional_District_election,_2026`;
-  const key = new URL(url(7)).pathname.slice(1).replaceAll("%27", "'");
+  const key = url(7).replace(/^https?:\/\/[^/]+\//, "").replaceAll("%27", "'");
   const page = (n: number) => ({ state: "AZ", office: "us_house" as const, districtHint: String(n), electionDate: "2026-11-03", url: url(n) });
   const counting = federalBox("Arizona", "House").replace("<p>The results have been certified.</p>", "");
   const requested: string[] = [], warnings: string[] = [], warn = console.warn;
@@ -749,7 +749,7 @@ test("fix rows go to the control-plane work query and facts to the reader query,
       return tx(text, params);
     })) }, states: ["AZ"], multistate: emptyBatch, congressSummaries: [overview("us_senate"), house],
     ballotsForState: async () => [], purge: async () => ({ purged: true }), now: new Date("2026-11-04T00:05:00.000Z"),
-    captured: capturedFile({ [new URL(url).pathname.slice(1).replaceAll("%27", "'")]: federalBox("Arizona", "House") }) });
+    captured: capturedFile({ [url.replace(/^https?:\/\/[^/]+\//, "").replaceAll("%27", "'")]: federalBox("Arizona", "House") }) });
   assert.equal(result.unmatched, 1);
   assert.ok(workSql.some(text => touchesWork(text)), "fix rows were written through the work query");
   assert.equal(readerSql.filter(touchesWork).length, 0);

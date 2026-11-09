@@ -30,27 +30,26 @@ async function fixture(count:number) {
 }
 
 test("a successful cutoff resumes only pending keyed meetings and leaves completed records alone",async t=>{
-  const f=await fixture(2);t.after(()=>f.db.pg.close());
+  const f=await fixture(5);t.after(()=>f.db.pg.close());
   const clock=Date.parse(f.at);t.mock.timers.enable({apis:["Date"],now:clock});
   await stageMeetingFactPublication({facts:f.db,vault:f.vault,scope:f.scope,candidateId:"unaccepted-candidate",meetings:f.meetings,responses:[f.response]});
   assert.equal(await meetingFactPublicationPending(f.db.query,f.scope),false,"an unaccepted candidate cannot reopen current work");
   await stageMeetingFactPublication({facts:f.db,vault:f.vault,scope:f.scope,candidateId:f.candidateId,meetings:f.meetings,responses:[f.response]});
   const cutQuery:Query=async(text,params)=>{
     const rows=await f.db.query(text,params);
-    if(text.startsWith("INSERT INTO pass_cursor")&&JSON.parse(String(params?.[1])).index===1)t.mock.timers.setTime(clock+1000);
+    if(text.startsWith("INSERT INTO pass_cursor")&&JSON.parse(String(params?.[1])).index===4)t.mock.timers.setTime(clock+1000);
     return rows;
   };
   const sliced=await continueMeetingFactPublication({facts:{query:cutQuery,transaction:f.db.transaction},vault:f.vault,candidateId:f.candidateId,
     meetings:f.meetings,observations:[f.response],clocks:factClocks(null),now:new Date(f.at),deadlineMs:clock+500});
   assert.equal(sliced.complete,false);assert.equal(await meetingFactPublicationPending(f.db.query,f.scope),true);
-  const firstFields=await f.db.query("SELECT field FROM fact WHERE entity_id=$1 AND status='live' ORDER BY field",[meetingEntityId(f.meetings[0]!.id)]);
-  assert.deepEqual(firstFields.map(row=>row.field),["agenda_url","location","starts_at","title"]);
-  assert.deepEqual(await f.db.query("SELECT field FROM fact WHERE entity_id=$1 AND status='live'",[meetingEntityId(f.meetings[1]!.id)]),[]);
+  for(const meeting of f.meetings.slice(0,4))assert.deepEqual((await f.db.query("SELECT field FROM fact WHERE entity_id=$1 AND status='live' ORDER BY field",[meetingEntityId(meeting.id)])).map(row=>row.field),["agenda_url","location","starts_at","title"]);
+  assert.deepEqual(await f.db.query("SELECT field FROM fact WHERE entity_id=$1 AND status='live'",[meetingEntityId(f.meetings[4]!.id)]),[]);
   const readIds:unknown[]=[];
   const resumeQuery:Query=async(text,params)=>{if(text.includes("FROM civic_data_promotions p JOIN civic_data_rows"))readIds.push(params?.[2]);return f.db.query(text,params);};
   const resumed=await continueMeetingFactPublication({facts:{query:resumeQuery,transaction:f.db.transaction},vault:f.vault,candidateId:f.candidateId,
     observations:[f.response],clocks:factClocks(null),now:new Date(),deadlineMs:Infinity});
-  assert.equal(resumed.complete,true);assert.deepEqual(readIds,[f.meetings[1]!.id]);
+  assert.equal(resumed.complete,true);assert.deepEqual(readIds,[[f.meetings[4]!.id]],"one query reads only the unfinished meetings");
   assert.equal(await meetingFactPublicationPending(f.db.query,f.scope),false);
 });
 
@@ -71,4 +70,16 @@ test("an interruption after required fields cannot hide unfinished optional fiel
     at:f.at,meetingIds:f.meetings.map(meeting=>meeting.id),bodyIds:[f.body]});
   assert.equal(stillOwed,false,"the source may confirm unchanged only after the pending optional fields finish");
   assert.deepEqual((await f.db.query("SELECT field FROM fact WHERE entity_id=$1 AND status='live' ORDER BY field",[meetingEntityId(f.meetings[0]!.id)])).map(row=>row.field),["agenda_url","location","starts_at","title"]);
+});
+
+test("an unfinished meeting keeps the saved index at the first unfinished one even when later meetings in its window finish",async t=>{
+  const f=await fixture(6);t.after(()=>f.db.pg.close());
+  await stageMeetingFactPublication({facts:f.db,vault:f.vault,scope:f.scope,candidateId:f.candidateId,meetings:f.meetings,responses:[f.response]});
+  const failing:FactDb&{query:Query}={query:f.db.query,transaction:work=>f.db.transaction(query=>work(async(text,params)=>{
+    if(text.includes("INSERT INTO fact")&&params?.includes(meetingEntityId(f.meetings[1]!.id)))throw new Error("CONTROLLED_STOP_ON_SECOND");return query(text,params);}))};
+  const run=(facts:FactDb&{query:Query})=>continueMeetingFactPublication({facts,vault:f.vault,candidateId:f.candidateId,meetings:f.meetings,observations:[f.response],clocks:factClocks(null),now:new Date(f.at),deadlineMs:Infinity});
+  await assert.rejects(run(failing),/CONTROLLED_STOP_ON_SECOND/);
+  assert.equal((await f.db.query("SELECT position::jsonb->>'index' AS index FROM pass_cursor WHERE name=$1",[`meeting-facts:${f.candidateId}`]))[0]!.index,"1");
+  assert.equal((await run(f.db)).complete,true);
+  assert.equal((await f.db.query("SELECT 1 FROM fact WHERE status='live' AND field='title'")).length,6);
 });

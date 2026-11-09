@@ -66,7 +66,7 @@ export async function continueMeetingFactPublication(input: {
   const tally = {live:0,confirmed:0,held:0,blanks:0};
   const [summary]=await input.facts.query("SELECT position::jsonb->>'complete' AS complete FROM pass_cursor WHERE name=$1",[cursorKey(input.candidateId)]);
   if (!summary || summary.complete==="true") return {...tally,complete:true};
-  let cursor = await readCursor(input.facts.query,input.candidateId);
+  const cursor = await readCursor(input.facts.query,input.candidateId);
   if (!cursor || cursor.complete) return {...tally,complete:true};
   if (cursor.index===cursor.meetingIds.length) {
     await writePassCursor(input.facts.query,cursorKey(cursor.candidateId),JSON.stringify({...cursor,complete:true}));
@@ -85,26 +85,21 @@ export async function continueMeetingFactPublication(input: {
     if (!capture) return {...tally,complete:false};
     captures.push(observed ? {...capture,observedAt:observed.retrievedAt,rawContentHash:`sha256-${source.rawHash}`} : capture);
   }
-  for (let index=cursor.index;index<cursor.meetingIds.length;index++) {
-    if (Date.now()>=deadlineMs) return {...tally,complete:false};
-    const id=cursor.meetingIds[index]!;
-    const supplied=input.meetings?.find(meeting=>meeting.id===id);
-    const [row]=supplied ? [] : await input.facts.query(`SELECT reader_payload_value(jsonb_build_object(
+  const pending=cursor.meetingIds.slice(cursor.index),byId=new Map(input.meetings?.map(meeting=>[meeting.id,meeting]));
+  const wanted=pending.filter(id=>!byId.has(id));
+  if (wanted.length) for (const row of await input.facts.query(`SELECT r.row_id AS id,reader_payload_value(jsonb_build_object(
       'id',r.value->'id','bodyId',r.value->'bodyId','ocdId',r.value->'ocdId','bodyName',r.value->'bodyName','title',r.value->'title',
       'startsAt',r.value->'startsAt','timeZone',r.value->'timeZone','startPrecision',r.value->'startPrecision','location',r.value->'location',
       'online',r.value->'online','mapPin',r.value->'mapPin','agendaUrl',r.value->'agendaUrl','videoUrl',r.value->'videoUrl',
       'jurisdiction',r.value->'jurisdiction','status',r.value->'status','provenance',r.value->'provenance','venueGap',r.value->'venueGap')) AS meeting
       FROM civic_data_promotions p JOIN civic_data_rows r ON r.promotion_key=p.key AND r.version_id=p.current_version_id
-      WHERE p.key=$1 AND p.current_version_id=$2 AND r.collection='meetings' AND r.row_id=$3`,[`MEETING:${cursor.scope}`,cursor.candidateId,id]);
-    const meeting=supplied??row?.meeting as Meeting|undefined;
-    if (!meeting || meeting.id!==id || meeting.carried) return {...tally,complete:false};
-    const report=await publishCapturedMeetingFacts({facts:input.facts,meetings:[meeting],captures,geocodeAttempts:new Map(cursor.geocodeAttempts??[]),producedBy:cursor.candidateId,clocks:input.clocks,now:input.now,deadlineMs});
-    tally.live+=report.live;tally.confirmed+=report.confirmed;tally.held+=report.held;tally.blanks+=report.blanks;
-    if (!report.complete) return {...tally,complete:false};
-    cursor={...cursor,index:index+1,complete:index+1===cursor.meetingIds.length};
-    await writePassCursor(input.facts.query,cursorKey(cursor.candidateId),JSON.stringify(cursor));
-  }
-  return {...tally,complete:true};
+      WHERE p.key=$1 AND p.current_version_id=$2 AND r.collection='meetings' AND r.row_id=ANY($3::text[])`,[`MEETING:${cursor.scope}`,cursor.candidateId,wanted])) byId.set(String(row.id),row.meeting as Meeting);
+  // A meeting that cannot be found stops the pass at that meeting; the ones before it still publish.
+  const meetings:Meeting[]=[];
+  for (const id of pending) { const meeting=byId.get(id); if (!meeting||meeting.id!==id||meeting.carried) break; meetings.push(meeting); }
+  const report=await publishCapturedMeetingFacts({facts:input.facts,meetings,captures,geocodeAttempts:new Map(cursor.geocodeAttempts??[]),producedBy:cursor.candidateId,clocks:input.clocks,now:input.now,deadlineMs,
+    onProgress:done=>writePassCursor(input.facts.query,cursorKey(cursor.candidateId),JSON.stringify({...cursor,index:cursor.index+done,complete:cursor.index+done===cursor.meetingIds.length}))});
+  return {...report,complete:report.complete&&meetings.length===pending.length};
 }
 
 /** Called after the parsed meetings and agenda content match the accepted source. */

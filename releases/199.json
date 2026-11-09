@@ -1,0 +1,27 @@
+{
+  "n": 199,
+  "branch": "release/199",
+  "head_sha": "7b53004b8be344d39d94d667afb1cd1dee2c2cb1",
+  "base_river_sha": "819a03f487b9cfbadae43822aa2edda50d605912",
+  "main_sha": null,
+  "lanes": [
+    {
+      "lane": "results-speed",
+      "steps": [
+        "RT-04"
+      ],
+      "ready_sha": "a75e617c467517cb2684ca398a640c567de25ef5",
+      "result_sha": "7b53004b8be344d39d94d667afb1cd1dee2c2cb1"
+    }
+  ],
+  "steps": [
+    "RT-04"
+  ],
+  "pr": {
+    "number": 918,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/918"
+  },
+  "ci": "running",
+  "at": "2026-11-09T04:02:11Z",
+  "growth_reason": "election results speed: one bulk publish per state through the door with no place-page rebuild per result, so every state publishes in minutes instead of hours (Alabama 906 s to 17 s on production-sized copies)"
+}

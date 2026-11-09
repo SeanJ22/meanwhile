@@ -21,7 +21,8 @@
     "number": 917,
     "url": "https://github.com/SeanJ22/meanwhile/pull/917"
   },
-  "ci": "running",
+  "ci": "pass",
   "at": "2026-11-09T02:35:08Z",
-  "growth_reason": "election results correctness: a race shows a leader, winner, call or flip only when every candidate with votes matched our ballot (live wrong leader on the Alaska Governor card), plus nickname and middle-initial matching"
+  "growth_reason": "election results correctness: a race shows a leader, winner, call or flip only when every candidate with votes matched our ballot (live wrong leader on the Alaska Governor card), plus nickname and middle-initial matching",
+  "settled_at": "2026-11-09T03:00:12Z"
 }

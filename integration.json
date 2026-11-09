@@ -5369,5 +5369,17 @@
     "release": 197,
     "ci": "pass",
     "at": "2026-11-09T01:35:55Z"
+  },
+  {
+    "lane": "results-partial",
+    "steps": [
+      "RT-05"
+    ],
+    "ready_sha": "909bf8533ddb9069d13d1cb117dc6689ea4bafd4",
+    "merge_sha": "819a03f487b9cfbadae43822aa2edda50d605912",
+    "river_sha": "819a03f487b9cfbadae43822aa2edda50d605912",
+    "release": 198,
+    "ci": "pass",
+    "at": "2026-11-09T03:00:12Z"
   }
 ]

@@ -5356,5 +5356,18 @@
     "release": 196,
     "ci": "pass",
     "at": "2026-11-08T23:43:03Z"
+  },
+  {
+    "lane": "results-turn",
+    "steps": [
+      "RT-01",
+      "RT-02"
+    ],
+    "ready_sha": "5655f77c836307564638e7c496c58c3bbaec720b",
+    "merge_sha": "af5adda5b8e98a19a28fdec83ceab5d998b8d65e",
+    "river_sha": "be2d4d0825368574bb3aba528818af84165d76b7",
+    "release": 197,
+    "ci": "pass",
+    "at": "2026-11-09T01:35:55Z"
   }
 ]

@@ -474,3 +474,4 @@ One line per batch folded into river.
 - 2026-11-08T20:58:10Z · river-growth · RG-01 · ready a756003104cd · river f2ff8f70e81c · GitHub CI passed on release 195
 - 2026-11-08T23:43:03Z · results-turn · RT-01 · ready 8de95b834e45 · river 41ce37f64cc4 · GitHub CI passed on release 196
 - 2026-11-08T23:43:03Z · river-growth-note · RG-02 · ready 6533ab7e3bfc · river 41ce37f64cc4 · GitHub CI passed on release 196
+- 2026-11-09T01:35:55Z · results-turn · RT-01, RT-02 · ready 5655f77c8363 · river be2d4d082536 · GitHub CI passed on release 197

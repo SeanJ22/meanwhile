@@ -23,7 +23,8 @@
     "number": 916,
     "url": "https://github.com/SeanJ22/meanwhile/pull/916"
   },
-  "ci": "running",
+  "ci": "pass",
   "at": "2026-11-09T01:08:06Z",
-  "growth_reason": "election results: Senate and House results from Ballotpedia pages captured through a browser and read from GitHub at every check, fix rows on the control plane, and seat and name matching, finishing the new election-results feature"
+  "growth_reason": "election results: Senate and House results from Ballotpedia pages captured through a browser and read from GitHub at every check, fix rows on the control plane, and seat and name matching, finishing the new election-results feature",
+  "settled_at": "2026-11-09T01:35:55Z"
 }

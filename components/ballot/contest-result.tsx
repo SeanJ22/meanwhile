@@ -51,6 +51,12 @@ function StatusRow({ contest, about }: { contest: ResultContest; about: string }
 export function RaceSummary({ contest, candidates, names }: { contest: ResultContest; candidates: readonly ResultCandidacy[]; names: ReadonlyMap<string, string> }): ReactNode {
   const result = contest.result;
   const about = `results for ${contest.title}`;
+  if (result?.withheld) {
+    const read = result.sources?.[0];
+    return <div className="rr-rows"><div className="rr-status" data-outcome-withheld="">
+      {read?.url ? <>Results from <a className="rr-link" href={read.url}>{read.name}</a></> : read ? `Results from ${read.name}` : <NoResultsLine about={about} />}
+    </div></div>;
+  }
   if (!hasResult(result)) return <div className="rr-rows"><StatusRow contest={contest} about={about} /></div>;
   const name = (candidate: ResultCandidacy) => names.get(candidate.id) ?? candidate.familyName;
   const winners = winnersOf(candidates);

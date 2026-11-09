@@ -9,6 +9,7 @@ import type { ElectionResultBatch } from "../lib/election-results/types.ts";
 import { summarizeCongressResults } from "../lib/election-results/summary.ts";
 import { resultFactDb, resultFeedMemory } from "./helpers/election-results.ts";
 import { workList } from "../lib/core/work.ts";
+import { parseBallotpediaResults } from "../lib/election-results/ballotpedia.ts";
 
 const AT = "2026-11-06T12:00:00.000Z";
 const STATE = "ocd-division/country:us/state:ma";
@@ -361,4 +362,23 @@ test("contradictory incumbent flags use the shared fix writer, preserve valid re
     now: new Date(correctedAt), prior: next.progress, purge, writeFix });
   assert.equal((await db.query("SELECT status FROM work WHERE id=$1", [fix.id]))[0].status, "done");
   assert.equal(written.length, 2, "a corrected source creates no replacement fix");
+});
+
+test("a captured Ballotpedia district page publishes its served contest and candidates though the page never spells its own URL", async context => {
+  const db = await resultFactDb(context, "test-slide", { AZ: "Arizona" });
+  const html = `<h5 class="votebox-header-election-type">General election for U.S. House Arizona District 6</h5><p class="results_text">JoAnna Mendoza defeated Juan Ciscomani in the general election for U.S. House Arizona District 6 on November 3, 2026.</p>
+    <table class="results_table"><tbody><tr class="non_result_row"><td>Candidate</td><td>%</td><td>Votes</td></tr>
+    <tr class="results_row winner"><td>&#10004;</td><td></td><td><a href="/JoAnna_Mendoza">JoAnna Mendoza</a> (D)</td><td><div class="percentage_number">53.0</div></td><td>163,197</td></tr>
+    <tr class="results_row"><td></td><td></td><td><a href="/Juan_Ciscomani">Juan Ciscomani</a> (R)</td><td><div class="percentage_number">44.9</div></td><td>138,235</td></tr></tbody></table>
+    <table class="votebox_legend"><tr><td>Vote totals may change until results are certified.</td></tr></table>`;
+  const batch = parseBallotpediaResults(html, { state: "AZ", office: "us_house", districtHint: "6",
+    url: "https://ballotpedia.org/Arizona%27s_6th_Congressional_District_election,_2026" }, AT);
+  const az = { id: "az-2026-11-03", date: "2026-11-03", state: "AZ", name: "General election" };
+  const seat: Contest = { ...contest("az-us-house-6", "U.S. Representative, District 6", "ocd-division/country:us/state:az/cd:6"), electionId: az.id };
+  const served: BallotSet = { election: az, contests: [seat], absences: [], measures: [],
+    candidacies: [{ ...candidate("mendoza", seat.id, "Mendoza"), givenName: "JoAnna" }, { ...candidate("ciscomani", seat.id, "Ciscomani"), givenName: "Juan" }] };
+  const out = await publishElectionResultBatch({ db, query: db.query, batch, ballots: [served], state: "AZ", now: new Date(AT), purge });
+  assert.equal(out.counts.matched, 1);
+  const rows = await db.query("SELECT entity_id FROM fact WHERE status='live' AND field='election_result' ORDER BY entity_id");
+  assert.deepEqual(rows.map(row => row.entity_id), ["az-us-house-6", "ciscomani", "mendoza"]);
 });

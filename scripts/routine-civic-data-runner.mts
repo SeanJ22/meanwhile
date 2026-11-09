@@ -16,6 +16,7 @@ import { ensureFactEntities, loadChangedStates, registeredStates } from "../lib/
 import { ensurePortalBodyLabels } from "../lib/facts/portal-publication.ts";
 import { makeCensusGoverningBodies } from "../lib/facts/census-governing.ts";
 import { syncReaderIds } from "../lib/core/resolve.ts";
+import { controlPlaneQuery } from "../lib/core/work.ts";
 import { cartonComments, cartonOffices, cartonRosters, importCartonComments, importCartonOffices, importCartonRosters } from "../lib/facts/carton-import.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { factRefreshBounds, observedSourceEveryMs, readSourceChangeHistory, type SourceChangeHistory } from "../lib/civic-data/source-change-cadence.ts";
@@ -794,7 +795,7 @@ async function runElectionResultsStep(deadlineMs: number): Promise<void> {
       run: () => routineJob(ROUTINE_JOBS.electionResults, async () => {
         const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
         const { runElectionResults } = await import("../lib/election-results/runner.ts");
-        return runElectionResults({ query: readerFactDb().query, db: readerFactDb(), doors: repos.doors, now: new Date(), deadlineMs });
+        return runElectionResults({ query: readerFactDb().query, workQuery: controlPlaneQuery({ WTP_CONTROL_PLANE_DATABASE_URL: connection }), db: readerFactDb(), doors: repos.doors, now: new Date(), deadlineMs });
       }, null) });
     if (results) console.log(`RCD_ELECTION_RESULTS ${JSON.stringify(results)}`);
   } catch (error) {

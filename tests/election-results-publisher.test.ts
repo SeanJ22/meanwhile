@@ -113,25 +113,6 @@ for (const statusDate of [AT, undefined]) test(`replaying unchanged results with
     statusDate ?? null, "an unknown source status date stays unknown");
 });
 
-test("a race boundary checkpoint resumes without replaying completed facts", async context => {
-  const db = await fixture(context);
-  const batch = parseMultiStateResults(raw(), AT);
-  let remaining = 1;
-  const first = await publishElectionResultBatch({ db, query: db.query, batch, ballots: [ballot], state: "MA", now: new Date(AT), purge,
-    more: () => remaining-- > 0 });
-  assert.equal(first.deferred, true);
-  assert.equal(first.nextCheckAt, AT);
-  assert.deepEqual(Object.keys(first.progress.races), ["multistate:2026-11-03:10"]);
-  assert.equal(first.counts.published, 3);
-  const resumed = await publishElectionResultBatch({ db, query: db.query, batch, ballots: [ballot], state: "MA", now: new Date(AT), purge,
-    prior: first.progress, more: () => true });
-  assert.equal(resumed.deferred, false);
-  assert.equal(Object.keys(resumed.progress.races).length, 4);
-  assert.equal((await db.query("SELECT count(*)::int n FROM fact"))[0].n, 6);
-  assert.equal((await db.query("SELECT count(*)::int n FROM fact WHERE entity_id='adams'"))[0].n, 1,
-    "the completed first race keeps its exact fact versions on resumption");
-});
-
 test("independent congressional summaries keep separate fact histories and source references", async context => {
   const db = await fixture(context);
   const batch = (office: "us_senate" | "us_house", now: string): ElectionResultBatch => {

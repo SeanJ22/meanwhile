@@ -31,3 +31,15 @@ export function governmentTimeZone(stateCode: string, countyFips?: string | null
   const zones = countyFips ? countyTimeZones(countyFips, stateCode) : [...(stateZones.get(stateCode.toUpperCase()) ?? [])];
   return zones.length === 1 ? zones[0]! : null;
 }
+
+/** A statewide display clock: its uniform county clock, or the most common unambiguous county clock. */
+export function stateClockZone(stateCode: string): string | null {
+  const state = stateCode.toUpperCase();
+  const uniform = governmentTimeZone(state);
+  if (uniform) return uniform;
+  const tally = new Map<string, number>();
+  for (const row of COUNTY_TIME_ZONES.values()) if (row.stateCode === state && row.timeZones.length === 1)
+    tally.set(row.timeZones[0]!, (tally.get(row.timeZones[0]!) ?? 0) + 1);
+  // Stable sort preserves the county reference's first occurrence when counts tie.
+  return [...tally].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+}

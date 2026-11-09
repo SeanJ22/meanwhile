@@ -188,16 +188,20 @@ export function parseMultiStateResults(sourceText: string, checkedAt: string, el
         seatsBefore: seats(object(chamber.before).composition), seatsNow: seats(object(chamber.after).composition),
         stillCounting: number(chamber.counting) ?? 0, controlBefore: text(object(chamber.before).control) || null,
         controlNow: text(object(chamber.after).control) || null,
-        ...(Object.keys(object(chamber.flips_from)).length ? {
+        ...(chamber.flips_from !== null && typeof chamber.flips_from === "object" && !Array.isArray(chamber.flips_from)
+          && Object.values(chamber.flips_from).every(count => number(count) !== undefined) ? {
           seatsFlipped: Object.values(seats(chamber.flips_from)).reduce((sum, count) => sum + count, 0),
         } : {}) }));
       for (const [name, value] of Object.entries(object(event.legislature))) {
         const held = object(value);
         if (!chambers.some(chamber => chamber.name === name) && held.seats_up_2026 === 0) chambers.push({ name,
           seatsBefore: seats(held.composition), seatsNow: seats(held.composition), stillCounting: 0,
-          controlBefore: text(held.control) || null, controlNow: text(held.control) || null });
+          controlBefore: text(held.control) || null, controlNow: text(held.control) || null, seatsFlipped: 0 });
       }
       summaries.push({ state, chambers,
+        ...(chambers.length && chambers.every(chamber => chamber.seatsFlipped !== undefined) ? {
+          seatsFlipped: chambers.reduce((sum, chamber) => sum + chamber.seatsFlipped!, 0),
+        } : {}),
         governor: { before: text(governor?.prev) || heldGovernorParty || null,
           now: governorElection ? text(governor?.win) || null : heldGovernorParty || null,
           ...(text(governor?.wN) ? { name: text(governor?.wN) } : {}) },

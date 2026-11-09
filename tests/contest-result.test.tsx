@@ -1,12 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
+import { build } from "esbuild";
 import { CandidateResultLine, MeasureResultBody, MeasureSummary, RaceSummary, WhatHappensNow } from "../components/ballot/contest-result.tsx";
 import { flippedParty, formatPercent, shortDate } from "../lib/ballot/results.ts";
 import type { Candidacy, Contest, Measure } from "../lib/ballot/types.ts";
 
 const source = { sources: [{ name: "MultiState", url: "https://example.test" }], checkedAt: "2026-11-06T12:00:00.000Z" };
-const contest = (result: Contest["result"], voteFor = 1): Contest => ({ id: "c1", electionId: "e", ocdId: "ocd-division/country:us/state:az", divisionVintage: "2026",
+const contest = (result: Contest["result"], voteFor = 1): Contest & { clockZone: string } => ({ clockZone: "America/Phoenix", id: "c1", electionId: "e", ocdId: "ocd-division/country:us/state:az", divisionVintage: "2026",
   title: "Governor", type: "CANDIDACY", voteFor, termYears: 4, scopeNote: null, provenance: { sourceUrl: "https://example.test", sourceOrg: "x", collectedAt: "", verifiedAt: null }, result });
 const person = (id: string, family: string, result?: Candidacy["result"]): Candidacy => ({ id, contestId: "c1", familyName: family, givenName: "A", partyLabel: null, slogan: null,
   incumbent: null, websiteUrl: null, provenance: { sourceUrl: "", sourceOrg: "", collectedAt: "", verifiedAt: null }, result });
@@ -59,9 +60,15 @@ test("a measure shows passed or failed, the yes percent, yes and no rows, and Wh
   assert.doesNotMatch(text(<MeasureSummary contest={contest(undefined)} measure={null} />), /Passed|Failed/);
 });
 
-test("dates read on the state's clock and parties map to the flip arrow", () => {
+test("dates read on the state's clock without shipping county data, and parties map to the flip arrow", async () => {
   assert.equal(shortDate("2026-11-05T02:00:00Z", { zone: "America/Phoenix" }), "Nov 4");
   assert.equal(shortDate("2026-12-08", { withYear: true }), "Dec 8, 2026");
+  assert.equal(shortDate("2026-11-04T01:00:00Z", { zone: "America/New_York", withYear: true }), "Nov 3, 2026");
+  assert.equal(shortDate("2026-11-04", { zone: "America/New_York" }), "Nov 4");
+  const browser = await build({ entryPoints: ["components/ballot/live-results.tsx"], bundle: true, write: false, metafile: true,
+    platform: "browser", format: "esm", target: "es2022", external: ["react", "react/*"], logLevel: "silent" });
+  const inputs = Object.keys(browser.metafile!.inputs);
+  assert.ok(!inputs.some(input => input.includes("county-time-zones") || input.includes("national_county_time_zones")));
   assert.equal(flippedParty({ status: "called", flipped: true, gainedByParty: "Democratic", ...source }), "D");
   assert.equal(flippedParty({ status: "called", flipped: false, gainedByParty: "D", ...source }), null);
 });

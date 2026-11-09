@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import type { BallotSet } from "../ballot/types.ts";
+import { ballotStatePlace } from "../ballot/reader-place.ts";
 import { workList, type WorkInput } from "../core/work.ts";
 import { ensureSourceEntity } from "../facts/entities.ts";
 import { stateName } from "../facts/entity-read.ts";
@@ -35,7 +36,6 @@ export interface ResultCounts {
   unchanged: number;
 }
 const clocks = { windowHours: () => 24, retryMinutes: () => 360 };
-const statePlace = (state: string) => state === "US" ? "ocd-division/country:us" : `ocd-division/country:us/state:${state.toLowerCase()}`;
 const fingerprint = (value: unknown) => createHash("sha256").update(canonicalJson(value)).digest("hex");
 export const raceClockKey = (race: Pick<ElectionResult, "sourceId" | "sourceRaceId" | "electionDate">) => `${race.sourceId}:${race.electionDate}:${race.sourceRaceId}`;
 const sources = (race: ElectionResult) => [{ name: race.sourceName, url: race.sourceUrl }, ...race.creditedSources];
@@ -51,7 +51,7 @@ function resultFingerprint(race: ElectionResult, match: ElectionMatch): string {
 export async function electionResultFix(query: Query, race: ElectionResult, reason: string, kind: "fix" | "detect" = "fix",
   details: Readonly<Record<string, unknown>> = {}, writeFix?: (row: WorkInput) => Promise<void>): Promise<void> {
   const row: WorkInput = {
-    kind, tier: "coverage", state: race.state, placeId: statePlace(race.state),
+    kind, tier: "coverage", state: race.state, placeId: ballotStatePlace(race.state),
     subjectId: `election-results:${race.state}:${race.sourceRaceId}`, field: `election_result:${reason}`,
     url: race.sourceUrl, sources: sources(race).flatMap(source => source.url ? [source.url] : []),
     value: { sourceRaceId: race.sourceRaceId, office: race.officeName, district: race.districtHint,
@@ -141,8 +141,8 @@ export async function publishElectionResultBatch(input: {
         progress.federalResults = { ...progress.federalResults, [federalKey]: { ...progress.federalResults[federalKey], checkedAt: at } };
       } else {
         let admitted = false;
-        if (await publishValue({ db: input.db, query: input.query, copy: await observed(), race, id: statePlace(race.state),
-          kind: "place", name: stateName(race.state) ?? race.state, parentId: statePlace("US"), sourceId: race.sourceRaceId,
+        if (await publishValue({ db: input.db, query: input.query, copy: await observed(), race, id: ballotStatePlace(race.state),
+          kind: "place", name: stateName(race.state) ?? race.state, parentId: ballotStatePlace("US"), sourceId: race.sourceRaceId,
           value: federal, quote: race.quote, field: `election_congress:${race.sourceRaceId}`, now, purge: input.purge,
           accepted: (...args) => { admitted = true; input.accepted?.(...args); } })) counts.published++;
         if (admitted) {
@@ -231,11 +231,11 @@ export async function publishElectionResultBatch(input: {
     const { checkedAt: _at, quote, quotes, ...value } = summary, key = `${input.batch.source.name}:${summary.state}${chamberKey ? `:${chamberKey}` : ""}`, hash = fingerprint(value);
     if (progress.summaries[key] === hash) continue;
     const sourceId = input.batch.races[0]?.sourceId ?? (/ballotpedia\.org/i.test(input.batch.source.url ?? "") ? "ballotpedia" : "multistate");
-    const id = statePlace(summary.state), race: ElectionResult = { sourceId,
+    const id = ballotStatePlace(summary.state), race: ElectionResult = { sourceId,
       sourceName: summary.source.name, sourceUrl: summary.source.url!, sourceRaceId: summary.state, creditedSources: summary.creditedSources,
       state: summary.state, office: "summary", officeName: "Election summary", electionDate: "2026-11-03", status: "counting", candidates: [], checkedAt: at, quote };
     if (await publishValue({ db: input.db, query: input.query, copy: await observed(), race, id, kind: "place", name: summary.state,
-      parentId: summary.state === "US" ? null : statePlace("US"), sourceId: summary.state,
+      parentId: summary.state === "US" ? null : ballotStatePlace("US"), sourceId: summary.state,
       value: { ...value, checkedAt: at, sourceClockKey: `${sourceId}${chamberKey ? `:${chamberKey}` : ""}` }, quote, quotes,
       field: chamberKey ? `election_summary:${chamberKey}` : "election_summary", now, purge: input.purge, accepted: input.accepted })) counts.published++;
     progress.summaries[key] = hash;

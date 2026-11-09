@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 import { MEETING_SITTING_WINDOW } from "../lib/civic-data/contracts.ts";
 import { meetingPartitionId } from "../lib/civic-data/meeting-partitions.ts";
 import { ControlledClock, nextAdmissionMs, recordedPasses, replayPass } from "./helpers/routine-pass-replay.ts";
@@ -24,8 +25,12 @@ import {
 } from "../lib/civic-data/routine-due-request.ts";
 import { SITTING_CONCLUSION_BOUND_MS, sittingWindowHotByConclusion } from "../lib/civic-data/sitting-window-admission.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { routineCandidateFixture, routineReceiptFixture } from "./helpers/routine-candidate-fixture.ts";
-import type { RoutineCandidate, ValidationReceipt } from "../lib/civic-data/types.ts";
+import {
+  VALIDATION_CHECKS,
+  sourceProjectionEvidence,
+  type RoutineCandidate,
+  type ValidationReceipt,
+} from "../lib/civic-data/types.ts";
 
 /*
  * The meeting refresh schedule under a controlled clock: a meeting source is checked twice daily, and within 60
@@ -62,26 +67,56 @@ type ReadOutcome = "CHANGED" | "UNCHANGED" | "FAILED" | "DIED_WITHOUT_RECEIPT";
 
 function meetingCandidate(task: RoutineSourceTask, id: string, observedMs: number, starts: readonly string[], revision: number): RoutineCandidate {
   const readModel = { meetings: starts.map((startsAt, index) => ({ id: `sitting:${index}`, startsAt, revision })) };
-  return routineCandidateFixture({
-    id, sourceId: task.sourceId, recordClass: "MEETING", scope: task.scope,
-    requestedUrl: "https://webapi.legistar.com/v1/pima/events",
-    // The claimed retrieval precedes the store's first event, as a real acquisition's does.
-    retrievedAt: iso(observedMs - 2_500), rawHash: HASH,
-    parserVersion: task.parserVersion, schemaVersion: "1", records: starts.length,
+  return {
+    id,
+    sourceId: task.sourceId,
+    recordClass: "MEETING",
+    scope: task.scope,
+    sourceProjectionEvidence: sourceProjectionEvidence(task.sourceId, "MEETING", task.scope),
+    retrieval: {
+      succeeded: true,
+      requestedUrl: "https://webapi.legistar.com/v1/pima/events",
+      finalUrl: "https://webapi.legistar.com/v1/pima/events",
+      httpStatus: 200,
+      // The claimed retrieval precedes the store's first event, as a real acquisition's does.
+      retrievedAt: iso(observedMs - 2_500),
+      rawHash: HASH,
+    },
+    normalization: {
+      succeeded: true,
+      parserVersion: task.parserVersion,
+      schemaVersion: "1",
+      normalizedHash: normalizedHash(readModel),
+      normalizedPayloadHash: normalizedHash(readModel),
+      inputRecords: starts.length,
+      outputRecords: starts.length,
+      droppedRecords: 0,
+      missingRequiredFields: [],
+    },
     identities: [{ subjectId: "pima-board", jurisdiction: "US-AZ", identifiers: { body: "pima" }, matchBasis: "OFFICIAL_ID", ambiguous: false }],
+    temporal: { version: "2026", expectedVersion: "2026", sourceThrough: iso(observedMs - 2_500), staleAtRetrieval: false },
     semantics: { factKind: "meeting schedule", violations: [] },
-    horizon: { query: "sittings" },
+    horizon: { kind: "OPEN_FACT_SET", query: "sittings", returnedRecords: starts.length, declaredTotal: null, paginationComplete: true, claimsComplete: false },
+    absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
     dependentChecks: [{ consumer: "meetings reader", passed: true, detail: "accepted" }],
     normalizedPayload: readModel,
     readModel,
-  });
+  };
 }
 
 function receipt(value: RoutineCandidate, atMs: number, failed = false): ValidationReceipt {
-  const held = routineReceiptFixture(value, { validatedAt: iso(atMs), decision: failed ? "FAIL" : "GOOD" });
   return {
-    ...held, checks: held.checks.map((result, index) => failed && index === 0
-      ? { ...result, verdict: "FAIL" as const, code: `${result.check}_FAIL`, detail: "the publisher page did not parse" } : result),
+    contractVersion: 2,
+    decision: failed ? "FAIL" : "GOOD",
+    candidateId: value.id,
+    sourceId: value.sourceId,
+    recordClass: value.recordClass,
+    scope: value.scope,
+    validatedAt: iso(atMs),
+    checks: VALIDATION_CHECKS.map((check, index) => failed && index === 0
+      ? { check, verdict: "FAIL" as const, code: `${check}_FAIL`, detail: "the publisher page did not parse" }
+      : { check, verdict: "PASS" as const, code: `${check}_PASS`, detail: "persisted proof" }),
+    excludedFacts: [],
   };
 }
 

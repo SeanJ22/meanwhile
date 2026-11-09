@@ -4,7 +4,7 @@ import test from "node:test";
 
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 
-import { fecSourceFixture } from "./helpers/routine-candidate-fixture.ts";
+import { fecFundingCandidate } from "../lib/civic-data/candidate-builders.ts";
 
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 
@@ -15,9 +15,46 @@ import { refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
 const PROVEN_AT = "2026-09-08T12:00:00.000Z";
 
 function provenFundingCandidate() {
-  return fecSourceFixture({
-    name: "Proof priming test candidate",
+  return fecFundingCandidate({
+    snapshot: {
+      formatVersion: 1,
+      fetchedAt: PROVEN_AT,
+      cycle: 2026,
+      matchReport: { rosterMatched: 1, rosterTotal: 1, ballotMatched: 0, ballotTotal: 0 },
+      candidates: [{
+        dataClass: "FEC_COMMITTEE",
+        fecCandidateId: "H6AZ01001",
+        name: "Proof priming test candidate",
+        state: "AZ",
+        office: "H",
+        district: "01",
+        targetKeys: ["congress:test"],
+        matchRoutes: ["bioguide-bridge"],
+        principalCommitteeId: "C00999999",
+        cycle: 2026,
+        totals: {
+          receipts: 10,
+          disbursements: 1,
+          cashOnHand: 9,
+          individualItemized: 10,
+          individualUnitemized: 0,
+          smallDonorShare: 0,
+          coverageEndDate: "2026-06-30",
+        },
+        topContributions: [],
+        provenance: {
+          sourceUrl: "https://api.open.fec.gov/v1/",
+          sourceOrg: "Federal Election Commission",
+          collectedAt: PROVEN_AT,
+          verifiedAt: PROVEN_AT,
+        },
+      }],
+      absences: [],
+    },
+    rawBodies: ["official FEC response bytes"],
+    finalUrl: "https://api.open.fec.gov/v1/candidates/search/",
     retrievedAt: PROVEN_AT,
+    excludedFacts: [],
   });
 }
 

@@ -23,6 +23,8 @@ export interface Scorecard {
   chambers: readonly ChamberScore[];
   governor: { name: string | null; party: PartyKey; flipped: boolean; reelected: boolean } | null;
   statewide: { total: number | null; flipped: readonly OfficeFlip[] } | null;
+  /** Source-counted state legislative seats that changed party. */
+  seatsFlippedTotal?: number;
   /** How many incumbents lost, when the source counts them. */
   incumbentsLostTotal?: number;
   sources: readonly { what: string; from: string; checked: string; url: string }[];
@@ -74,6 +76,7 @@ export function scorecardsFromFacts(facts: Readonly<Record<string, unknown>>, ho
     return { scope, name, chambers,
       governor: scope !== "US" && now ? { name: summary.governor.name ?? null, party: now, flipped: before !== null && before !== now, reelected: before === now } : null,
       statewide: scope !== "US" ? { total: null, flipped: flips } : null,
+      ...(scope !== "US" && typeof summary.seatsFlipped === "number" ? { seatsFlippedTotal: summary.seatsFlipped } : {}),
       ...(typeof summary.incumbentsLost === "number" ? { incumbentsLostTotal: summary.incumbentsLost } : {}),
       sources: credited.map((source, index) => ({ what: index === 0 ? "Seats and control" : "Credited by the source we read", from: source.name,
         checked: summary.checkedAt, url: source.url ?? "" })) };

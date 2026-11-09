@@ -2,8 +2,6 @@ import type { ReactNode } from "react";
 import type { Candidacy, Contest, Measure } from "@/lib/ballot/types";
 import type { ContestResult } from "@/lib/ballot/election-results";
 import { barWidth, flippedParty, formatPercent, joinNames, leadersOf, shortDate, winnersOf } from "@/lib/ballot/results";
-import { resultStateTimeZone } from "@/lib/time/result-state-time-zones";
-import { ocdStateCode } from "@/lib/ocd/state-of";
 import { NoResultsLine } from "./no-results-line";
 
 const FLIP_LEFT = "M10 6H3M5.5 3l-3 3 3 3";
@@ -17,9 +15,9 @@ function FlipPill({ to, seats }: { to: "D" | "R"; seats: number }) {
 }
 
 const hasResult = (result: ContestResult | undefined): result is ContestResult => result !== undefined && result.status !== "pending";
-type ResultContest = Pick<Contest, "id" | "title" | "ocdId" | "voteFor" | "result">;
+type ResultContest = Pick<Contest, "id" | "title" | "ocdId" | "voteFor" | "result"> & { clockZone?: string | null };
 type ResultCandidacy = Pick<Candidacy, "id" | "familyName" | "result">;
-const zoneOf = (contest: ResultContest) => resultStateTimeZone(ocdStateCode(contest.ocdId) ?? "");
+const zoneOf = (contest: ResultContest) => contest.clockZone ?? null;
 
 function StatusRow({ contest, about }: { contest: ResultContest; about: string }) {
   const result = contest.result;

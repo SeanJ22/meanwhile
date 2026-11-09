@@ -8,10 +8,16 @@ import {
   nhSeatHolderReadState,
   refreshNhSeatHolders,
 } from "../lib/ballot/seat-holders.ts";
+import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 import type { NhMemberReadModel } from "../lib/civic-data/candidate-builders.ts";
 import type { CivicDataReadStore } from "../lib/civic-data/read-model.ts";
-import type { PromotedProjection } from "../lib/civic-data/types.ts";
-import { routineCandidateFixture, routineReceiptFixture, routineRecordFixture } from "./helpers/routine-candidate-fixture.ts";
+import {
+  VALIDATION_CHECKS,
+  sourceProjectionEvidence,
+  type CandidateVersionRecord,
+  type PromotedProjection,
+  type ValidationReceipt,
+} from "../lib/civic-data/types.ts";
 
 const AT = "2026-09-09T12:00:00.000Z";
 const CANDIDATE_ID = "nh-members-reader-preload-proof";
@@ -92,34 +98,80 @@ const NH_MEMBERS: NhMemberReadModel = {
 };
 
 function promotedNhMembersStore(): CivicDataReadStore {
-  const value = routineCandidateFixture({
-    id: CANDIDATE_ID,
+  const readModelHash = normalizedHash(NH_MEMBERS);
+  const normalizedPayload = { source: "Members.txt+legislators.txt", rows: 2 };
+  const normalizedPayloadHash = normalizedHash(normalizedPayload);
+  const receipt: ValidationReceipt = {
+    contractVersion: 2,
+    decision: "GOOD",
+    candidateId: CANDIDATE_ID,
     sourceId: "nh-general-court",
     recordClass: "STATE_LEGISLATOR",
     scope: "US-NH",
-    retrievedAt: AT,
-    requestedUrl: "https://gc.nh.gov/downloads/Members.txt",
-    parserVersion: "nh-general-court/3",
-    schemaVersion: "Members.txt+legislators.txt:2025-2026",
-    records: 2,
-    identities: [],
-    temporal: { version: "2025-2026", expectedVersion: "2025-2026" },
-    semantics: { factKind: "current NH legislative membership", violations: [] },
-    horizon: {
-      kind: "BOUNDED",
-      query: "the complete official Members.txt membership",
-      declaredTotal: 2,
-      claimsComplete: true,
-    },
-    dependentChecks: [{ consumer: "ballot incumbency", passed: true, detail: "Exact district slice is readable." }],
-    normalizedPayload: { source: "Members.txt+legislators.txt", rows: 2 },
-    readModel: NH_MEMBERS,
-  });
-  const receipt = routineReceiptFixture(value, {
     validatedAt: "2026-09-09T12:01:00.000Z",
-    detail: check => `${check} was proven for the exact NH member projection.`,
-  });
-  const candidate = routineRecordFixture(value, { receipt });
+    checks: VALIDATION_CHECKS.map((check) => ({
+      check,
+      verdict: "PASS",
+      code: `${check}_PASS`,
+      detail: `${check} was proven for the exact NH member projection.`,
+    })),
+    excludedFacts: [],
+  };
+  const candidate = {
+    candidate: {
+      id: CANDIDATE_ID,
+      sourceId: "nh-general-court",
+      recordClass: "STATE_LEGISLATOR",
+      scope: "US-NH",
+      sourceProjectionEvidence: sourceProjectionEvidence("nh-general-court", "STATE_LEGISLATOR", "US-NH"),
+      retrieval: {
+        succeeded: true,
+        requestedUrl: "https://gc.nh.gov/downloads/Members.txt",
+        finalUrl: "https://gc.nh.gov/downloads/Members.txt",
+        httpStatus: 200,
+        retrievedAt: AT,
+        rawHash: "a".repeat(64),
+      },
+      normalization: {
+        succeeded: true,
+        parserVersion: "nh-general-court/3",
+        schemaVersion: "Members.txt+legislators.txt:2025-2026",
+        normalizedHash: readModelHash,
+        normalizedPayloadHash,
+        inputRecords: 2,
+        outputRecords: 2,
+        droppedRecords: 0,
+        missingRequiredFields: [],
+      },
+      identities: [],
+      temporal: {
+        version: "2025-2026",
+        expectedVersion: "2025-2026",
+        sourceThrough: AT,
+        staleAtRetrieval: false,
+      },
+      semantics: { factKind: "current NH legislative membership", violations: [] },
+      horizon: {
+        kind: "BOUNDED",
+        query: "the complete official Members.txt membership",
+        returnedRecords: 2,
+        declaredTotal: 2,
+        paginationComplete: true,
+        claimsComplete: true,
+      },
+      absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
+      dependentChecks: [{ consumer: "ballot incumbency", passed: true, detail: "Exact district slice is readable." }],
+      normalizedPayload,
+      readModel: NH_MEMBERS,
+    },
+    state: "PROMOTED",
+    acquisitionSucceeded: true,
+    receipt,
+    promotedVersion: CANDIDATE_ID,
+    lastKnownGoodVersion: CANDIDATE_ID,
+    failureCode: null,
+    failureDetail: null,
+  } satisfies CandidateVersionRecord;
   const projection = {
     key: "STATE_LEGISLATOR:US-NH",
     sourceId: "nh-general-court",

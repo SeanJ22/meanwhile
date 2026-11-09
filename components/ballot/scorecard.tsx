@@ -105,6 +105,9 @@ function ScorecardBody({ card }: { card: Scorecard }) {
   const flips = statewideFlips(card);
   return <>
     {card.chambers.length > 0 && <div className={styles.chambers}>{card.chambers.map(chamber => <ChamberPanel key={chamber.name} chamber={chamber} />)}</div>}
+    {typeof card.seatsFlippedTotal === "number" && <div className={styles.block}>
+      <span className={styles.blockLabel}>State legislative seats that flipped</span><p className={styles.blockText}>{card.seatsFlippedTotal}</p>
+    </div>}
     {(governor || flips) && <div className={styles.twoUp}>
       {governor && <div className={styles.block}><span className={styles.blockLabel}>{governor.label}</span><p className={styles.blockText}>{governor.text}</p></div>}
       {flips && <div className={styles.block}>

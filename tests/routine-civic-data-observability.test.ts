@@ -199,24 +199,6 @@ function readerEvent(
   };
 }
 
-/** A source observation normally carries its fixture history and current pointer; damaged proofs override them explicitly. */
-function projectSource(
-  contract: RoutineSourceContract | ManualProductionSourceContract,
-  input: RoutineCandidateRow | readonly RoutineCandidateRow[],
-  options: {
-    readonly events?: readonly RoutineCandidateEventRow[];
-    readonly promotions?: readonly RoutinePromotionRow[];
-    readonly readback?: boolean;
-    readonly build?: Parameters<typeof projectRoutineDataObservability>[3];
-  } = {},
-) {
-  const candidates = (Array.isArray(input) ? input : [input]) as readonly RoutineCandidateRow[];
-  const history = options.events ?? candidates.flatMap(sourceHistory);
-  const events = options.readback ? [...history, readerEvent(contract, candidates[0])] : history;
-  const promotions = options.promotions ?? (candidates.length ? [promotion(contract, candidates[0])] : []);
-  return projectRoutineDataObservability({ candidates, events, promotions }, NOW, [contract], options.build);
-}
-
 function countValue<T>(count: { readonly kind: string; readonly value?: number; readonly members: readonly T[] }): number {
   assert.equal(count.kind, "MEASURED");
   assert.equal(typeof count.value, "number");
@@ -256,7 +238,12 @@ test("PDC-13: an illegal adjacent source transition cannot become canonical or c
     { id: "illegal-2", candidateId: row.id, sequence: 2, state: "VALIDATED", at: row.retrievedAt, detail: "Skipped normalization." },
     { id: "illegal-3", candidateId: row.id, sequence: 3, state: "PROMOTED", at: row.retrievedAt, detail: "Promoted." },
   ];
-  const observed = projectSource(contract, row, { events: sourceEvents, build: READER_BUILD }).contracts[0];
+  const observed = projectRoutineDataObservability(
+    { candidates: [row], events: sourceEvents, promotions: [promotion(contract, row)] },
+    NOW,
+    [contract],
+    READER_BUILD,
+  ).contracts[0];
 
   assert.equal(observed.canonicalPromotion.kind, "UNKNOWN");
   if (observed.canonicalPromotion.kind === "UNKNOWN") {
@@ -270,7 +257,7 @@ test("PDC-13: an illegal adjacent source transition cannot become canonical or c
 
 test("PDC-13: an answered empty store is NOT_RECORDED while a complete history count is measured zero", () => {
   const contract = ROUTINE_SOURCE_CONTRACTS[0];
-  const view = projectSource(contract, []);
+  const view = projectRoutineDataObservability({ candidates: [], events: [], promotions: [] }, NOW, [contract]);
   const row = view.contracts[0];
 
   assert.equal(row.currentState.kind, "NOT_RECORDED");
@@ -299,7 +286,12 @@ test("PDC-13: exact change members, GOOD pointer, and typed Reader receipt prove
       held: [{ key: "candidate:C", code: "IDENTITY_HELD", detail: "Official id is unresolved.", record: { name: "C" } }],
     }),
   });
-  const view = projectSource(contract, row, { readback: true, build: READER_BUILD });
+  const view = projectRoutineDataObservability(
+    { candidates: [row], events: [...sourceHistory(row), readerEvent(contract, row)], promotions: [promotion(contract, row)] },
+    NOW,
+    [contract],
+    READER_BUILD,
+  );
   const source = view.contracts[0];
 
   assert.equal(source.canonicalPromotion.kind, "MEASURED");
@@ -357,19 +349,33 @@ test("PDC-13: exact change members, GOOD pointer, and typed Reader receipt prove
 test("PDC-13: declared consumers without a durable typed Reader readback do not prove delivery", () => {
   const contract = ROUTINE_SOURCE_CONTRACTS[0];
   const row = candidateRow(contract, { id: "fec-no-reader-receipt", at: "2026-09-08T00:30:00.000Z" });
-  const missing = projectSource(contract, row, { build: READER_BUILD }).contracts[0];
+  const missing = projectRoutineDataObservability(
+    { candidates: [row], events: sourceHistory(row), promotions: [promotion(contract, row)] },
+    NOW,
+    [contract],
+    READER_BUILD,
+  ).contracts[0];
   assert.equal(missing.canonicalPromotion.kind, "MEASURED");
   assert.equal(missing.readerVisible.kind, "NOT_RECORDED");
 
   const malformedEvent = { ...readerEvent(contract, row), detail: `${READER_PROJECTION_READBACK_PREFIX}{broken` };
-  const malformed = projectSource(contract, row, { events: [...sourceHistory(row), malformedEvent] }).contracts[0];
+  const malformed = projectRoutineDataObservability(
+    { candidates: [row], events: [...sourceHistory(row), malformedEvent], promotions: [promotion(contract, row)] },
+    NOW,
+    [contract],
+  ).contracts[0];
   assert.equal(malformed.readerVisible.kind, "UNKNOWN");
 });
 
 test("PDC-13: a pointer without its atomic PROMOTED event is UNKNOWN, never canonical", () => {
   const contract = ROUTINE_SOURCE_CONTRACTS[0];
   const row = candidateRow(contract, { id: "fec-missing-promotion-event", at: "2026-09-08T00:35:00.000Z" });
-  const observed = projectSource(contract, row, { events: [readerEvent(contract, row)], build: READER_BUILD }).contracts[0];
+  const observed = projectRoutineDataObservability(
+    { candidates: [row], events: [readerEvent(contract, row)], promotions: [promotion(contract, row)] },
+    NOW,
+    [contract],
+    READER_BUILD,
+  ).contracts[0];
 
   assert.equal(observed.canonicalPromotion.kind, "UNKNOWN");
   assert.equal(observed.readerVisible.kind, "UNKNOWN");
@@ -390,7 +396,12 @@ test("PDC-13: a future-dated Reader PASS cannot certify present Reader visibilit
     at: future,
     detail: `${READER_PROJECTION_READBACK_PREFIX}${JSON.stringify({ ...receipt, observedAt: future })}`,
   };
-  const observed = projectSource(contract, row, { events: [...sourceHistory(row), futureReader], build: READER_BUILD }).contracts[0];
+  const observed = projectRoutineDataObservability(
+    { candidates: [row], events: [...sourceHistory(row), futureReader], promotions: [promotion(contract, row)] },
+    NOW,
+    [contract],
+    READER_BUILD,
+  ).contracts[0];
 
   assert.equal(observed.canonicalPromotion.kind, "MEASURED");
   assert.equal(observed.readerVisible.kind, "UNKNOWN");
@@ -400,7 +411,12 @@ test("PDC-13: a future-dated Reader PASS cannot certify present Reader visibilit
 test("PDC-13: Reader delivery UNKNOWN is surfaced separately from fresh source data", () => {
   const contract = ROUTINE_SOURCE_CONTRACTS[0];
   const row = candidateRow(contract, { id: "fresh-source-reader-unknown", at: "2026-09-08T01:00:00.000Z" });
-  const view = projectSource(contract, row, { build: READER_BUILD });
+  const view = projectRoutineDataObservability(
+    { candidates: [row], events: sourceHistory(row), promotions: [promotion(contract, row)] },
+    NOW,
+    [contract],
+    READER_BUILD,
+  );
 
   assert.equal(view.contracts[0].cadence.freshness, "FRESH");
   assert.equal(view.contracts[0].cadence.operationalState, "UNKNOWN");
@@ -425,7 +441,15 @@ test("PDC-13: future source evidence cannot become a latest attempt, exact count
     failureCode: "FUTURE_FAILURE",
     failureDetail: "This evidence has not happened yet.",
   });
-  const view = projectSource(contract, [lkg, future]);
+  const view = projectRoutineDataObservability(
+    {
+      candidates: [lkg, future],
+      events: [...sourceHistory(lkg), ...sourceHistory(future)],
+      promotions: [promotion(contract, lkg)],
+    },
+    NOW,
+    [contract],
+  );
   const observed = view.contracts[0];
 
   assert.equal(observed.canonicalPromotion.kind, "MEASURED", "unrelated future attempt evidence does not erase the valid pointer");
@@ -477,7 +501,15 @@ test("PDC-13: a future adapter timestamp is a contained refusal on the local att
     { id: `${candidateId}:2`, candidateId, sequence: 2, state: "NORMALIZED", at: localAttemptAt, detail: "Normalized source envelope." },
     { id: `${candidateId}:3`, candidateId, sequence: 3, state: "TEMPORAL_INVALID", at: localAttemptAt, detail: failureDetail },
   ];
-  const view = projectSource(contract, [lkg, refused], { events: [...sourceHistory(lkg), ...refusedEvents] });
+  const view = projectRoutineDataObservability(
+    {
+      candidates: [lkg, refused],
+      events: [...sourceHistory(lkg), ...refusedEvents],
+      promotions: [promotion(contract, lkg)],
+    },
+    NOW,
+    [contract],
+  );
   const observed = view.contracts[0];
 
   assert.equal(observed.currentState.kind, "MEASURED");
@@ -511,7 +543,11 @@ test("PDC-13: a future validation receipt cannot manufacture a contained refusal
     promotedVersionId: null,
     lastKnownGoodVersionId: null,
   });
-  const observed = projectSource(contract, refused, { promotions: [] }).contracts[0];
+  const observed = projectRoutineDataObservability(
+    { candidates: [refused], events: sourceHistory(refused), promotions: [] },
+    NOW,
+    [contract],
+  ).contracts[0];
 
   assert.equal(observed.latestRefused.kind, "UNKNOWN");
   assert.equal(observed.lastValidation.kind, "UNKNOWN");
@@ -539,7 +575,11 @@ test("PDC-13: contradictory acquisition scalars cannot report source success or 
       retrieval: { succeeded: true, retrievedAt: base.retrievedAt },
     },
   };
-  const observed = projectSource(contract, contradictory, { promotions: [] }).contracts[0];
+  const observed = projectRoutineDataObservability(
+    { candidates: [contradictory], events: sourceHistory(contradictory), promotions: [] },
+    NOW,
+    [contract],
+  ).contracts[0];
 
   assert.equal(observed.lastSuccessfulAcquisition.kind, "UNKNOWN");
   assert.equal(observed.cadence.operationalState, "UNKNOWN");
@@ -558,7 +598,16 @@ test("PDC-13: malformed authority-transfer evidence cannot masquerade as live-so
       bootstrapImport: null,
     },
   };
-  const observed = projectSource(contract, malformed, { build: READER_BUILD }).contracts[0];
+  const observed = projectRoutineDataObservability(
+    {
+      candidates: [malformed],
+      events: sourceHistory(malformed),
+      promotions: [promotion(contract, malformed)],
+    },
+    NOW,
+    [contract],
+    READER_BUILD,
+  ).contracts[0];
 
   assert.equal(observed.lastSuccessfulAcquisition.kind, "UNKNOWN");
   assert.equal(observed.canonicalPromotion.kind, "UNKNOWN");
@@ -593,7 +642,15 @@ test("PDC-13: older uncertain authority evidence does not hide a later proven so
     failureCode: "SOURCE_BLOCKED",
     failureDetail: "The later source attempt is proven.",
   });
-  const observed = projectSource(contract, [lkg, uncertain, latestFailure]).contracts[0];
+  const observed = projectRoutineDataObservability(
+    {
+      candidates: [lkg, uncertain, latestFailure],
+      events: [...sourceHistory(lkg), ...sourceHistory(uncertain), ...sourceHistory(latestFailure)],
+      promotions: [promotion(contract, lkg)],
+    },
+    NOW,
+    [contract],
+  ).contracts[0];
 
   assert.equal(observed.lastAttemptedAcquisition.kind, "MEASURED");
   if (observed.lastAttemptedAcquisition.kind === "MEASURED") {
@@ -605,7 +662,11 @@ test("PDC-13: older uncertain authority evidence does not hide a later proven so
 test("PDC-13: a PROMOTED candidate row without atomic event never masquerades as an outcome", () => {
   const contract = ROUTINE_SOURCE_CONTRACTS[0];
   const row = candidateRow(contract, { id: "row-only-promotion", at: "2026-09-08T02:00:00.000Z" });
-  const history = projectSource(contract, row, { events: [], promotions: [] }).contracts[0].histories["24h"];
+  const history = projectRoutineDataObservability(
+    { candidates: [row], events: [], promotions: [] },
+    NOW,
+    [contract],
+  ).contracts[0].histories["24h"];
 
   assert.equal(history.attempts[0].canonicalOutcome.kind, "NOT_RECORDED");
   assert.equal(history.counts.promotions.kind, "UNKNOWN", "the terminal row/event contradiction prevents a false measured zero");
@@ -625,7 +686,11 @@ test("PDC-13: a terminal candidate row without its append-only event is UNKNOWN,
     failureCode: "SOURCE_BLOCKED",
     failureDetail: "A row without its atomic event is torn evidence.",
   });
-  const observed = projectSource(contract, refused, { events: [], promotions: [] }).contracts[0];
+  const observed = projectRoutineDataObservability(
+    { candidates: [refused], events: [], promotions: [] },
+    NOW,
+    [contract],
+  ).contracts[0];
 
   assert.equal(observed.cadence.operationalState, "UNKNOWN");
   assert.match(observed.cadence.operationalDetail, /no append-only source-state event/i);
@@ -651,7 +716,11 @@ test("PDC-13: a terminal event cannot be revived into a nonterminal state on the
     detail: "This terminal refusal must remain terminal.",
   };
   const normalizedLater = event(revived, 2);
-  const observed = projectSource(contract, revived, { events: [refusedFirst, normalizedLater], promotions: [] }).contracts[0];
+  const observed = projectRoutineDataObservability(
+    { candidates: [revived], events: [refusedFirst, normalizedLater], promotions: [] },
+    NOW,
+    [contract],
+  ).contracts[0];
 
   assert.equal(observed.cadence.operationalState, "UNKNOWN");
   assert.match(
@@ -666,7 +735,11 @@ test("PDC-13: a historical promotion event must follow its own source-scoped evi
   const row = candidateRow(contract, { id: "misordered-historical-promotion", at: "2026-09-08T02:00:00.000Z" });
   const complete = sourceHistory(row);
   const beforeAcquisition = { ...complete.at(-1)!, at: "2026-09-08T01:59:59.000Z" };
-  const history = projectSource(contract, row, { events: [...complete.slice(0, -1), beforeAcquisition], promotions: [] }).contracts[0].histories["24h"];
+  const history = projectRoutineDataObservability(
+    { candidates: [row], events: [...complete.slice(0, -1), beforeAcquisition], promotions: [] },
+    NOW,
+    [contract],
+  ).contracts[0].histories["24h"];
 
   assert.equal(history.attempts[0].canonicalOutcome.kind, "UNKNOWN");
   assert.equal(history.counts.promotions.kind, "UNKNOWN");
@@ -688,7 +761,15 @@ test("PDC-13: tied latest attempts cannot be ordered by UUID or database return 
     failureCode: "SOURCE_BLOCKED",
     failureDetail: "Same-instant outcome has no causal tie-breaker.",
   });
-  const view = projectSource(contract, [lkg, refused]);
+  const view = projectRoutineDataObservability(
+    {
+      candidates: [lkg, refused],
+      events: [...sourceHistory(lkg), ...sourceHistory(refused)],
+      promotions: [promotion(contract, lkg)],
+    },
+    NOW,
+    [contract],
+  );
   const observed = view.contracts[0];
 
   assert.equal(observed.canonicalPromotion.kind, "MEASURED");
@@ -757,7 +838,11 @@ test("PDC-13: a later source-state event invalidates only that candidate's point
     at: "2026-09-08T04:01:00.000Z",
     detail: "A source-state event appeared after atomic promotion.",
   };
-  const observed = projectSource(contract, row, { events: [...sourceHistory(row), laterSourceEvent] }).contracts[0];
+  const observed = projectRoutineDataObservability(
+    { candidates: [row], events: [...sourceHistory(row), laterSourceEvent], promotions: [promotion(contract, row)] },
+    NOW,
+    [contract],
+  ).contracts[0];
 
   assert.equal(observed.canonicalPromotion.kind, "UNKNOWN");
   assert.equal(observed.cadence.operationalState, "UNKNOWN");
@@ -779,7 +864,16 @@ test("PDC-13: Reader repair ordering uses append-only sequence without corruptin
       detail: "A later sequence cannot move backward in time.",
     })}`,
   };
-  const view = projectSource(contract, row, { events: [...sourceHistory(row), pass, failedLaterSequence], build: READER_BUILD });
+  const view = projectRoutineDataObservability(
+    {
+      candidates: [row],
+      events: [...sourceHistory(row), pass, failedLaterSequence],
+      promotions: [promotion(contract, row)],
+    },
+    NOW,
+    [contract],
+    READER_BUILD,
+  );
 
   assert.equal(view.contracts[0].canonicalPromotion.kind, "MEASURED", "Reader evidence is not a source-disposition authority");
   assert.equal(view.contracts[0].readerVisible.kind, "UNKNOWN");
@@ -790,7 +884,16 @@ test("PDC-13: Reader repair ordering uses append-only sequence without corruptin
 test("PDC-13: a gap before Reader readback fails delivery closed without changing source disposition", () => {
   const contract = ROUTINE_SOURCE_CONTRACTS[0];
   const row = candidateRow(contract, { id: "reader-sequence-gap", at: "2026-09-08T04:10:00.000Z" });
-  const observed = projectSource(contract, row, { events: [...sourceHistory(row), readerEvent(contract, row, 6)], build: READER_BUILD }).contracts[0];
+  const observed = projectRoutineDataObservability(
+    {
+      candidates: [row],
+      events: [...sourceHistory(row), readerEvent(contract, row, 6)],
+      promotions: [promotion(contract, row)],
+    },
+    NOW,
+    [contract],
+    READER_BUILD,
+  ).contracts[0];
 
   assert.equal(observed.canonicalPromotion.kind, "MEASURED", "Reader history cannot reclassify source promotion");
   assert.equal(observed.readerVisible.kind, "UNKNOWN");
@@ -809,7 +912,16 @@ test("PDC-13: a later retired Reader receipt cannot be hidden behind an older V2
     at: "2026-09-08T04:16:00.000Z",
     detail: "READER_PROJECTION_READBACK_V1 {\"status\":\"PASS\"}",
   };
-  const observed = projectSource(contract, row, { events: [...sourceHistory(row), readerEvent(contract, row, 5), retiredLater], build: READER_BUILD }).contracts[0];
+  const observed = projectRoutineDataObservability(
+    {
+      candidates: [row],
+      events: [...sourceHistory(row), readerEvent(contract, row, 5), retiredLater],
+      promotions: [promotion(contract, row)],
+    },
+    NOW,
+    [contract],
+    READER_BUILD,
+  ).contracts[0];
 
   assert.equal(observed.canonicalPromotion.kind, "MEASURED", "Reader history remains outside source authority");
   assert.equal(observed.readerVisible.kind, "UNKNOWN", "latest Reader evidence uses a retired/unreadable contract");
@@ -823,7 +935,16 @@ test("PDC-13: Reader evidence cannot become a source refusal even if its event s
     ...readerEvent(contract, row),
     state: "CANNOT_TELL",
   };
-  const observed = projectSource(contract, row, { events: [...sourceHistory(row), malformedReaderState], build: READER_BUILD }).contracts[0];
+  const observed = projectRoutineDataObservability(
+    {
+      candidates: [row],
+      events: [...sourceHistory(row), malformedReaderState],
+      promotions: [promotion(contract, row)],
+    },
+    NOW,
+    [contract],
+    READER_BUILD,
+  ).contracts[0];
 
   assert.equal(observed.canonicalPromotion.kind, "MEASURED", "Reader evidence has no source-disposition authority");
   assert.equal(observed.readerVisible.kind, "UNKNOWN");
@@ -843,7 +964,16 @@ test("PDC-13: an unrecognised source event cannot coexist with a healthy canonic
     at: "2026-09-08T04:45:00.000Z",
     detail: "A corrupted source-state event must fail closed.",
   };
-  const observed = projectSource(contract, row, { events: [...sourceHistory(row), unknownSourceEvent], build: READER_BUILD }).contracts[0];
+  const observed = projectRoutineDataObservability(
+    {
+      candidates: [row],
+      events: [...sourceHistory(row), unknownSourceEvent],
+      promotions: [promotion(contract, row)],
+    },
+    NOW,
+    [contract],
+    READER_BUILD,
+  ).contracts[0];
 
   assert.equal(observed.canonicalPromotion.kind, "UNKNOWN");
   assert.equal(observed.cadence.operationalState, "UNKNOWN");
@@ -863,7 +993,11 @@ test("PDC-13: a durable failed typed Reader readback is UNKNOWN, never false hea
       detail: "The typed funding Reader rejected the promoted payload.",
     })}`,
   };
-  const observed = projectSource(contract, row, { events: [...sourceHistory(row), failedEvent] }).contracts[0];
+  const observed = projectRoutineDataObservability(
+    { candidates: [row], events: [...sourceHistory(row), failedEvent], promotions: [promotion(contract, row)] },
+    NOW,
+    [contract],
+  ).contracts[0];
 
   assert.equal(observed.canonicalPromotion.kind, "MEASURED", "the source promotion remains canonical");
   assert.equal(observed.currentState.kind, "MEASURED");
@@ -875,7 +1009,12 @@ test("PDC-13: a durable failed typed Reader readback is UNKNOWN, never false hea
 test("PDC-13: an old typed Reader PASS cannot certify a later deployed Reader version", () => {
   const contract = ROUTINE_SOURCE_CONTRACTS[0];
   const row = candidateRow(contract, { id: "fec-reader-code-drift", at: "2026-09-08T00:47:00.000Z" });
-  const view = projectSource(contract, row, { readback: true, build: { ...READER_BUILD, codeSha: LATER_READER_CODE_SHA } });
+  const view = projectRoutineDataObservability(
+    { candidates: [row], events: [...sourceHistory(row), readerEvent(contract, row)], promotions: [promotion(contract, row)] },
+    NOW,
+    [contract],
+    { ...READER_BUILD, codeSha: LATER_READER_CODE_SHA },
+  );
   const observed = view.contracts[0];
 
   assert.equal(observed.canonicalPromotion.kind, "MEASURED", "the data-plane pointer remains canonical");
@@ -890,12 +1029,22 @@ test("PDC-13: an old typed Reader PASS cannot certify a later deployed Reader ve
 test("PDC-13: a manual promotion also requires durable typed Reader proof before Admin can call it healthy", () => {
   const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((item) => item.id === "congress-bulk-roster:AZ")!;
   const row = candidateRow(contract, { id: "manual-directory-v1", at: "2026-09-08T00:50:00.000Z" });
-  const withoutReadback = projectSource(contract, row, { build: READER_BUILD }).contracts[0];
+  const withoutReadback = projectRoutineDataObservability(
+    { candidates: [row], events: sourceHistory(row), promotions: [promotion(contract, row)] },
+    NOW,
+    [contract],
+    READER_BUILD,
+  ).contracts[0];
   assert.equal(withoutReadback.canonicalPromotion.kind, "MEASURED");
   assert.equal(withoutReadback.readerVisible.kind, "NOT_RECORDED");
   assert.equal(withoutReadback.cadence.operationalState, "UNKNOWN");
 
-  const withReadback = projectSource(contract, row, { readback: true, build: READER_BUILD }).contracts[0];
+  const withReadback = projectRoutineDataObservability(
+    { candidates: [row], events: [...sourceHistory(row), readerEvent(contract, row)], promotions: [promotion(contract, row)] },
+    NOW,
+    [contract],
+    READER_BUILD,
+  ).contracts[0];
   assert.equal(withReadback.readerVisible.kind, "MEASURED");
   assert.equal(withReadback.cadence.operationalState, "HEALTHY");
   assert.match(withReadback.cadence.operationalDetail, /deployed-code typed Reader read model is proven/i);
@@ -904,7 +1053,11 @@ test("PDC-13: a manual promotion also requires durable typed Reader proof before
 test("PDC-13: a Reader PASS cannot be current when the deployed code identity is unavailable", () => {
   const contract = ROUTINE_SOURCE_CONTRACTS[0];
   const row = candidateRow(contract, { id: "fec-reader-build-unknown", at: "2026-09-08T00:55:00.000Z" });
-  const observed = projectSource(contract, row, { readback: true }).contracts[0];
+  const observed = projectRoutineDataObservability(
+    { candidates: [row], events: [...sourceHistory(row), readerEvent(contract, row)], promotions: [promotion(contract, row)] },
+    NOW,
+    [contract],
+  ).contracts[0];
 
   assert.equal(observed.readerVisible.kind, "UNKNOWN");
   assert.equal(observed.cadence.operationalState, "UNKNOWN");
@@ -918,7 +1071,12 @@ test("PDC-13: a feature/preview build cannot certify production Reader visibilit
     { codeSha: READER_CODE_SHA, branch: "feature/pdc", context: "production" },
     { codeSha: READER_CODE_SHA, branch: "main", context: "deploy-preview" },
   ]) {
-    const observed = projectSource(contract, row, { readback: true, build: currentReaderBuild }).contracts[0];
+    const observed = projectRoutineDataObservability(
+      { candidates: [row], events: [...sourceHistory(row), readerEvent(contract, row)], promotions: [promotion(contract, row)] },
+      NOW,
+      [contract],
+      currentReaderBuild,
+    ).contracts[0];
     assert.equal(observed.readerVisible.kind, "UNKNOWN");
     assert.equal(observed.cadence.operationalState, "UNKNOWN");
   }
@@ -950,7 +1108,11 @@ test("PDC-13: receipt-held records retain their exact key and record payload", (
     receipt: heldReceipt,
     changeSet: changes(),
   });
-  const view = projectSource(contract, row);
+  const view = projectRoutineDataObservability(
+    { candidates: [row], events: sourceHistory(row), promotions: [promotion(contract, row)] },
+    NOW,
+    [contract],
+  );
   const held = view.contracts[0].latestHeld;
   assert.equal(held.kind, "MEASURED");
   if (held.kind === "MEASURED") {
@@ -967,7 +1129,11 @@ test("PDC-13: a contract without a Reader projection is never labeled Reader-vis
     readerProjection: null,
   };
   const row = candidateRow(contract, { id: "operational-reference-v1", at: "2026-09-08T01:00:00.000Z" });
-  const view = projectSource(contract, row);
+  const view = projectRoutineDataObservability(
+    { candidates: [row], events: sourceHistory(row), promotions: [promotion(contract, row)] },
+    NOW,
+    [contract],
+  );
   assert.equal(view.contracts[0].canonicalPromotion.kind, "MEASURED");
   assert.equal(view.contracts[0].readerVisible.kind, "NOT_APPLICABLE");
 });
@@ -976,10 +1142,16 @@ test("NL-01: CISA government domains become Reader-visible only after typed Read
   const contract = ROUTINE_SOURCE_CONTRACTS.find((item) => item.id === "dotgov")!;
   assert.equal(contract.readerProjection?.id, "government-domains");
   const row = candidateRow(contract, { id: "dotgov-reader-v1", at: "2026-09-08T01:00:00.000Z" });
-  const withoutReadback = projectSource(contract, row, { build: READER_BUILD }).contracts[0];
+  const withoutReadback = projectRoutineDataObservability(
+    { candidates: [row], events: sourceHistory(row), promotions: [promotion(contract, row)] },
+    NOW, [contract], READER_BUILD,
+  ).contracts[0];
   assert.equal(withoutReadback.canonicalPromotion.kind, "MEASURED");
   assert.equal(withoutReadback.readerVisible.kind, "NOT_RECORDED");
-  const withReadback = projectSource(contract, row, { readback: true, build: READER_BUILD }).contracts[0];
+  const withReadback = projectRoutineDataObservability(
+    { candidates: [row], events: [...sourceHistory(row), readerEvent(contract, row)], promotions: [promotion(contract, row)] },
+    NOW, [contract], READER_BUILD,
+  ).contracts[0];
   assert.equal(withReadback.readerVisible.kind, "MEASURED");
   assert.equal(withReadback.cadence.operationalState, "HEALTHY");
 });
@@ -991,7 +1163,11 @@ test("PDC-13: a broken pointer proof makes canonical and Reader visibility UNKNO
     at: "2026-09-08T01:00:00.000Z",
     promotedVersionId: "a-different-version",
   });
-  const view = projectSource(contract, row);
+  const view = projectRoutineDataObservability(
+    { candidates: [row], events: sourceHistory(row), promotions: [promotion(contract, row)] },
+    NOW,
+    [contract],
+  );
   assert.equal(view.contracts[0].canonicalPromotion.kind, "UNKNOWN");
   if (view.contracts[0].canonicalPromotion.kind === "UNKNOWN") {
     assert.match(view.contracts[0].canonicalPromotion.detail, /canonical source promotion pointer proof failed/i);
@@ -1011,7 +1187,11 @@ test("PDC-13: pointer payload drift is UNKNOWN even when an older typed Reader P
     at: "2026-09-08T01:00:00.000Z",
   });
   const pointer = { ...promotion(contract, row), payload: { candidateId: "different-payload" } };
-  const view = projectSource(contract, row, { readback: true, promotions: [pointer] });
+  const view = projectRoutineDataObservability(
+    { candidates: [row], events: [...sourceHistory(row), readerEvent(contract, row)], promotions: [pointer] },
+    NOW,
+    [contract],
+  );
   const observed = view.contracts[0];
   assert.equal(observed.canonicalPromotion.kind, "UNKNOWN");
   assert.equal(observed.readerVisible.kind, "UNKNOWN");
@@ -1038,7 +1218,11 @@ test("PDC-13: pointer or candidate LKG drift cannot remain canonical, Reader-vis
     },
   ] as const;
   for (const item of cases) {
-    const view = projectSource(contract, item.row, { readback: true, promotions: [item.pointer] });
+    const view = projectRoutineDataObservability(
+      { candidates: [item.row], events: [...sourceHistory(item.row), readerEvent(contract, item.row)], promotions: [item.pointer] },
+      NOW,
+      [contract],
+    );
     const observed = view.contracts[0];
     assert.equal(observed.canonicalPromotion.kind, "UNKNOWN", `${item.name} LKG drift`);
     assert.equal(observed.readerVisible.kind, "UNKNOWN", `${item.name} LKG drift`);
@@ -1055,7 +1239,11 @@ test("PDC-13: contradictory durable evidence becomes UNKNOWN instead of a false 
     state: "SOURCE_BLOCKED",
     receipt: validationReceipt(contract, "fec-contradictory-receipt", "2026-09-08T03:00:00.000Z", "GOOD"),
   });
-  const contradiction = projectSource(contract, contradictoryReceipt, { events: [event(contradictoryReceipt)], promotions: [] }).contracts[0];
+  const contradiction = projectRoutineDataObservability(
+    { candidates: [contradictoryReceipt], events: [event(contradictoryReceipt)], promotions: [] },
+    NOW,
+    [contract],
+  ).contracts[0];
   assert.equal(contradiction.latestRefused.kind, "UNKNOWN");
 
   const contradictoryChanges = candidateRow(contract, {
@@ -1063,7 +1251,15 @@ test("PDC-13: contradictory durable evidence becomes UNKNOWN instead of a false 
     at: "2026-09-08T04:00:00.000Z",
     changeSet: changes({ outcome: "CHANGED" }),
   });
-  const changedView = projectSource(contract, contradictoryChanges).contracts[0];
+  const changedView = projectRoutineDataObservability(
+    {
+      candidates: [contradictoryChanges],
+      events: sourceHistory(contradictoryChanges),
+      promotions: [promotion(contract, contradictoryChanges)],
+    },
+    NOW,
+    [contract],
+  ).contracts[0];
   assert.equal(changedView.latestChanges.kind, "UNKNOWN");
   assert.equal(changedView.latestCanonicalOutcome.kind, "UNKNOWN");
 
@@ -1074,7 +1270,11 @@ test("PDC-13: contradictory durable evidence becomes UNKNOWN instead of a false 
     receipt: validationReceipt(contract, "fec-misdated-event", "2026-09-08T05:00:00.000Z", "FAIL"),
   });
   const outsideWindowEvent = { ...event(refused), at: "2026-09-01T05:00:00.000Z" };
-  const history = projectSource(contract, refused, { events: [outsideWindowEvent], promotions: [] }).contracts[0].histories["24h"];
+  const history = projectRoutineDataObservability(
+    { candidates: [refused], events: [outsideWindowEvent], promotions: [] },
+    NOW,
+    [contract],
+  ).contracts[0].histories["24h"];
   assert.equal(history.counts.refused.kind, "UNKNOWN");
 });
 
@@ -1098,7 +1298,15 @@ test("PDC-13: a later refusal leaves the proven LKG serving with exact held and 
       held: [{ key: null, code: "SOURCE_HELD", detail: "No source body was eligible for promotion." }],
     }),
   });
-  const view = projectSource(contract, [lkg, refused]);
+  const view = projectRoutineDataObservability(
+    {
+      candidates: [lkg, refused],
+      events: [...sourceHistory(lkg), ...sourceHistory(refused)],
+      promotions: [promotion(contract, lkg)],
+    },
+    NOW,
+    [contract],
+  );
   const source = view.contracts[0];
 
   assert.equal(source.currentState.kind, "MEASURED");
@@ -1212,7 +1420,15 @@ test("PDC-13: a final dotgov outage supersedes an earlier synthetic refusal as R
     sourceEvent(synthetic, 3, "DEPENDENT_CONSUMER_INVALID", syntheticDetail),
     sourceEvent(outage, 1, "SOURCE_BLOCKED", outageDetail),
   ];
-  const view = projectSource(contract, [lkg, synthetic, outage], { events: events });
+  const view = projectRoutineDataObservability(
+    {
+      candidates: [lkg, synthetic, outage],
+      events,
+      promotions: [promotion(contract, lkg)],
+    },
+    NOW,
+    [contract],
+  );
   const observed = view.contracts[0];
 
   assert.deepEqual(observed.lastAttemptedAcquisition, { kind: "MEASURED", value: outageAt });
@@ -1276,7 +1492,15 @@ test("PDC-13: LKG serving is based on candidate chronology, not pointer-write ti
     at: lkg.retrievedAt,
     detail: "The LKG candidate was validated.",
   };
-  const observed = projectSource(contract, [lkg, refused], { events: [firstLkgEvent, normalizedEvent, validatedEvent, promotedEvent, event(refused, 1)], promotions: [pointer] }).contracts[0];
+  const observed = projectRoutineDataObservability(
+    {
+      candidates: [lkg, refused],
+      events: [firstLkgEvent, normalizedEvent, validatedEvent, promotedEvent, event(refused, 1)],
+      promotions: [pointer],
+    },
+    NOW,
+    [contract],
+  ).contracts[0];
 
   assert.equal(observed.canonicalPromotion.kind, "MEASURED");
   assert.equal(observed.lkg.kind, "MEASURED");
@@ -1294,7 +1518,11 @@ test("PDC-13: 24h, 7d, and 30d histories use exact attempt/event members", () =>
     candidateRow(contract, { id: "in-30d", at: "2026-08-24T12:00:00.000Z", changeSet: changes({ outcome: "CHANGED", removed: [{ key: "old", before: 1, after: null }] }) }),
     candidateRow(contract, { id: "outside-30d", at: "2026-07-30T12:00:00.000Z", changeSet: changes({ outcome: "UNCHANGED" }) }),
   ];
-  const view = projectSource(contract, rows, { events: rows.flatMap((row) => sourceHistory(row)) });
+  const view = projectRoutineDataObservability(
+    { candidates: rows, events: rows.flatMap((row) => sourceHistory(row)), promotions: [promotion(contract, rows[0])] },
+    NOW,
+    [contract],
+  );
   const histories = view.contracts[0].histories;
 
   assert.deepEqual(histories["24h"].counts.attempts.members.map((item) => item.candidateId), ["in-24h"]);
@@ -1339,12 +1567,16 @@ test("PDC-13: freshness separates FRESH, DUE, STALE, and UNKNOWN", () => {
   const contract = ROUTINE_SOURCE_CONTRACTS[0];
   const projected = (at: string, id: string) => {
     const row = candidateRow(contract, { id, at });
-    return projectSource(contract, row).contracts[0].cadence.freshness;
+    return projectRoutineDataObservability(
+      { candidates: [row], events: sourceHistory(row), promotions: [promotion(contract, row)] },
+      NOW,
+      [contract],
+    ).contracts[0].cadence.freshness;
   };
   assert.equal(projected("2026-09-07T12:00:00.000Z", "fresh"), "FRESH");
   assert.equal(projected("2026-08-31T12:00:00.000Z", "due"), "DUE");
   assert.equal(projected("2026-08-20T12:00:00.000Z", "stale"), "STALE");
-  assert.equal(projectSource(contract, []).contracts[0].cadence.freshness, "UNKNOWN");
+  assert.equal(projectRoutineDataObservability({ candidates: [], events: [], promotions: [] }, NOW, [contract]).contracts[0].cadence.freshness, "UNKNOWN");
 });
 
 test("PDC-13: a trusted-LKG import leaves the standing source due immediately", () => {
@@ -1353,17 +1585,17 @@ test("PDC-13: a trusted-LKG import leaves the standing source due immediately", 
     id: "fec-import-clock",
     at: "2026-09-08T11:59:00.000Z",
   });
-  const observed = projectSource(
-    contract,
-    {
+  const observed = projectRoutineDataObservability({
+    candidates: [{
       ...imported,
       candidate: {
         ...(imported.candidate as Record<string, unknown>),
         bootstrapImport: { kind: "TRUSTED_LKG_IMPORT" },
       },
-    },
-    { events: [], promotions: [] },
-  ).contracts[0];
+    }],
+    events: [],
+    promotions: [],
+  }, NOW, [contract]).contracts[0];
 
   assert.equal(observed.cadence.nextDue.kind, "MEASURED");
   if (observed.cadence.nextDue.kind === "MEASURED") assert.equal(observed.cadence.nextDue.value, NOW);
@@ -1382,7 +1614,11 @@ test("PDC-13: an abandoned standing attempt becomes HELD instead of remaining si
     promotedVersionId: null,
     lastKnownGoodVersionId: null,
   });
-  const observed = projectSource(contract, abandoned, { promotions: [] }).contracts[0];
+  const observed = projectRoutineDataObservability(
+    { candidates: [abandoned], events: sourceHistory(abandoned), promotions: [] },
+    NOW,
+    [contract],
+  ).contracts[0];
 
   assert.equal(observed.cadence.operationalState, "HELD");
   assert.match(observed.cadence.operationalDetail, /without a terminal source disposition/);
@@ -1402,7 +1638,11 @@ test("PDC-13: elapsed automatic retries and owner-invoked refusals are explicitl
     failureCode: "SOURCE_ROUTE_BLOCKED",
     failureDetail: "Publisher unavailable.",
   });
-  const routineView = projectSource(routine, [lkg, failed]);
+  const routineView = projectRoutineDataObservability(
+    { candidates: [lkg, failed], events: [...sourceHistory(lkg), ...sourceHistory(failed)], promotions: [promotion(routine, lkg)] },
+    NOW,
+    [routine],
+  );
   assert.equal(routineView.contracts[0].cadence.operationalState, "HELD");
   assert.equal(countValue(routineView.summary.held), 1);
 
@@ -1417,7 +1657,11 @@ test("PDC-13: elapsed automatic retries and owner-invoked refusals are explicitl
     failureCode: "SEMANTIC_CONTRACT_VIOLATION",
     failureDetail: "Reviewed package was refused.",
   });
-  const manualView = projectSource(manual, manualFailure, { promotions: [] });
+  const manualView = projectRoutineDataObservability(
+    { candidates: [manualFailure], events: sourceHistory(manualFailure), promotions: [] },
+    NOW,
+    [manual],
+  );
   assert.equal(manualView.contracts[0].cadence.operationalState, "HELD");
 });
 
@@ -1579,7 +1823,9 @@ test("a confirmed re-check keeps Admin current: the newest confirmation is the l
   const confirmedAt = "2026-09-08T11:00:00.000Z";
   const row = candidateRow(contract, { id: "fec-confirmed", at: promotedAt });
   const history = [...sourceHistory(row), readerEvent(contract, row)];
-  const unconfirmed = projectSource(contract, row, { events: history, build: READER_BUILD }).contracts[0];
+  const unconfirmed = projectRoutineDataObservability(
+    { candidates: [row], events: history, promotions: [promotion(contract, row)] }, NOW, [contract], READER_BUILD,
+  ).contracts[0];
   assert.notEqual(unconfirmed.cadence.freshness, "FRESH", "a week-old promotion alone is not fresh");
 
   const built = buildUnchangedConfirmation({
@@ -1602,7 +1848,9 @@ test("a confirmed re-check keeps Admin current: the newest confirmation is the l
     at: confirmedAt,
     detail: serializeUnchangedConfirmation(built.confirmation),
   };
-  const view = projectSource(contract, row, { events: [...history, confirmation], build: READER_BUILD });
+  const view = projectRoutineDataObservability(
+    { candidates: [row], events: [...history, confirmation], promotions: [promotion(contract, row)] }, NOW, [contract], READER_BUILD,
+  );
   const source = view.contracts[0];
   assert.equal(source.canonicalPromotion.kind, "MEASURED", "the pointer proof is untouched by a confirmation");
   assert.equal(source.readerVisible.kind, "MEASURED");
@@ -1617,7 +1865,8 @@ test("a confirmed re-check keeps Admin current: the newest confirmation is the l
   const failed = candidateRow(contract, { id: "fec-intermediate-failure", at: failedAt, state: "SOURCE_BLOCKED",
     acquisitionSucceeded: false, receipt: validationReceipt(contract, "fec-intermediate-failure", failedAt, "FAIL"),
     promotedVersionId: null, lastKnownGoodVersionId: row.id, failureCode: "SOURCE_UNAVAILABLE", failureDetail: "Temporarily unavailable" });
-  const recovered = projectSource(contract, [row, failed], { events: [...history, ...sourceHistory(failed), confirmation], build: READER_BUILD }).contracts[0];
+  const recovered = projectRoutineDataObservability({ candidates: [row, failed],
+    events: [...history, ...sourceHistory(failed), confirmation], promotions: [promotion(contract, row)] }, NOW, [contract], READER_BUILD).contracts[0];
   assert.equal(recovered.cadence.operationalState, "HEALTHY", "a later confirmation supersedes the earlier failed attempt");
   assert.deepEqual(recovered.latestHeld, { kind: "MEASURED", value: [] });
   assert.deepEqual(recovered.latestRefused, { kind: "MEASURED", value: [] });
@@ -1630,12 +1879,10 @@ test("a confirmed re-check keeps Admin current: the newest confirmation is the l
     sourceCheck: { requestedUrl: "https://api.open.fec.gov/v1/", finalUrl: "https://api.open.fec.gov/v1/",
       httpStatus: 304 as const, rawHash: "c".repeat(64), checkedAt: confirmedAt },
   } };
-  const afterReplay = projectSource(
-    contract,
-    [row, laterFailure],
-    { events: [...history, confirmation, ...sourceHistory(laterFailure), { ...confirmation, id: "held-replay",
-      sequence: confirmation.sequence + 1, at: heldReplay.observedAt, detail: serializeUnchangedConfirmation(heldReplay) }], build: READER_BUILD },
-  ).contracts[0];
+  const afterReplay = projectRoutineDataObservability({ candidates: [row, laterFailure],
+    events: [...history, confirmation, ...sourceHistory(laterFailure), { ...confirmation, id: "held-replay",
+      sequence: confirmation.sequence + 1, at: heldReplay.observedAt, detail: serializeUnchangedConfirmation(heldReplay) }],
+    promotions: [promotion(contract, row)] }, NOW, [contract], READER_BUILD).contracts[0];
   assert.deepEqual(afterReplay.lastAttemptedAcquisition, { kind: "MEASURED", value: laterFailedAt });
   assert.deepEqual(afterReplay.lastSuccessfulAcquisition, { kind: "MEASURED", value: confirmedAt });
   assert.equal(afterReplay.cadence.operationalState, "RETRYING", "held replay cannot clear a later provider failure");
@@ -1644,7 +1891,8 @@ test("a confirmed re-check keeps Admin current: the newest confirmation is the l
     detail: serializeUnchangedConfirmationSources(built.confirmation, []) };
   const laterReader = readerEvent(contract, { ...row, retrievedAt: confirmedAt }, sources.sequence + 1);
   const historyAfterRecheck = [...history, confirmation, sources, laterReader];
-  const readAfterRecheck = (events: RoutineCandidateEventRow[]) => projectSource(contract, row, { events: events, build: READER_BUILD }).contracts[0].readerVisible;
+  const readAfterRecheck = (events: RoutineCandidateEventRow[]) => projectRoutineDataObservability(
+    { candidates: [row], events, promotions: [promotion(contract, row)] }, NOW, [contract], READER_BUILD).contracts[0].readerVisible;
   assert.equal(readAfterRecheck(historyAfterRecheck).kind, "MEASURED", "legitimate source receipts between reader checks are not missing events");
   assert.equal(readAfterRecheck(historyAfterRecheck.filter(e => e.id !== sources.id)).kind, "UNKNOWN", "a real missing companion sequence still holds");
   assert.equal(readAfterRecheck(historyAfterRecheck.map(e => e.id === sources.id ? { ...e, detail: "UNCHANGED_CONFIRMATION_SOURCES_V1 {}" } : e)).kind, "UNKNOWN", "malformed companion evidence cannot fill the sequence gap");
@@ -1693,7 +1941,11 @@ test("R20: Admin shows the retry the runner admits on; a meeting partition never
   });
 
   const never = outage(null);
-  const unpublished = projectSource(contract, never, { events: [blockedEvent(never)], promotions: [] }).contracts[0];
+  const unpublished = projectRoutineDataObservability(
+    { candidates: [never], events: [blockedEvent(never)], promotions: [] },
+    NOW,
+    [contract],
+  ).contracts[0];
   assert.equal(unpublished.canonicalPromotion.kind, "NOT_RECORDED");
   // Owed twelve hours after the attempt, admitted 2 hours before.
   assert.deepEqual(unpublished.cadence.nextDue, { kind: "MEASURED", value: "2026-09-08T21:30:00.000Z" });
@@ -1703,7 +1955,11 @@ test("R20: Admin shows the retry the runner admits on; a meeting partition never
 
   const lkg = candidateRow(contract, { id: "meeting-lkg", at: "2026-09-08T09:00:00.000Z" });
   const failed = outage(lkg.id);
-  const published = projectSource(contract, [lkg, failed], { events: [...sourceHistory(lkg), blockedEvent(failed)] }).contracts[0];
+  const published = projectRoutineDataObservability(
+    { candidates: [lkg, failed], events: [...sourceHistory(lkg), blockedEvent(failed)], promotions: [promotion(contract, lkg)] },
+    NOW,
+    [contract],
+  ).contracts[0];
   // Owed an hour after the failed attempt, admitted 25 minutes before.
   assert.deepEqual(published.cadence.nextDue, { kind: "MEASURED", value: "2026-09-08T12:05:00.000Z" });
   assert.equal(published.cadence.operationalState, "RETRYING");

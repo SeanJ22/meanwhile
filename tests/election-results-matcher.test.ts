@@ -28,6 +28,9 @@ test("full candidate names match a county-numbered New Hampshire district withou
   const found = matchElectionResult(result("NH", ["Alice Eleanor Quinn"]), set);
   assert.equal(found.kind, "matched");
   if (found.kind === "matched") { assert.equal(found.contest.id, a.id); assert.equal(found.candidates[0].candidacy.id, "a"); }
+  const unicode = matchElectionResult(result("NH", ["张伟"]),
+    ballot([a, b], [candidate("han", a.id, "张伟"), candidate("cyrillic", b.id, "Иван Иванов")]));
+  assert.equal(unicode.kind === "matched" && unicode.candidates[0].candidacy.id, "han", "full names in distinct scripts cannot collapse to an empty ASCII key");
 });
 
 test("Massachusetts named districts and Minnesota lettered districts use candidate identity", () => {

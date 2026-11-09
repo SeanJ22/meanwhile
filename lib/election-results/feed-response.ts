@@ -1,3 +1,4 @@
+import { stateClockZone } from "../time/county-time-zones.ts";
 import { isResultState } from "./feed-types.ts";
 import { resultFeedStore, type ElectionResultFeedStore } from "./feed-store.ts";
 import { readNationalElectionResults, readStateElectionResults } from "../reader/election-results.ts";
@@ -10,7 +11,7 @@ async function results(store: ElectionResultFeedStore, state?: string, contests?
   try {
     if (state) {
       const feed = await readStateElectionResults(state, contests, store);
-      return Response.json({ available: feed !== null, ...(feed ?? { state, facts: {}, checkedAt: null }) }, { headers: cacheHeaders });
+      return Response.json({ available: feed !== null, ...(feed ?? { state, facts: {}, checkedAt: null }), clockZone: stateClockZone(state) }, { headers: cacheHeaders });
     }
     const summary = await readNationalElectionResults(store);
     return Response.json({ available: summary !== null, ...(summary ?? { states: {}, sources: [], checkedAt: null }) }, { headers: cacheHeaders });

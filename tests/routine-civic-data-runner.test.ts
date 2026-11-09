@@ -11,8 +11,7 @@ import { ROUTINE_JOBS, runRoutineJob } from "../lib/civic-data/routine-jobs.ts";
 import { runInNewContext } from "node:vm";
 import { transpileModule, ScriptTarget, ModuleKind, createSourceFile, isFunctionDeclaration } from "typescript";
 
-import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
-import { fecSourceFixture } from "./helpers/routine-candidate-fixture.ts";
+import { failedAcquisitionCandidate, fecFundingCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredRoutineCandidate, processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
@@ -516,11 +515,46 @@ test("the standing parent durably accounts for a routine child killed outside so
 });
 
 function sourceGoodCandidate(receipts = 10) {
-  return fecSourceFixture({
-    name: "Source-aware test candidate",
+  return fecFundingCandidate({
+    snapshot: {
+      formatVersion: 1,
+      fetchedAt: T0,
+      cycle: 2026,
+      matchReport: { rosterMatched: 1, rosterTotal: 1, ballotMatched: 0, ballotTotal: 0 },
+      candidates: [{
+        dataClass: "FEC_COMMITTEE",
+        fecCandidateId: "H6AZ01001",
+        name: "Source-aware test candidate",
+        state: "AZ",
+        office: "H",
+        district: "01",
+        targetKeys: ["congress:test"],
+        matchRoutes: ["bioguide-bridge"],
+        principalCommitteeId: "C00999999",
+        cycle: 2026,
+        totals: {
+          receipts,
+          disbursements: 1,
+          cashOnHand: receipts - 1,
+          individualItemized: receipts,
+          individualUnitemized: 0,
+          smallDonorShare: 0,
+          coverageEndDate: "2026-06-30",
+        },
+        topContributions: [],
+        provenance: {
+          sourceUrl: "https://api.open.fec.gov/v1/",
+          sourceOrg: "Federal Election Commission",
+          collectedAt: T0,
+          verifiedAt: T0,
+        },
+      }],
+      absences: [],
+    },
+    rawBodies: [`official FEC response bytes: receipts=${receipts}`],
+    finalUrl: "https://api.open.fec.gov/v1/candidates/search/",
     retrievedAt: T0,
-    receipts,
-    rawBody: `official FEC response bytes: receipts=${receipts}`,
+    excludedFacts: [],
   });
 }
 

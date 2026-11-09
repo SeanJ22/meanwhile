@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import { afterBallotReady } from "./ballot-narrowing";
 
 /** The checked results for one state's ballot: loading until the ballot accepts input, then settled with whatever the feed holds. */
-export type ResultsFeed = { status: "loading" } | { status: "settled"; facts: Readonly<Record<string, unknown>> };
+export type ResultsFeed = { status: "loading" } | { status: "settled"; facts: Readonly<Record<string, unknown>>; clockZone: string | null };
 
 export const ResultsFeedContext = createContext<ResultsFeed>({ status: "loading" });
 export const useResultsFeed = (): ResultsFeed => useContext(ResultsFeedContext);
@@ -25,16 +25,16 @@ export function ResultsFeedProvider({ state, contestIds, children }: { state: st
   const key = contestIds.join(",");
   useEffect(() => {
     const controller = new AbortController();
-    const settle = (facts: Readonly<Record<string, unknown>>) => { if (!controller.signal.aborted) setFeed({ status: "settled", facts }); };
+    const settle = (facts: Readonly<Record<string, unknown>>, clockZone: string | null = null) => { if (!controller.signal.aborted) setFeed({ status: "settled", facts, clockZone }); };
     const cancel = afterBallotReady(() => {
       const url = `/api/election-results?${new URLSearchParams({ state, contests: key })}`;
       const request = url.length <= 6_000
         ? fetch(url, { signal: controller.signal, priority: "low" })
         : fetch("/api/election-results", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ state, contests: key.split(",") }), signal: controller.signal, priority: "low" });
       void request.then(async response => {
-        const body = response.ok ? await response.json() as { state?: unknown; facts?: unknown } : null;
+        const body = response.ok ? await response.json() as { state?: unknown; facts?: unknown; clockZone?: unknown } : null;
         const facts = body && body.state === state && body.facts && typeof body.facts === "object" && !Array.isArray(body.facts) ? body.facts as Record<string, unknown> : {};
-        settle(facts);
+        settle(facts, body?.state === state && typeof body.clockZone === "string" ? body.clockZone : null);
       }).catch(() => settle({}));
     });
     return () => { controller.abort(); cancel(); };

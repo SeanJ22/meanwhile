@@ -17,6 +17,8 @@ export type ElectionMatch = {
 };
 
 type ServedBallot = Pick<BallotSet, "election" | "contests" | "candidacies" | "measures">;
+// Unlike roster-facts.nameKey's ASCII folding, NFKC preserves full Unicode names:
+// candidates written in distinct scripts must not collapse to the same empty key.
 const key = (value: string): string => value.normalize("NFKC").toLocaleLowerCase("en-US")
   .replace(/[.’'`]/g, "").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const nameKey = (value: string): string => key(ballotCandidateDisplayName({ givenName: "", familyName: value }));

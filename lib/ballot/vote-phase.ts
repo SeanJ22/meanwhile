@@ -1,7 +1,7 @@
 import { readReaderSetting } from "../civic-data/reader-settings-publication.ts";
 import { registerSetting } from "../control-plane/settings.ts";
 import { ocdStateCode } from "../ocd/state-of.ts";
-import { resultStateTimeZone } from "../time/result-state-time-zones.ts";
+import { stateClockZone } from "../time/county-time-zones.ts";
 import { toZonedIso } from "../time/zoned.ts";
 import type { ContestResult } from "./election-results.ts";
 
@@ -45,7 +45,7 @@ export function voteQuestionPhase(input: {
   if (result && (result.status === "counting" || result.status === "called" || result.status === "certified")) return "after";
   const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(input.electionDate ?? "");
   if (!match) return "before";
-  const zone = resultStateTimeZone(ocdStateCode(input.contest.ocdId) ?? "") ?? LATEST_ZONE;
+  const zone = stateClockZone(ocdStateCode(input.contest.ocdId) ?? "") ?? LATEST_ZONE;
   const close = Date.parse(toZonedIso(Number(match[1]), Number(match[2]), Number(match[3]), CLOSE_HOUR, 0, zone));
   return input.now.getTime() >= close ? "after" : "before";
 }

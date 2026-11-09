@@ -55,19 +55,9 @@ export function resultFeedScope(environment: Readonly<Record<string, string | un
   return contexts.includes("production") ? "site" : "deploy";
 }
 
-const netlifyIO: ResultFeedJSONIO = {
-  async read(key) { return (await netlifyStore()).get(key, { type: "json", consistency: "strong" }); },
-  async write(key, value) { await (await netlifyStore()).setJSON(key, value); },
-};
-
 export interface ResultFeedBlobClient {
   get(key: string, options: { type: "json"; consistency: "strong" }): Promise<unknown | null>;
   setJSON(key: string, value: unknown): Promise<unknown>;
-}
-
-/** A native request uses the platform's context and automatic credentials, without opening saved keys. */
-export function nativeResultFeedScope(deployContext?: string): "site" | "deploy" {
-  return deployContext === "production" ? "site" : "deploy";
 }
 
 interface BlobsCredentials { readonly siteID: string; readonly token: string }
@@ -79,16 +69,19 @@ async function automaticBlobsStore(scope: "site" | "deploy", credentials?: Blobs
   return scope === "site" ? getStore(options) : getDeployStore(options);
 }
 
+function createStore(io: () => Promise<ResultFeedBlobClient>): ElectionResultFeedStore {
+  return createElectionResultFeedStore({
+    read: async key => (await io()).get(key, { type: "json", consistency: "strong" }),
+    write: async (key, value) => { await (await io()).setJSON(key, value); },
+  });
+}
+
 export function nativeResultFeedStore(deployContext?: string,
   open: (scope: "site" | "deploy") => Promise<ResultFeedBlobClient> = automaticBlobsStore): ElectionResultFeedStore {
   if (installed) return installed;
   const local = process.env.WTP_ELECTION_RESULTS_TEST_FEED_DIR;
   if (local && deployContext !== "production") return localElectionResultFeedStore(local);
-  const scope = nativeResultFeedScope(deployContext);
-  return createElectionResultFeedStore({
-    read: async key => (await open(scope)).get(key, { type: "json", consistency: "strong" }),
-    write: async (key, value) => { await (await open(scope)).setJSON(key, value); },
-  });
+  return createStore(() => open(resultFeedScope({ CONTEXT: deployContext })));
 }
 
 async function netlifyStore() {
@@ -126,7 +119,7 @@ export function installElectionResultFeedStore(store: ElectionResultFeedStore | 
 export function resultFeedStore(): ElectionResultFeedStore {
   if (installed) return installed;
   const local = process.env.WTP_ELECTION_RESULTS_TEST_FEED_DIR;
-  return local ? localElectionResultFeedStore(local) : createElectionResultFeedStore(netlifyIO);
+  return local ? localElectionResultFeedStore(local) : createStore(netlifyStore);
 }
 
 /** The runner is always production: it writes the site-scoped store the live Function reads, whatever CONTEXT says, with the
@@ -139,8 +132,5 @@ export function runnerResultFeedStore(environment: Readonly<Record<string, strin
   if (/^(?:local|test)(?:-|$)/i.test(environment.WTP_DB_ROLE ?? "")) return resultFeedStore();
   const credentials = resolveReaderArtifactWriteCredentials();
   if (!credentials) throw new Error("ELECTION_RESULT_FEED_WRITE_CREDENTIALS_MISSING");
-  return createElectionResultFeedStore({
-    read: async key => (await open("site", credentials)).get(key, { type: "json", consistency: "strong" }),
-    write: async (key, value) => { await (await open("site", credentials)).setJSON(key, value); },
-  });
+  return createStore(() => open("site", credentials));
 }

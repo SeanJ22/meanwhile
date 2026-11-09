@@ -308,6 +308,7 @@ test("MultiState summary retains multiple flipped seats, the governor's name and
   const document = JSON.parse(multi());
   document.scorecard.states[0].statewide[0].wN = "Ann María Smith";
   document.scorecard.states[0].chambers[0].flips_from = { D: 2, R: 7, O: 1 };
+  document.scorecard.states[0].chambers.push({ ...document.scorecard.states[0].chambers[0], name: "Senate", flips_from: { R: 1 } });
   document.general_events[0].statewide_races[0].general_results.contests[0].candidates = [
     { ...candidates[0], is_incumbent: false }, { ...candidates[1], is_incumbent: true },
     { ...candidates[1], candidate_id: 12, name: "Another incumbent", is_incumbent: true },
@@ -315,10 +316,17 @@ test("MultiState summary retains multiple flipped seats, the governor's name and
   const raw = JSON.stringify(document), batch = parseMultiStateResults(raw, now), summary = batch.summaries[0];
   assert.equal(summary.governor.name, "Ann María Smith");
   assert.equal(summary.chambers[0].seatsFlipped, 10);
+  assert.equal(summary.seatsFlipped, 11, "the source's chamber counts are totaled before publishing, excluding statewide offices");
   assert.equal(summary.incumbentsLost, 2);
   assert.equal(batch.races[0].incumbentsLost, 2, "a multi-seat race can defeat more than one incumbent");
   assert.ok(summary.quotes?.every(quote => raw.includes(quote)));
   assert.ok(summary.quotes?.some(quote => quote.includes('"name":"Another incumbent"')));
+  document.scorecard.states[0].chambers[1].flips_from = { R: null };
+  assert.equal(parseMultiStateResults(JSON.stringify(document), now).summaries[0].seatsFlipped, undefined, "an unknown chamber count cannot become zero");
+  document.scorecard.states[0].chambers.forEach((chamber: Record<string, unknown>) => { chamber.flips_from = {}; });
+  assert.equal(parseMultiStateResults(JSON.stringify(document), now).summaries[0].seatsFlipped, 0, "explicit empty flip counts are a verified zero");
+  delete document.scorecard.states[0].chambers[1].flips_from;
+  assert.equal(parseMultiStateResults(JSON.stringify(document), now).summaries[0].seatsFlipped, undefined, "a missing chamber count stays unknown");
 });
 
 test("the general-election incumbent count deduplicates source IDs and follows the general table's own incumbent flags", () => {

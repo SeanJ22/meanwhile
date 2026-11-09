@@ -5,7 +5,7 @@ import { BallotNarrowing } from "../components/ballot/ballot-narrowing.tsx";
 import { LiveCandidateResult, LiveMeasureBody, LiveMeasureSummary, LiveRaceSummary } from "../components/ballot/live-results.tsx";
 import { ResultsFeedContext, type ResultsFeed } from "../components/ballot/results-feed.tsx";
 
-const settled = (facts: Record<string, unknown>): ResultsFeed => ({ status: "settled", facts });
+const settled = (facts: Record<string, unknown>, clockZone = "America/Phoenix"): ResultsFeed => ({ status: "settled", facts, clockZone });
 const render = (feed: ResultsFeed, node: React.ReactNode) => renderToStaticMarkup(<ResultsFeedContext.Provider value={feed}>{node}</ResultsFeedContext.Provider>);
 const text = (html: string) => html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 const state = (id: string) => ({ id, title: "State House", ocdId: "ocd-division/country:us/state:az", voteFor: 7 });
@@ -28,10 +28,13 @@ test("a multi-seat flip uses the source's count and a winner needs no vote total
 });
 
 test("a call is dated on the state's clock and a card with no result says it is working on it", () => {
-  const call = text(render(settled({ race: { status: "called", statusChangedAt: "2026-11-04T01:00:00Z", ...source } }),
+  const facts = { race: { status: "called", statusChangedAt: "2026-11-04T01:00:00Z", ...source } };
+  const call = text(render(settled(facts, "America/New_York"),
     <LiveRaceSummary contest={{ ...state("race"), ocdId: "ocd-division/country:us/state:fl", voteFor: 1 }} choices={[]} />));
   assert.match(call, /Called Nov 3/);
   assert.doesNotMatch(call, /MultiState/);
+  const national = text(render(settled(facts, "America/New_York"), <LiveRaceSummary contest={{ ...state("race"), ocdId: "ocd-division/country:us" }} choices={[]} />));
+  assert.match(national, /Called Nov 4/, "a national contest retains UTC rather than borrowing the ballot state clock");
   assert.match(text(render(settled({}), <LiveRaceSummary contest={state("race")} choices={[]} />)), /Want us to get this sooner\?/);
 });
 

@@ -14,6 +14,15 @@ export interface BallotPlace {
   readonly state: { readonly code: string; readonly name: string; readonly ocdId: string } | null;
 }
 
+/** The canonical national, state, district or territory place used by ballot readers. */
+export function ballotStatePlace(code: string): string {
+  const state = code.toUpperCase();
+  if (state === "US") return "ocd-division/country:us";
+  const jurisdiction = US_JURISDICTIONS.find(row => row.usps === state);
+  if (!jurisdiction) throw new Error(`Unknown ballot state: ${code}`);
+  return `ocd-division/country:us/${jurisdiction.prefix}:${jurisdiction.slug}`;
+}
+
 /** Typed ZIP links retain their area; map links carry their exact point. */
 export async function ballotPlaceFromParams(params: { zip?: string; state?: string; lat?: string; lng?: string }): Promise<BallotPlace> {
   const zip = params.zip && /^\d{5}$/.test(params.zip) ? params.zip : null;
@@ -28,7 +37,7 @@ export async function ballotPlaceFromParams(params: { zip?: string; state?: stri
     const actual = US_JURISDICTIONS.find(row => row.usps === place.states?.[0]);
     if (!actual) return {zip:null,centroid:null,state:null};
     return { zip: null, centroid: point, state: { code: actual.usps, name: stateName(actual.usps)!,
-      ocdId: `ocd-division/country:us/${actual.prefix}:${actual.slug}` } };
+      ocdId: ballotStatePlace(actual.usps) } };
   }
   return { zip, centroid: resolution?.ok ? resolution.centroid : null, state: null };
 }
@@ -68,7 +77,7 @@ export function ballotPlaceFromRequest(request: Request): Promise<string[]> {
     [...key.matchAll(/(?:^|\/)statewide:([a-z]{2})(?=[:/]|$)/gi)].map(match => match[1].toUpperCase()))));
   const divisions = explicit.length ? explicit : query.has("zip") || query.has("lat") ? [] :
     [...selection?.divisions ?? [], ...states].map(key => /^[A-Z]{2}$/.test(key)
-      ? `ocd-division/country:us/${key === "DC" ? "district" : "state"}:${key.toLowerCase()}` : key);
+      ? ballotStatePlace(key) : key);
   return ballotPlaceDivisions({ divisions, zip: query.get("zip"),
     lat: query.has("lat") ? Number(query.get("lat")) : undefined,
     lng: query.has("lng") ? Number(query.get("lng")) : undefined });

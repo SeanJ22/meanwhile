@@ -600,7 +600,10 @@ test("a fresh national overview reaches a prepared state feed while its called a
     seat_id: 601, office: "State House", district: "1", election_date: "2026-11-03", incumbent_defeated: false,
     general_results: { contests: [{ type: "General", election_id: 1601, result_status: "Called",
       candidates: [{ candidate_id: 1, name: "Alex Legislator", party: "D", votes: 100, pct: 100, is_incumbent: false, result: "Won" }] }] },
-  }] }] }), at);
+  }] }], scorecard: { states: [{ st: "AZ", chambers: [
+    { name: "House", before: { composition: { D: 2, R: 3 } }, after: { composition: { D: 3, R: 2 } }, flips_from: { R: 2, D: 1 } },
+    { name: "Senate", before: { composition: { D: 1, R: 2 } }, after: { composition: { D: 2, R: 1 } }, flips_from: { R: 1 } },
+  ] }] } }), at);
   const url = "https://ballotpedia.org/Arizona%27s_7th_Congressional_District_election,_2026";
   const house = overview("us_house", [{ state: "AZ", office: "us_house", districtHint: "7", electionDate: "2026-11-03", url }]);
   const senate = (democrats: number, checkedAt: string): ElectionResultBatch => {
@@ -611,7 +614,7 @@ test("a fresh national overview reaches a prepared state feed while its called a
   };
   const jobStatements: string[] = [], requests: string[] = [], cache = resultReadCache();
   const query: Query = async (text, params) => { jobStatements.push(text); return db.query(text, params); };
-  const input = { db, query, cache, states: ["AZ"], multistate: { ...stateResults, summaries: [] }, purge: async () => ({ purged: true }),
+  const input = { db, query, cache, states: ["AZ"], multistate: stateResults, purge: async () => ({ purged: true }),
     captured: capturedFile({ "Arizona's_7th_Congressional_District_election,_2026": federalBox("Arizona", "House") }),
     fetch: async (request: Parameters<typeof fetch>[0]) => { requests.push(String(request)); throw new Error("ballotpedia.org must not be requested"); } };
   const first = await runElectionResults({ ...input, now: new Date(at), congressSummaries: [senate(52, at), house] });
@@ -623,6 +626,11 @@ test("a fresh national overview reaches a prepared state feed while its called a
     return (feed?.facts["ocd-division/country:us#election_summary:us_senate"] as { chambers: { seatsNow: { D: number } }[] })?.chambers[0].seatsNow.D;
   };
   assert.equal(await senateSeats(), 52);
+  const publishedSummary = (await db.query("SELECT value FROM fact WHERE entity_id=$1 AND field='election_summary' AND status='live'", [stateId]))[0].value as { seatsFlipped: number };
+  assert.equal(publishedSummary.seatsFlipped, 4, "the total passes the Slide as a state summary fact");
+  assert.equal(((await readStateElectionResults("AZ", undefined, feeds))?.facts[stateId] as { seatsFlipped: number }).seatsFlipped, 4,
+    "the state's prepared summary carries the published count");
+  assert.equal((await readNationalElectionResults(feeds))?.statewide?.AZ.seatsFlipped, 4, "the national document carries the same state count");
   const before = JSON.parse(String((await db.query("SELECT position FROM pass_cursor WHERE name='election-results:AZ'"))[0].position));
   assert.equal(before.races["multistate:2026-11-03:601"].nextCheckAt, "2026-11-05T00:00:00.000Z");
   assert.ok(Object.entries(before.races).some(([key, value]) => key.startsWith("ballotpedia:") && (value as { status: string }).status === "certified"));

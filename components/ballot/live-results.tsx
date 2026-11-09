@@ -5,7 +5,10 @@ import type { ResultSource } from "@/lib/election-results/types";
 import type { CardSource } from "@/lib/officials/card-sources";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { CandidateResultLine, MeasureResultBody, MeasureSummary, RaceSummary, WhatHappensNow } from "./contest-result";
-import { resultFor, useResultsFeed } from "./results-feed";
+import { ocdStateCode } from "@/lib/ocd/state-of";
+import { resultFor, useResultsFeed, type ResultsFeed } from "./results-feed";
+
+const clockOf = (feed: ResultsFeed, ocdId: string) => feed.status === "settled" && ocdStateCode(ocdId) ? feed.clockZone : null;
 
 type Sourced = { checkedAt?: string; sources?: readonly ResultSource[] };
 const sourcesOf = (result: Sourced | undefined): CardSource[] => {
@@ -26,7 +29,7 @@ export function LiveRaceSummary({ contest, choices }: { contest: ContestIdentity
   const result = resultFor<ContestResult>(feed, [contest.id, ...contest.aliases ?? []]);
   const candidates = choices.map(choice => ({ id: choice.id, familyName: choice.name, result: resultFor<CandidateResult>(feed, [choice.id, ...choice.aliases ?? []]) }));
   return <>
-    <RaceSummary contest={{ ...contest, result }} candidates={candidates} names={new Map(choices.map(choice => [choice.id, choice.name]))} />
+    <RaceSummary contest={{ ...contest, result, clockZone: clockOf(feed, contest.ocdId) }} candidates={candidates} names={new Map(choices.map(choice => [choice.id, choice.name]))} />
     <CardSourcesContribution id={`election-result:${contest.id}`} sources={sourcesOf(result)} />
   </>;
 }
@@ -46,7 +49,7 @@ function useMeasure(measure: MeasureIdentity) {
   const feed = useResultsFeed();
   const result = resultFor<ContestResult>(feed, [measure.id, ...measure.aliases ?? []]);
   const held = resultFor<MeasureResult>(feed, [measure.measureId, ...measure.measureAliases ?? []]) ?? (result?.outcome ? result as MeasureResult : undefined);
-  return { feed, result, held, contest: { id: measure.id, title: measure.title, ocdId: measure.ocdId, voteFor: 1, result } };
+  return { feed, result, held, contest: { id: measure.id, title: measure.title, ocdId: measure.ocdId, voteFor: 1, result, clockZone: clockOf(feed, measure.ocdId) } };
 }
 
 /** Passed or failed, and the yes share, under a measure's title. */

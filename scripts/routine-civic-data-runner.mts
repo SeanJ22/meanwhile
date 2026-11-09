@@ -812,14 +812,12 @@ async function runFactMaintenance(deadlineMs: number): Promise<void> {
   catch (error) {
     supervisorFailures.push({ taskId: "reader-entity-ids", code: "READER_ENTITY_IDS_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   }
-  const maintenanceCursors = new Map((await facts.query("SELECT name,position FROM pass_cursor WHERE name=ANY($1::text[])",
-    [["routine-fact-maintenance-state", "routine-fact-entities-state"]])).map(row => [String(row.name), String(row.position)]));
-  const prior = maintenanceCursors.get("routine-fact-maintenance-state") ?? null;
+  const prior = await readPassCursor(facts.query, "routine-fact-maintenance-state");
   const state = states[(states.indexOf(prior ?? "") + 1) % states.length];
   if (!state || Date.now() >= deadlineMs) return;
   step = "loading fact store entities";
   try {
-    const loaded = await routineJob(ROUTINE_JOBS.factEntities, async () => loadChangedStates(states, maintenanceCursors.get("routine-fact-entities-state") ?? null,
+    const loaded = await routineJob(ROUTINE_JOBS.factEntities, async () => loadChangedStates(states, await readPassCursor(facts.query, "routine-fact-entities-state"),
       async next => {
         const loaded=await ensureFactEntities(facts, ROOT, [next]);
         return await ensurePortalBodyLabels(facts,next.toUpperCase()) ? [...new Set([...loaded,next])] : loaded;

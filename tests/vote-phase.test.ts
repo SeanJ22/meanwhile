@@ -4,6 +4,7 @@ import { test } from "node:test";
 import { VOTE_QUESTION_SETTING, voteQuestionPhase, type VoteQuestionSetting } from "../lib/ballot/vote-phase.ts";
 import { settingDefinition } from "../lib/control-plane/settings.ts";
 import type { ContestResult } from "../lib/ballot/election-results.ts";
+import { stateClockZone } from "../lib/time/county-time-zones.ts";
 
 const AZ = "ocd-division/country:us/state:az/cd:6";
 const TX = "ocd-division/country:us/state:tx";
@@ -27,6 +28,8 @@ test("the setting is registered for readers with the three choices and auto by d
 });
 
 test("auto: a contest switches at 9 pm on its own voting day, in its state's clock", () => {
+  for (const [state, zone] of [["az", "America/Phoenix"], ["TX", "America/Chicago"], ["FL", "America/New_York"], ["ZZ", null]] as const)
+    assert.equal(stateClockZone(state), zone, state);
   // Arizona keeps MST all year: 9 pm Nov 3 is 04:00 UTC Nov 4.
   assert.equal(phase({ date: "2026-11-03", now: "2026-11-04T03:59:59Z" }), "before");
   assert.equal(phase({ date: "2026-11-03", now: "2026-11-04T04:00:00Z" }), "after");

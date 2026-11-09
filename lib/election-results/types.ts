@@ -48,6 +48,8 @@ export interface ElectionResult {
 
 export interface ElectionSummary {
   state: string;
+  /** Total across this summary's chambers; absent when any chamber's count is unknown. */
+  seatsFlipped?: number;
   chambers: {
     name: string;
     seatsBefore: Record<string, number>;

@@ -177,15 +177,17 @@ test("the published result summaries become the state and United States scorecar
       controlBefore: chamber.controlBefore, controlNow: chamber.controlNow, ...(chamber.seatsFlipped === undefined ? {} : { seatsFlipped: chamber.seatsFlipped }) })),
     source: { name: "MultiState", url: "https://example.test/ms" }, creditedSources: [{ name: "State election office" }], checkedAt: "2026-11-06T12:00:00.000Z" });
   const cards = scorecardsFromFacts({
-    "ocd-division/country:us/state:az": summary("AZ", [{ name: "House", before: { D: 27, R: 33 }, now: { D: 37, R: 20 }, counting: 3, controlBefore: "R", controlNow: "D", seatsFlipped: 10 }]),
+    "ocd-division/country:us/state:az": { ...summary("AZ", [{ name: "House", before: { D: 27, R: 33 }, now: { D: 37, R: 20 }, counting: 3, controlBefore: "R", controlNow: "D", seatsFlipped: 10 }]), seatsFlipped: 12 },
     "ocd-division/country:us#election_summary:us_senate": summary("US", [{ name: "us_senate", before: { D: 47, R: 53, I: 0 }, now: { D: 48, R: 50, I: 2, Vacant: 0 }, counting: 0, controlBefore: "R", controlNow: "R" }]),
   } as never, "AZ", "Arizona");
   assert.ok(cards);
   const house = cards.AZ.chambers[0];
   assert.deepEqual([house.name, house.seats, house.toControl, house.now.counting, house.seatsFlipped], ["State House", 60, 31, 3, 10]);
+  assert.equal(cards.AZ.seatsFlippedTotal, 12, "the design reads the published total rather than summing chamber values");
   assert.equal(chamberFlipped(house), "D");
   const senate = cards.US.chambers[0];
   assert.deepEqual([senate.name, senate.now.O, senate.controlNow], ["U.S. Senate", 2, "R"]);
+  assert.equal(cards.US.seatsFlippedTotal, undefined, "separate chamber summaries are not added into a browser-made Congress total");
   assert.deepEqual([cards.AZ.governor?.name, cards.AZ.governor?.flipped, cards.AZ.incumbentsLostTotal], ["Jordan Example", true, 7]);
   assert.deepEqual(cards.AZ.statewide?.flipped, [{ office: "Treasurer", to: "D" }]);
   assert.deepEqual(cards.AZ.sources.map((source: { from: string }) => source.from), ["MultiState", "State election office"]);

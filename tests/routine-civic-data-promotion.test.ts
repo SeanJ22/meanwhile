@@ -14,7 +14,6 @@ import { VALIDATION_CHECKS } from "../lib/civic-data/types.ts";
 import { stateRollAttribution, stateRollPublisher } from "../lib/sources/legiscan/types.ts";
 import { parseReaderProjectionReadback } from "../lib/civic-data/reader-readback.ts";
 import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
-import { routineCandidateFixture } from "./helpers/routine-candidate-fixture.ts";
 import {
   recordRoutineReaderProjectionReadback,
 } from "../lib/civic-data/reader-verification.ts";
@@ -61,9 +60,30 @@ test("the generic transition driver cannot write a production store outside an e
 });
 
 function candidate(id: string, over: Partial<RoutineCandidate> = {}): RoutineCandidate {
-  const built = routineCandidateFixture({
-    id, scope: "federal-candidates:2026", retrievedAt: NOW, rawHash: HASH,
-    requestedUrl: "https://api.open.fec.gov/v1/candidates/search/?election_year=2026",
+  const built: RoutineCandidate = {
+    id,
+    sourceId: "fec-open-api",
+    recordClass: "FEC_FUNDING",
+    scope: "federal-candidates:2026",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-candidates:2026"),
+    retrieval: {
+      succeeded: true,
+      requestedUrl: "https://api.open.fec.gov/v1/candidates/search/?election_year=2026",
+      finalUrl: "https://api.open.fec.gov/v1/candidates/search/?election_year=2026",
+      httpStatus: 200,
+      retrievedAt: NOW,
+      rawHash: HASH,
+    },
+    normalization: {
+      succeeded: true,
+      parserVersion: "fec-funding/4",
+      schemaVersion: "2",
+      normalizedHash: HASH,
+      inputRecords: 1,
+      outputRecords: 1,
+      droppedRecords: 0,
+      missingRequiredFields: [],
+    },
     identities: [{
       subjectId: "H6AZ01001",
       jurisdiction: "US",
@@ -71,13 +91,27 @@ function candidate(id: string, over: Partial<RoutineCandidate> = {}): RoutineCan
       matchBasis: "OFFICIAL_ID",
       ambiguous: false,
     }],
-    temporal: { sourceThrough: "2026-09-06T00:00:00.000Z" },
+    temporal: {
+      version: "2026",
+      expectedVersion: "2026",
+      sourceThrough: "2026-09-06T00:00:00.000Z",
+      staleAtRetrieval: false,
+    },
     semantics: { factKind: "filed campaign-finance total", violations: [] },
-    horizon: { query: "registered 2026 federal candidates represented in Reader" },
+    horizon: {
+      kind: "OPEN_FACT_SET",
+      query: "registered 2026 federal candidates represented in Reader",
+      returnedRecords: 1,
+      declaredTotal: null,
+      paginationComplete: true,
+      claimsComplete: false,
+    },
+    absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
     dependentChecks: [{ consumer: "Reader funding card", passed: true, detail: "accepted" }],
     normalizedPayload: { amount: 10 },
     readModel: { version: id, rows: [{ candidateId: "H6AZ01001", amount: 10 }] },
-  }, over);
+    ...over,
+  };
   if (!built.normalization.succeeded) return built;
   return {
     ...built,

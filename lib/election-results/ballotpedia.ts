@@ -1,9 +1,9 @@
 import { createHash } from "node:crypto";
 import { decodeHTML } from "entities";
+import { extractHtmlText as text } from "../extract/html-text.ts";
 import { stateCodeOf, stateName } from "../facts/entity-read.ts";
 import type { ElectionResult, ElectionResultBatch, ResultCandidate, ResultSource } from "./types.ts";
 
-const text = (html: string) => decodeHTML(html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, " ").replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim();
 const number = (value: string): number | undefined => /^\d[\d,]*(?:\.\d+)?%?$/.test(value.trim()) ? Number(value.replace(/[,%]/g, "")) : undefined;
 const attr = (html: string, key: string) => decodeHTML(new RegExp(`\\b${key}\\s*=\\s*(?:"([^"]*)"|'([^']*)')`, "i").exec(html)?.slice(1).find(value => value !== undefined) ?? "");
 
@@ -240,6 +240,7 @@ export function parseBallotpediaCongressSummary(html: string, office: "us_house"
   return { source, races: [], summaries: [{ state: "US", chambers: [{ name: office, seatsBefore, seatsNow, stillCounting, controlBefore,
     controlNow: projected ? projected[1].toLowerCase() === "democrats" ? "D" : "R" : null,
     ...(seatsFlipped === undefined ? {} : { seatsFlipped }) }], governor: { before: null, now: null },
+    ...(seatsFlipped === undefined ? {} : { seatsFlipped }),
     ...(incumbentsLost === undefined ? {} : { incumbentsLost }), statewideOfficesFlipped: [], source, creditedSources, checkedAt, quote,
     ...(incumbentParagraph && incumbentsLost !== undefined && !quote.includes(incumbentParagraph[0]) ? { quotes: [quote, incumbentParagraph[0]] } : {}) }],
     ...(catalog.length ? { racePages: catalog } : {}),

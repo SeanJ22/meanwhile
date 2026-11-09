@@ -7,12 +7,14 @@ import { lineupRowForCard } from "../lib/identity/az-2026.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";
 import { bindNamedEntity } from "../lib/routing/named-entity.ts";
 import { createHash } from "node:crypto";
-import { installCandidateCorpus, installOfficeholderStatements, installRegistryAuthority, syntheticCandidateCorpus } from "./helpers/promoted-fixtures.ts";
+import { installOfficeholderStatements, installRegistryAuthority, syntheticCandidateCorpus } from "./helpers/promoted-fixtures.ts";
 import { syntheticCandidateCard, candidateProfilesFor } from "./helpers/reader-fixtures.ts";
 
 import { installManualValue } from "./helpers/promoted-fixtures.ts";
 import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
+import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
 import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+import type { CandidateCorpus } from "../lib/candidates/corpus.ts";
 import { readStateAuthorityProjection } from "../lib/civic-data/state-reader.ts";
 import type { CandidateProfilesProjection } from "../lib/civic-data/manual-projections.ts";
 import { candidateKeysForState } from "../lib/ballot/person-keys.ts";
@@ -27,7 +29,16 @@ async function installCandidateProfiles(value: CandidateProfilesProjection, stat
   return value;
 }
 
+async function installCandidateCorpus(value: CandidateCorpus = syntheticCandidateCorpus(), state = "AZ"): Promise<CandidateCorpus> {
+  installManualValue(stateBallotContractId("candidate-corpus", state), value, `test:candidate-corpus:${state}`);
+  served((await readStateAuthorityProjection("candidate-publications", state)).result, "Candidate publications");
+  return value;
+}
 
+function served<T>(read: CivicDataReadResult<T>, what: string): T {
+  if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(`${what} fixture did not install: ${read.kind} ${"detail" in read ? read.detail : ""}`);
+  return read.value as T;
+}
 
 
 

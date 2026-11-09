@@ -1,0 +1,29 @@
+{
+  "n": 197,
+  "branch": "release/197",
+  "head_sha": "be2d4d0825368574bb3aba528818af84165d76b7",
+  "base_river_sha": "41ce37f64cc4f9985bd13fcbf008517f15ef8137",
+  "main_sha": "33da41610156a80b8d66d81f00a883a4f093f298",
+  "lanes": [
+    {
+      "lane": "results-turn",
+      "steps": [
+        "RT-01",
+        "RT-02"
+      ],
+      "ready_sha": "5655f77c836307564638e7c496c58c3bbaec720b",
+      "result_sha": "af5adda5b8e98a19a28fdec83ceab5d998b8d65e"
+    }
+  ],
+  "steps": [
+    "RT-01",
+    "RT-02"
+  ],
+  "pr": {
+    "number": 916,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/916"
+  },
+  "ci": "running",
+  "at": "2026-11-09T01:08:06Z",
+  "growth_reason": "election results: Senate and House results from Ballotpedia pages captured through a browser and read from GitHub at every check, fix rows on the control plane, and seat and name matching, finishing the new election-results feature"
+}

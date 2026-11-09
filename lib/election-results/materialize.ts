@@ -38,7 +38,7 @@ export async function readResultProjection(query: Query, state: string): Promise
  * Every state's served ballot and its already filed result facts, read together: the states are split into a few statements that run
  * at the same time, because the reader database cancels any one statement after 30 seconds. A state with no served ballot is null.
  */
-export async function readResultProjections(query: Query, states: readonly string[], perStatement = 6, lanes = 3): Promise<Map<string, ResultProjection | null>> {
+export async function readResultProjections(query: Query, states: readonly string[], perStatement = 4, lanes = 2): Promise<Map<string, ResultProjection | null>> {
   const parts: string[][] = [];
   for (let from = 0; from < states.length; from += perStatement) parts.push(states.slice(from, from + perStatement));
   const out = new Map<string, ResultProjection | null>();

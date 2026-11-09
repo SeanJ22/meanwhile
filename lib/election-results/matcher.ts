@@ -21,7 +21,10 @@ type ServedBallot = Pick<BallotSet, "election" | "contests" | "candidacies" | "m
 // candidates written in distinct scripts must not collapse to the same empty key.
 const key = (value: string): string => value.normalize("NFKC").toLocaleLowerCase("en-US")
   .replace(/[.’'`]/g, "").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
-const nameKey = (value: string): string => key(ballotCandidateDisplayName({ givenName: "", familyName: value }));
+/** Accents are not identity: Aimeé is Aimee. */
+const nameKey = (value: string): string => key(ballotCandidateDisplayName({ givenName: "", familyName: value })).normalize("NFD").replace(/\p{M}/gu, "");
+/** A source's middle initial ("Michael A. Shaw") is not on every filing. */
+const withoutMiddleInitials = (name: string): string => name.split(" ").filter((token, index, all) => token.length > 1 || index === 0 || index === all.length - 1).join(" ");
 const aliases: Readonly<Record<string, string>> = {
   us_senator: "us_senate", us_representative: "us_house", state_senator: "state_senate",
   state_lower_house: "state_house", state_treasurer: "treasurer", state_auditor: "auditor",
@@ -116,11 +119,34 @@ function names(candidate: Candidacy, office: string): ReadonlySet<string> {
   }
   return new Set(values.filter((value): value is string => !!value?.trim()).flatMap(value => {
     const known = nameKey(value);
-    return [known, withoutSuffix(known)];
+    return [known, withoutSuffix(known), ...spokenNames(value).map(name => withoutSuffix(nameKey(name)))];
   }));
 }
 
+/**
+ * How a result prints a person a filing spells out: `Jonathan S. “JKT” Kreiss-Tomkins` is `Jonathan Kreiss-Tomkins` (or `JKT Kreiss-Tomkins`),
+ * `James W. “JP4” Parkin` is `James Parkin`. Quoted nicknames and middle initials are dropped; a joint ticket keeps its first person.
+ */
+function spokenNames(value: string): string[] {
+  const person = value.split(/\s*\/\s*/)[0], nicknames = [...person.matchAll(/["“”„‟]([^"“”„‟]+)["“”„‟]/g)].map(row => row[1].trim());
+  const tokens = person.replace(/["“”„‟][^"“”„‟]*["“”„‟]/g, " ").split(/\s+/).filter(Boolean);
+  if (tokens.length < 2) return [];
+  const rest = tokens.slice(1).filter((token, index) => index === tokens.length - 2 || token.replace(/[^\p{L}]/gu, "").length > 1);
+  return [`${tokens[0]} ${rest.join(" ")}`, ...nicknames.map(nickname => `${nickname} ${rest.join(" ")}`)];
+}
+
 const withoutSuffix = (name: string): string => name.replace(/\s+(?:jr|sr|ii|iii|iv)$/, "");
+
+/** Aggregate lines a source prints that no ballot lists as a candidate. */
+export const isAggregateCandidateName = (name: string): boolean => /^(?:write ins?|other|scattering|none of (?:these|the above))$/.test(sourceName(name, ""));
+
+/** True when every candidate with votes in the source matched exactly one ballot candidate. Only then may a race show a leader, win, call or flip. */
+export function allVoteGettersMatched(result: ElectionResult, match: Extract<ElectionMatch, { kind: "matched" }>): boolean {
+  return [...match.unmatchedCandidates, ...match.ambiguousCandidates].every(index => {
+    const candidate = result.candidates[index];
+    return !(typeof candidate.votes === "number" && candidate.votes > 0) || isAggregateCandidateName(candidate.name);
+  });
+}
 
 function sourceName(name: string, office: string): string {
   // The source can print the joint choice as two full names. The governor is its lead.
@@ -178,11 +204,11 @@ export function matchElectionResult(result: ElectionResult, ballot: ServedBallot
   const scored = eligible.map(contest => {
     const candidates = ballot.candidacies.filter(candidate => candidate.contestId === contest.id);
     const resolved = result.candidates.map((candidate, resultIndex) => {
-      const wanted = sourceName(candidate.name, office);
+      const wanted = sourceName(candidate.name, office), plain = withoutMiddleInitials(wanted);
       const skipped = /^(?:write ins?|other|scattering|none of (?:these|the above))$/.test(wanted);
       // A nickname equivalence is a fallback: an exact filing name wins, and two nickname matches stay ambiguous.
-      const strict = skipped ? [] : candidates.filter(candidate => names(candidate, office).has(wanted));
-      const found = skipped || strict.length ? strict : candidates.filter(candidate => nicknameNames(candidate, office).has(wanted));
+      const strict = skipped ? [] : candidates.filter(candidate => names(candidate, office).has(wanted) || names(candidate, office).has(plain));
+      const found = skipped || strict.length ? strict : candidates.filter(candidate => nicknameNames(candidate, office).has(wanted) || nicknameNames(candidate, office).has(plain));
       return { resultIndex, found };
     });
     return { contest, resolved, score: resolved.filter(row => row.found.length > 0).length,

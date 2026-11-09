@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { guardResultFacts } from "@/lib/ballot/election-results";
 import { afterBallotReady } from "./ballot-narrowing";
 
 /** The checked results for one state's ballot: loading until the ballot accepts input, then settled with whatever the feed holds. */
@@ -25,7 +26,7 @@ export function ResultsFeedProvider({ state, contestIds, children }: { state: st
   const key = contestIds.join(",");
   useEffect(() => {
     const controller = new AbortController();
-    const settle = (facts: Readonly<Record<string, unknown>>, clockZone: string | null = null) => { if (!controller.signal.aborted) setFeed({ status: "settled", facts, clockZone }); };
+    const settle = (facts: Readonly<Record<string, unknown>>, clockZone: string | null = null) => { if (!controller.signal.aborted) setFeed({ status: "settled", facts: guardResultFacts(facts), clockZone }); };
     const cancel = afterBallotReady(() => {
       const url = `/api/election-results?${new URLSearchParams({ state, contests: key })}`;
       const request = url.length <= 6_000

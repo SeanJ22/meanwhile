@@ -34,8 +34,22 @@ export async function readResultProjection(query: Query, state: string): Promise
     facts: store.additionalRows[0]?.facts as BallotResultFacts ?? {} };
 }
 
-/** Every state's served ballot and its already filed result facts in one read. A state with no served ballot is null. */
-export async function readResultProjections(query: Query, states: readonly string[]): Promise<Map<string, ResultProjection | null>> {
+/**
+ * Every state's served ballot and its already filed result facts, read together: the states are split into a few statements that run
+ * at the same time, because the reader database cancels any one statement after 30 seconds. A state with no served ballot is null.
+ */
+export async function readResultProjections(query: Query, states: readonly string[], perStatement = 6, lanes = 3): Promise<Map<string, ResultProjection | null>> {
+  const parts: string[][] = [];
+  for (let from = 0; from < states.length; from += perStatement) parts.push(states.slice(from, from + perStatement));
+  const out = new Map<string, ResultProjection | null>();
+  let next = 0;
+  await Promise.all(Array.from({ length: Math.min(lanes, parts.length) }, async () => {
+    while (next < parts.length) for (const [state, projection] of await readProjectionStatement(query, parts[next++])) out.set(state, projection);
+  }));
+  return out;
+}
+
+async function readProjectionStatement(query: Query, states: readonly string[]): Promise<Map<string, ResultProjection | null>> {
   const scopes = states.map(state => stateBallotScope("ballot-contests", state)), keys = scopes.map(scope => `BALLOT_CANDIDACY:${scope}`);
   const store = await readCanonicalShelf(scopes.map(scope => ({ recordClass: "BALLOT_CANDIDACY" as const, scope })), async statements => {
     const rows = [];

@@ -20,7 +20,16 @@ type ServedBallot = Pick<BallotSet, "election" | "contests" | "candidacies" | "m
 const key = (value: string): string => value.normalize("NFKC").toLocaleLowerCase("en-US")
   .replace(/[.’'`]/g, "").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 /** Accents are not identity: Aimeé is Aimee. */
-const nameKey = (value: string): string => key(ballotCandidateDisplayName({ givenName: "", familyName: value })).normalize("NFD").replace(/\p{M}/gu, "");
+const nameKeys = new Map<string, string>();
+const nameKey = (value: string): string => {
+  let known = nameKeys.get(value);
+  if (known === undefined) {
+    known = key(ballotCandidateDisplayName({ givenName: "", familyName: value })).normalize("NFD").replace(/\p{M}/gu, "");
+    if (nameKeys.size > 200_000) nameKeys.clear();
+    nameKeys.set(value, known);
+  }
+  return known;
+};
 /** A source's middle initial ("Michael A. Shaw") is not on every filing. */
 const withoutMiddleInitials = (name: string): string => name.split(" ").filter((token, index, all) => token.length > 1 || index === 0 || index === all.length - 1).join(" ");
 const aliases: Readonly<Record<string, string>> = {
@@ -104,7 +113,16 @@ function nicknameNames(candidate: Candidacy, office: string): ReadonlySet<string
   return new Set(values.flatMap(value => { const known = nameKey(value); return [known, withoutSuffix(known)]; }));
 }
 
+const candidateNames = new WeakMap<Candidacy, Map<string, ReadonlySet<string>>>();
 function names(candidate: Candidacy, office: string): ReadonlySet<string> {
+  let byOffice = candidateNames.get(candidate);
+  if (!byOffice) candidateNames.set(candidate, byOffice = new Map());
+  let held = byOffice.get(office);
+  if (!held) byOffice.set(office, held = namesOf(candidate, office));
+  return held;
+}
+
+function namesOf(candidate: Candidacy, office: string): ReadonlySet<string> {
   const person = office === "lieutenant_governor" && candidate.ticket ? candidate.ticket.runningMate : candidate;
   const values = [ballotCandidateDisplayName({ ...person, ticket: undefined }), person.filing?.publishedName,
     ...person.aliases?.flatMap(alias => alias.includes("|") ? [alias.slice(alias.lastIndexOf("|") + 1)] : []) ?? []];

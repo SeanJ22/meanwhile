@@ -52,9 +52,14 @@ export type CheckResult = { readonly ok: true; readonly quoteStart: number } | {
 
 export const normalizeText = (s: string): string => s.normalize("NFC").replace(/\s+/g, " ").trim();
 const copyTexts = new WeakMap<SavedCopy, string>();
+// Many saved copies carry the same large source text (one file read for every state): normalize that text once.
+let lastRaw: string | undefined, lastNormalized = "";
 function copyText(copy: SavedCopy): string {
   let text = copyTexts.get(copy);
-  if (text === undefined) { text = normalizeText(copy.text); copyTexts.set(copy, text); }
+  if (text === undefined) {
+    if (lastRaw !== copy.text) { lastNormalized = normalizeText(copy.text); lastRaw = copy.text; }
+    text = lastNormalized; copyTexts.set(copy, text);
+  }
   return text;
 }
 const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -65,9 +70,16 @@ export function boundedIndexOf(hay: string, needle: string): number {
   if (hay === needle) return 0;
   // A number goes on in digits, a decimal point, or a comma and one more group of three digits.
   const before = /^\p{N}/u.test(needle) ? "|\\p{N}\\.|(?<!\\p{N})\\p{N}{1,3}," : "", after = /\p{N}$/u.test(needle) ? "|\\.\\p{N}|,\\p{N}{3}(?!\\p{N})" : "";
-  const re = new RegExp(`(?<![\\p{L}\\p{N}]${before})${escapeRegExp(needle)}(?![\\p{L}\\p{N}]${after})`, "u");
-  const m = re.exec(hay);
-  return m ? m.index : -1;
+  // The text is searched for the needle first; the boundary rules are then tested only around each hit, not across the whole page.
+  const at0 = hay.indexOf(needle);
+  if (at0 === -1) return -1;
+  const re = new RegExp(`(?<![\\p{L}\\p{N}]${before})${escapeRegExp(needle)}(?![\\p{L}\\p{N}]${after})`, "uy");
+  for (let at = at0; at !== -1; at = hay.indexOf(needle, at + 1)) {
+    const from = Math.max(0, at - 16), window = hay.slice(from, at + needle.length + 16);
+    re.lastIndex = at - from;
+    if (re.test(window)) return at;
+  }
+  return -1;
 }
 
 export function hostOf(url: string): string {

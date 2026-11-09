@@ -4,9 +4,26 @@ import { currentRosterMemberReaderDisposition, currentRosterPersonKeys } from ".
 import { fecPersonKeys } from "../funding/snapshot.ts";
 import { candidateCardIdentityUnresolved, candidateKeysForState, heldCandidatePersonKeys } from "../ballot/person-keys.ts";
 import { selectedRegistryStates } from "../registry/runtime-read-model.ts";
+import { currentReaderSelection } from "../db/reader-route.ts";
 
-/** Exact committed person relationships; no names participate in reader joins. */
-export function readerPersonKeys(subjectId: string): { status: "RESOLVED" | "DIRECT" | "IDENTITY_UNRESOLVED"; keys: string[] } {
+type PersonKeys = { status: "RESOLVED" | "DIRECT" | "IDENTITY_UNRESOLVED"; keys: string[] };
+const requestKeys = new WeakMap<object, Map<string, PersonKeys>>();
+
+/**
+ * Exact committed person relationships; no names participate in reader joins. A request reads one fixed
+ * set of projections, so each person resolves once per request however many cards ask about them.
+ */
+export function readerPersonKeys(subjectId: string): PersonKeys {
+  const request = currentReaderSelection();
+  if (!request) return resolvePersonKeys(subjectId);
+  let held = requestKeys.get(request);
+  if (!held) requestKeys.set(request, held = new Map());
+  let found = held.get(subjectId);
+  if (!found) held.set(subjectId, found = resolvePersonKeys(subjectId));
+  return { status: found.status, keys: [...found.keys] };
+}
+
+function resolvePersonKeys(subjectId: string): PersonKeys {
   const namedState = /^(?:ballot-)?([a-z]{2})[-:]/i.exec(subjectId)?.[1]?.toUpperCase();
   const states = [...new Set([...selectedRegistryStates(), ...namedState ? [namedState] : []])];
   const unresolvedCard = (key: string) => states.some(state => candidateCardIdentityUnresolved(state, key));

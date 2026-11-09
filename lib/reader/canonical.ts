@@ -244,6 +244,18 @@ export function electionResultClockRows(query: Query, scopes: readonly { readonl
     [scopes.map(row => row.name), scopes.map(row => row.scope), scopes.map(row => row.hashMD5 ?? null)]);
 }
 
+/** The scopes that have a served ballot, so the results job reads every state, the District and the territories that hold one. */
+export async function servedBallotScopes(query: Query): Promise<ReadonlySet<string>> {
+  return new Set((await query("SELECT scope FROM civic_data_promotions WHERE record_class='BALLOT_CANDIDACY'")).map(row => String(row.scope)));
+}
+
+/** Several states' authority and already filed facts in one statement. */
+export function readBallotResultPublications(scopes: readonly string[], factsSql: string, query: ReadOnlyQuery) {
+  const keys = scopes.map(scope => `BALLOT_CANDIDACY:${scope}`);
+  return readCanonicalShelf(scopes.map(scope => ({ recordClass: "BALLOT_CANDIDACY" as const, scope })), query, {
+    text: `SELECT p.key,${factsSql} AS facts FROM civic_data_promotions p WHERE p.key=ANY($1::text[])`, params: [keys] });
+}
+
 /** Results-job bootstrap only: its authority and already filed facts share the state read. */
 export function readBallotResultPublication(scope: string, factsSql: string, query: ReadOnlyQuery) {
   const key = `BALLOT_CANDIDACY:${scope}`;

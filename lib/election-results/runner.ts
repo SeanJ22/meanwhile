@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { electionResultClockRows } from "../reader/canonical.ts";
+import { electionResultClockRows, servedBallotScopes } from "../reader/canonical.ts";
 import { withCandidateTickets } from "../ballot/tickets.ts";
 import { withCurrentCandidacies } from "../ballot/filing-changes.ts";
 import type { BallotSet } from "../ballot/types.ts";
@@ -25,9 +25,10 @@ import { runtimeCivicReadCache, type CivicReadCache } from "../db/civic-read-cac
 import type { ElectionResult, ElectionResultBatch } from "./types.ts";
 import type { BallotResultFacts, BallotElectionSummary } from "../ballot/election-results.ts";
 import { readResultProjection, readResultProjections, refreshedResultFacts, preparedStateResultFeed, projectionBallots, type ResultProjection } from "./materialize.ts";
+import { houseDistrictResults } from "./house-districts.ts";
 import { runnerResultFeedStore, type ElectionResultFeedStore } from "./feed-store.ts";
 import type { StateResultFeed } from "./feed-types.ts";
-import { summarizeCongressResults, type NationalCongressSummary } from "./summary.ts";
+import { summarizeCongressResults, type HouseDistrictResult, type NationalCongressSummary } from "./summary.ts";
 
 const STATES_BASE = "AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY".split(" ");
 const STATES = STATES_BASE;
@@ -141,7 +142,7 @@ export async function runElectionResults(input: {
   const workQuery = input.workQuery ?? query;
   // Every state, the District and the territories that have a served ballot, taken from the served scopes rather than a fixed list.
   const states: readonly string[] = input.states ?? await (async () => {
-    const served = new Set((await query("SELECT scope FROM civic_data_promotions WHERE record_class='BALLOT_CANDIDACY'")).map(row => String(row.scope)));
+    const served = await servedBallotScopes(query);
     const held = BALLOT_CODES.filter(code => served.has(stateBallotScope("ballot-contests", code)));
     return held.length ? held : STATES;
   })();
@@ -534,6 +535,7 @@ export async function runElectionResults(input: {
   // One work-list write for every state's standing hunts.
   if (standing.length) await ensureOpenElectionResults(workQuery, standing.flatMap(row => row.ballots), new Set(standing.flatMap(row => [...row.covered])));
   // A national check also reaches states whose own called races are not due today. Every state feed is prepared now and written together.
+  const houseDistricts: Record<string, HouseDistrictResult> = {};
   const checkedNation = Object.values(nation.sourceChecks ?? {}).some(check => check.lastSucceededAt === at);
   if (!input.ballotsForState) {
     const feeds: { state: string; prior: StateProgress; held: ResultProjection; facts: BallotResultFacts; feed: StateResultFeed }[] = [];
@@ -546,6 +548,7 @@ export async function runElectionResults(input: {
         if (!held) continue;
         const facts = refreshedResultFacts({ ...held.facts, ...feedQueue.get(state), ...nation.readerFacts }, prior, nation);
         feeds.push({ state, prior, held, facts, feed: preparedStateResultFeed(held, facts, state, at) });
+        Object.assign(houseDistricts, houseDistrictResults(projectionBallots(held), facts));
       } catch (error) {
         unfinished = true;
         await saveProgress(state, { ...prior, readerPending: true });
@@ -596,7 +599,8 @@ export async function runElectionResults(input: {
     nation.federalRoutes?.filter(route => states.includes(route.state)), previousSummary);
   const nationalFeed = { ...nationalSummary,
     statewide: { ...previousSummary?.statewide, ...Object.fromEntries([...progress].flatMap(([state, value]) =>
-      value.stateSummary ? [[state, value.stateSummary]] : [])) } };
+      value.stateSummary ? [[state, value.stateSummary]] : [])) },
+    houseDistricts: { ...previousSummary?.houseDistricts, ...houseDistricts } };
   const nationalFeedFingerprint = createHash("sha256").update(canonicalJson(nationalFeed)).digest("hex");
   let nationalFeedPending = false;
   try {

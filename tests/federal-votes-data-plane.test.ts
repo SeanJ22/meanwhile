@@ -6,7 +6,7 @@ import test from "node:test";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { candidateChangeSet, canonicalCivicDataJson, civicRecordsFor } from "../lib/civic-data/changes.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
-import { settleFederalVoteSources } from "../lib/votes/source-fanout.ts";
+import { FEDERAL_VOTE_MEMBER_CONCURRENCY, settleFederalVoteSources } from "../lib/votes/source-fanout.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { sourceProjectionEvidence } from "../lib/civic-data/types.ts";
 import {
@@ -319,6 +319,31 @@ test("a matching national hash repairs an interrupted member fanout before confi
   store.readPromotion=async()=>{throw Error("unchanged fanout opened a held payload");};store.readCandidate=async()=>{throw Error("unchanged fanout opened a held candidate");};
   const repeated=await settleFederalVoteSources({store,members,source,publish:async()=>{throw Error("unchanged member republished");}});
   assert.ok(repeated.confirmed);assert.deepEqual(repeated.refused,[]);
+});
+
+test("federal members settle several at a time, list every refusal in input order, and one thrown member fails the whole settle",async()=>{
+  const seed=await rollCallSeed(),store=new MemoryRoutineDataStore();
+  const common={acquisitions:acquisitionsForRollCalls(seed.snapshot),identifierSourceHash:"a".repeat(64),retrievedAt:T0,
+    expectedCongress:119,expectedSession:2,snapshot:seed.snapshot};
+  const national=federalRollCallsCandidate({...common,partyBreakdowns:{},billSummaries:seed.billSummaries});
+  const one=federalMemberVotesCandidate({...common,officeholderId:"congress:A000001",positions:seed.positions.filter(row=>row.officeholderId==="congress:A000001")});
+  const members=Array.from({length:FEDERAL_VOTE_MEMBER_CONCURRENCY*3},(_,i)=>({...one,scope:`member-${i}`}));
+  const source={sourceId:national.sourceId,recordClass:national.recordClass,scope:national.scope,parserVersion:national.normalization.parserVersion,
+    rawHash:national.retrieval.rawHash!,now:T1,complete:true,retrieval:{requestedUrl:national.retrieval.requestedUrl,finalUrl:national.retrieval.finalUrl,
+      httpStatus:national.retrieval.httpStatus,rawHash:national.retrieval.rawHash!,retrievedAt:T1}};
+  let inFlight=0,peak=0;
+  const refusing=async()=>{
+    inFlight++;peak=Math.max(peak,inFlight);await new Promise(done=>setTimeout(done,5));inFlight--;
+    return{promoted:null,confirmed:false,candidate:{state:"REJECTED",failureCode:"X"}} as never;
+  };
+  const refusedAll=await settleFederalVoteSources({store,members:members.values(),source,publish:refusing});
+  assert.equal(peak,FEDERAL_VOTE_MEMBER_CONCURRENCY);
+  assert.deepEqual(refusedAll.refused,members.map(member=>`${member.scope}:X`));assert.equal(refusedAll.confirmed,null);
+  let started=0;
+  await assert.rejects(settleFederalVoteSources({store,members,source,publish:async candidate=>{
+    started++;if(candidate.scope==="member-3")throw Error("member 3 failed");return refusing();
+  }}),/member 3 failed/);
+  assert.ok(started<members.length,"a thrown member stops further members from starting");
 });
 
 test("a member's source hash follows its displayed bill-title body without inheriting unrelated members' titles",async()=>{

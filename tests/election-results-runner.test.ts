@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test, { beforeEach } from "node:test";
 import { createHash } from "node:crypto";
 import { runElectionResults as runElectionResultsWith } from "../lib/election-results/runner.ts";
-import { parseCapturedBallotpedia, readCapturedBallotpediaResults } from "../lib/election-results/ballotpedia.ts";
+import { parseCapturedBallotpedia, readCapturedBallotpediaResults, readCapturedCongressSummary } from "../lib/election-results/ballotpedia.ts";
 import { fetchCapturedBallotpediaText } from "../lib/election-results/captured-source.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { seedFeedDoors } from "../lib/doors/seed-feeds.ts";
@@ -755,4 +755,69 @@ test("fix rows go to the control-plane work query and facts to the reader query,
   assert.equal(readerSql.filter(touchesWork).length, 0);
   assert.ok(Number((await db.query("SELECT count(*)::int AS n FROM work WHERE kind='fix'"))[0].n) > 0);
   assert.equal((await db.query("SELECT count(*)::int AS n FROM fact WHERE field LIKE 'election_congress:%' AND status='live'"))[0].n, 1, "facts still publish through the reader");
+});
+
+const senateOverviewPage = `<h1>United States Senate elections, 2026</h1><h2><span id="Election_results,_2026">Election results, 2026</span></h2>
+  <p>As of Nov. 6, 2026, Democrats had won 20 and Republicans 13 of the 35 U.S. Senate races.</p>
+  <p>Republicans held a 53-47 majority. Of the seats up for election, Democrats hold 13 and Republicans hold 22.</p>
+  <h2>Partisan balance</h2><table><caption>U.S. Senate Partisan Breakdown</caption>
+  <tr><td>Democratic Party</td><td>45</td></tr><tr><td>Republican Party</td><td>53</td></tr>
+  <tr><td>Independent</td><td>2</td></tr><tr><td>Vacancies</td><td>0</td></tr></table>`;
+const houseOverviewPage = `<h1>United States House of Representatives elections, 2026</h1><h2><span id="Election_results,_2026">Election results, 2026</span></h2>
+  <p>Democrats had won 248 and Republicans 150 of the 435 U.S. House races.</p><p>Republicans held a 218-214 majority.</p>
+  <h2>Partisan balance</h2><table><caption>Partisan composition, U.S. House 119th Congress</caption>
+  <tr><td>Democratic</td><td>214</td></tr><tr><td>Republican</td><td>218</td></tr>
+  <tr><td>Independent</td><td>1</td></tr><tr><td>Vacancies</td><td>2</td></tr></table>`;
+const overviewKeys = { "United_States_Senate_elections,_2026": senateOverviewPage, "United_States_House_of_Representatives_elections,_2026": houseOverviewPage };
+
+test("the Senate and House chamber summaries come from the captured overview pages, only when the capture is newer, and wait quietly when the file lacks them", async context => {
+  const db = await resultBallotDb(context);
+  for (const sql of WORK_DDL) await db.pg.exec(sql);
+  const stateId = "ocd-division/country:us/state:az", scope = stateBallotScope("ballot-contests", "AZ");
+  const held = ballot("AZ", "U.S. Representative");
+  held.contests[0].ocdId = `${stateId}/cd:7`;
+  held.candidacies.push({ id: "az-cd7-candidate", contestId: held.contests[0].id, givenName: "", familyName: "Casey Citizen",
+    partyLabel: "D", slogan: null, incumbent: false, websiteUrl: null, provenance });
+  await db.publish({ id: "az-overview-authority", recordClass: "BALLOT_CANDIDACY", scope, at, sourceId: "synthetic-ballot-authority",
+    value: { kind: "ballot-contests", ballots: { [ballotElectionKey(held)]: held } } });
+  for (const [id, name] of [["ocd-division/country:us", "United States"], [stateId, "Arizona"], [held.contests[0].ocdId, "District 7"]])
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place',$2,$3) ON CONFLICT DO NOTHING", [id, name, id === "ocd-division/country:us" ? null : "AZ"]);
+  workList(db.query, { owner: "test-captured-overview" });
+  const race = { "Arizona's_7th_Congressional_District_election,_2026": federalBox("Arizona", "House") };
+  const requests: string[] = [], logs: string[] = [], cache = resultReadCache();
+  const input = { db, query: db.query, cache, states: ["AZ"], multistate: emptyBatch, purge: async () => ({ purged: true }),
+    fetch: async (request: Parameters<typeof fetch>[0]) => { requests.push(String(request)); throw new Error("ballotpedia.org must not be requested"); } };
+  const facts = async () => (await readStateElectionResults("AZ", undefined, feeds))?.facts ?? {};
+  const chamber = async (office: string) => (await facts())[`ocd-division/country:us#election_summary:${office}`] as
+    { checkedAt: string; chambers: { seatsBefore: Record<string, number>; seatsNow: Record<string, number>; stillCounting: number }[] } | undefined;
+  const log = console.log;
+  console.log = (...args: unknown[]) => { logs.push(args.join(" ")); };
+  try {
+    // Before the refresh: races publish, the overview pages are absent, one quiet log line each, no failure rows.
+    const first = await runElectionResults({ ...input, now: new Date(at), captured: capturedFile(race, "2026-11-03T23:00:00.000Z") });
+    assert.equal(first.matched, 1, "race results are unaffected");
+    assert.equal(await chamber("us_senate"), undefined);
+    assert.equal(logs.filter(line => /overview page is not in the captured file/.test(line)).length, 2);
+    assert.equal((await db.query("SELECT count(*)::int n FROM work WHERE kind='fix'"))[0].n, 0, "a missing overview is not a failure");
+    // The refresh adds both overview pages: both chamber summaries publish with checkedAt = capturedAt.
+    const capturedAt = "2026-11-08T23:10:49.135Z", later = "2026-11-09T01:05:00.000Z";
+    await runElectionResults({ ...input, now: new Date(later), captured: async () => JSON.stringify({ formatVersion: 1, capturedAt, pages: race, summaryPages: overviewKeys }) });
+    const senate = await chamber("us_senate"), house = await chamber("us_house");
+    assert.equal(senate?.checkedAt, later, "the fact is stamped with the check that published it");
+    const batches = await Promise.all((["us_senate", "us_house"] as const).map(office => readCapturedCongressSummary(parseCapturedBallotpedia(JSON.stringify({ formatVersion: 1, capturedAt, pages: {}, summaryPages: overviewKeys })), office)));
+    assert.deepEqual(batches.map(batch => batch?.summaries[0].checkedAt), [capturedAt, capturedAt], "the batch is dated by the capture");
+    assert.deepEqual(batches.map(batch => batch?.source.url), [
+      "https://ballotpedia.org/United_States_Senate_elections,_2026", "https://ballotpedia.org/United_States_House_of_Representatives_elections,_2026"]);
+    assert.ok(batches.every(batch => batch && batch.evidence.text.includes("Election results, 2026")), "the evidence is the captured page text");
+    assert.deepEqual(senate?.chambers[0].seatsBefore, { D: 45, R: 53, I: 2, Vacant: 0 });
+    assert.deepEqual(senate?.chambers[0].seatsNow, { D: 52, R: 44, I: 2, Vacant: 0 });
+    assert.equal(house?.chambers[0].stillCounting, 37);
+    // The same capture again changes nothing.
+    const before = JSON.parse(String((await db.query("SELECT position FROM pass_cursor WHERE name='election-results:US'"))[0].position));
+    assert.equal(before.capturedSummaryAt.us_senate, capturedAt);
+    const again = await runElectionResults({ ...input, now: new Date("2026-11-09T01:30:00.000Z"), captured: async () => JSON.stringify({ formatVersion: 1, capturedAt, pages: race, summaryPages: overviewKeys }) });
+    assert.equal(again.published, 0);
+    assert.equal((await chamber("us_senate"))?.checkedAt, later, "an unchanged capture rewrites nothing");
+  } finally { console.log = log; }
+  assert.deepEqual(requests, []);
 });

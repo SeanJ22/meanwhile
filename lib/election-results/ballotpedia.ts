@@ -266,7 +266,9 @@ export async function readBallotpediaCongressSummary(office: "us_house" | "us_se
 }
 
 /** Race pages captured through a browser that passes Ballotpedia's challenge: exact page substrings, dated when captured. */
-export interface CapturedBallotpedia { capturedAt: string; seats: Map<string, string>; races: BallotpediaRace[] }
+export interface CapturedBallotpedia { capturedAt: string; seats: Map<string, string>; races: BallotpediaRace[];
+  /** The two national overview pages (full page text), when the file carries them. */
+  overviews: Partial<Record<"us_house" | "us_senate", string>> }
 
 const AT_LARGE_STATES = ["AK", "DE", "ND", "SD", "VT", "WY"];
 
@@ -297,15 +299,20 @@ function capturedRace(path: string): { seat: string; race: BallotpediaRace } | n
 
 /** Throws unless the text is a version-1 capture file. Pages are indexed by seat, so a route's own spelling never has to match the page key. */
 export function parseCapturedBallotpedia(text: string): CapturedBallotpedia {
-  const file = JSON.parse(text) as { formatVersion?: unknown; capturedAt?: unknown; pages?: Record<string, unknown> };
+  const file = JSON.parse(text) as { formatVersion?: unknown; capturedAt?: unknown; pages?: Record<string, unknown>; summaryPages?: Record<string, unknown> };
   if (file.formatVersion !== 1) throw new Error(`Captured Ballotpedia file has format version ${String(file.formatVersion)}, not 1`);
   if (typeof file.capturedAt !== "string" || !file.pages || typeof file.pages !== "object") throw new Error("Captured Ballotpedia file has no capturedAt and pages");
-  const seats = new Map<string, string>(), races: BallotpediaRace[] = [];
+  const seats = new Map<string, string>(), races: BallotpediaRace[] = [], overviews: CapturedBallotpedia["overviews"] = {};
   for (const [key, html] of Object.entries(file.pages)) {
     const found = typeof html === "string" ? capturedRace(key) : null;
     if (found && !seats.has(found.seat)) { seats.set(found.seat, html as string); races.push(found.race); }
   }
-  return { capturedAt: file.capturedAt, seats, races };
+  // The two national overview pages sit beside `pages` under summaryPages, keyed by the page name.
+  for (const office of ["us_senate", "us_house"] as const) {
+    const page = file.summaryPages?.[BALLOTPEDIA_CONGRESS_URLS[office].replace("https://ballotpedia.org/", "")];
+    if (typeof page === "string") overviews[office] = page;
+  }
+  return { capturedAt: file.capturedAt, seats, races, overviews };
 }
 
 /** The race read from its captured page (checkedAt is the capture time), or null when the file has no page for the seat. */
@@ -314,4 +321,13 @@ export function readCapturedBallotpediaResults(captured: CapturedBallotpedia, ra
   const seat = seatOf(state, race.office, race.districtHint, special);
   const html = captured.seats.get(seat) ?? (race.office === "us_senate" ? captured.seats.get(seatOf(state, race.office, undefined, !special)) : undefined);
   return html === undefined ? null : parseBallotpediaResults(html, race, captured.capturedAt);
+}
+
+/** The national overview read from its captured page by the same parser the live read used (checkedAt is the capture time), or null when the file lacks the page. */
+export async function readCapturedCongressSummary(captured: CapturedBallotpedia, office: "us_house" | "us_senate"): Promise<ElectionResultBatch | null> {
+  const html = captured.overviews[office];
+  if (html === undefined) return null;
+  const batch = await readBallotpediaCongressSummary(office, captured.capturedAt, async () => new Response(html, { status: 200 }));
+  const { racePages: _pages, ...rest } = batch;
+  return rest;
 }

@@ -91,7 +91,9 @@ async function publishValue(input: {
 
 /** One state at a time, against its current served ballot. Only the Slide writes result facts. */
 export async function publishElectionResultBatch(input: {
-  query: Query; db: FactDb; batch: ElectionResultBatch; ballots: readonly BallotSet[]; state: string;
+  query: Query;
+  /** The control-plane query: the `work` table exists only there. Defaults to `query` for single-database callers. */
+  workQuery?: Query; db: FactDb; batch: ElectionResultBatch; ballots: readonly BallotSet[]; state: string;
   prior?: ResultProgress; door?: DoorRecord; now?: Date; purge?: ReaderCachePurger; more?: () => boolean;
   /** One runner-owned allowance handles every kind of fix; queued work never delays a fact. */
   writeFix?: (row: WorkInput) => Promise<void>;
@@ -160,18 +162,18 @@ export async function publishElectionResultBatch(input: {
       ? race.candidates.filter(candidate => candidate.incumbent === true && candidate.won === false) : [];
     const updateIncumbentConflict = async () => {
       if (conflictingCandidates.length) {
-        await electionResultFix(input.query, race, incumbentConflictReason, "fix", {
+        await electionResultFix(input.workQuery ?? input.query, race, incumbentConflictReason, "fix", {
           reportedIncumbentLost: false, candidateNames: conflictingCandidates.map(candidate => candidate.name),
         }, input.writeFix);
         progress.summaries[incumbentConflictKey] = hash;
       } else if (progress.summaries[incumbentConflictKey]) {
-        await workList(input.query, { owner: "election-results" }).resolve({ subjectId: `election-results:${race.state}:${race.sourceRaceId}`,
+        await workList(input.workQuery ?? input.query, { owner: "election-results" }).resolve({ subjectId: `election-results:${race.state}:${race.sourceRaceId}`,
           fieldPrefix: `election_result:${incumbentConflictReason}` });
         delete progress.summaries[incumbentConflictKey];
       }
     };
     if (match.kind !== "matched") {
-      await electionResultFix(input.query, race, match.reason, match.kind === "ambiguous" ? "detect" : "fix", { contestIds: match.contestIds }, input.writeFix);
+      await electionResultFix(input.workQuery ?? input.query, race, match.reason, match.kind === "ambiguous" ? "detect" : "fix", { contestIds: match.contestIds }, input.writeFix);
       await updateIncumbentConflict();
     } else {
       const evidence = await observed(), citation = { sources: sources(race), checkedAt: at,
@@ -186,8 +188,10 @@ export async function publishElectionResultBatch(input: {
       };
       const measureValue = race.measure ? { yesVotes: race.measure.yesVotes ?? null, noVotes: race.measure.noVotes ?? null,
         yesPercent: race.measure.yesPercent ?? null, outcome: race.measure.outcome } : undefined;
+      // A captured Ballotpedia page is a substring that never spells its own URL id, so the saved copy can only name this contest by the seat it prints.
+      const congress = race.sourceId === "ballotpedia" && (race.office === "us_house" || race.office === "us_senate");
       await write({ id: match.contest.id, kind: "contest", name: match.contest.title, parentId: match.contest.ocdId,
-        sourceId: race.sourceRaceId, quote: race.quote,
+        sourceId: congress ? `U.S. ${race.office === "us_house" ? "House" : "Senate"} ${stateName(race.state) ?? race.state}` : race.sourceRaceId, quote: race.quote,
         value: { status: race.status, percentCounted: race.percentCounted ?? null, statusChangedAt: raw.statusChangedAt ?? null,
           seatsToFill: race.seatsToFill ?? match.contest.voteFor, flipped: race.flipped ?? null,
           gainedByParty: race.gainedByParty ?? null, incumbentLost: race.incumbentLost ?? null,
@@ -202,12 +206,12 @@ export async function publishElectionResultBatch(input: {
       if (race.measure && match.measure) await write({ id: match.measure.id, kind: "measure", name: race.measure.name,
         parentId: match.contest.id, sourceId: race.sourceRaceId, quote: race.quote,
         value: { ...measureValue, ...citation } });
-      if (match.unmatchedCandidates.length) await electionResultFix(input.query, race, "Candidate missing from served ballot", "fix",
+      if (match.unmatchedCandidates.length) await electionResultFix(input.workQuery ?? input.query, race, "Candidate missing from served ballot", "fix",
         { candidateNames: match.unmatchedCandidates.map(index => race.candidates[index].name) }, input.writeFix);
-      if (match.ambiguousCandidates.length) await electionResultFix(input.query, race, "Candidate identity tie", "detect",
+      if (match.ambiguousCandidates.length) await electionResultFix(input.workQuery ?? input.query, race, "Candidate identity tie", "detect",
         { candidateNames: match.ambiguousCandidates.map(index => race.candidates[index].name) });
       await updateIncumbentConflict();
-      const list = workList(input.query, { owner: "election-results" });
+      const list = workList(input.workQuery ?? input.query, { owner: "election-results" });
       await list.resolve({ subjectId: `election-results:${race.state}:${race.sourceRaceId}`, fieldPrefix: "election_result:",
         exceptFields: [...match.unmatchedCandidates.length ? ["election_result:Candidate missing from served ballot"] : [],
           ...match.ambiguousCandidates.length ? ["election_result:Candidate identity tie"] : [],

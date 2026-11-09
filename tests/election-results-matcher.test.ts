@@ -195,3 +195,44 @@ for (const [state, sourceOffice, title, district] of [
   }), ballot([held], [candidate("same-full-name", held.id, "Alice Eleanor Quinn")]));
   assert.equal(found.kind, "unmatched");
 });
+
+const given = (id: string, contestId: string, givenName: string, familyName: string): Candidacy => ({ ...candidate(id, contestId, familyName), givenName });
+
+test("an Arizona district seat takes its Ballotpedia result by candidate names, nickname and suffix spellings included", () => {
+  const held = contest("az-6", "AZ", "U.S. Representative, District 6", "cd:6"), other = contest("az-7", "AZ", "U.S. Representative, District 7", "cd:7");
+  const set = ballot([held, other], [given("m", held.id, "JoAnna", "Mendoza"), given("c", held.id, "Juan", "Ciscomani"),
+    given("p", held.id, "Jereme Lance", "Peters"), given("f", other.id, "Thomas \"Jay\"", "Feely IV"), given("g", other.id, "Adelita", "Grijalva")]);
+  const found = matchElectionResult(result("AZ", ["JoAnna Mendoza", "Juan Ciscomani", "Jereme Peters"], { office: "us_house", officeName: "U.S. House Arizona District 6", districtHint: "6" }), set);
+  assert.equal(found.kind, "matched");
+  if (found.kind === "matched") { assert.equal(found.contest.id, held.id); assert.equal(found.candidates.length, 3); assert.deepEqual(found.unmatchedCandidates, []); }
+  const nickname = matchElectionResult(result("AZ", ["Jay Feely", "Adelita Grijalva"], { office: "us_house", districtHint: "7" }), set);
+  assert.equal(nickname.kind === "matched" && nickname.contest.id, other.id);
+});
+
+test("an at-large House seat and a Senate special with a parenthetical term match their served contests", () => {
+  const house = contest("ak-house", "AK", "U.S. Representative", "cd:0"), senate = contest("oh-special", "OH", "U.S. Senator (Unexpired term ending 1/3/2029)", "");
+  assert.equal(matchElectionResult(result("AK", ["Nick Begich"], { office: "us_house", districtHint: "at-large" }),
+    ballot([house], [given("b", house.id, "Nick", "Begich")])).kind, "matched");
+  const found = matchElectionResult(result("OH", ["Sherrod Brown", "Jon Husted"], { office: "us_senate", districtHint: undefined }),
+    ballot([senate], [given("s", senate.id, "Sherrod", "Brown"), given("h", senate.id, "Jon", "Husted")]));
+  assert.equal(found.kind === "matched" && found.contest.id, senate.id);
+});
+
+test("a printed nickname that is not a prefix matches its formal filing name, and a tie between nicknames stays ambiguous", () => {
+  const senate = contest("oh-special", "OH", "U.S. Senator (Unexpired term ending 1/3/2029)", "");
+  const set = ballot([senate], [given("w", senate.id, "William", "Redpath"), given("g", senate.id, "Gregory", "Levy")]);
+  const found = matchElectionResult(result("OH", ["Bill Redpath", "Greg Levy"], { office: "us_senate", districtHint: undefined }), set);
+  assert.equal(found.kind, "matched");
+  if (found.kind === "matched") { assert.deepEqual(found.candidates.map(row => row.candidacy.id), ["w", "g"]); assert.deepEqual(found.unmatchedCandidates, []); }
+  // Different family name or an unrelated given name is never a nickname.
+  const other = matchElectionResult(result("OH", ["Bob Redpath", "Greg Levin"], { office: "us_senate", districtHint: undefined }), set);
+  assert.equal(other.kind, "unmatched");
+  // Two filings that both answer to the printed nickname are a tie, never a guess; an exact filing name still wins.
+  const tie = ballot([senate], [given("a", senate.id, "Katherine", "Jones"), given("b", senate.id, "Catherine", "Jones")]);
+  const ambiguous = matchElectionResult(result("OH", ["Kate Jones"], { office: "us_senate", districtHint: undefined }), tie);
+  assert.equal(ambiguous.kind === "matched" && ambiguous.ambiguousCandidates.join(), "0");
+  assert.equal(ambiguous.kind === "matched" && ambiguous.candidates.length, 0);
+  const exact = ballot([senate], [given("a", senate.id, "Katherine", "Jones"), given("b", senate.id, "Kate", "Jones")]);
+  const chosen = matchElectionResult(result("OH", ["Kate Jones"], { office: "us_senate", districtHint: undefined }), exact);
+  assert.equal(chosen.kind === "matched" && chosen.candidates[0]?.candidacy.id, "b");
+});

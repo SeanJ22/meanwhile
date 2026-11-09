@@ -12,7 +12,8 @@ import { workId, workList, type WorkInput } from "../core/work.ts";
 import type { DoorRepository, DoorRecord } from "../doors/registry.ts";
 import { isDoorRecord } from "../doors/registry.ts";
 import { parseMultiStateResults, readMultiStateResults } from "./multistate.ts";
-import { readBallotpediaResults, readBallotpediaCongressSummary, ballotpediaRaceId, type BallotpediaRace } from "./ballotpedia.ts";
+import { CAPTURED_BALLOTPEDIA_URL, fetchCapturedBallotpediaText } from "./captured-source.ts";
+import { ballotpediaRaceId, parseCapturedBallotpedia, readCapturedBallotpediaResults, type CapturedBallotpedia, type BallotpediaRace } from "./ballotpedia.ts";
 import { PUBLIC_SITE_ORIGIN } from "../ops/origins.ts";
 import { ensureOpenElectionResults, publishElectionResultBatch, raceClockKey, type ResultProgress, type ResultCounts } from "./publisher.ts";
 import { matchElectionResult } from "./matcher.ts";
@@ -37,6 +38,8 @@ interface StateProgress extends ResultProgress {
   readonly standingFingerprint?: string;
   readonly sourceFingerprints?: Readonly<Record<string, string>>;
   readonly federalRoutes?: readonly BallotpediaRace[];
+  /** The newest browser-capture time this state's Senate and House results were read from. */
+  readonly capturedBallotpediaAt?: string;
   readonly ballotVersion?: string | null;
   readonly pendingSources?: readonly string[];
   readonly pendingFixes?: readonly WorkInput[];
@@ -91,8 +94,13 @@ function federalRoutes(catalog: readonly BallotpediaRace[], held: readonly Ballo
 }
 
 export async function runElectionResults(input: {
-  query: Query; db: FactDb; doors?: DoorRepository; now?: Date; fetch?: typeof fetch;
+  query: Query;
+  /** The control-plane query: fix-list (`work`) rows live only in the control-plane database. Defaults to `query` for single-database callers. */
+  workQuery?: Query;
+  db: FactDb; doors?: DoorRepository; now?: Date; fetch?: typeof fetch;
   states?: readonly string[];
+  /** Browser-captured Ballotpedia pages (file text) used when the live read is blocked. Defaults to GitHub when no fetch is injected. */
+  captured?: () => Promise<string>;
   /** Local test adapters supply the reader authority; no repository ballot file is used. */
   ballotsForState?: (state: string) => Promise<readonly BallotSet[]>;
   multistate?: ElectionResultBatch;
@@ -109,6 +117,9 @@ export async function runElectionResults(input: {
   if (!Number.isSafeInteger(maxFixRows) || maxFixRows < 1) throw new RangeError("maxFixRows must be a positive integer");
   let fixRowsWritten = 0;
   const now = input.now ?? new Date(), at = now.toISOString(), states = input.states ?? STATES;
+  // The MultiState download is time-limited (a caller's own fetch is used as given); a timeout is that read's ordinary failure.
+  const limited = (ms: number): typeof fetch => (url, init) => fetch(url, { ...init, signal: AbortSignal.timeout(ms) });
+  const multistateFetch = input.fetch ?? limited(120_000);
   const more = () => (input.clock ?? Date.now)() < (input.deadlineMs ?? Number.POSITIVE_INFINITY);
   const result: ResultCounts = { matched: 0, unmatched: 0, ambiguous: 0, published: 0, unchanged: 0 };
   if (!more()) return { ...result, reads: 0, nextCheckAt: at, fixRowsWritten, pendingFixRows: 0 };
@@ -118,6 +129,7 @@ export async function runElectionResults(input: {
     return query(text, params);
   };
   const query = count(input.query), db: FactDb = { transaction: work => input.db.transaction(tx => work(count(tx))) };
+  const workQuery = input.workQuery ?? query;
   const cache = (input.cache ?? runtimeCivicReadCache()).jobState();
   const savedClocks = await cache.readCheckpoint<unknown>(CLOCK_CACHE_NAMESPACE, CLOCK_CACHE_KEY);
   const cached: Record<string, CachedClock> = {};
@@ -162,7 +174,7 @@ export async function runElectionResults(input: {
     if (writtenFixes.has(id)) return;
     if (fixRowsWritten < maxFixRows && more()) {
       fixRowsWritten++;
-      await workList(query, { owner: "election-results" }).ensure([row]);
+      await workList(workQuery, { owner: "election-results" }).ensure([row]);
       writtenFixes.add(id);
       if (queue.delete(id)) dirtyFixStates.add(state);
     } else {
@@ -213,6 +225,9 @@ export async function runElectionResults(input: {
     if (checked?.failed || clocks.length === 0) return nextElectionResultCheck({ status: "pending", lastCheckedAt: checked?.checkedAt }, door, now);
     return clocks.flatMap(clock => nextElectionResultCheck(clock, door, now) ?? []).sort()[0] ?? null;
   };
+  // Ballotpedia keeps race clocks only once a capture has been read; before that a newer capture, not a clock, is its due time.
+  const sourceDues = (prior: StateProgress) => ["multistate", ...Object.keys(prior.races).some(key => key.startsWith("ballotpedia:")) || prior.sourceChecks?.ballotpedia
+    ? ["ballotpedia"] : []].flatMap(source => sourceNext(prior, source, false) ?? []);
   const checked = (prior: StateProgress, source: string, failed: boolean): StateProgress => {
     const previous = prior.sourceChecks?.[source];
     const lastSucceededAt = failed ? previous?.lastSucceededAt ?? (previous?.failed !== true ? previous?.checkedAt : undefined) : at;
@@ -242,7 +257,7 @@ export async function runElectionResults(input: {
     for (const [id, row] of queue ?? []) if (row.subjectId === subjectId && row.field === field) {
       queue!.delete(id); dirtyFixStates.add(state);
     }
-    await workList(query, { owner: "election-results" }).resolve({ subjectId, fieldPrefix: field });
+    await workList(workQuery, { owner: "election-results" }).resolve({ subjectId, fieldPrefix: field });
   };
   // National results have their own clocks and cannot wait behind the initial state backfill.
   let nation: StateProgress = progress.get("US") ?? empty();
@@ -252,6 +267,19 @@ export async function runElectionResults(input: {
         Object.entries(prior.races).filter(([key]) => key.startsWith("ballotpedia:")).every(([, clock]) => clock.status === "certified"));
   const lastCertification = [...progress.values()].flatMap(prior => Object.entries(prior.races)
     .filter(([key]) => key.startsWith("ballotpedia:")).map(([, clock]) => clock.lastCheckedAt)).sort().at(-1);
+  // Senate and House results come from the browser-captured Ballotpedia pages, read from GitHub once at every check; ballotpedia.org is never fetched.
+  let captured: CapturedBallotpedia | null = null;
+  if (more() && (input.captured || !input.fetch)) {
+    try { captured = parseCapturedBallotpedia(await (input.captured ?? fetchCapturedBallotpediaText)()); }
+    catch (error) {
+      noteOutcome("ballotpedia", String(error));
+      await failure("US", CAPTURED_BALLOTPEDIA_URL, String(error));
+      const retry = nextElectionResultCheck({ status: "pending", lastCheckedAt: at }, doors.get("ballotpedia"), now);
+      if (retry) due.push(retry);
+    }
+  }
+  if (captured) nation = { ...nation, federalRoutes: [...new Map([...nation.federalRoutes ?? [], ...captured.races]
+    .map(page => [ballotpediaRaceId(page.url), page])).values()] };
   for (const office of ["us_senate", "us_house"] as const) {
     if (!more()) { unfinished = true; break; }
     const key = `ballotpedia:${office}`, next = sourceNext(nation, key);
@@ -259,14 +287,13 @@ export async function runElectionResults(input: {
     if (next === null) continue;
     if (next > at) { due.push(next); continue; }
     try {
-      const batch = input.congressSummaries?.find(batch => batch.summaries.some(summary => summary.chambers.some(chamber => chamber.name === office)))
-        ?? await readBallotpediaCongressSummary(office, at, input.fetch, office === "us_house" &&
-          ((nation.federalRoutes?.filter(race => race.office === "us_house").length ?? 0) < 435 || doors.get("ballotpedia")?.readNow === true));
+      const batch = input.congressSummaries?.find(batch => batch.summaries.some(summary => summary.chambers.some(chamber => chamber.name === office)));
+      if (!batch) continue;
       if (batch.racePages) nation = { ...nation, federalRoutes: [...new Map([
         ...nation.federalRoutes ?? [], ...batch.racePages,
       ].map(page => [ballotpediaRaceId(page.url), page])).values()] };
       const readerFacts = { ...nation.readerFacts };
-      const changed = await publishElectionResultBatch({ query, db, batch, ballots: [], state: "US", prior: nation, now,
+      const changed = await publishElectionResultBatch({ query, workQuery, db, batch, ballots: [], state: "US", prior: nation, now,
         door: doors.get("ballotpedia"), purge: input.purge, more, writeFix,
         accepted: (id, field, value) => { readerFacts[field.startsWith("election_summary:") ? `${id}#${field}` : id] = value; } });
       nation = checked(pending({ ...nation, ...changed.progress, readerFacts }, key, changed.deferred), key, Boolean(batch.catalogErrors?.length));
@@ -314,7 +341,9 @@ export async function runElectionResults(input: {
     await cache.checkpoint("election-results-reader", state, current);
     return { ...prior, readerPending, readerSlice: feed };
   };
-  for (const state of states) {
+  // Every state's MultiState results are published before any Ballotpedia request, so a slow Ballotpedia cannot keep them off the feeds.
+  const ballotsRead = new Map<string, readonly BallotSet[]>();
+  for (const phase of ["multistate", "ballotpedia"] as const) for (const state of states) {
     if (!more()) { unfinished = true; break; }
     let prior: StateProgress = progress.get(state) ?? empty();
     const ballotVersion = ballotVersions.get(state) ?? null;
@@ -327,8 +356,10 @@ export async function runElectionResults(input: {
       prior = pending(prior, "ballotpedia", true);
     }
     const sourceDue = (source: string) => { const next = sourceNext(prior, source); return next !== null && next <= at; };
-    if (!sourceDue("multistate") && !sourceDue("ballotpedia")) {
-      due.push(...["multistate", "ballotpedia"].flatMap(source => sourceNext(prior, source, false) ?? [])); continue;
+    // Ballotpedia is due whenever the capture is newer than the one this state last read (or its ballot changed): the read is a no-op otherwise.
+    const capturedDue = captured !== null && (captured.capturedAt > (prior.capturedBallotpediaAt ?? "") || changedBallot);
+    if (phase === "multistate" ? !sourceDue("multistate") : !capturedDue) {
+      due.push(...sourceDues(prior)); continue;
     }
     try {
       await withBatchedReaderInvalidation(async purge => {
@@ -336,7 +367,7 @@ export async function runElectionResults(input: {
       const acceptedFacts: Record<string, unknown> = {};
       const getBallots = async () => {
         if (ballots) return ballots;
-        if (input.ballotsForState) return ballots = await input.ballotsForState(state);
+        if (input.ballotsForState) { ballots = ballotsRead.get(state) ?? await input.ballotsForState(state); ballotsRead.set(state, ballots); return ballots; }
         const held = await getProjection(state);
         return ballots = held ? projectionBallots(held).map(ballot => withCandidateTickets(withCurrentCandidacies(ballot))) : [];
       };
@@ -347,7 +378,7 @@ export async function runElectionResults(input: {
         const eligible: ElectionResult[] = [];
         for (const race of batch.races.filter(race => race.state === state)) {
           const key = raceClockKey(race), previous = prior.races[key];
-          if (previous && !doors.get(source)?.readNow && (nextElectionResultCheck(previous, doors.get(source), now) ?? "~") > at) continue;
+          if (source !== "ballotpedia" && previous && !doors.get(source)?.readNow && (nextElectionResultCheck(previous, doors.get(source), now) ?? "~") > at) continue;
           const { checkedAt: _at, quote: _quote, ...value } = race;
           const hash = fingerprint({ ...value, candidates: value.candidates.map(({ quote: _quote, ...candidate }) => candidate) });
           const missingCongressSummary = race.sourceId === "ballotpedia" && !prior.federalResults?.[`${race.electionDate}:${race.sourceRaceId}`];
@@ -379,7 +410,7 @@ export async function runElectionResults(input: {
             newlyCovered.set(key, [...newlyCovered.get(key) ?? [], match.contest.id]);
           }
         }
-        const changed = await publishElectionResultBatch({ query, db, batch: { ...batch, races: eligible, summaries }, ballots: held,
+        const changed = await publishElectionResultBatch({ query, workQuery, db, batch: { ...batch, races: eligible, summaries }, ballots: held,
           state, prior, now, door: doors.get(source), purge, more, writeFix,
           accepted: (id, field, value) => {
             if (field === "election_result" || field === "election_summary" || field.startsWith("election_summary:"))
@@ -401,7 +432,7 @@ export async function runElectionResults(input: {
         for (const key of Object.keys(result) as (keyof ResultCounts)[]) result[key] += changed.counts[key];
         return !changed.deferred;
       };
-      if (sourceDue("multistate")) {
+      if (phase === "multistate" && sourceDue("multistate")) {
         if (!more()) { prior = pending(prior, "multistate", true); unfinished = true; }
         else {
         try {
@@ -409,7 +440,7 @@ export async function runElectionResults(input: {
           if (!input.multistate && multistateText === undefined) {
             if (multistateFailure) throw multistateFailure;
             try {
-              firstState = await readMultiStateResults(at, input.fetch, state);
+              firstState = await readMultiStateResults(at, multistateFetch, state);
               multistateText = firstState.evidence.text;
             } catch (error) { multistateFailure = error; throw error; }
           }
@@ -422,24 +453,29 @@ export async function runElectionResults(input: {
         }
         }
       }
-      if (sourceDue("ballotpedia")) {
+      if (phase === "ballotpedia" && captured) {
         if (!more()) { prior = pending(prior, "ballotpedia", true); unfinished = true; }
         else {
         const visited = new Set<string>();
         let failed = false, deferred = false;
-        const routes = federalRoutes(catalog, prior.federalRoutes ?? (await getBallots()).filter(row => row.election.date === "2026-11-03")
-          .flatMap(ballot => ballot.contests.flatMap(contest => federalRace(ballot, contest) ?? [])));
+        const routes = federalRoutes([...catalog, ...captured.races.filter(race => race.state === state)],
+          prior.federalRoutes ?? (await getBallots()).filter(row => row.election.date === "2026-11-03")
+            .flatMap(ballot => ballot.contests.flatMap(contest => federalRace(ballot, contest) ?? [])));
         for (const race of routes) {
           if (!more()) { deferred = true; break; }
           if (!race || visited.has(race.url)) continue;
           visited.add(race.url);
           const previous = prior.races[raceClockKey({ sourceId: "ballotpedia", sourceRaceId: ballotpediaRaceId(race.url), electionDate: race.electionDate ?? "2026-11-03" })];
-          if (previous?.status === "certified" || previous && !doors.get("ballotpedia")?.readNow &&
-            (nextElectionResultCheck(previous, doors.get("ballotpedia"), now) ?? "~") > at) continue;
-          try { if (!await publish(await readBallotpediaResults(race, at, input.fetch), "ballotpedia")) deferred = true; }
+          if (previous?.status === "certified") continue;
+          let batch: ElectionResultBatch | null;
+          try { batch = readCapturedBallotpediaResults(captured, race); }
+          catch (error) { failed = true; await failure(state, race.url, String(error)); continue; }
+          if (!batch) { console.warn(`Ballotpedia race missing from the captured file: ${race.url}`); continue; }
+          try { if (!await publish(batch, "ballotpedia")) deferred = true; }
           catch (error) { failed = true; await failure(state, race.url, String(error)); }
         }
         prior = checked(pending({ ...prior, federalRoutes: routes }, "ballotpedia", deferred), "ballotpedia", failed);
+        if (!deferred && !failed) prior = { ...prior, capturedBallotpediaAt: captured.capturedAt };
         unfinished ||= deferred;
         if (visited.size && !failed) noteOutcome("ballotpedia", null);
         }
@@ -448,14 +484,14 @@ export async function runElectionResults(input: {
       const standingFingerprint = createHash("sha256").update(JSON.stringify([
         ballots?.flatMap(ballot => ballot.contests.map(contest => contest.id)).sort(), [...covered].sort(),
       ])).digest("hex");
-      if (ballots && prior.standingFingerprint !== standingFingerprint) await ensureOpenElectionResults(query, ballots, covered);
+      if (ballots && prior.standingFingerprint !== standingFingerprint) await ensureOpenElectionResults(workQuery, ballots, covered);
       prior = { ...prior, coveredContestIds: [...covered].sort(), ...(ballots ? { standingFingerprint } : {}), ballotVersion };
       if (prior.stateSummary) prior = { ...prior,
         stateSummary: refreshedResultFacts({ state: prior.stateSummary }, prior).state as BallotElectionSummary };
       prior = await prepareFeed(state, prior, acceptedFacts);
       await saveProgress(state, prior);
       progress.set(state, prior);
-      due.push(...["multistate", "ballotpedia"].flatMap(source => sourceNext(prior, source, false) ?? []));
+      due.push(...sourceDues(prior));
       }, input.purge);
     } catch (error) { await failure(state, `${PUBLIC_SITE_ORIGIN}/ballot`, String(error)); }
   }
@@ -471,6 +507,12 @@ export async function runElectionResults(input: {
       await saveProgress(state, { ...prior, readerPending: true });
       await failure(state, `${PUBLIC_SITE_ORIGIN}/ballot`, String(error));
     }
+  }
+  // A capture newer than the last read is the Senate and House clock: keep the turn coming back at the Ballotpedia cadence until every captured race is certified.
+  if (captured && !captured.races.every(race => progress.get(race.state)?.races[raceClockKey({ sourceId: "ballotpedia",
+    sourceRaceId: ballotpediaRaceId(race.url), electionDate: race.electionDate ?? "2026-11-03" })]?.status === "certified")) {
+    const next = nextElectionResultCheck({ status: "pending", lastCheckedAt: at }, doors.get("ballotpedia"), now);
+    if (next) due.push(next);
   }
   for (const [source, reason] of outcomes) {
     const row = doorRows.get(source);

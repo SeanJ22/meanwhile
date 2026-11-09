@@ -139,7 +139,8 @@ export function parseBallotpediaResults(html: string, race: BallotpediaRace, che
 
 export async function readBallotpediaResults(race: BallotpediaRace, checkedAt: string, fetcher: typeof fetch = fetch): Promise<ElectionResultBatch> {
   const response = await fetcher(race.url.replaceAll("'", "%27"), { headers: { Accept: "text/html" } });
-  if (!response.ok) throw new Error(`Ballotpedia HTTP ${response.status}: ${race.url}`);
+  // A 202 is Ballotpedia's challenge page, not results: it counts as blocked.
+  if (response.status !== 200) throw new Error(`Ballotpedia HTTP ${response.status}: ${race.url}`);
   return parseBallotpediaResults(await response.text(), race, checkedAt);
 }
 
@@ -262,4 +263,55 @@ export async function readBallotpediaCongressSummary(office: "us_house" | "us_se
     }
   }));
   return { ...batch, ...(catalog.size ? { racePages: [...catalog.values()] } : {}), ...(catalogErrors.length ? { catalogErrors } : {}) };
+}
+
+/** Race pages captured through a browser that passes Ballotpedia's challenge: exact page substrings, dated when captured. */
+export interface CapturedBallotpedia { capturedAt: string; seats: Map<string, string>; races: BallotpediaRace[] }
+
+const AT_LARGE_STATES = ["AK", "DE", "ND", "SD", "VT", "WY"];
+
+/** The seat a captured page key or a race route names: state, chamber and district, or Senate regular or special. */
+function seatOf(state: string, office: "us_house" | "us_senate", value: string | undefined, special: boolean): string {
+  if (office === "us_senate") return `${state}:senate:${special ? "special" : "regular"}`;
+  const district = (value ?? "").toLowerCase().replace(/[\s-]/g, "");
+  const atLarge = ["0", "00", "atlarge"].includes(district) || !district && AT_LARGE_STATES.includes(state);
+  return `${state}:house:${atLarge ? 0 : Number(district)}`;
+}
+
+/** The seat a page key names, with the race route that reads it. */
+function capturedRace(path: string): { seat: string; race: BallotpediaRace } | null {
+  let key = path.replace(/^https?:\/\/[^/]+/i, "").replace(/^\//, "");
+  try { key = decodeURIComponent(key); } catch { /* keep the raw key */ }
+  const senate = /^United_States_Senate_(special_)?election_in_(.+?),_2026$/.exec(key);
+  const house = /^United_States_House_of_Representatives_election_in_(.+?),_2026$/.exec(key);
+  const district = /^(.+?)(?:'s|')_(?:(\d+)(?:st|nd|rd|th)|At-Large)_Congressional_District_election,_2026$/.exec(key);
+  const name = senate?.[2] ?? house?.[1] ?? district?.[1];
+  const state = name ? stateCodeOf(name.replaceAll("_", " ")) : null;
+  if (!state) return null;
+  const office = senate ? "us_senate" as const : "us_house" as const;
+  const hint = senate ? undefined : house ? "at-large" : district![2] ?? "at-large";
+  return { seat: seatOf(state, office, hint === "at-large" ? "0" : hint, Boolean(senate?.[1])),
+    race: { state, office, electionDate: "2026-11-03", ...(hint ? { districtHint: hint } : {}),
+      url: `https://ballotpedia.org/${encodeURI(key).replaceAll("'", "%27")}` } };
+}
+
+/** Throws unless the text is a version-1 capture file. Pages are indexed by seat, so a route's own spelling never has to match the page key. */
+export function parseCapturedBallotpedia(text: string): CapturedBallotpedia {
+  const file = JSON.parse(text) as { formatVersion?: unknown; capturedAt?: unknown; pages?: Record<string, unknown> };
+  if (file.formatVersion !== 1) throw new Error(`Captured Ballotpedia file has format version ${String(file.formatVersion)}, not 1`);
+  if (typeof file.capturedAt !== "string" || !file.pages || typeof file.pages !== "object") throw new Error("Captured Ballotpedia file has no capturedAt and pages");
+  const seats = new Map<string, string>(), races: BallotpediaRace[] = [];
+  for (const [key, html] of Object.entries(file.pages)) {
+    const found = typeof html === "string" ? capturedRace(key) : null;
+    if (found && !seats.has(found.seat)) { seats.set(found.seat, html as string); races.push(found.race); }
+  }
+  return { capturedAt: file.capturedAt, seats, races };
+}
+
+/** The race read from its captured page (checkedAt is the capture time), or null when the file has no page for the seat. */
+export function readCapturedBallotpediaResults(captured: CapturedBallotpedia, race: BallotpediaRace): ElectionResultBatch | null {
+  const special = /special/i.test(race.url), state = race.state.toUpperCase();
+  const seat = seatOf(state, race.office, race.districtHint, special);
+  const html = captured.seats.get(seat) ?? (race.office === "us_senate" ? captured.seats.get(seatOf(state, race.office, undefined, !special)) : undefined);
+  return html === undefined ? null : parseBallotpediaResults(html, race, captured.capturedAt);
 }

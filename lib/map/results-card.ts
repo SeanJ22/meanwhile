@@ -63,16 +63,3 @@ export function senateCard(name: string, result: DistrictResult | undefined, you
     raceThisYear: Boolean(result),
   };
 }
-
-/** Phone House view: how many seats in a state have flipped so far. */
-export function houseStateMeta(name: string, flips: number, yours: boolean): { title: string; meta: string } {
-  return { title: `U.S. House, ${name}`, meta: `${yours ? "Your state · " : ""}${flips ? `${flips} ${flips > 1 ? "seats" : "seat"} flipped so far` : "No flips reported yet"}` };
-}
-
-const PARTY_NAME = { D: "Democrat", R: "Republican", O: "Other" } as const;
-
-/** "Democrat 3 · Republican 2 · 1 still counting": the seats a state holds in one chamber so far. */
-export function seatSummary({ counts }: Pick<DistrictResult, "counts">): string {
-  return (["D", "R", "O", "counting"] as const).filter(key => counts[key] > 0)
-    .map(key => key === "counting" ? `${counts[key]} still counting` : `${PARTY_NAME[key]} ${counts[key]}`).join(" · ");
-}

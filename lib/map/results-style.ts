@@ -9,6 +9,7 @@ export const BADGE_INK = "#fdfaf4";
 export const INK = { ground: "#0f1117", line: "#0f1117", none: "#262a33", base: "#1e2028", stripeA: "#2a2d37", stripeB: "#4a4f5c", halo: "#4fc9e8", you: "#ffffff" } as const;
 
 export const RESULTS_STATES_SOURCE = "results-states";
+export const RESULTS_DISTRICTS_SOURCE = "results-districts";
 export const RESULTS_BADGES_SOURCE = "results-state-badges";
 export const resultsLayerId = (name: string) => `results-${name}`;
 export const isResultsLayer = (id: string) => id.startsWith("results-");
@@ -16,7 +17,9 @@ export const isResultsLayer = (id: string) => id.startsWith("results-");
 /** What the results draw on: a district kind within one state, or the state shapes themselves. */
 export type ResultsSurface =
   | { kind: "districts"; boundary: "congressional" | "state-senate" | "state-house"; state: string }
-  | { kind: "states" };
+  | { kind: "states" }
+  /** The national House view: all 435 districts in the Albers-USA layout, with the state lines over them. */
+  | { kind: "nation-districts" };
 
 export const imageIds = () => ({
   stripes: "results-stripes",
@@ -42,14 +45,14 @@ export const groundLayer = (): LayerSpecification => ({ id: resultsLayerId("grou
 export function resultLayers(
   surface: ResultsSurface,
   results: Readonly<Record<string, DistrictResult>>,
-  options: { yours: readonly string[] },
+  options: { yours: readonly string[]; stateLines?: boolean },
 ): LayerSpecification[] {
   const ink = INK;
   const images = imageIds();
   const on = surface.kind === "districts"
     ? { source: NATIONAL_BOUNDARIES_SOURCE, "source-layer": "districts" as const,
         base: ["all", ["==", ["get", "boundaryType"], surface.boundary], stateFilter(surface.state)] as FilterSpecification }
-    : { source: RESULTS_STATES_SOURCE, base: null as FilterSpecification | null };
+    : { source: surface.kind === "nation-districts" ? RESULTS_DISTRICTS_SOURCE : RESULTS_STATES_SOURCE, base: null as FilterSpecification | null };
   const layer = (suffix: string): { id: string; source: string; "source-layer"?: string } =>
     ({ id: resultsLayerId(suffix), source: on.source, ...("source-layer" in on ? { "source-layer": on["source-layer"] } : {}) });
   const groups = groupByFill(results);
@@ -73,11 +76,15 @@ export function resultLayers(
     layout: { "line-join": "round" },
     paint: { "line-color": ink.line, "line-width": surface.kind === "states" ? 0.8 : 0.7 },
   } as LayerSpecification);
+  if (surface.kind === "nation-districts" && options.stateLines) layers.push({
+    id: resultsLayerId("state-line"), type: "line", source: RESULTS_STATES_SOURCE, layout: { "line-join": "round" },
+    paint: { "line-color": INK.line, "line-width": 1.4 },
+  } as LayerSpecification);
   if (options.yours.length) layers.push({
     ...layer("yours"), type: "line", filter: withBase(on.base, idsIn(options.yours)),
     layout: { "line-join": "round" }, paint: { "line-color": ink.you, "line-width": 2.5 },
   } as LayerSpecification);
-  if (surface.kind === "districts") {
+  if (surface.kind !== "states") {
     for (const party of ["D", "R", "O"] as const) {
       const flipped = Object.values(results).filter(result => flipParty(result) === party).map(result => result.ocdId);
       if (!flipped.length) continue;

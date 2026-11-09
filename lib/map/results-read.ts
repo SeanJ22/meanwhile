@@ -52,9 +52,28 @@ function stateResults(state: string, { query = readerDatabaseQuery(), store = re
   return read;
 }
 
+/**
+ * Every congressional district's result, for the national House view. The one national summary says which states have
+ * reported House races; only those states' result feeds are read, and their U.S. House contests (no legislature, no
+ * candidates of other races) come from one batched database round trip. Nothing reported yet costs one blob read.
+ */
+async function houseDistrictResults({ query = readerDatabaseQuery(), store = resultFeedStore() }: ResultsSources): Promise<Record<string, DistrictResult>> {
+  const summary = await readNationalElectionResults(store);
+  const reported = Object.entries(summary?.states ?? {}).filter(([, offices]) => (offices.us_house?.reportedRaces ?? 0) > 0).map(([state]) => state);
+  const feeds = (await Promise.all(reported.map(async state => ({ state, feed: await readStateElectionResults(state, undefined, store) })))).flatMap(({ state, feed }) => feed ? [{ state, feed }] : []);
+  if (!feeds.length) return {};
+  if (!query) throw new Error("READER_STORE_NOT_CONFIGURED");
+  const answers = await query(feeds.map(({ state }) => mapBallotStatement(state, "congress")));
+  return Object.assign({}, ...feeds.map(({ feed }, index) => {
+    const ballot = latestResultBallot(mapBallotsFromRows(answers[index]), feed.facts);
+    return ballot ? resultsByDistrict(resultContests(ballot, feed.facts)) : {};
+  }));
+}
+
 /** The map's answer for a request, keyed by the division it colors. An empty answer means nothing is published there yet. */
 export async function mapResults(request: ResultsRequest, sources: ResultsSources = {}): Promise<Record<string, DistrictResult>> {
   if (request.scope === "state") return stateResults(request.state, sources);
+  if (request.scope === "us-house") return houseDistrictResults(sources);
   const summary = await readNationalElectionResults(sources.store ?? resultFeedStore());
   return summary ? nationalResults(summary, request.scope === "us-senate" ? "us_senate" : "us_house") : {};
 }

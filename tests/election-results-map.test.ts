@@ -228,18 +228,16 @@ test("requests parse to one state, the Senate, or the House; anything else is re
 const feedOf = (state: string, facts: BallotResultFacts): StateResultFeed => ({ formatVersion: 1, state, ballotVersion: null, checkedAt: AT, fingerprint: "synthetic", facts });
 const rowsFor = (ballot: ReturnType<typeof ballotOf>) => [{ published: true, payload: { kind: "ballot-contests", ballots: { [`${ballot.election.state}:${ballot.election.id}`]: ballot } } }];
 
-test("a national request reads the one published summary and never touches the ballots or the database", async context => {
+test("a national Senate request reads the one published summary and never touches the ballots or the database", async context => {
   const copy = electionFeedFixture(context);
   await copy.store.writeNation({ checkedAt: AT, sources: [], states: summary.states });
   let queries = 0;
   const query = async () => { queries++; return [[]]; };
   const senate = await mapResults({ scope: "us-senate" }, { store: copy.store, query });
   assert.deepEqual(Object.keys(senate).sort(), ["ocd-division/country:us/state:oh", "ocd-division/country:us/state:tx"]);
-  const house = await mapResults({ scope: "us-house" }, { store: copy.store, query });
-  assert.deepEqual(Object.keys(house).sort(), ["ocd-division/country:us/state:oh", "ocd-division/country:us/state:pa"]);
   assert.equal(queries, 0);
   assert.equal(copy.databaseReads(), 0);
-  assert.deepEqual(copy.reads, ["nation.json", "nation.json"]);
+  assert.deepEqual(copy.reads, ["nation.json"]);
 });
 
 test("nothing published nationally is an empty answer, so the national views show their banner", async context => {
@@ -286,7 +284,7 @@ test("search filters as you type, matches anywhere in the name, and an empty que
 
 /* -------------------------------------------------------------------- cards --- */
 
-import { districtCard, houseStateMeta, senateCard } from "../lib/map/results-card.ts";
+import { districtCard, senateCard } from "../lib/map/results-card.ts";
 
 const sldl = (n: number) => `ocd-division/country:us/state:az/sldl:${n}`;
 
@@ -319,12 +317,9 @@ test("a district with nothing filed has no rows, so its card says we are working
   assert.equal(card.flip, null);
 });
 
-test("Senate and House state cards", () => {
+test("Senate state card", () => {
   assert.equal(senateCard("Ohio", undefined, false).meta, "No U.S. Senate race this year");
   assert.equal(senateCard("Ohio", undefined, false).raceThisYear, false);
-  assert.deepEqual(houseStateMeta("Ohio", 3, false), { title: "U.S. House, Ohio", meta: "3 seats flipped so far" });
-  assert.equal(houseStateMeta("Arizona", 1, true).meta, "Your state · 1 seat flipped so far");
-  assert.equal(houseStateMeta("Utah", 0, false).meta, "No flips reported yet");
 });
 
 import { outlineBounds } from "../lib/map/results-counties.ts";
@@ -383,8 +378,6 @@ test("the next run of the results job shows up on the map's next read: nothing i
   await copy.store.writeNation({ checkedAt: "2026-11-08T08:00:00.000Z", sources: [], states: { ...summary.states, PA: { ...summary.states.PA, us_house: row({ D: 9, R: 9 }, 0, 0, 18) } } });
   const second = await mapResults({ scope: "state", state: "AZ" }, { store: copy.store, query });
   assert.equal(fillClass(second[azId("sldl", 6)]), "split", "the newly called seats are on the map");
-  const house = await mapResults({ scope: "us-house" }, { store: copy.store, query });
-  assert.equal(fillClass(house["ocd-division/country:us/state:pa"]), "split", "the new national summary is read, not the old one");
   assert.equal(copy.databaseReads(), 0);
 });
 
@@ -459,4 +452,74 @@ test("a House sample with every state, Alaska and Hawaii included, colors every 
   const layers = resultLayers({ kind: "states" }, house, { yours: [] });
   const fill = layers[0] as unknown as { paint: { "fill-color": unknown[] } };
   assert.ok(fill.paint["fill-color"].flat().includes(byFips("02")) && fill.paint["fill-color"].flat().includes(byFips("15")), "Alaska and Hawaii are in the color match");
+});
+
+/* ------------------------------------------- the national House map, by district --- */
+
+import { layOutDistricts, type NationalDistricts } from "../lib/map/albers-usa.ts";
+
+const cd = (state: string, n: number | "at-large") => `ocd-division/country:us/state:${state}/cd:${n}`;
+const heldFact = (status: string, matched: boolean) => ({ status, seatsToFill: 1, sourceId: "ballotpedia", sourceRaceId: `race-${status}-${matched}`, electionDate: "2026-11-03", ...attribution, ...matched ? { allCandidatesMatched: true } : {} });
+
+test("the national House map reads each reporting state's districts in one batch and colors them by result", async context => {
+  const copy = electionFeedFixture(context);
+  const house: Race[] = [
+    { id: "c1", ocdId: cd("az", 1), title: "U.S. House", status: "called", flip: "Democrat", flipSeats: 1, people: [["A", "Democrat", false, true, 60], ["B", "Republican", true, false, 40]] },
+    { id: "c2", ocdId: cd("az", 2), title: "U.S. House", status: "called", people: [["C", "Republican", true, true, 60], ["D", "Democrat", false, false, 40]] },
+    { id: "c3", ocdId: cd("az", 3), title: "U.S. House", status: "counting", people: [["E", "Democrat", false, false, 5], ["F", "Republican", false, false, 4]] },
+    { id: "c4", ocdId: cd("az", 4), title: "U.S. House", status: "called", people: [["G", "Republican", true, true, 60], ["H", "Democrat", false, false, 40]] },
+  ];
+  const held = factsOf(house);
+  // c2 was called, but the publisher could not match every candidate with votes: RT-05 holds its outcome back.
+  for (const race of house) Object.assign(held, { [race.id]: { ...held[race.id] as object, ...heldFact(race.status, race.id !== "c2") } });
+  await copy.store.writeNation({ checkedAt: AT, sources: [], states: { AZ: { us_house: row({ D: 1, R: 1 }, 2, 1, 4), us_senate: row({}, 0, 0, 0) }, OH: { us_house: row({}, 0, 0, 0), us_senate: row({}, 0, 0, 0) } } });
+  await copy.store.writeState("AZ", feedOf("AZ", held));
+  const calls: string[] = [];
+  const query = async (statements: { params?: unknown[]; text: string }[]) => { calls.push(String(statements.length)); return statements.map(() => rowsFor(ballotOf(house))); };
+  const drawn = await mapResults({ scope: "us-house" }, { store: copy.store, query: query as never });
+  assert.deepEqual(calls, ["1"], "one database round trip, for the one state that reported");
+  assert.deepEqual(copy.reads.sort(), ["nation.json", "states/AZ.json"], "the national document and the reporting state's feed only");
+  assert.equal(fillClass(drawn[cd("az", 1)]), "D");
+  assert.equal(flipParty(drawn[cd("az", 1)]), "D");
+  assert.equal(fillClass(drawn[cd("az", 3)]), "counting");
+  assert.equal(fillClass(drawn[cd("az", 4)]), "R");
+  assert.equal(drawn[cd("az", 2)], undefined, "a race whose candidates did not all match shows no party color: its district stays neutral");
+  const fill = (resultLayers({ kind: "nation-districts" }, drawn, { yours: [] })[0] as unknown as { source: string; paint: { "fill-color": unknown[] } });
+  assert.equal(fill.source, "results-districts");
+  const colors = JSON.stringify(fill.paint["fill-color"]);
+  assert.ok(colors.includes(cd("az", 1)) && colors.includes(cd("az", 4)) && !colors.includes(cd("az", 2)), "only districts with a guarded result are in the color match");
+});
+
+test("a House with nothing reported costs one blob read and no database request", async context => {
+  const copy = electionFeedFixture(context);
+  await copy.store.writeNation({ checkedAt: AT, sources: [], states: { OH: { us_house: row({}, 0, 0, 0), us_senate: row({}, 0, 0, 0) } } });
+  assert.deepEqual(await mapResults({ scope: "us-house" }, { store: copy.store, query: async () => { throw new Error("no database"); } }), {});
+  assert.deepEqual(copy.reads, ["nation.json"]);
+});
+
+const national = JSON.parse(readOutlines(new URL("../public/geo/cd-national.json", import.meta.url), "utf8")) as NationalDistricts;
+
+test("the national district layer holds every House seat, Alaska and Hawaii included, light enough for first paint", () => {
+  const ids = national.features.map(f => f.properties.ocdId);
+  assert.equal(new Set(ids).size, 436, "435 seats plus the District of Columbia");
+  for (const id of [cd("ak", "at-large"), cd("hi", 1), cd("hi", 2), cd("wy", "at-large"), cd("ca", 52), cd("tx", 38)]) assert.ok(ids.includes(id), id);
+  assert.ok(!ids.some(id => /territory:/.test(id)));
+  assert.ok(readOutlines(new URL("../public/geo/cd-national.json", import.meta.url)).length < 400_000, "under 400 KB before compression");
+});
+
+test("laid out, every district sits where its state does: Alaska and Hawaii in their insets below the lower 48", () => {
+  const { shapes: laidDistricts, bounds: districtBounds } = layOutDistricts(national);
+  const width = laid.bounds[1][0] - laid.bounds[0][0];
+  for (const [i, j] of [[0, 0], [0, 1], [1, 0], [1, 1]]) assert.ok(Math.abs(districtBounds[i][j] - laid.bounds[i][j]) < width * 0.02, "the districts frame the same box the states do");
+  assert.equal(laidDistricts.features.length, 436);
+  const box = (match: (id: string) => boolean) => {
+    const points = laidDistricts.features.filter(f => match(f.properties.ocdId))
+      .flatMap(f => (f.geometry.type === "Polygon" ? [f.geometry.coordinates] : f.geometry.coordinates).flat(2) as unknown as number[][]);
+    const xs = points.map(p => p[0]), ys = points.map(p => p[1]);
+    return { west: Math.min(...xs), east: Math.max(...xs), south: Math.min(...ys), north: Math.max(...ys) };
+  };
+  const [ca, az, nm, ak, hi] = [/state:ca\//, /state:az\//, /state:nm\//, /state:ak\//, /state:hi\//].map(re => box(id => re.test(id)));
+  for (const inset of [ak, hi]) for (const neighbour of [ca, az, nm]) assert.ok(apart(inset, neighbour), "an inset never overlaps the states above it");
+  assert.ok(ak.north < Math.min(ca.south, az.south) && hi.north < az.south && hi.west > ak.west);
+  for (const id of laidDistricts.features.map(f => f.properties.ocdId)) assert.ok(laid.shapes.features.some(f => id.startsWith(f.properties.ocdId + "/")), `${id} belongs to a laid-out state`);
 });

@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import type { FilterSpecification, MapMouseEvent } from "maplibre-gl";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { NATIONAL_BOUNDARIES_SOURCE } from "@/lib/map/districts";
-import { layOutStates } from "@/lib/map/albers-usa";
+import { layOutDistricts, layOutStates, loadNationalDistricts } from "@/lib/map/albers-usa";
 import { loadStateOutlines, stateAbbrFromOcdId, stateFilter, type StateOutlines } from "@/lib/map/state-focus";
 import { stateOcd, type DistrictResult } from "@/lib/map/results";
-import { districtCard, houseStateMeta, seatSummary, senateCard } from "@/lib/map/results-card";
+import { districtCard, senateCard } from "@/lib/map/results-card";
 import { countyChoices, outlineBounds, type CountyChoice } from "@/lib/map/results-counties";
 import { canDrawResults, clearResultLayers, drawResultLayers } from "@/lib/map/results-apply";
 import { countyOutlineLayers, resultLayers, resultsLayerId, stateBadgeLayers, stateBadgePoints, type ResultsSurface, } from "@/lib/map/results-style";
-import { closeResults, setResultsDistricts, setResultsScope, showResultsState, useResultsScope, type ResultsState } from "@/lib/map/results-scope";
+import { closeResults, setResultsDistricts, setResultsScope, showResultsState, useResultsScope } from "@/lib/map/results-scope";
 import { Banner, CountyChip, GettingBanner, Legend, MapCard, PillButton, Segmented, Sheet, WinnerRow, type LegendKey } from "./results-chrome";
 import { useMapInstance } from "./map-instance";
 import { MapScorecard } from "./results-scorecard";
@@ -60,6 +60,18 @@ function useOutlines(): StateOutlines | null {
   return outlines;
 }
 
+/** The simplified national districts in the Albers-USA layout, fetched only once the national House view is chosen. */
+function useNationalDistricts(wanted: boolean): ReturnType<typeof layOutDistricts> | null {
+  const [districts, setDistricts] = useState<ReturnType<typeof layOutDistricts> | null>(null);
+  useEffect(() => {
+    if (!wanted) return;
+    let live = true;
+    loadNationalDistricts().then(value => { if (live) setDistricts(layOutDistricts(value)); }, () => undefined);
+    return () => { live = false; };
+  }, [wanted]);
+  return districts;
+}
+
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 export interface ResultsMapProps {
@@ -79,7 +91,6 @@ export default function ResultsMap({ phone, yours, zip }: ResultsMapProps) {
   const laid = useMemo(() => outlines ? layOutStates(outlines) : null, [outlines]);
   const [layer, setLayer] = useState<StateLayer>("sen");
   const [natLayer, setNatLayer] = useState<"sen" | "house">("sen");
-  const [houseState, setHouseState] = useState<ResultsState | null>(null);
   // A county or a tapped district belongs to the scene it was chosen in; a new scene starts clear.
   const [countyHeld, setCountyHeld] = useState<{ scene: string; county: CountyChoice | null } | null>(null);
   const [counties, setCounties] = useState<CountyChoice[]>([]);
@@ -89,47 +100,49 @@ export default function ResultsMap({ phone, yours, zip }: ResultsMapProps) {
   const [topBottom, setTopBottom] = useState(0);
 
   const nation = scope === "nation";
-  const statesFirst = nation && natLayer === "house" && !houseState;
-  const sceneKey = !nation ? `state:${state.abbr}` : houseState ? `house:${houseState.abbr}` : "nation";
+  const nationHouse = nation && natLayer === "house";
+  const nationDistricts = useNationalDistricts(nationHouse);
+  // The House view needs only its districts to draw and to frame the camera; the state shapes join when they arrive.
+  const nationBounds = laid?.bounds ?? nationDistricts?.bounds ?? null;
+  const sceneKey = !nation ? `state:${state.abbr}` : "nation";
   const county = countyHeld?.scene === sceneKey ? countyHeld.county : null;
   const picked = pickedHeld?.scene === sceneKey ? pickedHeld : null;
   const setCounty = (value: CountyChoice | null) => setCountyHeld({ scene: sceneKey, county: value });
   const setPicked = (value: { ocdId: string; name: string } | null) => setPickedHeld(value && { scene: sceneKey, ...value });
-  const houseAbbr = houseState?.abbr ?? null;
   const surface: ResultsSurface = useMemo(() => !nation
     ? { kind: "districts", boundary: BOUNDARY[layer], state: state.abbr }
-    : natLayer === "house" && houseAbbr ? { kind: "districts", boundary: "congressional", state: houseAbbr } : { kind: "states" },
-  [nation, layer, state.abbr, natLayer, houseAbbr]);
+    : natLayer === "house" ? { kind: "nation-districts" } : { kind: "states" },
+  [nation, layer, state.abbr, natLayer]);
   const needsDistricts = surface.kind === "districts";
   useEffect(() => { setResultsDistricts(needsDistricts); }, [needsDistricts]);
 
-  // A state's districts come from that state's results; the national views come from the one national summary.
-  const request = !nation ? `scope=state&state=${state.abbr}` : houseAbbr ? `scope=state&state=${houseAbbr}` : natLayer === "sen" ? "scope=us-senate" : "scope=us-house";
+  // A state's districts come from that state's results; the national Senate view from the one national summary, the House view from every reporting district.
+  const request = !nation ? `scope=state&state=${state.abbr}` : natLayer === "sen" ? "scope=us-senate" : "scope=us-house";
   const { results, failed } = useResults(request);
   const drawn: Results = results ?? NO_RESULTS;
 
   const stateName = useCallback((abbr: string) => outlines?.features.find(f => stateAbbrFromOcdId(f.properties.ocdId) === abbr)?.properties.name ?? abbr, [outlines]);
-  const yoursOnSurface = useMemo(() => surface.kind === "states" ? [stateOcd(home.abbr)] : yours.filter(id => id.includes(surface.boundary === "congressional" ? "/cd:" : surface.boundary === "state-senate" ? "/sldu:" : "/sldl:")),
+  const yoursOnSurface = useMemo(() => surface.kind === "states" ? [stateOcd(home.abbr)] : yours.filter(id => id.includes(surface.kind === "nation-districts" || surface.boundary === "congressional" ? "/cd:" : surface.boundary === "state-senate" ? "/sldu:" : "/sldl:")),
     [surface, yours, home.abbr]);
 
   /* ------------------------------------------------------ layers on the map --- */
   const specs = useMemo(() => {
-    const base = resultLayers(surface, drawn, { yours: yoursOnSurface });
+    const base = resultLayers(surface, drawn, { yours: yoursOnSurface, stateLines: Boolean(laid) });
     const badges = surface.kind === "states" && laid
       ? stateBadgePoints(laid.shapes.features, Object.fromEntries(Object.values(drawn).flatMap(result => {
-        const count = result.flipSeats ?? 0;
-        return statesFirst ? count > 0 ? [[result.ocdId, { party: result.flipTo ?? "O" as const, count }]] : [] : result.flipTo ? [[result.ocdId, { party: result.flipTo }]] : [];
+        return result.flipTo ? [[result.ocdId, { party: result.flipTo }]] : [];
       })))
       : null;
-    return { layers: [...base, ...(badges ? stateBadgeLayers(statesFirst) : []), ...(county && surface.kind === "districts" ? countyOutlineLayers(county.ocdId) : [])], badges };
-  }, [surface, drawn, yoursOnSurface, laid, statesFirst, county]);
+    return { layers: [...base, ...(badges ? stateBadgeLayers(false) : []), ...(county && surface.kind === "districts" ? countyOutlineLayers(county.ocdId) : [])], badges };
+  }, [surface, drawn, yoursOnSurface, laid, county]);
 
   useEffect(() => {
     let attaching = false;
     const ensure = () => {
-      if (attaching || !canDrawResults(map, surface.kind === "districts") || surface.kind === "states" && !laid) return;
+      if (attaching || !canDrawResults(map, surface.kind === "districts") || surface.kind === "states" && !laid || surface.kind === "nation-districts" && !nationDistricts) return;
       attaching = true;
-      try { drawResultLayers(map, specs.layers, { states: surface.kind === "states" ? laid?.shapes ?? null : null, badges: specs.badges }); }
+      try { drawResultLayers(map, specs.layers, { states: surface.kind !== "districts" ? laid?.shapes ?? null : null,
+        districts: surface.kind === "nation-districts" ? nationDistricts?.shapes ?? null : null, badges: specs.badges }); }
       catch { /* The style is mid-change; the next styledata puts the layers back. */ }
       finally { attaching = false; }
     };
@@ -137,7 +150,7 @@ export default function ResultsMap({ phone, yours, zip }: ResultsMapProps) {
     const onStyle = () => { if (!attaching && !map.getLayer(resultsLayerId("fill")) && canDrawResults(map, surface.kind === "districts")) ensure(); };
     map.on("styledata", onStyle);
     return () => { map.off("styledata", onStyle); try { clearResultLayers(map); } catch { /* The map is gone. */ } };
-  }, [map, specs, surface, laid]);
+  }, [map, specs, surface, laid, nationDistricts]);
 
   // Closing the results takes everything off the map, the state shapes too.
   useEffect(() => () => { try { clearResultLayers(map, true); } catch { /* The map is gone. */ } }, [map]);
@@ -154,13 +167,10 @@ export default function ResultsMap({ phone, yours, zip }: ResultsMapProps) {
   }, [outlines, state.abbr, fit]);
   useEffect(() => {
     if (!nation && outlines) fitState();
-    else if (nation && houseAbbr) {
-      const bounds = outlineBounds(outlines?.features.find(f => stateAbbrFromOcdId(f.properties.ocdId) === houseAbbr) ?? null);
-      if (bounds) fit(bounds);
-    } else if (nation && laid) fit(laid.bounds, 14);
+    else if (nation && nationBounds) fit(nationBounds, 14);
     // The camera moves when the scene changes, not when the outlines or padding objects do.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sceneKey, !outlines, !laid]);
+  }, [sceneKey, !outlines, !nationBounds]);
 
   /* --------------------------------------------------------------- counties --- */
   useEffect(() => {
@@ -206,9 +216,7 @@ export default function ResultsMap({ phone, yours, zip }: ResultsMapProps) {
   const count = Object.keys(results ?? {}).length;
   const banner = failed ? <>We couldn&apos;t load results just now. Reload to try again.</>
     : !results ? null
-    : nation && houseState ? <>{count === 0 ? <GettingBanner about={`${houseState.name} district results`} /> : `${houseState.name} districts.`} <button type="button" onClick={() => setHouseState(null)}>Back to all states</button></>
     : nation && count === 0 ? <GettingBanner about={natLayer === "sen" ? "U.S. Senate results" : "U.S. House results"} />
-    : statesFirst ? <>Numbers show House seats flipped so far. Tap a state to see its districts.</>
     : !nation && !Object.keys(results).some(id => id.includes(layer === "cd" ? "/cd:" : layer === "sen" ? "/sldu:" : "/sldl:")) ? <GettingBanner about={`${state.name} district results`} />
     : null;
 
@@ -224,7 +232,7 @@ export default function ResultsMap({ phone, yours, zip }: ResultsMapProps) {
   const card = (() => {
     if (!picked) return null;
     const close = () => setPicked(null);
-    if (surface.kind === "districts") {
+    if (surface.kind !== "states") {
       const model = districtCard(picked.ocdId, results?.[picked.ocdId], yours.includes(picked.ocdId));
       return <MapCard title={model.title} meta={model.meta} flip={model.flip} onClose={close}>
         {model.hasResult
@@ -234,13 +242,6 @@ export default function ResultsMap({ phone, yours, zip }: ResultsMapProps) {
       </MapCard>;
     }
     const abbr = stateAbbrFromOcdId(picked.ocdId) ?? "", name = picked.name || stateName(abbr), mine = abbr === home.abbr;
-    if (statesFirst) {
-      const result = results?.[picked.ocdId], model = houseStateMeta(name, result?.flipSeats ?? 0, mine);
-      return <MapCard title={model.title} meta={model.meta} onClose={close}>
-        {result && <p className={styles.dim} style={{ margin: 0, lineHeight: 1.45 }}>{seatSummary(result)}</p>}
-        <PillButton arrow="right" onClick={() => { setHouseState({ abbr, name }); setPicked(null); }}>See {name}&rsquo;s districts</PillButton>
-      </MapCard>;
-    }
     const model = senateCard(name, results?.[picked.ocdId], mine);
     return <MapCard title={model.title} meta={model.meta} flip={model.flip} onClose={close}>
       {model.raceThisYear ? model.rows.map((row, index) => <WinnerRow key={index} {...row} />)
@@ -262,7 +263,7 @@ export default function ResultsMap({ phone, yours, zip }: ResultsMapProps) {
         </div>
         {!nation && state.abbr !== home.abbr && <PillButton arrow="left" onClick={() => showResultsState(home)}>Back to {home.name}</PillButton>}
         {nation
-          ? <Segmented label="Show" items={NATION_LAYERS} value={natLayer} onChange={id => { setNatLayer(id); setHouseState(null); setPicked(null); }} />
+          ? <Segmented label="Show" items={NATION_LAYERS} value={natLayer} onChange={id => { setNatLayer(id); setPicked(null); }} />
           : <Segmented label="Show" items={STATE_LAYERS} value={layer} onChange={id => { setLayer(id); setPicked(null); }} />}
         <div className={styles.chips}>
           {!nation && <>

@@ -56,6 +56,7 @@
     "start": "next start",
     "state-holdings:project": "tsx --import ./scripts/register-test-loader.mjs scripts/state-holdings-project.mts",
     "states:fetch": "tsx --import ./scripts/register-test-loader.mjs scripts/fetch-state-outlines.mts",
+    "districts:national": "node --experimental-strip-types scripts/build-national-districts.mts",
     "test": "node scripts/ci-tests.mjs",
     "test:bundle": "node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/feedback.test.ts",
     "tiger:fetch": "tsx --import ./scripts/register-test-loader.mjs scripts/fetch-tiger-national.mts",

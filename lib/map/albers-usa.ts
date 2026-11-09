@@ -1,3 +1,4 @@
+import { fetchReaderResponse, readReaderJson } from "../reader/bootstrap.ts";
 import type { StateOutlines } from "./state-focus.ts";
 
 /**
@@ -58,4 +59,37 @@ export function layOutStates(outlines: StateOutlines): LaidOutStates {
     return { type: "Feature" as const, properties: { ocdId, name }, geometry: { type: "Polygon" as const, coordinates } };
   });
   return { shapes: { type: "FeatureCollection", features }, bounds };
+}
+
+export interface NationalDistricts { type: "FeatureCollection"; features: { type: "Feature"; properties: { ocdId: string }; geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon }[] }
+
+/** Every congressional district in the same layout as the states, so they sit exactly inside the state shapes. Districts of territories are not part of it. */
+export function layOutDistricts(districts: NationalDistricts): { shapes: GeoJSON.FeatureCollection<GeoJSON.Polygon | GeoJSON.MultiPolygon, { ocdId: string }>; bounds: LaidOutStates["bounds"] } {
+  const bounds: LaidOutStates["bounds"] = [[Infinity, Infinity], [-Infinity, -Infinity]];
+  const place = (state: string) => (ring: number[][]) => ring.map(([lng, lat]) => {
+    const point = planePoint(planeOf(state)(lng, lat));
+    bounds[0] = [Math.min(bounds[0][0], point[0]), Math.min(bounds[0][1], point[1])];
+    bounds[1] = [Math.max(bounds[1][0], point[0]), Math.max(bounds[1][1], point[1])];
+    return point;
+  });
+  const features = districts.features.filter(({ properties: { ocdId } }) => !TERRITORIES.test(ocdId.replace(/\/cd:.*$/, ""))).map(({ properties, geometry }) => {
+    const state = properties.ocdId.replace(/\/cd:.*$/, ""), lay = place(state);
+    const polygons = (geometry.type === "Polygon" ? [geometry.coordinates] : geometry.coordinates)
+      .map(rings => rings.filter(ring => keepRing(state, ring)).map(lay)).filter(rings => rings.length > 0);
+    return { type: "Feature" as const, properties: { ocdId: properties.ocdId },
+      geometry: polygons.length === 1 ? { type: "Polygon" as const, coordinates: polygons[0] } : { type: "MultiPolygon" as const, coordinates: polygons } };
+  });
+  return { shapes: { type: "FeatureCollection", features }, bounds };
+}
+
+export const NATIONAL_DISTRICTS_URL = "/geo/cd-national.json";
+let districtsLoad: Promise<NationalDistricts> | null = null;
+
+/** The simplified districts, fetched once and only when the national House view asks. */
+export function loadNationalDistricts(): Promise<NationalDistricts> {
+  districtsLoad ??= fetchReaderResponse(NATIONAL_DISTRICTS_URL).then(response => {
+    if (!response.ok) throw new Error(`National districts: ${response.status}`);
+    return readReaderJson<NationalDistricts>(response);
+  }).catch(error => { districtsLoad = null; throw error; });
+  return districtsLoad;
 }

@@ -118,7 +118,8 @@ export function parseBallotpediaResults(html: string, race: BallotpediaRace, che
   }
   const descriptions = [...html.matchAll(/<meta\b[^>]*>/gi)].filter(meta => attr(meta[0], "name") === "description").map(meta => attr(meta[0], "content"));
   const winnerNames = candidates.filter(candidate => candidate.won).map(candidate => candidate.name);
-  const called = [text(narrative), ...descriptions].some(statement => statement.includes(year) && /\bdefeated\b/i.test(statement)
+  // Ballotpedia ticks the winner in a general-election votebox only once the race is called; that mark is the call even when its text has not caught up.
+  const called = !primary && winnerNames.length > 0 || [text(narrative), ...descriptions].some(statement => statement.includes(year) && /\bdefeated\b/i.test(statement)
     && winnerNames.some(name => statement.toLocaleLowerCase().includes(name.toLocaleLowerCase())));
   const certified = /results have been certified/i.test(text(section));
   const percentCounted = /(\d+(?:\.\d+)?)%\s+(?:of\s+)?(?:the\s+)?(?:votes|precincts)\s+(?:counted|reporting)/i.exec(text(section));

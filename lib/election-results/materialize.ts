@@ -6,7 +6,7 @@ import { canonicalCivicDataHash } from "../civic-data/canonical-hash.ts";
 import type { StateResultFeed } from "./feed-types.ts";
 import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import type { ResultProgress } from "./publisher.ts";
-import { readBallotResultPublication } from "../reader/canonical.ts";
+import { readBallotResultPublication, readCanonicalShelf } from "../reader/canonical.ts";
 import { stateBallotScope } from "../civic-data/state-scopes.ts";
 import type { Query } from "../facts/publish.ts";
 
@@ -32,6 +32,25 @@ export async function readResultProjection(query: Query, state: string): Promise
   return { key, versionId: entry.projection.versionId, payload: entry.projection.payload as GenericBallotProjection,
     hash: null,
     facts: store.additionalRows[0]?.facts as BallotResultFacts ?? {} };
+}
+
+/** Every state's served ballot and its already filed result facts in one read. A state with no served ballot is null. */
+export async function readResultProjections(query: Query, states: readonly string[]): Promise<Map<string, ResultProjection | null>> {
+  const scopes = states.map(state => stateBallotScope("ballot-contests", state)), keys = scopes.map(scope => `BALLOT_CANDIDACY:${scope}`);
+  const store = await readCanonicalShelf(scopes.map(scope => ({ recordClass: "BALLOT_CANDIDACY" as const, scope })), async statements => {
+    const rows = [];
+    for (const statement of statements) rows.push(await query(statement.text, statement.params));
+    return rows;
+  }, { text: `SELECT p.key,${resultFactsForPublicationSql("p.payload")} AS facts FROM civic_data_promotions p WHERE p.key=ANY($1::text[])`, params: [keys] });
+  const out = new Map<string, ResultProjection | null>();
+  for (const [index, state] of states.entries()) {
+    const entry = await store.readPromotedEntry!("BALLOT_CANDIDACY", scopes[index]);
+    if (entry.kind === "NOT_RECORDED") { out.set(state, null); continue; }
+    if (entry.kind !== "PROMOTED") throw new Error(`Election results cannot read ${state}'s served ballot`);
+    out.set(state, { key: keys[index], versionId: entry.projection.versionId, payload: entry.projection.payload as GenericBallotProjection, hash: null,
+      facts: store.additionalRows.find(row => row.key === keys[index])?.facts as BallotResultFacts ?? {} });
+  }
+  return out;
 }
 
 /** Confirmation dates change in the prepared feed, never at ballot request time. */

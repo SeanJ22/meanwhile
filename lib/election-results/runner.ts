@@ -24,12 +24,15 @@ import { officeIdentity } from "../officials/office-identity.ts";
 import { runtimeCivicReadCache, type CivicReadCache } from "../db/civic-read-cache.ts";
 import type { ElectionResult, ElectionResultBatch } from "./types.ts";
 import type { BallotResultFacts, BallotElectionSummary } from "../ballot/election-results.ts";
-import { readResultProjection, refreshedResultFacts, preparedStateResultFeed, projectionBallots, type ResultProjection } from "./materialize.ts";
+import { readResultProjection, readResultProjections, refreshedResultFacts, preparedStateResultFeed, projectionBallots, type ResultProjection } from "./materialize.ts";
 import { runnerResultFeedStore, type ElectionResultFeedStore } from "./feed-store.ts";
 import type { StateResultFeed } from "./feed-types.ts";
 import { summarizeCongressResults, type NationalCongressSummary } from "./summary.ts";
 
-const STATES = "AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY".split(" ");
+const STATES_BASE = "AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY".split(" ");
+const STATES = STATES_BASE;
+/** Codes a served ballot may carry: the fifty states, the District and the territories. A state is read only when a ballot is served for it. */
+const BALLOT_CODES = [...STATES_BASE, "DC", "AS", "GU", "MP", "PR", "VI"];
 /** States whose results are read, matched and written side by side. */
 const STATE_LANES = 4;
 const cursorName = (state: string) => `election-results:${state}`;
@@ -122,7 +125,7 @@ export async function runElectionResults(input: {
   const maxFixRows = input.maxFixRows ?? 100;
   if (!Number.isSafeInteger(maxFixRows) || maxFixRows < 1) throw new RangeError("maxFixRows must be a positive integer");
   let fixRowsWritten = 0;
-  const now = input.now ?? new Date(), at = now.toISOString(), states = input.states ?? STATES;
+  const now = input.now ?? new Date(), at = now.toISOString();
   // The MultiState download is time-limited (a caller's own fetch is used as given); a timeout is that read's ordinary failure.
   const limited = (ms: number): typeof fetch => (url, init) => fetch(url, { ...init, signal: AbortSignal.timeout(ms) });
   const multistateFetch = input.fetch ?? limited(120_000);
@@ -136,6 +139,12 @@ export async function runElectionResults(input: {
   };
   const query = count(input.query), db: FactDb = { transaction: work => input.db.transaction(tx => work(count(tx))) };
   const workQuery = input.workQuery ?? query;
+  // Every state, the District and the territories that have a served ballot, taken from the served scopes rather than a fixed list.
+  const states: readonly string[] = input.states ?? await (async () => {
+    const served = new Set((await query("SELECT scope FROM civic_data_promotions WHERE record_class='BALLOT_CANDIDACY'")).map(row => String(row.scope)));
+    const held = BALLOT_CODES.filter(code => served.has(stateBallotScope("ballot-contests", code)));
+    return held.length ? held : STATES;
+  })();
   const cache = (input.cache ?? runtimeCivicReadCache()).jobState();
   const savedClocks = await cache.readCheckpoint<unknown>(CLOCK_CACHE_NAMESPACE, CLOCK_CACHE_KEY);
   const cached: Record<string, CachedClock> = {};
@@ -286,46 +295,64 @@ export async function runElectionResults(input: {
   }
   if (captured) nation = { ...nation, federalRoutes: [...new Map([...nation.federalRoutes ?? [], ...captured.races]
     .map(page => [ballotpediaRaceId(page.url), page])).values()] };
-  for (const office of ["us_senate", "us_house"] as const) {
-    if (!more()) { unfinished = true; break; }
-    const key = `ballotpedia:${office}`, next = sourceNext(nation, key);
-    const injected = input.congressSummaries?.find(batch => batch.summaries.some(summary => summary.chambers.some(chamber => chamber.name === office)));
-    // Without an injected batch the overview comes from the captured file, and only when that capture is newer than the one last published (certified or not).
-    const capturedNew = !injected && captured !== null && captured.capturedAt > (nation.capturedSummaryAt?.[office] ?? "");
-    if (!injected && captured !== null && !captured.overviews[office]) {
-      console.log(`Ballotpedia ${office} overview page is not in the captured file yet; the chamber summary waits for the next refresh.`);
-      continue;
+  // Race pages the overviews name are known before any state reads its routes; the summaries themselves publish while the states run.
+  for (const batch of input.congressSummaries ?? []) if (batch.racePages) nation = { ...nation, federalRoutes: [...new Map([
+    ...nation.federalRoutes ?? [], ...batch.racePages].map(page => [ballotpediaRaceId(page.url), page])).values()] };
+  // The national Senate and House summaries are read and published while the states run, not before them.
+  const nationalTask = async (): Promise<void> => {
+    for (const office of ["us_senate", "us_house"] as const) {
+      if (!more()) { unfinished = true; break; }
+      const key = `ballotpedia:${office}`, next = sourceNext(nation, key);
+      const injected = input.congressSummaries?.find(batch => batch.summaries.some(summary => summary.chambers.some(chamber => chamber.name === office)));
+      // Without an injected batch the overview comes from the captured file, and only when that capture is newer than the one last published (certified or not).
+      const capturedNew = !injected && captured !== null && captured.capturedAt > (nation.capturedSummaryAt?.[office] ?? "");
+      if (!injected && captured !== null && !captured.overviews[office]) {
+        console.log(`Ballotpedia ${office} overview page is not in the captured file yet; the chamber summary waits for the next refresh.`);
+        continue;
+      }
+      if (!capturedNew && !nation.pendingSources?.includes(key) && congressCertified && lastCertification && (nation.sourceChecks?.[key]?.checkedAt ?? "") >= lastCertification) continue;
+      if (!capturedNew) {
+        if (next === null) continue;
+        if (next > at) { due.push(next); continue; }
+      }
+      try {
+        const batch = injected ?? (capturedNew ? await readCapturedCongressSummary(captured!, office) : null);
+        if (!batch) continue;
+        if (batch.racePages) nation = { ...nation, federalRoutes: [...new Map([
+          ...nation.federalRoutes ?? [], ...batch.racePages,
+        ].map(page => [ballotpediaRaceId(page.url), page])).values()] };
+        const readerFacts = { ...nation.readerFacts };
+        const changed = await publishElectionResultBatch({ query, workQuery, db, batch, ballots: [], state: "US", prior: nation, now,
+          door: doors.get("ballotpedia"), purge: input.purge, more, writeFix,
+          accepted: (id, field, value) => { readerFacts[field.startsWith("election_summary:") ? `${id}#${field}` : id] = value; } });
+        nation = checked(pending({ ...nation, ...changed.progress, readerFacts, ...capturedNew && !changed.deferred
+          ? { capturedSummaryAt: { ...nation.capturedSummaryAt, [office]: captured!.capturedAt } } : {} }, key, changed.deferred), key, Boolean(batch.catalogErrors?.length));
+        unfinished ||= changed.deferred;
+        for (const issue of batch.catalogErrors ?? []) await failure("US", issue.url, issue.reason);
+        noteOutcome("ballotpedia", null);
+        for (const count of Object.keys(result) as (keyof ResultCounts)[]) result[count] += changed.counts[count];
+      } catch (error) {
+        nation = checked(pending(nation, key, false), key, true);
+        await failure("US", `https://ballotpedia.org/United_States_${office === "us_house" ? "House_of_Representatives" : "Senate"}_elections,_2026`, String(error));
+      }
+      const nextCheck = sourceNext(nation, key, false);
+      if (nextCheck) due.push(nextCheck);
     }
-    if (!capturedNew && !nation.pendingSources?.includes(key) && congressCertified && lastCertification && (nation.sourceChecks?.[key]?.checkedAt ?? "") >= lastCertification) continue;
-    if (!capturedNew) {
-      if (next === null) continue;
-      if (next > at) { due.push(next); continue; }
-    }
-    try {
-      const batch = injected ?? (capturedNew ? await readCapturedCongressSummary(captured!, office) : null);
-      if (!batch) continue;
-      if (batch.racePages) nation = { ...nation, federalRoutes: [...new Map([
-        ...nation.federalRoutes ?? [], ...batch.racePages,
-      ].map(page => [ballotpediaRaceId(page.url), page])).values()] };
-      const readerFacts = { ...nation.readerFacts };
-      const changed = await publishElectionResultBatch({ query, workQuery, db, batch, ballots: [], state: "US", prior: nation, now,
-        door: doors.get("ballotpedia"), purge: input.purge, more, writeFix,
-        accepted: (id, field, value) => { readerFacts[field.startsWith("election_summary:") ? `${id}#${field}` : id] = value; } });
-      nation = checked(pending({ ...nation, ...changed.progress, readerFacts, ...capturedNew && !changed.deferred
-        ? { capturedSummaryAt: { ...nation.capturedSummaryAt, [office]: captured!.capturedAt } } : {} }, key, changed.deferred), key, Boolean(batch.catalogErrors?.length));
-      unfinished ||= changed.deferred;
-      for (const issue of batch.catalogErrors ?? []) await failure("US", issue.url, issue.reason);
-      noteOutcome("ballotpedia", null);
-      for (const count of Object.keys(result) as (keyof ResultCounts)[]) result[count] += changed.counts[count];
-    } catch (error) {
-      nation = checked(pending(nation, key, false), key, true);
-      await failure("US", `https://ballotpedia.org/United_States_${office === "us_house" ? "House_of_Representatives" : "Senate"}_elections,_2026`, String(error));
-    }
-    const nextCheck = sourceNext(nation, key, false);
-    if (nextCheck) due.push(nextCheck);
-  }
-  await saveProgress("US", nation);
+    await saveProgress("US", nation);
+  };
   const projections = new Map<string, ResultProjection | null>(), preparedStates = new Set<string>();
+  // One read returns every state's ballot and filed facts; a state whose saved copy still matches is not read again.
+  if (!input.ballotsForState && more()) {
+    const missing: string[] = [];
+    for (const state of states) {
+      if (!ballotVersions.get(state)) continue;
+      const held = await cache.readCheckpoint<ResultProjection>("election-results-reader", state);
+      if (held && held.versionId === ballotVersions.get(state) && held.hash === resultHashes.get(state)) projections.set(state, { ...held, hash: resultHashes.get(state) ?? null });
+      else missing.push(state);
+    }
+    if (missing.length) for (const [state, projection] of await readResultProjections(query, missing))
+      projections.set(state, projection ? { ...projection, hash: resultHashes.get(state) ?? null } : null);
+  }
   const getProjection = async (state: string) => {
     if (projections.has(state)) return projections.get(state)!;
     const held = await cache.readCheckpoint<ResultProjection>("election-results-reader", state);
@@ -335,31 +362,12 @@ export async function runElectionResults(input: {
     projections.set(state, projection);
     return projection;
   };
-  const prepareFeed = async (state: string, prior: StateProgress, acceptedFacts: BallotResultFacts): Promise<StateProgress> => {
-    if (!ballotVersions.get(state) || input.ballotsForState) return prior;
-    const held = await getProjection(state);
-    if (!held) return prior;
-    const facts = refreshedResultFacts({ ...held.facts, ...acceptedFacts, ...nation.readerFacts }, prior, nation);
-    const feed = preparedStateResultFeed(held, facts, state, at);
-    const url = `${PUBLIC_SITE_ORIGIN}/api/election-results?state=${state}`;
-    let readerPending = false;
-    try {
-      if (prior.readerPending || prior.readerSlice?.fingerprint !== feed.fingerprint)
-        await (input.feedStore ?? runnerResultFeedStore()).writeState(state, feed);
-      if (prior.readerPending) await finishFeedFailure(state, url);
-    } catch (error) {
-      unfinished = true;
-      readerPending = true;
-      await failure(state, url, `Prepared results feed could not be published: ${String(error)}`);
-    }
-    const current = { ...held, facts, hash: feed.fingerprint };
-    projections.set(state, current); resultHashes.set(state, feed.fingerprint); preparedStates.add(state);
-    await cache.checkpoint("election-results-reader", state, current);
-    return { ...prior, readerPending, readerSlice: feed };
-  };
+  /** Each state's accepted facts; its feed is prepared and every feed is written together once all states are done. */
+  const feedQueue = new Map<string, BallotResultFacts>();
+  const standing: { ballots: readonly BallotSet[]; covered: ReadonlySet<string> }[] = [];
   // Every state's MultiState results are published before any Ballotpedia request, so a slow Ballotpedia cannot keep them off the feeds.
   const ballotsRead = new Map<string, readonly BallotSet[]>();
-  const runState = async (phase: "multistate" | "ballotpedia", state: string): Promise<void> => {
+  const runState = async (state: string): Promise<void> => {
     if (!more()) { unfinished = true; return; }
     let prior: StateProgress = progress.get(state) ?? empty();
     const ballotVersion = ballotVersions.get(state) ?? null;
@@ -374,7 +382,9 @@ export async function runElectionResults(input: {
     const sourceDue = (source: string) => { const next = sourceNext(prior, source); return next !== null && next <= at; };
     // Ballotpedia is due whenever the capture is newer than the one this state last read (or its ballot changed): the read is a no-op otherwise.
     const capturedDue = captured !== null && (captured.capturedAt > (prior.capturedBallotpediaAt ?? "") || changedBallot);
-    if (phase === "multistate" ? !sourceDue("multistate") : !capturedDue) {
+    // MultiState and the captured Ballotpedia pages are both read for this state in the same pass.
+    const multistateDue = sourceDue("multistate");
+    if (!multistateDue && !capturedDue) {
       due.push(...sourceDues(prior)); return;
     }
     try {
@@ -448,7 +458,7 @@ export async function runElectionResults(input: {
         for (const key of Object.keys(result) as (keyof ResultCounts)[]) result[key] += changed.counts[key];
         return !changed.deferred;
       };
-      if (phase === "multistate" && sourceDue("multistate")) {
+      if (multistateDue) {
         if (!more()) { prior = pending(prior, "multistate", true); unfinished = true; }
         else {
         try {
@@ -471,7 +481,7 @@ export async function runElectionResults(input: {
         }
         }
       }
-      if (phase === "ballotpedia" && captured) {
+      if (capturedDue && captured) {
         if (!more()) { prior = pending(prior, "ballotpedia", true); unfinished = true; }
         else {
         const visited = new Set<string>();
@@ -502,38 +512,65 @@ export async function runElectionResults(input: {
       const standingFingerprint = createHash("sha256").update(JSON.stringify([
         ballots?.flatMap(ballot => ballot.contests.map(contest => contest.id)).sort(), [...covered].sort(),
       ])).digest("hex");
-      if (ballots && prior.standingFingerprint !== standingFingerprint) await ensureOpenElectionResults(workQuery, ballots, covered);
+      if (ballots && prior.standingFingerprint !== standingFingerprint) standing.push({ ballots, covered });
       prior = { ...prior, coveredContestIds: [...covered].sort(), ...(ballots ? { standingFingerprint } : {}), ballotVersion };
       if (prior.stateSummary) prior = { ...prior,
         stateSummary: refreshedResultFacts({ state: prior.stateSummary }, prior).state as BallotElectionSummary };
-      prior = await prepareFeed(state, prior, acceptedFacts);
+      feedQueue.set(state, acceptedFacts);
       await saveProgress(state, prior);
       progress.set(state, prior);
       due.push(...sourceDues(prior));
       }, input.purge);
     } catch (error) { await failure(state, `${PUBLIC_SITE_ORIGIN}/ballot`, String(error)); }
   };
-  // States run side by side, four at a time (the reader pool holds four connections); each phase finishes before the next begins.
-  for (const phase of ["multistate", "ballotpedia"] as const) {
-    let nextState = 0;
-    await Promise.all(Array.from({ length: Math.min(input.stateLanes ?? STATE_LANES, states.length) }, async () => {
-      while (nextState < states.length) {
-        if (!more()) { unfinished = true; return; }
-        await runState(phase, states[nextState++]);
+  // Every state runs at once (bounded by the reader pool) beside the national task; no state waits for another state's phase.
+  let nextState = 0;
+  await Promise.all([nationalTask(), ...Array.from({ length: Math.min(input.stateLanes ?? STATE_LANES, states.length) }, async () => {
+    while (nextState < states.length) {
+      if (!more()) { unfinished = true; return; }
+      await runState(states[nextState++]);
+    }
+  })]);
+  // One work-list write for every state's standing hunts.
+  if (standing.length) await ensureOpenElectionResults(workQuery, standing.flatMap(row => row.ballots), new Set(standing.flatMap(row => [...row.covered])));
+  // A national check also reaches states whose own called races are not due today. Every state feed is prepared now and written together.
+  const checkedNation = Object.values(nation.sourceChecks ?? {}).some(check => check.lastSucceededAt === at);
+  if (!input.ballotsForState) {
+    const feeds: { state: string; prior: StateProgress; held: ResultProjection; facts: BallotResultFacts; feed: StateResultFeed }[] = [];
+    for (const state of states) {
+      const prior: StateProgress = progress.get(state) ?? empty();
+      if (!ballotVersions.get(state) || !feedQueue.has(state) && !checkedNation && !prior.readerPending) continue;
+      if (!more()) { unfinished = true; await saveProgress(state, { ...prior, readerPending: true }); continue; }
+      try {
+        const held = await getProjection(state);
+        if (!held) continue;
+        const facts = refreshedResultFacts({ ...held.facts, ...feedQueue.get(state), ...nation.readerFacts }, prior, nation);
+        feeds.push({ state, prior, held, facts, feed: preparedStateResultFeed(held, facts, state, at) });
+      } catch (error) {
+        unfinished = true;
+        await saveProgress(state, { ...prior, readerPending: true });
+        await failure(state, `${PUBLIC_SITE_ORIGIN}/ballot`, String(error));
+      }
+    }
+    const store = input.feedStore ?? runnerResultFeedStore();
+    const failed = new Set<string>();
+    let nextFeed = 0;
+    await Promise.all(Array.from({ length: Math.min(8, feeds.length) }, async () => {
+      while (nextFeed < feeds.length) {
+        const { state, prior, feed } = feeds[nextFeed++];
+        try {
+          if (prior.readerPending || prior.readerSlice?.fingerprint !== feed.fingerprint) await store.writeState(state, feed);
+          if (prior.readerPending) await finishFeedFailure(state, `${PUBLIC_SITE_ORIGIN}/api/election-results?state=${state}`);
+        } catch (error) {
+          unfinished = true; failed.add(state);
+          await failure(state, `${PUBLIC_SITE_ORIGIN}/api/election-results?state=${state}`, `Prepared results feed could not be published: ${String(error)}`);
+        }
       }
     }));
-  }
-  // A national check also reaches states whose own called races are not due today.
-  const checkedNation = Object.values(nation.sourceChecks ?? {}).some(check => check.lastSucceededAt === at);
-  if (!input.ballotsForState) for (const state of states) {
-    const prior: StateProgress = progress.get(state) ?? empty();
-    if (!ballotVersions.get(state) || preparedStates.has(state) || !checkedNation && !prior.readerPending) continue;
-    if (!more()) { unfinished = true; await saveProgress(state, { ...prior, readerPending: true }); continue; }
-    try { await saveProgress(state, await prepareFeed(state, prior, {})); }
-    catch (error) {
-      unfinished = true;
-      await saveProgress(state, { ...prior, readerPending: true });
-      await failure(state, `${PUBLIC_SITE_ORIGIN}/ballot`, String(error));
+    for (const { state, prior, held, facts, feed } of feeds) {
+      projections.set(state, { ...held, facts, hash: feed.fingerprint }); resultHashes.set(state, feed.fingerprint); preparedStates.add(state);
+      await cache.checkpoint("election-results-reader", state, { ...held, facts, hash: feed.fingerprint });
+      await saveProgress(state, { ...prior, readerPending: failed.has(state), readerSlice: feed });
     }
   }
   // A capture newer than the last read is the Senate and House clock: keep the turn coming back at the Ballotpedia cadence until every captured race is certified.

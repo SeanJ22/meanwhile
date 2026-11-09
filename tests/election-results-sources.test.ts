@@ -166,9 +166,10 @@ test("Ballotpedia selects current general election, exact displayed percentage, 
   assert.equal(result.percentCounted, undefined);
 });
 
-test("a checkmark alone cannot call a Ballotpedia race and historic defeated text does not call it", () => {
+test("a checkmarked winner in the general-election votebox is the call; no checkmark and historic defeated text stay counting", () => {
   const html = `${box(2026, "The following candidates ran")}${box(2024, "Ann Smith defeated John Doe")}`;
-  assert.equal(parseBallotpediaResults(html, race, now).races[0].status, "counting");
+  assert.equal(parseBallotpediaResults(html, race, now).races[0].status, "called");
+  assert.equal(parseBallotpediaResults(html.replace("&#10004;", ""), race, now).races[0].status, "counting");
   assert.equal(parseBallotpediaResults(box(2026, "Ann Smith defeated John Doe"), race, now).races[0].status, "called");
   assert.equal(parseBallotpediaResults(box(2026, "Ann Smith defeated John Doe", true), race, now).races[0].status, "certified");
 });
@@ -357,4 +358,17 @@ test("Congress summary keeps the source's flip count and general-election incumb
   assert.equal(summary.incumbentsLost, 11);
   assert.ok(summary.quotes?.every(quote => html.includes(quote)));
   assert.ok(summary.quotes?.some(quote => quote.startsWith("<p>Eleven incumbents")));
+});
+
+test("real captured Ballotpedia pages with a checkmarked winner parse as called (CO-1, MA-2, OH Senate special)", async () => {
+  const { readFileSync } = await import("node:fs");
+  const pages = JSON.parse(readFileSync(new URL("./fixtures/ballotpedia-called-by-checkmark.json", import.meta.url), "utf8")) as Record<string, string>;
+  const cases = [["Colorado's_1st_Congressional_District_election,_2026", { state: "CO", office: "us_house" as const, districtHint: "1" }],
+    ["Massachusetts'_2nd_Congressional_District_election,_2026", { state: "MA", office: "us_house" as const, districtHint: "2" }],
+    ["United_States_Senate_special_election_in_Ohio,_2026", { state: "OH", office: "us_senate" as const }]] as const;
+  for (const [key, seat] of cases) {
+    const result = parseBallotpediaResults(pages[key], { ...seat, url: `https://ballotpedia.org/${key.replaceAll("'", "%27")}` }, now).races[0];
+    assert.equal(result.status, "called", key);
+    assert.equal(result.candidates.filter(candidate => candidate.won).length, 1, key);
+  }
 });

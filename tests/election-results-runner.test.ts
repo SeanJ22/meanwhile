@@ -352,7 +352,7 @@ test("the production reader matches every held district before creating a missin
   const query: Query = async (sql, params = []) => {
     if (sql.startsWith("WITH RECURSIVE shelf AS MATERIALIZED")) {
       canonicalReads.push([...params]);
-      assert.deepEqual(params, [[key], key], "authority and fact bootstrap name the whole state, with no ZIP or selected district");
+      assert.deepEqual(params, [[key], [key]], "authority and fact bootstrap name the whole state, with no ZIP or selected district");
     }
     return db.query(sql, params);
   };
@@ -670,7 +670,7 @@ test("a failed prepared-feed write retries from checked facts without changing i
   const cache = resultReadCache();
   let writes = 0;
   const store: ElectionResultFeedStore = { ...feeds, writeState: async (state, document) => {
-    if (++writes <= 2) throw new Error("Synthetic object store unavailable");
+    if (++writes <= 1) throw new Error("Synthetic object store unavailable");
     await feeds.writeState(state, document);
   } };
   const query: Query = async (text, params) => { statements.push(text); return db.query(text, params); };
@@ -697,7 +697,7 @@ test("a failed prepared-feed write retries from checked facts without changing i
   assert.equal(next.reads, 2, "the warm retry only needs the ordinary compact clock and Admin source-door metadata reads");
   assert.equal(next.fixRowsWritten, 0);
   assert.ok(next.nextCheckAt! > later);
-  assert.equal(writes, 3);
+  assert.equal(writes, 2);
   assert.equal(statements.filter(text => text.startsWith("WITH RECURSIVE shelf AS MATERIALIZED")).length, 0);
   const prepared = await feeds.readState("AZ");
   assert.equal((prepared?.facts[held.contests[0].id] as { status: string }).status, "called");

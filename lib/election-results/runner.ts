@@ -293,8 +293,10 @@ export async function runElectionResults(input: {
       continue;
     }
     if (!capturedNew && !nation.pendingSources?.includes(key) && congressCertified && lastCertification && (nation.sourceChecks?.[key]?.checkedAt ?? "") >= lastCertification) continue;
-    if (!capturedNew && next === null) continue;
-    if (!capturedNew && next > at) { due.push(next); continue; }
+    if (!capturedNew) {
+      if (next === null) continue;
+      if (next > at) { due.push(next); continue; }
+    }
     try {
       const batch = injected ?? (capturedNew ? await readCapturedCongressSummary(captured!, office) : null);
       if (!batch) continue;

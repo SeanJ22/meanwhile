@@ -1,10 +1,11 @@
 import { createHash } from "node:crypto";
 import type { BallotSet } from "../ballot/types.ts";
 import { workList, type WorkInput } from "../core/work.ts";
-import { ensureSourceEntity } from "../facts/entities.ts";
 import { stateName } from "../facts/entity-read.ts";
 import { pageCopy, saveSourceReference } from "../facts/source-copy.ts";
-import { publishClaim, type FactDb, type Query } from "../facts/publish.ts";
+import type { Decision } from "../core/door.ts";
+import type { FactDb, Query } from "../facts/publish.ts";
+import { publishResultWrites, type ResultWrite } from "./bulk-publish.ts";
 import type { SavedCopy } from "../facts/check.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
 import { allVoteGettersMatched, matchElectionResultAcrossBallots, type ElectionMatch } from "./matcher.ts";
@@ -64,31 +65,23 @@ export async function electionResultFix(query: Query, race: ElectionResult, reas
   else await workList(query, { owner: "election-results" }).ensure([row]);
 }
 
-async function publishValue(input: {
-  db: FactDb; query: Query; copy: SavedCopy; race: ElectionResult; id: string;
-  kind: "contest" | "candidacy" | "measure" | "place"; name: string; parentId: string | null;
-  sourceId: string; value: unknown; quote: string; quotes?: readonly string[]; field?: string; now: Date; purge?: ReaderCachePurger;
-  accepted?: (id: string, field: string, value: unknown) => void;
-}): Promise<boolean> {
+interface QueuedValue {
+  readonly write: ResultWrite; readonly input: unknown;
+  readonly done: (decision: Decision) => void;
+}
+
+/** The Slide's own §3 guard: every quote is on the saved page before a value is queued; the door's check then runs again in memory at write time. */
+function resultWrite(input: {
+  copy: SavedCopy; race: ElectionResult; id: string; kind: "contest" | "candidacy" | "measure" | "place"; name: string; parentId: string | null;
+  sourceId: string; value: unknown; quote: string; quotes?: readonly string[]; field?: string;
+}): ResultWrite {
   const { race } = input;
   const quotes = input.quotes?.length ? input.quotes : [input.quote];
   if (quotes.some(quote => !quote || !input.copy.text.includes(quote))) throw new Error("ELECTION_RESULT_EVIDENCE_MISMATCH");
-  await input.db.transaction(async query => ensureSourceEntity(query, {
-    id: input.id, kind: input.kind, name: input.name, state: race.state === "US" ? null : race.state, parentId: input.parentId,
-  }, `election-results:${race.sourceId}:${race.state}:${input.kind}:${race.sourceRaceId}`, input.sourceId));
   const { checkedAt: _checkedAt, ...value } = input.value as Record<string, unknown>;
-  const derived = quotes.map((quote, index) => ({ quote, text: index === 0 ? canonicalJson(value) : "" }));
-  const valueText = derived.map(part => part.text).join(" ");
-  const outcome = await publishClaim(input.db, {
-    entity: { id: input.id, fullName: input.name, stateName: null, hosts: [], externalIds: [] },
-    field: input.field ?? "election_result", fieldKind: "ballot", provenance: "REFERENCE", value,
-    valueText, quote: quotes.join("\n"), derived, copy: input.copy,
-    acquisition: "checked", producedBy: "election-results", costUsd: 0,
-  }, clocks, input.now, { purge: input.purge });
-  if ("blank" in outcome) throw new Error(`ELECTION_RESULT_REFUSED:${outcome.blank}`);
-  if (outcome.decision === "PUBLISH" || outcome.decision === "CONFIRM")
-    input.accepted?.(input.id, input.field ?? "election_result", input.value);
-  return outcome.decision === "PUBLISH";
+  return { id: input.id, kind: input.kind, name: input.name, parentId: input.parentId, state: race.state === "US" ? null : race.state,
+    aliasScheme: `election-results:${race.sourceId}:${race.state}:${input.kind}:${race.sourceRaceId}`, sourceId: input.sourceId,
+    field: input.field ?? "election_result", value, quotes };
 }
 
 /** One state at a time, against its current served ballot. Only the Slide writes result facts. */
@@ -109,8 +102,9 @@ export async function publishElectionResultBatch(input: {
   };
   let deferred = false;
   let copy: SavedCopy | undefined;
-  /** Each matched race writes its contest, then its candidates, as one job; jobs for different races run side by side. */
-  const jobs: Array<() => Promise<void>> = [];
+  /** Every value this state publishes is queued first and written together; work-list upkeep follows once the facts are down. */
+  const resolves: { subjectId: string; fieldPrefix: string; exceptFields?: string[] }[] = [];
+  const queue: QueuedValue[] = [], afterWrites: Array<() => Promise<void>> = [];
   const observed = async () => {
     if (copy) return copy;
     const hash = createHash("sha256").update(input.batch.evidence.text).digest("hex");
@@ -144,15 +138,17 @@ export async function publishElectionResultBatch(input: {
       if (progress.summaries[summaryKey] === federalHash && progress.federalResults?.[federalKey]) {
         progress.federalResults = { ...progress.federalResults, [federalKey]: { ...progress.federalResults[federalKey], checkedAt: at } };
       } else {
-        let admitted = false;
-        if (await publishValue({ db: input.db, query: input.query, copy: await observed(), race, id: statePlace(race.state),
+        const field = `election_congress:${race.sourceRaceId}`, id = statePlace(race.state);
+        queue.push({ input: federal, write: resultWrite({ copy: await observed(), race, id,
           kind: "place", name: stateName(race.state) ?? race.state, parentId: statePlace("US"), sourceId: race.sourceRaceId,
-          value: federal, quote: race.quote, field: `election_congress:${race.sourceRaceId}`, now, purge: input.purge,
-          accepted: (...args) => { admitted = true; input.accepted?.(...args); } })) counts.published++;
-        if (admitted) {
+          value: federal, quote: race.quote, field }),
+        done: decision => {
+          if (decision === "PUBLISH") counts.published++;
+          if (decision !== "PUBLISH" && decision !== "CONFIRM") return;
+          input.accepted?.(id, field, federal);
           progress.federalResults = { ...progress.federalResults, [federalKey]: federal };
           progress.summaries[summaryKey] = federalHash;
-        }
+        } });
       }
     }
     if (match.kind === "matched") counts.matched++;
@@ -183,12 +179,15 @@ export async function publishElectionResultBatch(input: {
       const evidence = await observed(), citation = { sources: sources(race), checkedAt: at,
         sourceId: race.sourceId, sourceRaceId: race.sourceRaceId, electionDate: race.electionDate };
       const values = { ...previous?.values };
-      const write = async (args: Pick<Parameters<typeof publishValue>[0], "id" | "kind" | "name" | "parentId" | "sourceId" | "value" | "quote">) => {
+      const write = (args: Pick<Parameters<typeof resultWrite>[0], "id" | "kind" | "name" | "parentId" | "sourceId" | "value" | "quote">) => {
         const { checkedAt: _checkedAt, ...value } = args.value as Record<string, unknown>;
-        const fieldKey = `${args.kind}:${args.id}`, hash = fingerprint(value);
-        if (values[fieldKey] === hash) return;
-        if (await publishValue({ ...args, db: input.db, query: input.query, copy: evidence, race, now, purge: input.purge, accepted: input.accepted })) counts.published++;
-        values[fieldKey] = hash;
+        const fieldKey = `${args.kind}:${args.id}`, valueHash = fingerprint(value);
+        if (values[fieldKey] === valueHash) return;
+        queue.push({ input: args.value, write: resultWrite({ ...args, copy: evidence, race }), done: decision => {
+          if (decision === "PUBLISH") counts.published++;
+          if (decision === "PUBLISH" || decision === "CONFIRM") input.accepted?.(args.id, "election_result", args.value);
+          values[fieldKey] = valueHash;
+        } });
       };
       const measureValue = race.measure ? { yesVotes: race.measure.yesVotes ?? null, noVotes: race.measure.noVotes ?? null,
         yesPercent: race.measure.yesPercent ?? null, outcome: race.measure.outcome } : undefined;
@@ -201,48 +200,37 @@ export async function publishElectionResultBatch(input: {
         gainedByParty: race.gainedByParty ?? null, incumbentLost: race.incumbentLost ?? null,
         seatsFlipped: race.seatsFlipped ?? null, incumbentsLost: race.incumbentsLost ?? null, allCandidatesMatched: true }
         : { status: "counting", statusChangedAt: raw.statusChangedAt ?? null, seatsToFill: race.seatsToFill ?? match.contest.voteFor };
-      await write({ id: match.contest.id, kind: "contest", name: match.contest.title, parentId: match.contest.ocdId,
+      write({ id: match.contest.id, kind: "contest", name: match.contest.title, parentId: match.contest.ocdId,
         sourceId: congress ? `U.S. ${race.office === "us_house" ? "House" : "Senate"} ${stateName(race.state) ?? race.state}` : race.sourceRaceId, quote: race.quote,
         value: { ...outcome, ...measureValue, ...citation } });
       for (const row of match.candidates) {
         const candidate = race.candidates[row.resultIndex];
-        await write({ id: row.candidacy.id, kind: "candidacy", name: candidate.name, parentId: match.contest.id,
+        write({ id: row.candidacy.id, kind: "candidacy", name: candidate.name, parentId: match.contest.id,
           sourceId: candidate.name, quote: candidate.quote ?? race.quote,
           value: { votes: candidate.votes ?? null, percent: candidate.percent ?? null, won: complete ? candidate.won ?? null : null,
             runoff: complete ? candidate.runoff ?? null : null, ...citation } });
       }
-      if (race.measure && match.measure) await write({ id: match.measure.id, kind: "measure", name: race.measure.name,
+      if (race.measure && match.measure) write({ id: match.measure.id, kind: "measure", name: race.measure.name,
         parentId: match.contest.id, sourceId: race.sourceRaceId, quote: race.quote,
         value: { ...measureValue, ...citation } });
-      if (match.unmatchedCandidates.length) await electionResultFix(input.workQuery ?? input.query, race, "Candidate missing from served ballot", "fix",
-        { candidateNames: match.unmatchedCandidates.map(index => race.candidates[index].name) }, input.writeFix);
-      if (match.ambiguousCandidates.length) await electionResultFix(input.workQuery ?? input.query, race, "Candidate identity tie", "detect",
-        { candidateNames: match.ambiguousCandidates.map(index => race.candidates[index].name) });
-      await updateIncumbentConflict();
-      const list = workList(input.workQuery ?? input.query, { owner: "election-results" });
-      await list.resolve({ subjectId: `election-results:${race.state}:${race.sourceRaceId}`, fieldPrefix: "election_result:",
-        exceptFields: [...match.unmatchedCandidates.length ? ["election_result:Candidate missing from served ballot"] : [],
-          ...match.ambiguousCandidates.length ? ["election_result:Candidate identity tie"] : [],
-          ...conflictingCandidates.length ? [`election_result:${incumbentConflictReason}`] : []] });
-      await list.resolve({ subjectId: match.contest.id, fieldPrefix: "election_result" });
-      progress.races[key] = { fingerprint: hash, status: race.status, statusChangedAt: race.statusChangedAt,
-        lastCheckedAt: at, nextCheckAt, values };
+      afterWrites.push(async () => {
+        if (match.unmatchedCandidates.length) await electionResultFix(input.workQuery ?? input.query, race, "Candidate missing from served ballot", "fix",
+          { candidateNames: match.unmatchedCandidates.map(index => race.candidates[index].name) }, input.writeFix);
+        if (match.ambiguousCandidates.length) await electionResultFix(input.workQuery ?? input.query, race, "Candidate identity tie", "detect",
+          { candidateNames: match.ambiguousCandidates.map(index => race.candidates[index].name) });
+        await updateIncumbentConflict();
+        resolves.push({ subjectId: `election-results:${race.state}:${race.sourceRaceId}`, fieldPrefix: "election_result:",
+          exceptFields: [...match.unmatchedCandidates.length ? ["election_result:Candidate missing from served ballot"] : [],
+            ...match.ambiguousCandidates.length ? ["election_result:Candidate identity tie"] : [],
+            ...conflictingCandidates.length ? [`election_result:${incumbentConflictReason}`] : []] },
+          { subjectId: match.contest.id, fieldPrefix: "election_result" });
+        progress.races[key] = { fingerprint: hash, status: race.status, statusChangedAt: race.statusChangedAt,
+          lastCheckedAt: at, nextCheckAt, values };
+      });
       continue;
     }
     progress.races[key] = { fingerprint: hash, status: race.status, statusChangedAt: race.statusChangedAt,
       lastCheckedAt: at, nextCheckAt };
-  }
-  // Races are written four at a time; a failed job lets those in flight finish, then the first failure is raised.
-  {
-    let next = 0, failure: unknown;
-    const lane = async () => {
-      while (next < jobs.length && failure === undefined) {
-        const job = jobs[next++];
-        try { await job(); } catch (error) { failure ??= error ?? new Error("ELECTION_RESULT_WRITE_FAILED"); }
-      }
-    };
-    await Promise.all(Array.from({ length: Math.min(RESULT_WRITE_LANES, jobs.length) }, lane));
-    if (failure !== undefined) throw failure;
   }
   for (const summary of input.batch.summaries.filter(row => row.state === input.state)) {
     if (input.more?.() === false) { deferred = true; break; }
@@ -254,11 +242,34 @@ export async function publishElectionResultBatch(input: {
     const id = statePlace(summary.state), race: ElectionResult = { sourceId,
       sourceName: summary.source.name, sourceUrl: summary.source.url!, sourceRaceId: summary.state, creditedSources: summary.creditedSources,
       state: summary.state, office: "summary", officeName: "Election summary", electionDate: "2026-11-03", status: "counting", candidates: [], checkedAt: at, quote };
-    if (await publishValue({ db: input.db, query: input.query, copy: await observed(), race, id, kind: "place", name: summary.state,
-      parentId: summary.state === "US" ? null : statePlace("US"), sourceId: summary.state,
-      value: { ...value, checkedAt: at, sourceClockKey: `${sourceId}${chamberKey ? `:${chamberKey}` : ""}` }, quote, quotes,
-      field: chamberKey ? `election_summary:${chamberKey}` : "election_summary", now, purge: input.purge, accepted: input.accepted })) counts.published++;
-    progress.summaries[key] = hash;
+    const field = chamberKey ? `election_summary:${chamberKey}` : "election_summary", summaryValue = { ...value, checkedAt: at, sourceClockKey: `${sourceId}${chamberKey ? `:${chamberKey}` : ""}` };
+    queue.push({ input: summaryValue, write: resultWrite({ copy: await observed(), race, id, kind: "place", name: summary.state,
+      parentId: summary.state === "US" ? null : statePlace("US"), sourceId: summary.state, value: summaryValue, quote, quotes, field }),
+    done: decision => {
+      if (decision === "PUBLISH") counts.published++;
+      if (decision === "PUBLISH" || decision === "CONFIRM") input.accepted?.(id, field, summaryValue);
+      progress.summaries[key] = hash;
+    } });
+  }
+  // One pass writes everything this state queued; the first refused fact is raised once the rest are down.
+  if (queue.length) {
+    const outcomes = await publishResultWrites(input.db, queue.map(item => item.write), await observed(), clocks, now, input.purge);
+    let refused: string | undefined;
+    outcomes.forEach((outcome, index) => {
+      if ("blank" in outcome) refused ??= outcome.blank; else queue[index].done(outcome.decision);
+    });
+    if (refused !== undefined) throw new Error(`ELECTION_RESULT_REFUSED:${refused}`);
+  }
+  {
+    let next = 0, failure: unknown;
+    const lane = async () => {
+      while (next < afterWrites.length && failure === undefined) {
+        try { await afterWrites[next++](); } catch (error) { failure ??= error ?? new Error("ELECTION_RESULT_WRITE_FAILED"); }
+      }
+    };
+    await Promise.all(Array.from({ length: Math.min(RESULT_WRITE_LANES, afterWrites.length) }, lane));
+    if (failure !== undefined) throw failure;
+    await workList(input.workQuery ?? input.query, { owner: "election-results" }).resolveMany(resolves);
   }
   const due = Object.values(progress.races).flatMap(row => row.nextCheckAt ? [row.nextCheckAt] : []).sort();
   return { counts, progress, nextCheckAt: deferred ? at : due[0] ?? null, deferred };

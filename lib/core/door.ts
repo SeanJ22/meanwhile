@@ -39,7 +39,7 @@ interface DoorOptions {
   readonly purge?: ReaderCachePurger;
 }
 
-const rank: Readonly<Record<Provenance, number>> = { OWNER: 0, OFFICIAL: 1, FILING: 1, REFERENCE: 2, NEWS: 3, CAMPAIGN: 4, OTHER: 5 };
+export const rank: Readonly<Record<Provenance, number>> = { OWNER: 0, OFFICIAL: 1, FILING: 1, REFERENCE: 2, NEWS: 3, CAMPAIGN: 4, OTHER: 5 };
 const savedFields=new WeakMap<object,Map<string,Map<unknown,Readonly<Record<string,unknown>>>>>();
 function savedRecord(input:DoorInput):Readonly<Record<string,unknown>>|undefined {
   const selector=input.savedField!,holder=input.capture??input.copy;
@@ -53,7 +53,7 @@ function savedRecord(input:DoorInput):Readonly<Record<string,unknown>>|undefined
   return rows.get(selector.id);
 }
 
-function officialSource(url: string, hosts: readonly string[], linkingPage?: OfficialLinkingPage | null): boolean {
+export function officialSource(url: string, hosts: readonly string[], linkingPage?: OfficialLinkingPage | null): boolean {
   return isOfficialUrl(url, hosts) || isSourceApiUrl(url) || isOfficialSource(url, linkingPage)
     || !!linkingPage && officialSource(linkingPage.url, hosts, linkingPage.linkingPage) && pageLinksSource(url, linkingPage);
 }
@@ -65,7 +65,7 @@ export function decide(current: Side | null, incoming: Side, field?: string): De
   return decideDifferent(current, incoming, field);
 }
 
-function decideDifferent(current: Side, incoming: Side, field?: string): Decision {
+export function decideDifferent(current: Side, incoming: Side, field?: string): Decision {
   if (incoming.provenance === "OWNER") return "PUBLISH";
   if (current.provenance === "OWNER") return "FLAG_OWNER";
   if (field === "agenda_url" && (current.provenance === "OFFICIAL" || current.provenance === "FILING")

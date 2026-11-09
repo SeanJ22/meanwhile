@@ -227,7 +227,7 @@ function aboutEntity(entity: CheckEntity, copy: SavedCopy): boolean {
 function derivedHolds(copy: SavedCopy, derived: NonNullable<Claim["derived"]>, valueText: string): "ARCHIVE_NEVER_PROVES_PRESENT" | "QUOTE_NOT_ON_SAVED_COPY" | "VALUE_NOT_IN_QUOTE" | number {
   if (copy.isArchive) return "ARCHIVE_NEVER_PROVES_PRESENT";
   if (!derived.length || derived.map(part => part.text).join(" ") !== valueText) return "VALUE_NOT_IN_QUOTE";
-  const page = normalizeText(copy.text);
+  const page = copyText(copy);
   const starts = derived.map(part => normalizeText(part.quote)).map(quote => quote ? page.indexOf(quote) : -1);
   return starts.includes(-1) ? "QUOTE_NOT_ON_SAVED_COPY" : starts[0]!;
 }

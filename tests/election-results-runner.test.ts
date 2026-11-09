@@ -148,7 +148,7 @@ test("the maintenance deadline saves completed states and resumes remaining work
     if (armed && text.startsWith("INSERT INTO pass_cursor") && params?.[0] === "election-results:AZ") tick = 2;
     return rows;
   };
-  const input = { ...runtime, query, states: ["AZ", "CA"], multistate: emptyBatch, deadlineMs: 1, clock: () => tick,
+  const input = { ...runtime, query, states: ["AZ", "CA"], stateLanes: 1, multistate: emptyBatch, deadlineMs: 1, clock: () => tick,
     ballotsForState: async (state: string) => { readStates.push(state); return [ballot(state)]; },
     fetch: async (url: Parameters<typeof fetch>[0]) => { requested.push(String(url)); throw new Error("Synthetic source unavailable"); } };
   const first = await runElectionResults({ ...input, now: new Date(at) });
@@ -175,7 +175,7 @@ test("an already spent maintenance deadline defers without database or source re
   assert.equal(result.nextCheckAt, at);
 });
 
-test("a race-boundary checkpoint resumes changed old races without republishing the completed race", async context => {
+test("a deadline that falls after a state's one-pass write keeps every written fact and republishes none of them", async context => {
   const db = await resultFactDb(context, "test-results-deadline", { AZ: "Arizona" });
   const held = ballot("AZ", "Governor");
   held.contests[0].id = "az-governor";
@@ -187,48 +187,43 @@ test("a race-boundary checkpoint resumes changed old races without republishing 
     [[21, "Governor", "Alpha Governor"], [22, "Attorney General", "Beta Lawyer"]].map(([seat_id, office, name]) => ({ seat_id, office,
       election_date: "2026-11-03", general_results: { contests: [{ type: "General", election_id: Number(seat_id) + 100,
         result_status: "Counting", candidates: [{ candidate_id: Number(seat_id), name, party: "D", votes, pct: 100 }] }] } })) }] }), now);
-  let tick = 0, expire = false, ballotReads = 0;
+  let tick = 0, expire = false;
   const clockBytes: number[] = [];
   const query: Query = async (text, params) => {
     const rows = await db.query(text, params);
     if (text.includes("requested(name,scope,hash)")) clockBytes.push(rows.reduce((total, row) => total +
       (typeof row.position === "string" ? Buffer.byteLength(row.position) : 0), 0));
-    if (expire && text.startsWith("UPDATE work SET status='done'") && params?.[0] === "az-governor") tick = 2;
+    if (expire && text.startsWith("INSERT INTO fact")) tick = 2;
     return rows;
   };
   const input = { db, query, states: ["AZ"], deadlineMs: 1, clock: () => tick,
-    ballotsForState: async () => { ballotReads++; return [held]; }, purge: async () => ({ purged: true }),
+    ballotsForState: async () => [held], purge: async () => ({ purged: true }),
     fetch: async () => { throw new Error("Synthetic overview unavailable"); } };
   await runElectionResults({ ...input, now: new Date(at), multistate: batch(at, 10) });
   const later = "2026-11-04T06:00:00.000Z";
   expire = true;
   const partial = await runElectionResults({ ...input, now: new Date(later), multistate: batch(later, 20) });
   assert.equal(clockBytes[1], 0, "the actual SQL returns only fresh headers when the cached continuation matches");
-  assert.equal(partial.published, 1);
-  assert.equal(partial.nextCheckAt, later);
+  assert.equal(partial.published, 2, "both changed races are written in the state's one pass");
   const position = JSON.parse(String((await db.query("SELECT position FROM pass_cursor WHERE name='election-results:AZ'"))[0].position));
-  assert.ok(position.pendingSources.includes("multistate"));
   assert.equal(position.races["multistate:2026-11-03:21"].lastCheckedAt, later);
-  assert.equal(position.races["multistate:2026-11-03:22"].lastCheckedAt, at);
-  assert.equal((await db.query("SELECT value->>'votes' votes FROM fact WHERE entity_id='beta' AND status='live'"))[0].votes, "10");
+  assert.equal((await db.query("SELECT value->>'votes' votes FROM fact WHERE entity_id='beta' AND status='live'"))[0].votes, "20");
   const alphaVersions = (await db.query("SELECT count(*)::int n FROM fact WHERE entity_id='alpha'"))[0].n;
   tick = 0;
   const failedAt = "2026-11-04T06:05:00.000Z";
   const failed = await runElectionResults({ ...input, now: new Date(failedAt) });
-  assert.equal(failed.nextCheckAt, "2026-11-04T12:05:00.000Z", "the source cadence, rather than immediate retry of the source outage, owns the next turn");
+  assert.equal(failed.nextCheckAt, "2026-11-04T12:00:00.000Z", "the race clocks written by the one pass, rather than immediate retry of the source outage, own the next turn");
   const waiting = JSON.parse(String((await db.query("SELECT position FROM pass_cursor WHERE name='election-results:AZ'"))[0].position));
   assert.ok(!waiting.pendingSources.includes("multistate"));
-  assert.equal(waiting.sourceChecks.multistate.checkedAt, failedAt);
   const resumedAt = "2026-11-04T12:05:00.000Z";
   const resumed = await runElectionResults({ ...input, now: new Date(resumedAt), multistate: batch(resumedAt, 20) });
-  assert.equal(resumed.published, 1, "the old fingerprint of the unfinished changed race was retained");
+  assert.equal(resumed.published, 0, "what the one pass already wrote is not written again");
   assert.equal((await db.query("SELECT value->>'votes' votes FROM fact WHERE entity_id='beta' AND status='live'"))[0].votes, "20");
   assert.equal((await db.query("SELECT count(*)::int n FROM fact WHERE entity_id='alpha'"))[0].n, alphaVersions,
     "the completed first race retains its saved field fingerprints and history");
   const complete = JSON.parse(String((await db.query("SELECT position FROM pass_cursor WHERE name='election-results:AZ'"))[0].position));
   assert.ok(!complete.pendingSources.includes("multistate"));
   assert.equal(complete.races["multistate:2026-11-03:22"].lastCheckedAt, resumedAt);
-  assert.equal(ballotReads, 3, "only the remaining changed race requires its state's current ballot on resume");
 });
 
 test("the captured file supplies a race missing from the served ballot and gives it a fix row", async context => {

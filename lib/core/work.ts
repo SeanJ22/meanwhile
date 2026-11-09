@@ -417,6 +417,19 @@ export function workList(query: Query, options: { readonly owner: string; readon
           AND kind IN('fix','detect','hunt') AND status='waiting'`,
       [input.subjectId, input.fieldPrefix, input.exceptFields ?? [], timestamp()]);
     },
+    /** Many `resolve` calls in one statement. */
+    async resolveMany(inputs: readonly { readonly subjectId: string; readonly fieldPrefix: string; readonly exceptFields?: readonly string[] }[]): Promise<void> {
+      if (!inputs.length) return;
+      if (inputs.some(input => !input.subjectId.trim() || !input.fieldPrefix.trim())) throw new Error("WORK_INVALID_INPUT");
+      for (let from = 0; from < inputs.length; from += 500) {
+        const part = inputs.slice(from, from + 500);
+        await query(`UPDATE work w SET status='done',done_at=$4::timestamptz,repeat_ms=NULL,refusal=NULL
+          FROM unnest($1::text[],$2::text[],$3::text[]) AS r(subject_id,prefix,excepts)
+          WHERE w.subject_id=r.subject_id AND starts_with(w.field,r.prefix) AND NOT(w.field=ANY(string_to_array(r.excepts,E'\\u001f')))
+            AND w.kind IN('fix','detect','hunt') AND w.status='waiting'`,
+        [part.map(input => input.subjectId), part.map(input => input.fieldPrefix), part.map(input => (input.exceptFields ?? []).join("\u001f")), timestamp()]);
+      }
+    },
     async add(input: WorkInput): Promise<WorkRow> {
       if (input.series !== undefined) throw new Error("WORK_INVALID_INPUT");
       const at = timestamp(), one = prepared(input, at);

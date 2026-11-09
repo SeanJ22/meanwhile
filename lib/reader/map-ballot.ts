@@ -9,7 +9,7 @@ import { selectedMetadataSql, selectedPointerSql } from "./selected-entry.ts";
  * not here; the results job publishes them separately and the map joins them by contest id. The title test for the
  * Senate is deliberately loose; the map's own office check is exact.
  */
-export function mapBallotStatement(state: string, only: "all" | "congress" = "all") {
+export function mapBallotStatement(state: string) {
   const ocd = "reader_payload_node(m.item)->>'ocdId'", title = "reader_payload_node(m.item)->>'title'";
   return { params: [`BALLOT_CANDIDACY:${stateBallotScope("ballot-contests", state)}`], text: `WITH
     pointer AS MATERIALIZED (${selectedPointerSql}),
@@ -18,8 +18,8 @@ export function mapBallotStatement(state: string, only: "all" | "congress" = "al
       FROM root r,LATERAL jsonb_each(reader_payload_node(r.value->'ballots')) b),
     contests AS MATERIALIZED (SELECT b.ballot_key,m.ordinal_index,reader_payload_node(m.item) AS value
       FROM ballots b,LATERAL reader_payload_members(b.value->'contests') m
-      WHERE ${only === "congress" ? `${ocd} ~ '/cd:[^/]+$'` : `${ocd} ~ '/(cd|sldu|sldl):[^/]+$'
-        OR (${ocd} ~ '^ocd-division/country:us/(state|district|territory):[a-z]{2}$' AND ${title} ~* 'senat')`}),
+      WHERE ${ocd} ~ '/(cd|sldu|sldl):[^/]+$'
+        OR (${ocd} ~ '^ocd-division/country:us/(state|district|territory):[a-z]{2}$' AND ${title} ~* 'senat')),
     selected AS (SELECT b.ballot_key,jsonb_build_object(
       'election',reader_payload_value(reader_payload_node(b.value->'election')),
       'contests',coalesce((SELECT jsonb_agg(reader_payload_value(c.value) ORDER BY c.ordinal_index) FROM contests c WHERE c.ballot_key=b.ballot_key),'[]'::jsonb),

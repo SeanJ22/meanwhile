@@ -36,7 +36,8 @@ export function nationalResultFeed(value: unknown): NationalCongressSummary {
   if (!object(value) || typeof value.checkedAt !== "string" || !object(value.states) || !Array.isArray(value.sources))
     throw new Error("ELECTION_RESULT_NATIONAL_FEED_INVALID");
   return { checkedAt: value.checkedAt, states: value.states, sources: value.sources,
-    ...(value.statewide === undefined ? {} : { statewide: value.statewide }) } as unknown as NationalCongressSummary;
+    ...(value.statewide === undefined ? {} : { statewide: value.statewide }),
+    ...(value.houseDistricts === undefined ? {} : { houseDistricts: value.houseDistricts }) } as unknown as NationalCongressSummary;
 }
 
 /** Injected IO makes all software tests independent of keys, network and deployment context. */

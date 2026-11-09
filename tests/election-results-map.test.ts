@@ -458,46 +458,43 @@ test("a House sample with every state, Alaska and Hawaii included, colors every 
 
 import { layOutDistricts, type NationalDistricts } from "../lib/map/albers-usa.ts";
 
+const national = JSON.parse(readOutlines(new URL("../public/geo/cd-national.json", import.meta.url), "utf8")) as NationalDistricts;
 const cd = (state: string, n: number | "at-large") => `ocd-division/country:us/state:${state}/cd:${n}`;
-const heldFact = (status: string, matched: boolean) => ({ status, seatsToFill: 1, sourceId: "ballotpedia", sourceRaceId: `race-${status}-${matched}`, electionDate: "2026-11-03", ...attribution, ...matched ? { allCandidatesMatched: true } : {} });
-
-test("the national House map reads each reporting state's districts in one batch and colors them by result", async context => {
+test("the national House map reads each district's result from the one national document and colors it", async context => {
   const copy = electionFeedFixture(context);
-  const house: Race[] = [
-    { id: "c1", ocdId: cd("az", 1), title: "U.S. House", status: "called", flip: "Democrat", flipSeats: 1, people: [["A", "Democrat", false, true, 60], ["B", "Republican", true, false, 40]] },
-    { id: "c2", ocdId: cd("az", 2), title: "U.S. House", status: "called", people: [["C", "Republican", true, true, 60], ["D", "Democrat", false, false, 40]] },
-    { id: "c3", ocdId: cd("az", 3), title: "U.S. House", status: "counting", people: [["E", "Democrat", false, false, 5], ["F", "Republican", false, false, 4]] },
-    { id: "c4", ocdId: cd("az", 4), title: "U.S. House", status: "called", people: [["G", "Republican", true, true, 60], ["H", "Democrat", false, false, 40]] },
-  ];
-  const held = factsOf(house);
-  // c2 was called, but the publisher could not match every candidate with votes: RT-05 holds its outcome back.
-  for (const race of house) Object.assign(held, { [race.id]: { ...held[race.id] as object, ...heldFact(race.status, race.id !== "c2") } });
-  await copy.store.writeNation({ checkedAt: AT, sources: [], states: { AZ: { us_house: row({ D: 1, R: 1 }, 2, 1, 4), us_senate: row({}, 0, 0, 0) }, OH: { us_house: row({}, 0, 0, 0), us_senate: row({}, 0, 0, 0) } } });
-  await copy.store.writeState("AZ", feedOf("AZ", held));
-  const calls: string[] = [];
-  const query = async (statements: { params?: unknown[]; text: string }[]) => { calls.push(String(statements.length)); return statements.map(() => rowsFor(ballotOf(house))); };
-  const drawn = await mapResults({ scope: "us-house" }, { store: copy.store, query: query as never });
-  assert.deepEqual(calls, ["1"], "one database round trip, for the one state that reported");
-  assert.deepEqual(copy.reads.sort(), ["nation.json", "states/AZ.json"], "the national document and the reporting state's feed only");
+  await copy.store.writeNation({ checkedAt: AT, sources: [], states: {}, houseDistricts: {
+    [cd("az", 1)]: { status: "called", party: "D", flipped: true },
+    [cd("az", 2)]: { status: "called", party: "R", flipped: false },
+    [cd("az", 3)]: { status: "counting", party: "D", flipped: null },
+    [cd("ak", "at-large")]: { status: "called", party: "R", flipped: null },
+    [cd("hi", 1)]: { status: "called", party: "D", flipped: null },
+  } });
+  const drawn = await mapResults({ scope: "us-house" }, { store: copy.store, query: async () => { throw new Error("no database"); } });
+  assert.deepEqual(copy.reads, ["nation.json"], "one blob read, no state feed");
+  assert.equal(copy.databaseReads(), 0);
   assert.equal(fillClass(drawn[cd("az", 1)]), "D");
   assert.equal(flipParty(drawn[cd("az", 1)]), "D");
-  assert.equal(fillClass(drawn[cd("az", 3)]), "counting");
-  assert.equal(fillClass(drawn[cd("az", 4)]), "R");
-  assert.equal(drawn[cd("az", 2)], undefined, "a race whose candidates did not all match shows no party color: its district stays neutral");
-  const fill = (resultLayers({ kind: "nation-districts" }, drawn, { yours: [] })[0] as unknown as { source: string; paint: { "fill-color": unknown[] } });
+  assert.equal(fillClass(drawn[cd("az", 2)]), "R");
+  assert.equal(fillClass(drawn[cd("az", 3)]), "counting", "a counting district takes the stripes, not its leader's color");
+  assert.equal(fillClass(drawn[cd("ak", "at-large")]), "R");
+  assert.equal(fillClass(drawn[cd("hi", 1)]), "D");
+  assert.equal(drawn[cd("az", 4)], undefined, "a district the guard left out stays neutral");
+  const fill = resultLayers({ kind: "nation-districts" }, drawn, { yours: [] })[0] as unknown as { source: string; paint: { "fill-color": unknown[] } };
   assert.equal(fill.source, "results-districts");
   const colors = JSON.stringify(fill.paint["fill-color"]);
-  assert.ok(colors.includes(cd("az", 1)) && colors.includes(cd("az", 4)) && !colors.includes(cd("az", 2)), "only districts with a guarded result are in the color match");
+  assert.ok(colors.includes(cd("ak", "at-large")) && colors.includes(cd("hi", 1)) && !colors.includes(cd("az", 4)));
+  const ids = new Set(national.features.map(f => f.properties.ocdId));
+  for (const id of Object.keys(drawn)) assert.ok(ids.has(id), `${id} is a district on the map`);
 });
 
-test("a House with nothing reported costs one blob read and no database request", async context => {
+test("a House with nothing published costs one blob read and no database request", async context => {
   const copy = electionFeedFixture(context);
-  await copy.store.writeNation({ checkedAt: AT, sources: [], states: { OH: { us_house: row({}, 0, 0, 0), us_senate: row({}, 0, 0, 0) } } });
-  assert.deepEqual(await mapResults({ scope: "us-house" }, { store: copy.store, query: async () => { throw new Error("no database"); } }), {});
+  await copy.store.writeNation({ checkedAt: AT, sources: [], states: {} });
+  assert.deepEqual(await mapResults({ scope: "us-house" }, { store: copy.store }), {});
   assert.deepEqual(copy.reads, ["nation.json"]);
+  assert.equal(copy.databaseReads(), 0);
 });
 
-const national = JSON.parse(readOutlines(new URL("../public/geo/cd-national.json", import.meta.url), "utf8")) as NationalDistricts;
 
 test("the national district layer holds every House seat, Alaska and Hawaii included, light enough for first paint", () => {
   const ids = national.features.map(f => f.properties.ocdId);

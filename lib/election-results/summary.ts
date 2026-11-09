@@ -36,6 +36,14 @@ export interface NationalCongressSummary {
   readonly sources: readonly ResultSource[];
   readonly states: Readonly<Record<string, Readonly<Record<CongressOffice, StateCongressResult>>>>;
   readonly statewide?: Readonly<Record<string, Omit<ElectionSummary, "quote" | "quotes">>>;
+  /** Each U.S. House district's result, keyed by cd OCD id. Only contests whose candidates all matched appear; a missing district is neutral. */
+  readonly houseDistricts?: Readonly<Record<string, HouseDistrictResult>>;
+}
+
+export interface HouseDistrictResult {
+  readonly status: ElectionResultStatus;
+  readonly party: "D" | "R" | "I" | null;
+  readonly flipped: boolean | null;
 }
 
 const key = (race: Pick<CongressRaceResult, "electionDate" | "sourceRaceId">) => `${race.electionDate}:${race.sourceRaceId}`;

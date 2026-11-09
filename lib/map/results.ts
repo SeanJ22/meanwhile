@@ -3,7 +3,7 @@ import { flippedParty, winnersOf } from "../ballot/results.ts";
 import { partyKey, seatCounts, type PartyKey, type SeatCounts } from "../ballot/scorecard-view.ts";
 import type { BallotSet, Contest } from "../ballot/types.ts";
 import type { BallotResultFacts, CandidateResult, ContestResult } from "../ballot/election-results.ts";
-import type { NationalCongressSummary } from "../election-results/summary.ts";
+import type { HouseDistrictResult, NationalCongressSummary } from "../election-results/summary.ts";
 
 /**
  * The results map's whole view of a contest result. This file is the only place
@@ -141,5 +141,20 @@ export function nationalResults(summary: Pick<NationalCongressSummary, "states">
     const ocdId = stateOcd(state);
     return [[ocdId, { ocdId, status: row.stillCounting > 0 ? "counting" as const : "called" as const, seats, counts,
       flipTo: row.seatsFlipped > 0 && winners.length === 1 ? winners[0] : null, flipSeats: row.seatsFlipped, candidates: [] }]];
+  }));
+}
+
+/**
+ * The national House map's districts, from the one national document's `houseDistricts` (already guarded: a contest whose
+ * candidates did not all match is absent, so its district stays neutral). A called district takes its party; any other
+ * status counts as still being counted.
+ */
+export function nationalDistrictResults(summary: Pick<NationalCongressSummary, "houseDistricts"> | null): Record<string, DistrictResult> {
+  return Object.fromEntries(Object.entries(summary?.houseDistricts ?? {}).map(([ocdId, row]) => {
+    const party: ResultParty | null = row.party === "I" ? "O" : row.party;
+    const decided = party !== null && (row.status === "called" || row.status === "certified" || row.status === "unopposed");
+    const flipTo = decided && row.flipped ? party : null;
+    return [ocdId, { ocdId, status: decided ? row.status : row.status === "pending" || row.status === "runoff" ? row.status : "counting" as const, seats: 1,
+      counts: seatCounts(decided ? { [party]: 1 } : {}, decided ? 0 : 1), flipTo, flipSeats: flipTo ? 1 : null, candidates: [] }];
   }));
 }

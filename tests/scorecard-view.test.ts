@@ -22,7 +22,7 @@ const arizona: Scorecard = {
     chamber("State House", 60, 31, seats(27, 33), seats(33, 17, 10), "R", "D"),
     chamber("State Senate", 30, 16, seats(13, 17), seats(19, 10, 1), "R", "D"),
   ],
-  governor: { name: "Katie Hobbs", party: "D", flipped: false, reelected: true },
+  governor: { name: "Katie Hobbs", party: "D", flipped: false, held: true },
   statewide: { total: 8, flipped: [{ office: "Treasurer", to: "D" }, { office: "State Mine Inspector", to: "D" }] },
   incumbentsLostTotal: 9,
   sources: [{ what: "Results", from: "Arizona Secretary of State", checked: "2026-11-06T14:40:00Z", url: "https://azsos.gov/results" }],
@@ -49,7 +49,7 @@ test("the national sentence says both without the word chambers", () => {
 });
 
 test("a split result names each party's offices and a chamber still undecided", () => {
-  const split: Scorecard = { ...arizona, governor: { name: "A B", party: "R", flipped: false, reelected: false }, chambers: [
+  const split: Scorecard = { ...arizona, governor: { name: "A B", party: "R", flipped: false, held: false }, chambers: [
     chamber("State House", 60, 31, seats(27, 33), seats(33, 27), "R", "D"),
     chamber("State Senate", 30, 16, seats(13, 17), seats(14, 14, 2), "R", null),
   ] };
@@ -69,9 +69,12 @@ test("control that moved to a party is a flip, and unknown control is not", () =
   assert.deepEqual(chamberHeaderRows(arizona), [{ name: "State House", flippedTo: "D" }, { name: "State Senate", flippedTo: "D" }]);
 });
 
-test("the governor block says re-elected, won or flipped", () => {
-  assert.deepEqual(governorBlock(arizona), { label: "Governor", text: "Katie Hobbs, Democrat, re-elected. The office did not change party." });
-  assert.equal(governorBlock({ ...arizona, governor: { name: "Pat Lee", party: "R", flipped: true, reelected: false } })?.text, "Pat Lee, Republican, won. The office flipped to Republicans.");
+test("the governor block reports the winner and party control", () => {
+  assert.deepEqual(governorBlock(arizona), { label: "Governor", text: "Katie Hobbs, Democrat, won. The office did not change party." });
+  assert.equal(governorBlock({ ...arizona, governor: { name: "Pat Lee", party: "R", flipped: true, held: false } })?.text, "Pat Lee, Republican, won. The office flipped to Republicans.");
+  assert.equal(governorBlock({ ...arizona, governor: { ...arizona.governor!, name: "David Crowley" } })?.text,
+    "David Crowley, Democrat, won. The office did not change party.", "the party keeping an office does not prove the same person was re-elected");
+  assert.equal(governorBlock({ ...arizona, governor: { name: "Pat Lee", party: "R", flipped: false, held: false } })?.text, "Pat Lee, Republican, won.");
   assert.equal(governorBlock({ ...arizona, governor: null }), null);
 });
 

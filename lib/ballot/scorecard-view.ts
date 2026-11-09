@@ -21,7 +21,7 @@ export interface Scorecard {
   scope: string;
   name: string;
   chambers: readonly ChamberScore[];
-  governor: { name: string | null; party: PartyKey; flipped: boolean; reelected: boolean } | null;
+  governor: { name: string | null; party: PartyKey; flipped: boolean; held: boolean } | null;
   statewide: { total: number | null; flipped: readonly OfficeFlip[] } | null;
   /** Source-counted state legislative seats that changed party. */
   seatsFlippedTotal?: number;
@@ -74,7 +74,7 @@ export function scorecardsFromFacts(facts: Readonly<Record<string, unknown>>, ho
     const flips = (summary.statewideOfficesFlipped ?? []).flatMap(row => { const to = partyKey(row.to); return to ? [{ office: row.office, to }] : []; });
     const credited = [summary.source, ...summary.creditedSources];
     return { scope, name, chambers,
-      governor: scope !== "US" && now ? { name: summary.governor.name ?? null, party: now, flipped: before !== null && before !== now, reelected: before === now } : null,
+      governor: scope !== "US" && now ? { name: summary.governor.name ?? null, party: now, flipped: before !== null && before !== now, held: before === now } : null,
       statewide: scope !== "US" ? { total: null, flipped: flips } : null,
       ...(scope !== "US" && typeof summary.seatsFlipped === "number" ? { seatsFlippedTotal: summary.seatsFlipped } : {}),
       ...(typeof summary.incumbentsLost === "number" ? { incumbentsLostTotal: summary.incumbentsLost } : {}),
@@ -142,12 +142,12 @@ export function governorBlock(card: Scorecard): { label: string; text: string } 
   const governor = card.governor;
   if (!governor) return null;
   if (!governor.name) {
-    const text = governor.flipped ? `The governor’s office flipped to ${PARTY_PLURAL[governor.party]}.` : `${PARTY_PLURAL[governor.party]} held the governor’s office.`;
+    const text = governor.flipped ? `The governor’s office flipped to ${PARTY_PLURAL[governor.party]}.` : `${PARTY_PLURAL[governor.party]} hold the governor’s office.`;
     return { label: "Governor", text };
   }
   const who = `${governor.name}, ${PARTY_SINGULAR[governor.party]}`;
   if (governor.flipped) return { label: "Governor", text: `${who}, won. The office flipped to ${PARTY_PLURAL[governor.party]}.` };
-  return { label: "Governor", text: `${who}, ${governor.reelected ? "re-elected" : "won"}. The office did not change party.` };
+  return { label: "Governor", text: `${who}, won.${governor.held ? " The office did not change party." : ""}` };
 }
 
 export interface FlipRow { office: string; to: PartyKey }

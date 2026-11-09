@@ -1,6 +1,6 @@
 import { checkFact, isOfficialUrl, type CheckEntity, type Claim, type Provenance } from "../facts/check.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
-import { enqueueReaderPlaces, invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger, type ReaderCacheScope } from "../reader/cache.ts";
+import { enqueueReaderPlaces, invalidateReaderCache, placePageConsumesFact, readerCacheScopeForEntity, type ReaderCachePurger, type ReaderCacheScope } from "../reader/cache.ts";
 import { bodyNamed, canonicalSubject, ensureEntity, governmentAt, placeBody, splitSubject, type BodyRef } from "../facts/entities.ts";
 import { readCheckEntity } from "../facts/entity-read.ts";
 import type { FactDb, Query, PublishInput, Clocks } from "../facts/publish.ts";
@@ -202,7 +202,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
       return { refused: verdict.reason };
     }
     const [placement] = await query("SELECT parent_id FROM entity WHERE id=$1",[entity.id]);
-    const filed=await fileEntityPlaces(query,entity.id,input.places ?? [],placement?.parent_id as string | null);
+    const filed=await fileEntityPlaces(query,entity.id,input.places ?? [],placement?.parent_id as string | null,[],placePageConsumesFact(c.field));
     if(filed.moved) {
       changed=await readerCacheScopeForEntity(query,entity.id);
     }
@@ -245,7 +245,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     [row!.id,`A source states a different value: ${c.valueText}`,c.copy.finalUrl]);
     if (live) {
       await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [c.entity.id, c.field]);
-      await enqueueReaderPlaces({ entities: [entity.id] }, query);
+      if (placePageConsumesFact(c.field)) await enqueueReaderPlaces({ entities: [entity.id] }, query);
       changed = await readerCacheScopeForEntity(query, c.entity.id);
     }
     return { decision, factId };

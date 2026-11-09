@@ -128,7 +128,7 @@ import { countyOutlineLayers, groupByFill, resultLayers, stateBadgePoints, state
 import { NATIONAL_BOUNDARIES_SOURCE } from "../lib/map/districts.ts";
 
 const lowerLayers = () => resultLayers({ kind: "districts", boundary: "state-house", state: "AZ" }, Object.fromEntries(Object.entries(results).filter(([id]) => id.includes("/sldl:"))),
-  { theme: "dark", yours: ["ocd-division/country:us/state:az/sldl:17"] });
+  { yours: ["ocd-division/country:us/state:az/sldl:17"] });
 
 test("each fill class gets its own layer on the existing boundary source, with the reader's district outlined", () => {
   const layers = lowerLayers();
@@ -149,27 +149,21 @@ test("the fill color is a complete match: a district with no result takes the ne
 });
 
 test("a state with no results draws every district neutral, with no pattern layers", () => {
-  const layers = resultLayers({ kind: "districts", boundary: "congressional", state: "TX" }, {}, { theme: "dark", yours: [] });
+  const layers = resultLayers({ kind: "districts", boundary: "congressional", state: "TX" }, {}, { yours: [] });
   assert.deepEqual(layers.map(l => l.id), ["results-fill", "results-line"]);
   assert.equal((layers[0] as unknown as { paint: { "fill-color": string } }).paint["fill-color"], "#262a33");
-});
-
-test("the national House view draws every state's districts: no state filter", () => {
-  const layers = resultLayers({ kind: "districts", boundary: "congressional", state: null }, {}, { theme: "dark", yours: [] });
-  assert.deepEqual((layers[0] as unknown as { filter: unknown }).filter, ["==", ["get", "boundaryType"], "congressional"]);
-  assert.ok(layers.some(l => l.id === "results-state-lines" && (l as { source: string }).source === RESULTS_STATES_SOURCE), "state lines sit on top of the districts");
 });
 
 test("state shapes draw from the state source, and flip badges are not drawn on districts there", () => {
   const states = resultsByDistrict([{ ocdId: "ocd-division/country:us/state:tx", status: "called", seats: 1, flip: { to: "D", seats: 1 },
     candidates: [{ name: "A", party: "D", incumbent: false, result: "won", votes: 1 }] }]);
-  const layers = resultLayers({ kind: "states" }, states, { theme: "light", yours: [] });
+  const layers = resultLayers({ kind: "states" }, states, { yours: [] });
   for (const layer of layers) assert.equal((layer as { source: string }).source, RESULTS_STATES_SOURCE);
   assert.ok(!layers.some(l => l.id.startsWith("results-flip")));
 });
 
 test("the county outline is one halo and one line on the county's own id", () => {
-  const [halo, line] = countyOutlineLayers("ocd-division/country:us/state:az/county:pima", "dark");
+  const [halo, line] = countyOutlineLayers("ocd-division/country:us/state:az/county:pima");
   assert.equal(halo.id, "results-county-halo");
   assert.equal(line.id, "results-county-line");
   assert.deepEqual((line as unknown as { filter: unknown }).filter, ["all", ["==", ["get", "boundaryType"], "county"], ["==", ["get", "ocdId"], "ocd-division/country:us/state:az/county:pima"]]);
@@ -363,12 +357,12 @@ test("redrawing the results keeps the large state-shapes source and closing them
     getSource: (id: string) => sources.get(id), addSource: (id: string, spec: unknown) => { sources.set(id, spec); }, removeSource: (id: string) => { sources.delete(id); },
     addLayer: (layer: { id: string }) => { layers.push(layer); }, hasImage: () => true, addImage: () => undefined } as unknown as import("maplibre-gl").Map;
   (globalThis as { window?: unknown }).window = { location: { href: "https://example.org/" } };
-  const states = resultLayers({ kind: "states" }, {}, { theme: "dark", yours: [] });
+  const states = resultLayers({ kind: "states" }, {}, { yours: [] });
   const badges = { type: "FeatureCollection" as const, features: [] };
-  drawResultLayers(map, states, { theme: "dark", states: true, badges });
+  drawResultLayers(map, states, { states: { type: "FeatureCollection", features: [] }, badges });
   const held = sources.get("results-states");
   assert.ok(held && sources.has("results-state-badges"));
-  drawResultLayers(map, states, { theme: "dark", states: true, badges });
+  drawResultLayers(map, states, { states: { type: "FeatureCollection", features: [] }, badges });
   assert.equal(sources.get("results-states"), held, "a redraw does not make the browser parse the shapes again");
   clearResultLayers(map, true);
   assert.equal(sources.size, 0);
@@ -392,4 +386,77 @@ test("the next run of the results job shows up on the map's next read: nothing i
   const house = await mapResults({ scope: "us-house" }, { store: copy.store, query });
   assert.equal(fillClass(house["ocd-division/country:us/state:pa"]), "split", "the new national summary is read, not the old one");
   assert.equal(copy.databaseReads(), 0);
+});
+
+/* ------------------------------------------- the national layout and fixtures --- */
+
+import { readFileSync as readOutlines } from "node:fs";
+import { layOutStates } from "../lib/map/albers-usa.ts";
+import type { StateOutlines } from "../lib/map/state-focus.ts";
+
+const outlines = JSON.parse(readOutlines(new URL("../public/geo/state-outlines.geojson", import.meta.url), "utf8")) as StateOutlines;
+const laid = layOutStates(outlines);
+const boxOf = (suffix: string) => {
+  const points = laid.shapes.features.find(f => f.properties.ocdId.endsWith(suffix))!.geometry.coordinates.flat();
+  const xs = points.map(p => p[0]), ys = points.map(p => p[1]);
+  return { west: Math.min(...xs), east: Math.max(...xs), south: Math.min(...ys), north: Math.max(...ys) };
+};
+const apart = (a: ReturnType<typeof boxOf>, b: ReturnType<typeof boxOf>) => a.east < b.west || b.east < a.west || a.north < b.south || b.north < a.south;
+
+test("the national layout holds the 50 states and DC, with Alaska and Hawaii inset below the lower 48 and clear of it", () => {
+  assert.equal(laid.shapes.features.length, 51);
+  assert.ok(!laid.shapes.features.some(f => /state:(?:as|gu|mp|pr|vi)$/.test(f.properties.ocdId)), "territories are not part of the layout");
+  const [ca, az, nm, ak, hi] = ["state:ca", "state:az", "state:nm", "state:ak", "state:hi"].map(boxOf);
+  for (const inset of [ak, hi]) for (const neighbour of [ca, az, nm]) assert.ok(apart(inset, neighbour), "an inset never overlaps the states above it");
+  assert.ok(ak.north < Math.min(ca.south, az.south), "Alaska sits below California and Arizona");
+  assert.ok(hi.north < az.south && hi.west > ak.west, "Hawaii sits below Arizona, to the right of Alaska");
+  assert.ok(apart(ak, hi));
+  const width = laid.bounds[1][0] - laid.bounds[0][0];
+  assert.ok(ak.east - ak.west < width * 0.3, "Alaska is drawn small, as the design draws it");
+  assert.ok(laid.bounds[0][0] <= ak.west && laid.bounds[0][1] <= hi.south, "the box the camera fits holds both insets");
+});
+
+test("the Aleutians are laid out beside the rest of Alaska, not across the world", () => {
+  const ak = boxOf("state:ak");
+  assert.ok(ak.east - ak.west < 3 && ak.north - ak.south < 3, "Alaska fits one inset");
+});
+
+const byFips = (code: string) => outlines.features.find(f => f.properties.statefp === code)!.properties.ocdId;
+/** The design's own sample of the 2026 Senate (Results Map.html): D and R won, * flipped, C still counting; states not listed have no race. */
+const DESIGN_SENATE: Record<string, string> = { "08": "D", "10": "D", "13": "D", "17": "D", "25": "D", "26": "D", "27": "D", "33": "D", "34": "D", "35": "D", "41": "D", "44": "D", "51": "D",
+  "19": "D*", "20": "D*", "23": "D*", "37": "D*", "39": "D*", "45": "D*", "48": "D*", "02": "C", "28": "C",
+  "01": "R", "05": "R", "12": "R", "16": "R", "21": "R", "22": "R", "30": "R", "31": "R", "40": "R", "46": "R", "47": "R", "54": "R", "56": "R" };
+const senateSummary = () => ({ states: Object.fromEntries(Object.entries(DESIGN_SENATE).map(([fips, code]) => {
+  const state = byFips(fips).split(":").pop()!.toUpperCase();
+  return [state, { us_house: row({}, 0, 0, 0), us_senate: code === "C" ? row({}, 1, 0, 1) : row({ [code[0]]: 1 }, 0, code.endsWith("*") ? 1 : 0, 1) }];
+})) });
+
+test("the design's Senate sample colors state by state as screenshot 13 does, Alaska included", () => {
+  const senate = nationalResults(senateSummary(), "us_senate");
+  const classes = Object.values(senate).map(fillClass);
+  assert.equal(classes.filter(c => c === "D").length, 13 + 7);
+  assert.equal(classes.filter(c => c === "R").length, 13);
+  assert.equal(classes.filter(c => c === "counting").length, 2);
+  assert.equal(Object.values(senate).filter(result => flipParty(result) === "D").length, 7, "seven flips to Democrats, each with its badge");
+  assert.equal(fillClass(senate[byFips("02")]), "counting", "Alaska is still counting");
+  assert.equal(senate[byFips("15")], undefined, "Hawaii has no Senate race this year");
+  assert.equal(senate[byFips("04")], undefined, "Arizona has none either");
+  const drawn = new Set(laid.shapes.features.map(f => f.properties.ocdId));
+  for (const id of Object.keys(senate)) assert.ok(drawn.has(id), `${id} is on the map`);
+  const layers = resultLayers({ kind: "states" }, senate, { yours: [byFips("04")] });
+  assert.deepEqual(layers.map(l => l.id), ["results-fill", "results-counting", "results-line", "results-yours"]);
+});
+
+test("a House sample with every state, Alaska and Hawaii included, colors every state on the map", () => {
+  const states = laid.shapes.features.map(f => f.properties.ocdId.split(":").pop()!.toUpperCase());
+  const summary = { states: Object.fromEntries(states.map((state, index) => [state, { us_senate: row({}, 0, 0, 0),
+    us_house: state === "AK" ? row({ R: 1 }, 0, 0, 1) : state === "HI" ? row({ D: 2 }, 0, 1, 2) : row({ D: 2 + index % 3, R: 1 + index % 4 }, index % 9 === 0 ? 1 : 0, index % 6 === 0 ? 1 : 0, 3 + index % 4) }])) };
+  const house = nationalResults(summary, "us_house");
+  assert.equal(Object.keys(house).length, 51, "every state has a result");
+  assert.equal(fillClass(house[byFips("02")]), "R");
+  assert.equal(fillClass(house[byFips("15")]), "D");
+  assert.equal(house[byFips("15")].flipSeats, 1);
+  const layers = resultLayers({ kind: "states" }, house, { yours: [] });
+  const fill = layers[0] as unknown as { paint: { "fill-color": unknown[] } };
+  assert.ok(fill.paint["fill-color"].flat().includes(byFips("02")) && fill.paint["fill-color"].flat().includes(byFips("15")), "Alaska and Hawaii are in the color match");
 });

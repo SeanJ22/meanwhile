@@ -3,15 +3,10 @@ import { NATIONAL_BOUNDARIES_SOURCE } from "./districts.ts";
 import { stateFilter } from "./state-focus.ts";
 import { fillClass, flipParty, type DistrictResult, type FillClass, type ResultParty } from "./results.ts";
 
-/** Result colors are the same in both themes; the neutrals follow the theme. */
+/** The design's map is one dark palette in either app theme: party colors on a near-black ground. */
 export const PARTY_FILL: Record<ResultParty, string> = { D: "#2457b8", R: "#b3362a", O: "#6b7280" };
 export const BADGE_INK = "#fdfaf4";
-
-export type ResultsTheme = "light" | "dark";
-export const NEUTRAL: Record<ResultsTheme, { line: string; none: string; base: string; stripeA: string; stripeB: string; halo: string; you: string }> = {
-  dark: { line: "#0f1117", none: "#262a33", base: "#1e2028", stripeA: "#2a2d37", stripeB: "#4a4f5c", halo: "#4fc9e8", you: "#ffffff" },
-  light: { line: "#ffffff", none: "#e3e6eb", base: "#eef0f3", stripeA: "#e2e5ea", stripeB: "#a2a8b4", halo: "#17809e", you: "#1a1a2e" },
-};
+export const INK = { ground: "#0f1117", line: "#0f1117", none: "#262a33", base: "#1e2028", stripeA: "#2a2d37", stripeB: "#4a4f5c", halo: "#4fc9e8", you: "#ffffff" } as const;
 
 export const RESULTS_STATES_SOURCE = "results-states";
 export const RESULTS_BADGES_SOURCE = "results-state-badges";
@@ -20,12 +15,12 @@ export const isResultsLayer = (id: string) => id.startsWith("results-");
 
 /** What the results draw on: a district kind within one state, or the state shapes themselves. */
 export type ResultsSurface =
-  | { kind: "districts"; boundary: "congressional" | "state-senate" | "state-house"; state: string | null }
+  | { kind: "districts"; boundary: "congressional" | "state-senate" | "state-house"; state: string }
   | { kind: "states" };
 
-export const imageIds = (theme: ResultsTheme) => ({
-  stripes: `results-stripes-${theme}`,
-  dots: `results-dots-${theme}`,
+export const imageIds = () => ({
+  stripes: "results-stripes",
+  dots: "results-dots",
   flip: { D: "results-flip-d", R: "results-flip-r", O: "results-flip-o" } as Record<ResultParty, string>,
 });
 
@@ -40,18 +35,20 @@ export function groupByFill(results: Readonly<Record<string, DistrictResult>>): 
   return groups;
 }
 
+/** The flat near-black the results sit on, covering the app's own basemap. */
+export const groundLayer = (): LayerSpecification => ({ id: resultsLayerId("ground"), type: "background", paint: { "background-color": INK.ground } });
+
 /** The layers that color a surface by result, drawn on the one boundary source the map already holds. */
 export function resultLayers(
   surface: ResultsSurface,
   results: Readonly<Record<string, DistrictResult>>,
-  options: { theme: ResultsTheme; yours: readonly string[] },
+  options: { yours: readonly string[] },
 ): LayerSpecification[] {
-  const ink = NEUTRAL[options.theme];
-  const images = imageIds(options.theme);
+  const ink = INK;
+  const images = imageIds();
   const on = surface.kind === "districts"
     ? { source: NATIONAL_BOUNDARIES_SOURCE, "source-layer": "districts" as const,
-        // No state means the whole country (the national House view).
-        base: (surface.state ? ["all", ["==", ["get", "boundaryType"], surface.boundary], stateFilter(surface.state)] : ["==", ["get", "boundaryType"], surface.boundary]) as FilterSpecification }
+        base: ["all", ["==", ["get", "boundaryType"], surface.boundary], stateFilter(surface.state)] as FilterSpecification }
     : { source: RESULTS_STATES_SOURCE, base: null as FilterSpecification | null };
   const layer = (suffix: string): { id: string; source: string; "source-layer"?: string } =>
     ({ id: resultsLayerId(suffix), source: on.source, ...("source-layer" in on ? { "source-layer": on["source-layer"] } : {}) });
@@ -80,10 +77,6 @@ export function resultLayers(
     ...layer("yours"), type: "line", filter: withBase(on.base, idsIn(options.yours)),
     layout: { "line-join": "round" }, paint: { "line-color": ink.you, "line-width": 2.5 },
   } as LayerSpecification);
-  // The national House view keeps the state lines on top of its 435 districts.
-  if (surface.kind === "districts" && !surface.state) layers.push({
-    id: resultsLayerId("state-lines"), source: RESULTS_STATES_SOURCE, type: "line", layout: { "line-join": "round" }, paint: { "line-color": ink.line, "line-width": 1.1 },
-  } as LayerSpecification);
   if (surface.kind === "districts") {
     for (const party of ["D", "R", "O"] as const) {
       const flipped = Object.values(results).filter(result => flipParty(result) === party).map(result => result.ocdId);
@@ -98,12 +91,12 @@ export function resultLayers(
 }
 
 /** The outline of the county the reader picked: a dark halo with a bright line on top. */
-export function countyOutlineLayers(countyOcdId: string, theme: ResultsTheme): LayerSpecification[] {
+export function countyOutlineLayers(countyOcdId: string): LayerSpecification[] {
   const filter = ["all", ["==", ["get", "boundaryType"], "county"], ["==", ["get", "ocdId"], countyOcdId]] as FilterSpecification;
   const base = { source: NATIONAL_BOUNDARIES_SOURCE, "source-layer": "districts", filter, type: "line" as const, layout: { "line-join": "round" as const } };
   return [
-    { ...base, id: resultsLayerId("county-halo"), paint: { "line-color": NEUTRAL[theme].line, "line-width": 4, "line-opacity": 0.7 } },
-    { ...base, id: resultsLayerId("county-line"), paint: { "line-color": NEUTRAL[theme].halo, "line-width": 1.5 } },
+    { ...base, id: resultsLayerId("county-halo"), paint: { "line-color": INK.line, "line-width": 4, "line-opacity": 0.7 } },
+    { ...base, id: resultsLayerId("county-line"), paint: { "line-color": INK.halo, "line-width": 1.5 } },
   ] as LayerSpecification[];
 }
 
@@ -154,7 +147,7 @@ export function stateBadgeLayers(counts: boolean): LayerSpecification[] {
   ] as LayerSpecification[];
   return (["D", "R", "O"] as const).map(party => ({
     ...base, id: resultsLayerId(`state-flip-${party}`), type: "symbol", filter: ["==", ["get", "party"], party],
-    layout: { "icon-image": imageIds("dark").flip[party], "icon-allow-overlap": true, "icon-ignore-placement": true },
+    layout: { "icon-image": imageIds().flip[party], "icon-allow-overlap": true, "icon-ignore-placement": true },
   })) as LayerSpecification[];
 }
 
@@ -173,8 +166,8 @@ function canvasImage(size: number, draw: Draw): StyleImageInterface & { width: n
 const ARROW = { D: "M3.5 0h-6M-0.5 -3l-3 3 3 3", R: "M-3.5 0h6M0.5 -3l3 3-3 3", O: "M-3.5 0h6M0.5 -3l3 3-3 3" } as const;
 
 /** Stripes, split-seat dots and flip badges, added once per style. Pixel ratio 2 keeps them crisp. */
-export function addResultImages(map: MapLibreMap, theme: ResultsTheme): void {
-  const ink = NEUTRAL[theme], ids = imageIds(theme), ratio = 2;
+export function addResultImages(map: MapLibreMap): void {
+  const ink = INK, ids = imageIds(), ratio = 2;
   const add = (id: string, size: number, draw: Draw) => { if (!map.hasImage(id)) map.addImage(id, canvasImage(size, draw), { pixelRatio: ratio }); };
   // 45° stripes, 6px period on screen.
   add(ids.stripes, 6 * ratio, (c, s) => {
@@ -192,7 +185,7 @@ export function addResultImages(map: MapLibreMap, theme: ResultsTheme): void {
     c.translate(s / 2, s / 2); c.scale(ratio, ratio);
     c.beginPath(); c.arc(0, 0, 7, 0, Math.PI * 2);
     c.fillStyle = PARTY_FILL[party]; c.fill();
-    c.lineWidth = 1; c.strokeStyle = NEUTRAL.dark.line; c.stroke();
+    c.lineWidth = 1; c.strokeStyle = INK.line; c.stroke();
     c.lineWidth = 1.6; c.lineCap = "round"; c.lineJoin = "round"; c.strokeStyle = BADGE_INK;
     c.stroke(new Path2D(ARROW[party]));
   });

@@ -1690,7 +1690,6 @@ function MapEntryInner() {
             votingSites={resultsOpen ? NO_VOTING_PINS : votingPins}
             results={resultsOpen ? (
               <ResultsMap
-                theme={theme}
                 phone={layoutBp === "phone"}
                 yours={resultsYours}
                 zip={clusterZip}

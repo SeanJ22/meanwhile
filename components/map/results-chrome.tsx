@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { feedbackHref } from "@/lib/feedback/shape";
 import { COUNTY_SEARCH_MIN, countyLabel, matchCounties, type CountyChoice } from "@/lib/map/results-counties";
-import { BADGE_INK, NEUTRAL, PARTY_FILL, type ResultsTheme } from "@/lib/map/results-style";
+import { BADGE_INK, INK, PARTY_FILL } from "@/lib/map/results-style";
 import type { ResultParty } from "@/lib/map/results";
 import styles from "./results-map.module.css";
 
@@ -55,23 +55,24 @@ export function CountyChip({ counties, selected, onPick }: { counties: readonly 
 
 export type LegendKey = "D" | "R" | "O" | "split" | "counting" | "none" | "flipD" | "flipR" | "yours";
 
-function Swatch({ kind, theme }: { kind: LegendKey; theme: ResultsTheme }) {
-  const ink = NEUTRAL[theme];
+function Swatch({ kind }: { kind: LegendKey }) {
+  const ink = INK;
   if (kind === "D" || kind === "R" || kind === "O") return <span className={styles.sw} style={{ background: PARTY_FILL[kind] }} />;
   if (kind === "split") return <span className={styles.sw} style={{ background: `radial-gradient(circle,${PARTY_FILL.D} 1.6px,transparent 1.9px) 0 0/5px 5px, radial-gradient(circle,${PARTY_FILL.R} 1.6px,transparent 1.9px) 2.5px 2.5px/5px 5px, ${ink.base}` }} />;
   if (kind === "counting") return <span className={styles.sw} style={{ background: `repeating-linear-gradient(45deg,${ink.stripeA} 0 3px,${ink.stripeB} 3px 4.5px)` }} />;
   if (kind === "none") return <span className={styles.sw} style={{ background: ink.none, boxShadow: `inset 0 0 0 1px ${ink.stripeB}` }} />;
-  if (kind === "yours") return <span className={styles.sw} style={{ boxShadow: `inset 0 0 0 2px ${ink.you}` }} />;
+  // The reader's outline is white on the map's dark ground, so its swatch sits on that ground whatever the legend panel's theme.
+  if (kind === "yours") return <span className={styles.sw} style={{ background: ink.ground, boxShadow: `inset 0 0 0 2px ${ink.you}` }} />;
   const party = kind === "flipD" ? "D" : "R";
   return <span className={styles.dot} style={{ background: PARTY_FILL[party], color: BADGE_INK }}><Arrow party={party} size={10} stroke={1.8} /></span>;
 }
 
-export function Legend({ rows, theme, phone }: { rows: readonly { key: LegendKey; label: string }[]; theme: ResultsTheme; phone: boolean }) {
+export function Legend({ rows, phone }: { rows: readonly { key: LegendKey; label: string }[]; phone: boolean }) {
   const [open, setOpen] = useState(!phone);
   return <>
     {phone && <button type="button" className={styles.legendBtn} aria-expanded={open} onClick={() => setOpen(value => !value)}>{open ? "Hide legend" : "Legend"}</button>}
     {open && <div className={styles.legend} style={phone ? { flexDirection: "row", flexWrap: "wrap", gap: "6px 12px" } : undefined} role="list" aria-label="Map legend">
-      {rows.map(row => <div key={row.key} className={styles.row} role="listitem"><Swatch kind={row.key} theme={theme} />{row.label}</div>)}
+      {rows.map(row => <div key={row.key} className={styles.row} role="listitem"><Swatch kind={row.key} />{row.label}</div>)}
     </div>}
   </>;
 }

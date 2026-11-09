@@ -5,13 +5,13 @@ import { useRouter } from "next/navigation";
 import type { FilterSpecification, MapMouseEvent } from "maplibre-gl";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { NATIONAL_BOUNDARIES_SOURCE } from "@/lib/map/districts";
-import { CONUS_BOUNDS } from "@/lib/map/style";
+import { layOutStates } from "@/lib/map/albers-usa";
 import { loadStateOutlines, stateAbbrFromOcdId, stateFilter, type StateOutlines } from "@/lib/map/state-focus";
 import { stateOcd, type DistrictResult } from "@/lib/map/results";
 import { districtCard, houseStateMeta, seatSummary, senateCard } from "@/lib/map/results-card";
 import { countyChoices, outlineBounds, type CountyChoice } from "@/lib/map/results-counties";
 import { canDrawResults, clearResultLayers, drawResultLayers } from "@/lib/map/results-apply";
-import { countyOutlineLayers, resultLayers, resultsLayerId, stateBadgeLayers, stateBadgePoints, type ResultsSurface, type ResultsTheme } from "@/lib/map/results-style";
+import { countyOutlineLayers, resultLayers, resultsLayerId, stateBadgeLayers, stateBadgePoints, type ResultsSurface, } from "@/lib/map/results-style";
 import { closeResults, setResultsDistricts, setResultsScope, showResultsState, useResultsScope, type ResultsState } from "@/lib/map/results-scope";
 import { Banner, CountyChip, GettingBanner, Legend, MapCard, PillButton, Segmented, Sheet, WinnerRow, type LegendKey } from "./results-chrome";
 import { useMapInstance } from "./map-instance";
@@ -63,19 +63,20 @@ function useOutlines(): StateOutlines | null {
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 export interface ResultsMapProps {
-  theme: ResultsTheme;
   phone: boolean;
   /** The reader's districts from their ZIP. */
   yours: readonly string[];
   zip: string | null;
 }
 
-export default function ResultsMap({ theme, phone, yours, zip }: ResultsMapProps) {
+export default function ResultsMap({ phone, yours, zip }: ResultsMapProps) {
   const map = useMapInstance();
   const router = useRouter();
   const onBack = () => { closeResults(); if (zip) router.push(`/ballot?zip=${zip}`); };
   const { scope, state, home } = useResultsScope();
   const outlines = useOutlines();
+  // The national views draw the states in the design's layout: the lower 48 with Alaska and Hawaii inset.
+  const laid = useMemo(() => outlines ? layOutStates(outlines) : null, [outlines]);
   const [layer, setLayer] = useState<StateLayer>("sen");
   const [natLayer, setNatLayer] = useState<"sen" | "house">("sen");
   const [houseState, setHouseState] = useState<ResultsState | null>(null);
@@ -97,9 +98,8 @@ export default function ResultsMap({ theme, phone, yours, zip }: ResultsMapProps
   const houseAbbr = houseState?.abbr ?? null;
   const surface: ResultsSurface = useMemo(() => !nation
     ? { kind: "districts", boundary: BOUNDARY[layer], state: state.abbr }
-    : natLayer === "sen" || statesFirst ? { kind: "states" }
-    : { kind: "districts", boundary: "congressional", state: houseAbbr },
-  [nation, layer, state.abbr, natLayer, statesFirst, houseAbbr]);
+    : natLayer === "house" && houseAbbr ? { kind: "districts", boundary: "congressional", state: houseAbbr } : { kind: "states" },
+  [nation, layer, state.abbr, natLayer, houseAbbr]);
   const needsDistricts = surface.kind === "districts";
   useEffect(() => { setResultsDistricts(needsDistricts); }, [needsDistricts]);
 
@@ -114,22 +114,22 @@ export default function ResultsMap({ theme, phone, yours, zip }: ResultsMapProps
 
   /* ------------------------------------------------------ layers on the map --- */
   const specs = useMemo(() => {
-    const base = resultLayers(surface, drawn, { theme, yours: yoursOnSurface });
-    const badges = surface.kind === "states" && outlines
-      ? stateBadgePoints(outlines.features, Object.fromEntries(Object.values(drawn).flatMap(result => {
+    const base = resultLayers(surface, drawn, { yours: yoursOnSurface });
+    const badges = surface.kind === "states" && laid
+      ? stateBadgePoints(laid.shapes.features, Object.fromEntries(Object.values(drawn).flatMap(result => {
         const count = result.flipSeats ?? 0;
         return statesFirst ? count > 0 ? [[result.ocdId, { party: result.flipTo ?? "O" as const, count }]] : [] : result.flipTo ? [[result.ocdId, { party: result.flipTo }]] : [];
       })))
       : null;
-    return { layers: [...base, ...(badges ? stateBadgeLayers(statesFirst) : []), ...(county && surface.kind === "districts" ? countyOutlineLayers(county.ocdId, theme) : [])], badges };
-  }, [surface, drawn, theme, yoursOnSurface, outlines, statesFirst, county]);
+    return { layers: [...base, ...(badges ? stateBadgeLayers(statesFirst) : []), ...(county && surface.kind === "districts" ? countyOutlineLayers(county.ocdId) : [])], badges };
+  }, [surface, drawn, yoursOnSurface, laid, statesFirst, county]);
 
   useEffect(() => {
     let attaching = false;
     const ensure = () => {
-      if (attaching || !canDrawResults(map, surface.kind === "districts")) return;
+      if (attaching || !canDrawResults(map, surface.kind === "districts") || surface.kind === "states" && !laid) return;
       attaching = true;
-      try { drawResultLayers(map, specs.layers, { theme, states: surface.kind === "states" || !surface.state, badges: specs.badges }); }
+      try { drawResultLayers(map, specs.layers, { states: surface.kind === "states" ? laid?.shapes ?? null : null, badges: specs.badges }); }
       catch { /* The style is mid-change; the next styledata puts the layers back. */ }
       finally { attaching = false; }
     };
@@ -137,8 +137,7 @@ export default function ResultsMap({ theme, phone, yours, zip }: ResultsMapProps
     const onStyle = () => { if (!attaching && !map.getLayer(resultsLayerId("fill")) && canDrawResults(map, surface.kind === "districts")) ensure(); };
     map.on("styledata", onStyle);
     return () => { map.off("styledata", onStyle); try { clearResultLayers(map); } catch { /* The map is gone. */ } };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map, specs, theme]);
+  }, [map, specs, surface, laid]);
 
   // Closing the results takes everything off the map, the state shapes too.
   useEffect(() => () => { try { clearResultLayers(map, true); } catch { /* The map is gone. */ } }, [map]);
@@ -158,10 +157,10 @@ export default function ResultsMap({ theme, phone, yours, zip }: ResultsMapProps
     else if (nation && houseAbbr) {
       const bounds = outlineBounds(outlines?.features.find(f => stateAbbrFromOcdId(f.properties.ocdId) === houseAbbr) ?? null);
       if (bounds) fit(bounds);
-    } else if (nation) fit(CONUS_BOUNDS, 5);
+    } else if (nation && laid) fit(laid.bounds, 14);
     // The camera moves when the scene changes, not when the outlines or padding objects do.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sceneKey, !outlines]);
+  }, [sceneKey, !outlines, !laid]);
 
   /* --------------------------------------------------------------- counties --- */
   useEffect(() => {
@@ -281,7 +280,7 @@ export default function ResultsMap({ theme, phone, yours, zip }: ResultsMapProps
 
       <div className={styles.bottom} style={phone ? { left: 10, right: 10, bottom: sheetOpen ? 630 : 226, maxWidth: "none", alignItems: "stretch" } : { bottom: 16 }}>
         {card}
-        <Legend rows={legend} theme={theme} phone={phone} />
+        <Legend rows={legend} phone={phone} />
       </div>
 
       {phone && <Sheet open={sheetOpen} onToggle={() => setSheetOpen(open => !open)}><MapScorecard /></Sheet>}

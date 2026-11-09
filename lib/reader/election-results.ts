@@ -1,5 +1,6 @@
 import { resultFeedStore, type ElectionResultFeedStore } from "../election-results/feed-store.ts";
 import type { StateResultFeed } from "../election-results/feed-types.ts";
+import { guardResultFacts } from "../ballot/election-results.ts";
 import type { NationalCongressSummary } from "../election-results/summary.ts";
 
 /** The job already published this document. A reader never opens a database connection. */
@@ -9,7 +10,8 @@ export function readNationalElectionResults(store: ElectionResultFeedStore = res
 
 export async function readStateElectionResults(state: string, contests?: readonly string[],
   store: ElectionResultFeedStore = resultFeedStore()): Promise<StateResultFeed | null> {
-  const feed = await store.readState(state);
+  const held = await store.readState(state);
+  const feed = held && { ...held, facts: guardResultFacts(held.facts) };
   if (!feed || !contests) return feed;
   const indexed = (id: string) => feed.contestIds && Object.hasOwn(feed.contestIds, id) ? feed.contestIds[id] : undefined;
   const ids = new Set(contests.flatMap(id => [id, ...indexed(id) ?? []]));

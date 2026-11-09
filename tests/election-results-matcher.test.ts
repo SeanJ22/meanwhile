@@ -64,7 +64,9 @@ test("governor results attach to the existing joint ticket and retain its visibl
 test("surname-only and party-label guesses do not establish a candidate match", () => {
   const held = contest("one");
   assert.equal(matchElectionResult(result("NH", ["Quinn"]), ballot([held], [candidate("a", held.id, "Alice Quinn")])).kind, "unmatched");
-  assert.equal(matchElectionResult(result("NH", ["Alice Quinn"]), ballot([held], [candidate("a", held.id, "Alice E. Quinn")])).kind, "unmatched");
+  // A middle initial the source leaves out is the same person (AK Governor: "Bernadette M. Wilson" is printed "Bernadette Wilson").
+  assert.equal(matchElectionResult(result("NH", ["Alice Quinn"]), ballot([held], [candidate("a", held.id, "Alice E. Quinn")])).kind, "matched");
+  assert.equal(matchElectionResult(result("NH", ["Alice Quinn"]), ballot([held], [candidate("a", held.id, "Alice Rae Quinn")])).kind, "unmatched");
 });
 
 test("state, office and election boundaries prevent cross-race matches", () => {

@@ -1,0 +1,27 @@
+{
+  "n": 198,
+  "branch": "release/198",
+  "head_sha": "819a03f487b9cfbadae43822aa2edda50d605912",
+  "base_river_sha": "be2d4d0825368574bb3aba528818af84165d76b7",
+  "main_sha": null,
+  "lanes": [
+    {
+      "lane": "results-partial",
+      "steps": [
+        "RT-05"
+      ],
+      "ready_sha": "909bf8533ddb9069d13d1cb117dc6689ea4bafd4",
+      "result_sha": "819a03f487b9cfbadae43822aa2edda50d605912"
+    }
+  ],
+  "steps": [
+    "RT-05"
+  ],
+  "pr": {
+    "number": 917,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/917"
+  },
+  "ci": "running",
+  "at": "2026-11-09T02:35:08Z",
+  "growth_reason": "election results correctness: a race shows a leader, winner, call or flip only when every candidate with votes matched our ballot (live wrong leader on the Alaska Governor card), plus nickname and middle-initial matching"
+}

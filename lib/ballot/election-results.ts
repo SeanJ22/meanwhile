@@ -22,6 +22,10 @@ export interface ContestResult extends ResultAttribution {
   readonly noVotes?: number | null;
   readonly yesPercent?: number | null;
   readonly outcome?: "passed" | "failed" | "counting";
+  /** Set by the publisher only when every candidate with votes in the source matched our ballot. Without it, no outcome is shown. */
+  readonly allCandidatesMatched?: boolean;
+  /** Set by `guardResultFacts` when an outcome was held back; the card shows only the source. */
+  readonly withheld?: boolean;
 }
 
 export interface CandidateResult extends ResultAttribution {
@@ -48,3 +52,26 @@ export type BallotElectionSummary = Omit<ElectionSummary, "quote" | "quotes" | "
 };
 export type BallotResultFacts = Readonly<Record<string, unknown>>;
 
+
+const record = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === "object" && !Array.isArray(value);
+const raceOf = (value: Record<string, unknown>) => `${value.sourceId}:${value.electionDate}:${value.sourceRaceId}`;
+/** A contest fact: a source race's status with no votes of its own. A measure carries its own yes/no outcome and needs no candidate match. */
+const candidateContest = (value: Record<string, unknown>) => typeof value.status === "string" && typeof value.sourceRaceId === "string"
+  && !("votes" in value) && !("percent" in value) && !("won" in value) && !("outcome" in value) && !("yesVotes" in value);
+
+/**
+ * A race shows a leader, Won, Called or Flipped only when the publisher marked that every candidate with votes matched our
+ * ballot. Any other contest fact keeps its source and loses its outcome, and its candidates lose won/runoff.
+ */
+export function guardResultFacts(facts: BallotResultFacts): BallotResultFacts {
+  const held = new Set<string>();
+  for (const value of Object.values(facts)) if (record(value) && candidateContest(value) && value.allCandidatesMatched !== true) held.add(raceOf(value));
+  if (!held.size) return facts;
+  return Object.fromEntries(Object.entries(facts).map(([id, value]) => {
+    if (!record(value) || !held.has(raceOf(value))) return [id, value];
+    if (candidateContest(value)) return [id, { status: "pending", withheld: true, sources: value.sources, checkedAt: value.checkedAt,
+      sourceId: value.sourceId, sourceRaceId: value.sourceRaceId, electionDate: value.electionDate }];
+    const { won: _won, runoff: _runoff, ...rest } = value;
+    return [id, rest];
+  }));
+}

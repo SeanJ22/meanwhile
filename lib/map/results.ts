@@ -116,7 +116,7 @@ const factFor = <T>(facts: BallotResultFacts, row: { id: string; aliases?: reado
 export function resultContests(ballot: Pick<BallotSet, "contests" | "candidacies">, facts: BallotResultFacts): ResultContest[] {
   return ballot.contests.flatMap(contest => {
     const filed = factFor<ContestResult>(facts, contest);
-    if (!filed || !drawn(contest)) return [];
+    if (!filed || filed.withheld || !drawn(contest)) return [];
     const ran = ballot.candidacies.filter(row => row.contestId === contest.id).map(row => ({ row, result: factFor<CandidateResult>(facts, row) }));
     const winners = new Set(winnersOf(ran).map(entry => entry.row));
     const candidates = ran.map(({ row, result }): ResultCandidate => ({ name: `${row.givenName} ${row.familyName}`.trim(), party: partyKey(row.partyLabel) ?? "O",

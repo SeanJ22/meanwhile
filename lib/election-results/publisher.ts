@@ -7,7 +7,7 @@ import { pageCopy, saveSourceReference } from "../facts/source-copy.ts";
 import { publishClaim, type FactDb, type Query } from "../facts/publish.ts";
 import type { SavedCopy } from "../facts/check.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
-import { matchElectionResultAcrossBallots, type ElectionMatch } from "./matcher.ts";
+import { allVoteGettersMatched, matchElectionResultAcrossBallots, type ElectionMatch } from "./matcher.ts";
 import { nextElectionResultCheck } from "./schedule.ts";
 import type { DoorRecord } from "../doors/registry.ts";
 import type { ReaderCachePurger } from "../reader/cache.ts";
@@ -45,7 +45,7 @@ const sources = (race: ElectionResult) => [{ name: race.sourceName, url: race.so
 /** Identity and result values, excluding evidence bytes and the time a source was checked. */
 function resultFingerprint(race: ElectionResult, match: ElectionMatch): string {
   const { quote: _quote, checkedAt: _checked, ...value } = race;
-  return fingerprint({ ...value, candidates: value.candidates.map(({ quote: _candidateQuote, ...candidate }) => candidate),
+  return fingerprint({ rule: "all-vote-getters-matched", ...value, candidates: value.candidates.map(({ quote: _candidateQuote, ...candidate }) => candidate),
     match: match.kind === "matched" ? { contest: match.contest.id, candidates: match.candidates.map(row => [row.resultIndex, row.candidacy.id]),
       measure: match.measure?.id, missing: match.unmatchedCandidates, ambiguous: match.ambiguousCandidates } : match });
 }
@@ -182,50 +182,51 @@ export async function publishElectionResultBatch(input: {
     } else {
       const evidence = await observed(), citation = { sources: sources(race), checkedAt: at,
         sourceId: race.sourceId, sourceRaceId: race.sourceRaceId, electionDate: race.electionDate };
-      jobs.push(async () => {
-        if (input.more?.() === false) { deferred = true; return; }
-        const values = { ...previous?.values };
-        const write = async (args: Pick<Parameters<typeof publishValue>[0], "id" | "kind" | "name" | "parentId" | "sourceId" | "value" | "quote">) => {
-          const { checkedAt: _checkedAt, ...value } = args.value as Record<string, unknown>;
-          const fieldKey = `${args.kind}:${args.id}`, hash = fingerprint(value);
-          if (values[fieldKey] === hash) return;
-          if (await publishValue({ ...args, db: input.db, query: input.query, copy: evidence, race, now, purge: input.purge, accepted: input.accepted })) counts.published++;
-          values[fieldKey] = hash;
-        };
-        const measureValue = race.measure ? { yesVotes: race.measure.yesVotes ?? null, noVotes: race.measure.noVotes ?? null,
-          yesPercent: race.measure.yesPercent ?? null, outcome: race.measure.outcome } : undefined;
-        // A captured Ballotpedia page is a substring that never spells its own URL id, so the saved copy can only name this contest by the seat it prints.
-        const congress = race.sourceId === "ballotpedia" && (race.office === "us_house" || race.office === "us_senate");
-        await write({ id: match.contest.id, kind: "contest", name: match.contest.title, parentId: match.contest.ocdId,
-          sourceId: congress ? `U.S. ${race.office === "us_house" ? "House" : "Senate"} ${stateName(race.state) ?? race.state}` : race.sourceRaceId, quote: race.quote,
-          value: { status: race.status, percentCounted: race.percentCounted ?? null, statusChangedAt: raw.statusChangedAt ?? null,
-            seatsToFill: race.seatsToFill ?? match.contest.voteFor, flipped: race.flipped ?? null,
-            gainedByParty: race.gainedByParty ?? null, incumbentLost: race.incumbentLost ?? null,
-            seatsFlipped: race.seatsFlipped ?? null, incumbentsLost: race.incumbentsLost ?? null, ...measureValue, ...citation } });
-        for (const row of match.candidates) {
-          const candidate = race.candidates[row.resultIndex];
-          await write({ id: row.candidacy.id, kind: "candidacy", name: candidate.name, parentId: match.contest.id,
-            sourceId: candidate.name, quote: candidate.quote ?? race.quote,
-            value: { votes: candidate.votes ?? null, percent: candidate.percent ?? null, won: candidate.won ?? null,
-              runoff: candidate.runoff ?? null, ...citation } });
-        }
-        if (race.measure && match.measure) await write({ id: match.measure.id, kind: "measure", name: race.measure.name,
-          parentId: match.contest.id, sourceId: race.sourceRaceId, quote: race.quote,
-          value: { ...measureValue, ...citation } });
-        if (match.unmatchedCandidates.length) await electionResultFix(input.workQuery ?? input.query, race, "Candidate missing from served ballot", "fix",
-          { candidateNames: match.unmatchedCandidates.map(index => race.candidates[index].name) }, input.writeFix);
-        if (match.ambiguousCandidates.length) await electionResultFix(input.workQuery ?? input.query, race, "Candidate identity tie", "detect",
-          { candidateNames: match.ambiguousCandidates.map(index => race.candidates[index].name) });
-        await updateIncumbentConflict();
-        const list = workList(input.workQuery ?? input.query, { owner: "election-results" });
-        await list.resolve({ subjectId: `election-results:${race.state}:${race.sourceRaceId}`, fieldPrefix: "election_result:",
-          exceptFields: [...match.unmatchedCandidates.length ? ["election_result:Candidate missing from served ballot"] : [],
-            ...match.ambiguousCandidates.length ? ["election_result:Candidate identity tie"] : [],
-            ...conflictingCandidates.length ? [`election_result:${incumbentConflictReason}`] : []] });
-        await list.resolve({ subjectId: match.contest.id, fieldPrefix: "election_result" });
-        progress.races[key] = { fingerprint: hash, status: race.status, statusChangedAt: race.statusChangedAt,
-          lastCheckedAt: at, nextCheckAt, values };
-      });
+      const values = { ...previous?.values };
+      const write = async (args: Pick<Parameters<typeof publishValue>[0], "id" | "kind" | "name" | "parentId" | "sourceId" | "value" | "quote">) => {
+        const { checkedAt: _checkedAt, ...value } = args.value as Record<string, unknown>;
+        const fieldKey = `${args.kind}:${args.id}`, hash = fingerprint(value);
+        if (values[fieldKey] === hash) return;
+        if (await publishValue({ ...args, db: input.db, query: input.query, copy: evidence, race, now, purge: input.purge, accepted: input.accepted })) counts.published++;
+        values[fieldKey] = hash;
+      };
+      const measureValue = race.measure ? { yesVotes: race.measure.yesVotes ?? null, noVotes: race.measure.noVotes ?? null,
+        yesPercent: race.measure.yesPercent ?? null, outcome: race.measure.outcome } : undefined;
+      // A captured Ballotpedia page is a substring that never spells its own URL id, so the saved copy can only name this contest by the seat it prints.
+      const congress = race.sourceId === "ballotpedia" && (race.office === "us_house" || race.office === "us_senate");
+      // RT-05: an outcome is published only when every candidate with votes matched our ballot.
+      const complete = allVoteGettersMatched(race, match);
+      const outcome = complete ? { status: race.status, percentCounted: race.percentCounted ?? null, statusChangedAt: raw.statusChangedAt ?? null,
+        seatsToFill: race.seatsToFill ?? match.contest.voteFor, flipped: race.flipped ?? null,
+        gainedByParty: race.gainedByParty ?? null, incumbentLost: race.incumbentLost ?? null,
+        seatsFlipped: race.seatsFlipped ?? null, incumbentsLost: race.incumbentsLost ?? null, allCandidatesMatched: true }
+        : { status: "counting", statusChangedAt: raw.statusChangedAt ?? null, seatsToFill: race.seatsToFill ?? match.contest.voteFor };
+      await write({ id: match.contest.id, kind: "contest", name: match.contest.title, parentId: match.contest.ocdId,
+        sourceId: congress ? `U.S. ${race.office === "us_house" ? "House" : "Senate"} ${stateName(race.state) ?? race.state}` : race.sourceRaceId, quote: race.quote,
+        value: { ...outcome, ...measureValue, ...citation } });
+      for (const row of match.candidates) {
+        const candidate = race.candidates[row.resultIndex];
+        await write({ id: row.candidacy.id, kind: "candidacy", name: candidate.name, parentId: match.contest.id,
+          sourceId: candidate.name, quote: candidate.quote ?? race.quote,
+          value: { votes: candidate.votes ?? null, percent: candidate.percent ?? null, won: complete ? candidate.won ?? null : null,
+            runoff: complete ? candidate.runoff ?? null : null, ...citation } });
+      }
+      if (race.measure && match.measure) await write({ id: match.measure.id, kind: "measure", name: race.measure.name,
+        parentId: match.contest.id, sourceId: race.sourceRaceId, quote: race.quote,
+        value: { ...measureValue, ...citation } });
+      if (match.unmatchedCandidates.length) await electionResultFix(input.workQuery ?? input.query, race, "Candidate missing from served ballot", "fix",
+        { candidateNames: match.unmatchedCandidates.map(index => race.candidates[index].name) }, input.writeFix);
+      if (match.ambiguousCandidates.length) await electionResultFix(input.workQuery ?? input.query, race, "Candidate identity tie", "detect",
+        { candidateNames: match.ambiguousCandidates.map(index => race.candidates[index].name) });
+      await updateIncumbentConflict();
+      const list = workList(input.workQuery ?? input.query, { owner: "election-results" });
+      await list.resolve({ subjectId: `election-results:${race.state}:${race.sourceRaceId}`, fieldPrefix: "election_result:",
+        exceptFields: [...match.unmatchedCandidates.length ? ["election_result:Candidate missing from served ballot"] : [],
+          ...match.ambiguousCandidates.length ? ["election_result:Candidate identity tie"] : [],
+          ...conflictingCandidates.length ? [`election_result:${incumbentConflictReason}`] : []] });
+      await list.resolve({ subjectId: match.contest.id, fieldPrefix: "election_result" });
+      progress.races[key] = { fingerprint: hash, status: race.status, statusChangedAt: race.statusChangedAt,
+        lastCheckedAt: at, nextCheckAt, values };
       continue;
     }
     progress.races[key] = { fingerprint: hash, status: race.status, statusChangedAt: race.statusChangedAt,

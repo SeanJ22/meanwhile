@@ -55,6 +55,14 @@ export function placePageConsumesPublication(scope: string, recordClass?: string
       && scope === requiredManualProductionContract("everyday-routing").scope;
 }
 
+/**
+ * Facts the place-page builder never reads. Election results reach readers through the prepared state feed the results job writes,
+ * so publishing one must not mark every place in its state stale (that walk cost seconds per fact).
+ */
+export function placePageConsumesFact(field: string): boolean {
+  return !(field === "election_result" || field.startsWith("election_summary") || field.startsWith("election_congress:"));
+}
+
 export function readerCacheTags(scope: ReaderCacheScope): string[] {
   const states = [...new Set((scope.states ?? []).flatMap(state => registryJurisdictions(state)))].sort();
   const places = [...new Set((scope.places ?? []).map(place => place.split("#")[0]!.trim().toLowerCase()).filter(Boolean))].sort();

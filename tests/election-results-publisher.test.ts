@@ -382,3 +382,19 @@ test("a captured Ballotpedia district page publishes its served contest and cand
   const rows = await db.query("SELECT entity_id FROM fact WHERE status='live' AND field='election_result' ORDER BY entity_id");
   assert.deepEqual(rows.map(row => row.entity_id), ["az-us-house-6", "ciscomani", "mendoza"]);
 });
+
+test("election results are written in one pass and never mark a place page stale per fact", async context => {
+  const db = await fixture(context);
+  const statements: string[] = [];
+  const counted = { ...db, query: db.query, transaction: <T>(work: (query: typeof db.query) => Promise<T>) =>
+    db.transaction(query => work((text, params) => { statements.push(text); return query(text, params); })) };
+  const batch = parseMultiStateResults(raw(), AT);
+  const first = await publishElectionResultBatch({ db: counted, query: db.query, batch, ballots: [ballot], state: "MA", now: new Date(AT), purge });
+  assert.equal(first.counts.published, 6);
+  assert.equal((await db.query("SELECT count(*)::int AS n FROM place_page"))[0].n, 0, "no place page was queued for a result fact");
+  assert.equal(statements.filter(text => /INSERT INTO fact\b/.test(text)).length, 1, "every new fact went in one multi-row statement");
+  assert.equal(statements.filter(text => /requested_entities/.test(text)).length, 0, "the place-page stale walk never ran");
+  const again = await publishElectionResultBatch({ db: counted, query: db.query, batch: parseMultiStateResults(raw(), AT), ballots: [ballot], state: "MA", now: new Date(AT), purge });
+  assert.equal(again.counts.published, 0);
+  assert.equal((await db.query("SELECT count(*)::int AS n FROM fact WHERE status='live'"))[0].n, 6);
+});

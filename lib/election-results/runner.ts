@@ -30,6 +30,8 @@ import type { StateResultFeed } from "./feed-types.ts";
 import { summarizeCongressResults, type NationalCongressSummary } from "./summary.ts";
 
 const STATES = "AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY".split(" ");
+/** States whose results are read, matched and written side by side. */
+const STATE_LANES = 4;
 const cursorName = (state: string) => `election-results:${state}`;
 const empty = (): ResultProgress => ({ races: {}, summaries: {} });
 interface StateProgress extends ResultProgress {
@@ -112,6 +114,8 @@ export async function runElectionResults(input: {
   feedStore?: ElectionResultFeedStore;
   /** Bounds all fix upserts across both sources and every state in one turn. Detectives are separate. */
   maxFixRows?: number;
+  /** States read, matched and written side by side; one keeps them strictly in order. */
+  stateLanes?: number;
 }): Promise<ResultCounts & { reads: number; nextCheckAt: string | null; fixRowsWritten: number; pendingFixRows: number }> {
   const maxFixRows = input.maxFixRows ?? 100;
   if (!Number.isSafeInteger(maxFixRows) || maxFixRows < 1) throw new RangeError("maxFixRows must be a positive integer");
@@ -213,7 +217,7 @@ export async function runElectionResults(input: {
     if (fixRowsWritten >= maxFixRows || !more()) break;
     await writeFix(row);
   }
-  let multistateText: string | undefined, multistateFailure: unknown;
+  let multistateText: string | undefined, multistateFailure: unknown, multistateRead: Promise<ElectionResultBatch> | undefined, multistateFirst = "";
   const due: string[] = [];
   const sourceNext = (prior: StateProgress, source: string, requested = true): string | null => {
     const door = doors.get(source.split(":")[0]);
@@ -343,8 +347,8 @@ export async function runElectionResults(input: {
   };
   // Every state's MultiState results are published before any Ballotpedia request, so a slow Ballotpedia cannot keep them off the feeds.
   const ballotsRead = new Map<string, readonly BallotSet[]>();
-  for (const phase of ["multistate", "ballotpedia"] as const) for (const state of states) {
-    if (!more()) { unfinished = true; break; }
+  const runState = async (phase: "multistate" | "ballotpedia", state: string): Promise<void> => {
+    if (!more()) { unfinished = true; return; }
     let prior: StateProgress = progress.get(state) ?? empty();
     const ballotVersion = ballotVersions.get(state) ?? null;
     const changedBallot = prior.ballotVersion !== ballotVersion;
@@ -359,7 +363,7 @@ export async function runElectionResults(input: {
     // Ballotpedia is due whenever the capture is newer than the one this state last read (or its ballot changed): the read is a no-op otherwise.
     const capturedDue = captured !== null && (captured.capturedAt > (prior.capturedBallotpediaAt ?? "") || changedBallot);
     if (phase === "multistate" ? !sourceDue("multistate") : !capturedDue) {
-      due.push(...sourceDues(prior)); continue;
+      due.push(...sourceDues(prior)); return;
     }
     try {
       await withBatchedReaderInvalidation(async purge => {
@@ -440,8 +444,10 @@ export async function runElectionResults(input: {
           if (!input.multistate && multistateText === undefined) {
             if (multistateFailure) throw multistateFailure;
             try {
-              firstState = await readMultiStateResults(at, multistateFetch, state);
-              multistateText = firstState.evidence.text;
+              if (!multistateRead) { multistateFirst = state; multistateRead = readMultiStateResults(at, multistateFetch, state); }
+              const read = await multistateRead;
+              if (multistateFirst === state) firstState = read;
+              multistateText = read.evidence.text;
             } catch (error) { multistateFailure = error; throw error; }
           }
           await publish(input.multistate ?? firstState ?? parseMultiStateResults(multistateText!, at, "2026-11-03", state), "multistate");
@@ -494,6 +500,16 @@ export async function runElectionResults(input: {
       due.push(...sourceDues(prior));
       }, input.purge);
     } catch (error) { await failure(state, `${PUBLIC_SITE_ORIGIN}/ballot`, String(error)); }
+  };
+  // States run side by side, four at a time (the reader pool holds four connections); each phase finishes before the next begins.
+  for (const phase of ["multistate", "ballotpedia"] as const) {
+    let nextState = 0;
+    await Promise.all(Array.from({ length: Math.min(input.stateLanes ?? STATE_LANES, states.length) }, async () => {
+      while (nextState < states.length) {
+        if (!more()) { unfinished = true; return; }
+        await runState(phase, states[nextState++]);
+      }
+    }));
   }
   // A national check also reaches states whose own called races are not due today.
   const checkedNation = Object.values(nation.sourceChecks ?? {}).some(check => check.lastSucceededAt === at);
